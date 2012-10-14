@@ -3,7 +3,7 @@
 //usually ## is used to connect the two para
 
 //class define
-#define Class(name) typedef struct _##name{
+#define Interface(name) typedef struct _##name{
 #define Implement(name) }name;name name##_obj;
 #define Constructor(name) name* name##_new(
 #define Arg() 
@@ -13,12 +13,18 @@
 //Global Macros
 #define New(name) name##_new( 
 #define Bind(class,name) class##_obj.name=name;
-#define Var(class,name) class##_obj.name
+#define Set(class,name,value) class##_obj.name=value;
 #define ReturnInstance(name) \
 	name* instance = (name*)malloc(sizeof(name##_obj));\
 	memcpy(instance, &name##_obj, sizeof(name##_obj));\
 	return instance;
 //methods
+#define method static
+#define function static
+#define Function extern
+#define var static
+#define Var
+
 #define dcl(name) (*name)(void* self
 #define	imp(name) name(void* self
 #define arg() ,

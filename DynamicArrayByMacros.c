@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <string.h>
 
-Class(DynamicArray)
+Interface(DynamicArray)
 	void* pointer;
 	int currentIndex;
 	ssize_t currentSize;
@@ -13,23 +13,35 @@ Class(DynamicArray)
 	arg() int index end();
 
 Implement(DynamicArray)
-	static int imp( addItem ) end()
+
+	Var int DynamicArray_count = 1000;
+	Function void DynamicArray_classmethod(void){
+		printf("this is a classmethod of DynamicArray\n");
+	}
+
+	var int count = 0;
+	function void logindex(int index){
+		printf("this is the addItem method, currentIndex:%d\n",index);
+	}
+
+	method int imp( addItem ) end()
 	body(
 		this->currentIndex++;
-		printf("this is the addItem method, currentIndex:%d\n",this->currentIndex);
+		logindex(this->currentIndex);
 		return this->currentIndex;
 	)
-	static void imp( removeItem )
+
+	method void imp( removeItem )
 	arg() int index end()
 	body(
 		this->currentIndex--;
-		printf("this is the removeItem method, currentIndex:%d\n",this->currentIndex);
+		logindex(this->currentIndex);
 	)
 
 Constructor(DynamicArray)
 Arg() size_t init_size End()
 Body(
-		Var(DynamicArray,currentIndex) = 10;
+		Set(DynamicArray,currentIndex,10)
 		Bind(DynamicArray,addItem)
 		Bind(DynamicArray,removeItem)
 		ReturnInstance(DynamicArray)
@@ -38,10 +50,11 @@ Body(
 /*******************************************************************/
 Main(
 	//old
-	DynamicArray* dold = DynamicArray_new(100);
-	dold->addItem(dold);
-	dold->removeItem(dold,1);
-
+	// DynamicArray* dold = DynamicArray_new(100);
+	// dold->addItem(dold);
+	// dold->removeItem(dold,1);
+	printf("%d\n",DynamicArray_count);
+	DynamicArray_classmethod();
 	//new
 	DynamicArray* da = New(DynamicArray)
 					   Arg() 100 End();
