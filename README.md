@@ -90,6 +90,7 @@ syntex:
 
 [how to use objects:]
 
+
 #include "DynamicArrayByMacros.h"
 #include "ClassA.h"
 Main(

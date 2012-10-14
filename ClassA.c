@@ -29,8 +29,6 @@ Body(
 	Bind(ClassA,onnew);
 	Bind(ClassA,onbye);
 	Bind(ClassA,open);
-
-	//ReturnInstance(ClassA);
 )CEnd(ClassA)
 
 

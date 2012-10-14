@@ -12,7 +12,7 @@
 
 Implement(DynamicArray)
 
-	//Var int DynamicArray_count = 1000;
+	Var int DynamicArray_count = 1000;
 	Function void DynamicArray_classmethod(void){
 		printf("this is a classmethod of DynamicArray\n");
 	}
@@ -36,13 +36,13 @@ Implement(DynamicArray)
 	)
 
 
-	static void imp( onnew )arg(tail)
+	method void imp( onnew )arg(tail)
 	body(
 		printf("DynamicArray: hello!\n");
 	)
 
 
-	static void imp( onbye )arg(tail)
+	method void imp( onbye )arg(tail)
 	body(
 		printf("DynamicArray: goodbye!\n");
 	)
