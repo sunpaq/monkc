@@ -5,76 +5,108 @@ OOP Macros for C:
 
 syntex:
 
-[start of a file:]
-	
-	#define CLASS MyClass
-	#include "OOP_MACROS.h"
-	//you must use them at first of a class file
+[marks:]
 
-[write a class:]
-
-	Class(C)
-	   //vars
-	   //methods
-	Implement(C)
-           //implement of the methods
-	Constructor(C)
-	   //the constructor of this class
-
-       	//you must write them in order as above
-
+		Var      //this is a C-style global variable
+		Function //this is a C-style global function
+		var      //this is a C-style local variable
+		function //this is a C-style local function
+		method   //this is a OOP-style method of this class
 
 [declare the method:]
+
 		dcl(method_name)
 
 [argumets:]
-		arg() <arg_list> end()
-		//even there is no argument at all, you still need the end()
+
+		arg(...)
+		//at least one arg, fill it with tail: 
+		arg(tail) 
+		//if you want a dummy
 
 [implement the method:]
-		imp(method_name)
+
+		imp(method_name)arg(...)
 
 [method body:]
+
 		body(your_method_body)
 
 [class constructor:]
-		//the constructor name always be: Constructor
-		//the argument list mark must be uppercase: Arg() <argi_list> End()
-		//the body mark must be uppercase: Body()
-		//you can set the var by Var(MyClass,var) = xxx
-		//you must bind the methods you implemented to your class 
-		//you must return a instance at last of constructor
-		//
-		//keep in mind: the right constructor must be: Var()->Bind()->ReturnInstance()
 
-example:
-	
-	#define CLASS MyClass
-	#include "OOP_MACROS.h"
-
-	Class(MyClass)
-		int var;
-		void dcl( method )
-		arg() int arg1, float arg2 end();
-
-	Implement(MyClass)
-		static void imp( method )
-		arg() int arg1, float arg2 end()
-		body(
-			this->var = 0;
+		Constructor(class)Arg(...)Body(
+			Bind(class,method1)
 		)
 
-	Constructor(MyClass)
-	Arg() int arg1, float arg2 End()
+
+-------------------------------------------------
+
+[header file:]
+	
+	#ifndef __ClassA__
+	#define __ClassA__
+	#define CLASS ClassA
+	#include "OOP_MACROS.h"
+	Interface(ClassA)
+		int i;
+		int dcl(open)arg(tail);
+		void dcl(onnew)arg(tail);
+		void dcl(onbye)arg(tail);
+	IEnd(ClassA,tail)
+	#endif
+
+[implement file:]
+
+	#include "ClassA.h"
+	// Interface(ClassA)
+	// 	int i;
+	// 	int dcl(open)arg(tail);
+	// 	void dcl(onnew)arg(tail);
+	// 	void dcl(onbye)arg(tail);
+	// Interface(ClassA,tail)
+	Implement(ClassA)
+		method int imp(open)arg(tail)
+		body(
+			printf("ClassA open\n");
+		)
+
+		method void imp(onnew)arg(tail)
+		body(
+			printf("ClassA hello\n");
+		)
+
+		method void imp(onbye)arg(tail)
+		body(
+			printf("ClassA byebye!\n");
+		)
+	MEnd(ClassA)
+	Constructor(ClassA)Arg(tail)
 	Body(
-		Var(MyClass,var) = 100;
-		Bind(MyClass,method);
-		ReturnInstance(MyClass);
-	)	
+		Bind(ClassA,onnew);
+		Bind(ClassA,onbye);
+		Bind(ClassA,open);
+	)CEnd(ClassA)
 
 
-useage:
+[how to use objects:]
 
-	MyClass* instance = New(MyClass)Arg() 10, 10.5 End();
-	call(instance,method)arg() 1, 1.5 end();
-	free(instance)
+#include "DynamicArrayByMacros.h"
+#include "ClassA.h"
+Main(
+	new(ClassA,aaa,nil);
+	call(aaa,open,nil);
+	//printf("%d\n",DynamicArray_count);
+	//DynamicArray_classmethod();
+	//new
+	new(DynamicArray,da,100);
+	new(DynamicArray,db,200);
+
+	call(da,addItem,nil);
+	call(da,addItem,nil);
+	call(db,removeItem,1);
+	call(db,removeItem,1);
+
+	//delete
+	bye(da);
+	bye(db);
+)
