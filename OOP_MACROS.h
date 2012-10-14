@@ -2,6 +2,9 @@
 //so we use ## to connect
 //usually ## is used to connect the two para
 
+#ifndef __OOP_MACROS__
+#define __OOP_MACROS__
+
 //class define
 #define Interface(name) typedef struct _##name{
 #define Implement(name) }name;name name##_obj;
@@ -21,9 +24,9 @@
 //methods
 #define method static
 #define function static
-#define Function extern
 #define var static
-#define Var
+#define Function extern
+#define Var extern
 
 #define dcl(name) (*name)(void* self
 #define	imp(name) name(void* self
@@ -33,3 +36,9 @@
 #define call(obj,name) obj->name(obj
 //main loop
 #define Main(body) int main(int argc, char* argv[]){body}
+//basic includes
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+
+#endif
