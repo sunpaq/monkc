@@ -7,17 +7,17 @@
 
 //interface
 #define Interface(name) typedef struct _##name{
-#define IEnd(name,...) }name;name name##_obj;name* name##_new(__VA_ARGS__);
+#define IEnd(name,...) }name;name* name##_new(__VA_ARGS__);
 //implement
-#define Implement(name)
+#define Implement(name) name class_obj;
 #define MEnd(name)
 //constructor
 #define Constructor(name) name* name##_new
 #define Arg(...) (__VA_ARGS__)
 #define Body(body) {body
 #define CEnd(name) \
-	name* instance = (name*)malloc(sizeof(name##_obj));\
-	memcpy(instance, &name##_obj, sizeof(name##_obj));\
+	name* instance = (name*)malloc(sizeof(class_obj));\
+	memcpy(instance, &class_obj, sizeof(class_obj));\
 	return instance;}
 //use at runntime
 #define nil ((void*)0)
@@ -26,8 +26,8 @@
 #define new(class,obj,...) class* obj = class##_new(__VA_ARGS__);obj->onnew(obj,((void*)0))
 #define bye(obj) obj->onbye(obj,((void*)0));free(obj)
 //use in constructor
-#define Bind(cls,name) cls##_obj.name=name;
-#define Set(cls,name,value) cls##_obj.name=value;
+#define Bind(name) class_obj.name=name;
+#define Set(name,value) class_obj.name=value;
 //marks for file scope
 #define method static
 #define function static

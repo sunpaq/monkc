@@ -26,9 +26,9 @@ MEnd(ClassA)
 
 Constructor(ClassA)Arg(tail)
 Body(
-	Bind(ClassA,onnew);
-	Bind(ClassA,onbye);
-	Bind(ClassA,open);
+	Bind(onnew);
+	Bind(onbye);
+	Bind(open);
 )CEnd(ClassA)
 
 

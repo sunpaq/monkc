@@ -50,11 +50,11 @@ MEnd(DynamicArray)
 
 Constructor(DynamicArray)Arg(size_t init_size)
 Body(
-		Set(DynamicArray,currentIndex,10)
-		Bind(DynamicArray,addItem)
-		Bind(DynamicArray,removeItem)
+		Set(currentIndex,10)
+		Bind(addItem)
+		Bind(removeItem)
 		//must called
-		Bind(DynamicArray,onnew)
-		Bind(DynamicArray,onbye)
+		Bind(onnew)
+		Bind(onbye)
 )
 CEnd(DynamicArray)
