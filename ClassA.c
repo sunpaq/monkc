@@ -1,34 +1,32 @@
-#include "ClassA.h"
+#include "Menifest.h"
 
-// Interface(ClassA)
-// 	int i;
-// 	int dcl(open)arg(tail);
-// 	void dcl(onnew)arg(tail);
-// 	void dcl(onbye)arg(tail);
-// Interface(ClassA,tail)
+Implement
 
-Implement(ClassA)
-	method int imp(open)arg(tail)
-	body(
-		printf("ClassA open\n");
-	)
+	virtual_imp(void,amethod,xxx){
+		printf("%s\n", "this is ClassA-amethod");
+	}
 
-	method void imp(onnew)arg(tail)
-	body(
-		printf("ClassA hello\n");
-	)
+	virtual_imp(void,bmethod,xxx){
+		printf("%s\n", "this is ClassA-bmethod");
+	}
 
-	method void imp(onbye)arg(tail)
-	body(
-		printf("ClassA byebye!\n");
-	)
-MEnd(ClassA)
+	virtual_imp(void,cmethod,xxx){
+		printf("%s\n", "this is ClassA-cmethod");
+	}
 
-Constructor(ClassA)Arg(tail)
-Body(
-	Bind(onnew);
-	Bind(onbye);
-	Bind(open);
-)CEnd(ClassA)
+	friend_borrow(ClassA,base_handler,void,retain,xxx)
+
+	friend_imp(void,release,xxx){
+		
+	}
+
+ImplementEnd(ClassA,xxx){
+	new(h,Base,nil);
+	Set(base_handler,h);
+	Bind(amethod);
+	Bind(bmethod);
+	Bind(cmethod);
+	Return(ClassA);
+}
 
 

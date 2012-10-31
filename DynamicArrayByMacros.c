@@ -38,12 +38,19 @@ Implement(DynamicArray)
 
 	method void imp( onnew )arg(tail)
 	body(
+
 		printf("DynamicArray: hello!\n");
+	)
+
+	method void imp( onplugin )arg(tail)
+	body(
+		ref_count++;
 	)
 
 
 	method void imp( onbye )arg(tail)
 	body(
+
 		printf("DynamicArray: goodbye!\n");
 	)
 MEnd(DynamicArray)

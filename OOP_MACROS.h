@@ -5,43 +5,41 @@
 #ifndef __OOP_MACROS__
 #define __OOP_MACROS__
 
-//interface
-#define Interface(name) typedef struct _##name{
-#define IEnd(name,...) }name;name* name##_new(__VA_ARGS__);
-//implement
-#define Implement(name) name class_obj;
-#define MEnd(name)
-//constructor
-#define Constructor(name) name* name##_new
-#define Arg(...) (__VA_ARGS__)
-#define Body(body) {body
-#define CEnd(name) \
-	name* instance = (name*)malloc(sizeof(class_obj));\
-	memcpy(instance, &class_obj, sizeof(class_obj));\
-	return instance;}
-//use at runntime
+//marks
+#define id void*
+#define xxx void* __xxx
 #define nil ((void*)0)
-#define Main(body) int main(int argc, char* argv[]){body return 0;}
-#define call(obj,name,...) obj->name(obj,__VA_ARGS__);
-#define new(class,obj,...) class* obj = class##_new(__VA_ARGS__);obj->onnew(obj,((void*)0))
-#define bye(obj) obj->onbye(obj,((void*)0));free(obj)
-//use in constructor
-#define Bind(name) class_obj.name=name;
-#define Set(name,value) class_obj.name=value;
-//marks for file scope
-#define method static
-#define function static
-#define var static
-//marks for global scope
-#define Function 
-#define Var 
-//methods
-#define dcl(name) (*name)
-#define	imp(name) name
-#define arg(...) (void* self, __VA_ARGS__)
-#define body(body) {CLASS* this = (CLASS*)self;body}
-//argument place holder
-#define tail void* all_the_method_must_have_at_least_one_arg
+//instance manipulate
+#define call(ins,method,...) ins->method(ins,__VA_ARGS__)
+#define new(ins,cls,...) cls* ins=cls##_new(__VA_ARGS__)
+//method
+#define method(ret,name,...) ret (*name)(void* self,__VA_ARGS__)
+#define method_imp(ret,name,...) static ret name(void* self,__VA_ARGS__)
+#define this(cls) cls* this = (cls*)self
+//friend method
+#define friend(ret,name,...) ret (*name)(void* self,__VA_ARGS__)
+#define friend_imp(ret,name,...) static ret name(void* self,__VA_ARGS__)
+#define friend_borrow(cls,fri,ret,name,...) static ret name(void* self,__VA_ARGS__){\
+cls* this = (cls*)self;\
+return this->fri->name(__VA_ARGS__);}
+//virtual method
+#define virtual(ret,name,...) ret (*name)(void* self,__VA_ARGS__)
+#define virtual_imp(ret,name,...) static ret name(void* self,__VA_ARGS__)
+//global functions
+#define function(ret,name,...) extern ret name(__VA_ARGS__)
+#define function_imp(ret,name,...) ret name(__VA_ARGS__)
+//class define
+#define MCInterface typedef struct{
+#define MCInterfaceEnd(name,...) }name;\
+name* name##_new(__VA_ARGS__);
+#define MCImplement 
+#define MCImplementEnd(name,...) name classobj;\
+name* name##_new(__VA_ARGS__)
+#define Bind(method) classobj.method=method
+#define Set(var,value) classobj.var=value
+#define Return(name) name* __instance = (name*)malloc(sizeof(classobj));\
+memcpy(__instance, &classobj, sizeof(classobj));\
+return __instance;
 
 //basic includes
 #include <stdlib.h>

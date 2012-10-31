@@ -5,7 +5,7 @@
 #include "OOP_MACROS.h"
 
 Interface(DynamicArray)
-	void* pointer;
+	id pointer;
 	int currentIndex;
 	ssize_t currentSize;
 	int dcl( addItem )arg(tail);
