@@ -1,0 +1,35 @@
+//for cast!!
+MCInterface(RCObject)
+	int ref_count;
+	method(void,retain,xxx);
+	method(void,release,xxx);
+	method(void,bye,xxx);
+MCInterfaceEnd(RCObject, xxx);
+
+//for default behavior
+method_imp(void,retain,xxx)body(
+	pull(int,ref_count);
+		ref_count++;
+	push(ref_count);
+	printf("retain ref_count is %d\n",ref_count);
+);
+
+method_imp(void,release,xxx)body(
+	pull(int,ref_count);
+		ref_count--;
+		if (ref_count==0){
+			call(this,bye,nil);
+		}
+	printf("release ref_count is %d\n",ref_count);
+)
+
+// method_imp(void,bye,xxx)body(
+// 	//do clean work here
+//  free(this);
+// )
+
+// Set(info,<your info>);
+// Set(ref_count,1);
+// Bind(retain);
+// Bind(release);
+// Bind(bye);
