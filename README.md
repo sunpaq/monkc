@@ -61,4 +61,55 @@ a set of C macro for OOP programming
 ---
 Total **18** keywords.[^1]
 
+
+####protocol files
+	ReferenceCount.protocol
+	ReferenceCount.default
+
+######the .protocol file:
+
+	int ref_count;
+	method(void,retain,xxx);
+	method(void,release,xxx);
+	method(void,bye,xxx);
+
+it just list the methods and vars, which is just as decleard in the interface of a class.
+
+the purpose of doing this is: we can use **#include "xx.protocol"** to import them direct in our class interface ! just like this:
+
+	MCInterface	( Classname )
+		#include "xx.protocol"
+		int var;
+		method(void, name1, arg-list);
+		method(void, name2, arg-list);
+	MCInterfaceEnd( Classname, argument-list )
+	
+the result of doing this is amazing ! we have already have some feature called: "interface" or "abstract class"
+in other OOP language.
+
+######the .default file:
+
+	//for default behavior
+	method_imp(void,retain,xxx)body(
+		pull(int,ref_count);
+			ref_count++;
+		push(ref_count);
+		printf("retain ref_count is %d\n",ref_count);
+	)
+
+	method_imp(void,release,xxx)body(
+		pull(int,ref_count);
+			ref_count--;
+			if (ref_count==0){
+				call(this,bye,nil);
+			}
+		printf("release ref_count is %d\n",ref_count);
+	)
+
+it just give implements of the methods in protocol file. as you can guess it also can be **#include "xx.default"**
+to our MCImplement parts. we use this to simulate some **inherit** feature. and you also can only use .protocol
+file, and let the class to implement its own methods. which we also heard as: **Polymorphism**
+
+
 [^1]: the syntex is improving, maybe more/less keywords in the feature.
+
