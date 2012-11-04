@@ -38,8 +38,8 @@ typedef struct MCClass_tag
 
 void bind_start(MCClass* const self, funcptr(mptr1), funcptr(mptr2));
 int bind_method(MCClass* const self, funcptr(mptr));
-int get_method_index(MCClass* const self, funcptr(name));
-bool response_to_method(MCClass* const self, funcptr(name));
+// int get_method_index(MCClass* const self, funcptr(name));
+int response_to_method(MCClass* const self, funcptr(name));
 void call(MCClass* const self, funcptr(name), id para);
 
 #endif

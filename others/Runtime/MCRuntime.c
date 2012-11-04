@@ -28,46 +28,47 @@ int bind_method(MCClass* const self, funcptr(mptr)){
 	return self->method_index-1;
 }
 
-int get_method_index(MCClass* const self, funcptr(name)){
+// int get_method_index(MCClass* const self, funcptr(name)){
 
-	// int i;
-	// for (i = 0; i < MAX_METHOD_NUM-1; ++i)
-	// {
-	// 	if(self->method_list[i]==name)return i;
-	// }
-	// return -1;
+// 	int i;
+// 	for (i = 0; i < MAX_METHOD_NUM-1; ++i)
+// 	{
+// 		if(self->method_list[i]==name)return i;
+// 	}
+// 	return -1;
 
-	printf("in get_method_index\n");
-	int step = self->method_offset;
-	int offset = (int)name - (int)self->method_first;
-	int index = (int)offset / step;
-	printf("step is: %d offset is: %d index is: %d\n", step, offset, index);
-	return index;
-}
+// 	// printf("in get_method_index\n");
+// 	// int step = self->method_offset;
+// 	// int offset = (int)(name - self->method_first);
+// 	// int index = offset / step;
+// 	// printf("step is: %d offset is: %d index is: %d\n", step, offset, index);
+// 	// return index;
+// }
 
-bool response_to_method(MCClass* const self, funcptr(name)){
+int response_to_method(MCClass* const self, funcptr(name)){
 
-	// int i;
-	// for (i = 0; i < (MAX_METHOD_NUM-1); ++i)
-	// {
-	// 	if(self->method_list[i]==name)return true;
-	// }
-	// return false;
-
-	int index = get_method_index(self, name);
-	if (self->method_boolean[index]==1)
+	int i;
+	for (i = 0; i < (MAX_METHOD_NUM-1); ++i)
 	{
-		printf("%s\n", "in class can response_to_method");
-		return true;
-	}else{
-		printf("%s\n", "in class can not response_to_method");
-		return false;
+		if(self->method_list[i]==name)return i;
 	}
+	return -1;
+
+	// int index = get_method_index(self, name);
+	// if (self->method_boolean[index]==1)
+	// {
+	// 	printf("%s\n", "in class can response_to_method");
+	// 	return true;
+	// }else{
+	// 	printf("%s\n", "in class can not response_to_method");
+	// 	return false;
+	// }
 }
 
 void call(MCClass* const self, funcptr(name), id para){
 	MCClass* obj = self;
-	while(response_to_method(obj, name)==false){
+	int res;
+	while((res=response_to_method(obj, name))==-1){
 		if(obj->super != nil){
 			obj = obj->super;
 			printf("%s\n", "continue to my super");
@@ -77,6 +78,6 @@ void call(MCClass* const self, funcptr(name), id para){
 		}
 	}
 
-	obj->method_list[get_method_index(obj, name)](nil);
+	obj->method_list[res](nil);
 	printf("%s\n", "MC_call finish");
 }
