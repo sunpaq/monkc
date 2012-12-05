@@ -1,6 +1,20 @@
+#ifndef __VTableSuper__
+#define __VTableSuper__
 #include "MCRuntime.h"
 
-extern id super_amethod(id para);
-extern id super_bmethod(id para);
-extern id super_cmethod(id para);
-extern id super_dmethod(id para);
+MCInterface(VTableSuper, root);
+	int a;
+	int b;
+	int c;
+#define VAR
+#include "DrawableProtocol.h"
+MCInterfaceEnd(VTableSuper, init, xxx);
+
+method(VTableSuper, show, BOOL isPrint, char* str);
+method(VTableSuper, bmethod, int a, double b, char* c);
+method(VTableSuper, cmethod, int a, double b, char* c);
+method(VTableSuper, bye, xxx);
+
+#define METHOD
+#include "DrawableProtocol.h"
+#endif

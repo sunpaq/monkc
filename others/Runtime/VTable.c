@@ -1,60 +1,57 @@
 #include "VTable.h"
-/* implement */
-// method_anchor(VTable, amethod);
-// method_anchor(VTable, bmethod);
-// method_anchor(VTable, cmethod);
-// method_anchor(VTable, dmethod);
 
-id amethod(id para){
-	printf("method a\n");
+method_imp(VTable, amethod, xxx)
+{
+	This(VTable);
+	// printf("class name is: %s\n", this->isa->name);
+	// printf("method id is: %d\n", cmd);
+	// printf("parameters: a/b/c is: %d/%s/%1.2f\n", a, b, c);
+	return 1;
 }
 
-id bmethod(id para){
-	printf("method b1\n");
-	printf("method b2\n");
+method_imp(VTable, bmethod, int a, double b, char* c)
+{
+	printf("method b1: a/b/c is:%d/%1.2f/%s\n", a, b, c);
+	printf("method b2: a/b/c is:%d/%1.2f/%s\n", a, b, c);
 }
 
-id cmethod(id para){
-	printf("method c1\n");
-	printf("method c2\n");
-	printf("method c3\n");
+method_imp(VTable, cmethod, int a, double b, char* c)
+{
+	printf("method c1: a/b/c is:%d/%1.2f/%s\n", a, b, c);
+	printf("method c2: a/b/c is:%d/%1.2f/%s\n", a, b, c);
+	printf("method c3: a/b/c is:%d/%1.2f/%s\n", a, b, c);
 }
 
-id dmethod(id para){
-	printf("method d1\n");
+#define IMPLEMENT
+#include "DrawableProtocol.h"
+protocol_imp(VTable, draw, xxx){
+	This(VTable);
+	printf("%s:%s\n", "VTable draw", this->main_color);
 }
 
-/* constructor */
-//MCObject instance;
-//MCClass classobj;
-void Class_initialize(MCClass* self){
-	//instance.isa = &classobj;
+method_imp(VTable, bye, xxx)
+{
+	This(VTable);
+	//do clean job
+	release(this->super_instance);
+}
 
-	alloc(vtsuper, MCClass);
-	Super_initialize(vtsuper);
-	self->super=vtsuper;
+method_imp(VTable, init, xxx)
+{
+	This(VTable);
+	setting_start(this, "VTable");
 
-	bind_start(self, amethod, bmethod);
-	bind_method(self, cmethod);
-	bind_method(self, dmethod);
+	this->main_color="sliver";
 
-	
-	//MCClass* ret = (MCClass*)malloc(sizeof(classobj));
-	//memcpy(ret, &classobj, sizeof(classobj));
-	//printf("Class is created\n");
-	//printf("%d\n",(int)ret->method_list[2]);
+	New(VTableSuper, vtsuper, nil);
+	set_super(this, vtsuper);
 
-	//return ret;
+	bind(this, MT(amethod), MA(VTable, amethod));
+	bind(this, MT(bmethod), MA(VTable, bmethod));
+	bind(this, MT(cmethod), MA(VTable, cmethod));
+	bind(this, MT(bye), MA(VTable, bye));
 
-	
-	//classobj->super = Super_initialize();
-	// printf("Class is created\n");
-	// printf("Class method index is:%d\n",(int)VTable_amethod);
-	// printf("Class method index is:%d\n",(int)VTable_bmethod);
-	// printf("Class method index is:%d\n",(int)VTable_cmethod);
-	// printf("Class method index is:%d\n",(int)VTable_dmethod);
-
-	// response_to_method(ins_ptr->isa, VTable_amethod);
-	// ins_ptr->isa->method_list[get_method_index(ins_ptr->isa, VTable_bmethod)](nil);
-	// call(ins_ptr->isa, VTable_cmethod, nil);
+	#define BIND
+	#include "DrawableProtocol.h"
+	bind(this, MT(draw), MA(VTable, draw));
 }
