@@ -1,4 +1,5 @@
-#include "MCRuntime.h"
+//please do not include the "MCRuntime.h"
+//in protocol file!!!
 
 #ifdef VAR
 	char* main_color;
@@ -21,19 +22,19 @@ protocol_imp(DrawableProtocol, draw, xxx)
 {
 	This(DrawableProtocol);
 	this->main_color = "default-red";
-	printf("%s:%s\n", "DrawableProtocol default draw", this->main_color);
+	debug_log("%s:%s\n", "DrawableProtocol default draw", this->main_color);
 }
 protocol_imp(DrawableProtocol, erase, xxx)
 {
 	This(DrawableProtocol);
 	this->main_color = "default-yellow";
-	printf("%s:%s\n", "DrawableProtocol default erase", this->main_color);
+	debug_log("%s:%s\n", "DrawableProtocol default erase", this->main_color);
 }
 protocol_imp(DrawableProtocol, redraw, xxx)
 {
 	This(DrawableProtocol);
 	this->main_color = "default-blue";
-	printf("%s:%s\n", "DrawableProtocol default redraw", this->main_color);
+	debug_log("%s:%s\n", "DrawableProtocol default redraw", this->main_color);
 }
 #undef IMPLEMENT
 #endif

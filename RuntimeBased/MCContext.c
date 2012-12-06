@@ -1,8 +1,8 @@
-#include "MCRuntime.h"
+#include "MCContext.h"
 
 method_imp(MCContext, bye, xxx)
 {
-	printf("%s\n", "MCContext goodbye");
+	runtime_log("%s\n", "MCContext goodbye");
 }
 
 method_imp(MCContext, dump, xxx)
@@ -11,7 +11,7 @@ method_imp(MCContext, dump, xxx)
 	int i;
 	for (i = 0; i < this->argc; ++i)
 	{
-		printf("%s\n", this->argv[i]);
+		runtime_log("%s\n", this->argv[i]);
 	}
 }
 
@@ -49,12 +49,13 @@ method_imp(MCContext, init, int argc, char** argv)
 {
 	This(MCContext);
 	setting_start(this, "MCContext");
-	this->argc=argc;
-	this->argv=argv;
+		this->argc=argc;
+		this->argv=argv;
 
-	bind(this, MT(bye), MA(MCContext, bye));
-	bind(this, MT(dump), MA(MCContext, dump));
-	bind(this, MT(getPara), MA(MCContext, getPara));
-	bind(this, MT(paraEqual), MA(MCContext, paraEqual));
-	bind(this, MT(havePara), MA(MCContext, havePara));
+		bind(this, MT(dump), MA(MCContext, dump));
+		bind(this, MT(getPara), MA(MCContext, getPara));
+		bind(this, MT(paraEqual), MA(MCContext, paraEqual));
+		bind(this, MT(havePara), MA(MCContext, havePara));
+
+	setting_end(this, MA(MCContext, bye));
 }

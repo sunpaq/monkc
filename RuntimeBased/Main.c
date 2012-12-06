@@ -1,18 +1,23 @@
+#include "MCContext.h"
+
 #include "VTable.h"
 #include "VTableSuper.h"
+#include "Bird.h"
 /* main */
+int MCContext_runloop(MCContext* const context){
 
-int MCRuntime_runloop(MCContext* context){
+	LOG_LEVEL=VERBOSE;
 
 	ff(context, MT(dump), nil);
 	BOOL res;
 	if(res = ff(context, MT(havePara), "-c"))
-		printf("%d %s\n", res,ff(context, MT(getPara), 1));
+		debug_log("%d %s\n", res,ff(context, MT(getPara), 1));
 
 	if(ff(context, MT(havePara), "-w"))
-		printf("%s\n", "context have -w para");
+		debug_log("%s\n", "context have -w para");
 
 	New(VTable, ret, nil);
+		New(VTable, ret2, nil);
 
 	ff(ret,"draw",nil);
 	ff(ret,MT(erase),nil);
@@ -30,6 +35,21 @@ int MCRuntime_runloop(MCContext* context){
 	if(ff(context, MT(havePara), "--release")){
 		release(ret);
 		release(ret_father);
-		release(context);
 	}
+
+	New(Bird, duck, DUCK_TYPE);
+	ff(duck, MT(fly), nil);
+
+	New(Bird, chicken, CHICKEN_TYPE);
+	ff(chicken, MT(fly), nil);
+
+	New(Bird, bird, NONE);
+	ff(bird, MT(fly), nil);
+
+	release(duck);
+		//release(duck);
+
+	release(chicken);
+	release(bird);
+
 }

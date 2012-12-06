@@ -9,11 +9,11 @@ MCInterface(VTableSuper, root);
 #define VAR
 #include "DrawableProtocol.h"
 MCInterfaceEnd(VTableSuper, init, xxx);
+method(VTableSuper, bye, xxx);
 
 method(VTableSuper, show, BOOL isPrint, char* str);
 method(VTableSuper, bmethod, int a, double b, char* c);
 method(VTableSuper, cmethod, int a, double b, char* c);
-method(VTableSuper, bye, xxx);
 
 #define METHOD
 #include "DrawableProtocol.h"
