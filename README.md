@@ -55,6 +55,7 @@ a set of C macro for OOP programming
 ####Macros and runtime functions
 
 ---
+
 1.MCInterface
 2.MCInterfaceEnd
 3.method
@@ -81,12 +82,13 @@ a set of C macro for OOP programming
 24.error_log
 25.debug_log
 26.runtime_log
+
 ---
 
 Total **25** words.[^1]
 
 ####protocol file
-	
+
 	DrawableProtocol.h
 
 		//please do not include the "MCRuntime.h"
@@ -190,4 +192,3 @@ it just give implements of the methods in protocol file. as you can guess it als
 to our .c files. we use this to simulate some **inherit** and **Polymorphism** feature.
 
 [^1]: the syntex is improving, maybe more/less keywords in the feature.
-
