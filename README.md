@@ -191,4 +191,12 @@ in other OOP language.
 it just give implements of the methods in protocol file. as you can guess it also can be **#include "xx.h"**
 to our .c files. we use this to simulate some **inherit** and **Polymorphism** feature.
 
+####method calling
+
+it just like the Objective-C. sending message instead of function call.
+
+	New(VTable, ret, nil);
+	ff(ret, MT(show), YES, "this is a super method called by child:VTable");
+
+
 [^1]: the syntex is improving, maybe more/less keywords in the feature.
