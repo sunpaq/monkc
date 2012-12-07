@@ -11,15 +11,15 @@ a set of C macro for OOP programming
 **Mocha** use "MC" as the prefix.
 #### declear interface - write in .h file
 
-  	MCInterface	( Classname, Supername );
-			int var;
+		MCInterface	( Classname, Supername );
+		int var;
 		MCInterfaceEnd( Classname, init, argument-list );
 		method(Classname, bye, xxx);
 		method(Classname, name1, arg-list);
 		method(Classname, name2, arg-list);
 	
 #### implement methods - write in .c file
-
+		
 		method_imp(Classname, name1, arg-list)
 		{
 			This(Classname);
@@ -55,37 +55,38 @@ a set of C macro for OOP programming
 ####Macros and runtime functions
 
 ---
-1.MCInterface( )
-2.MCInterfaceEnd( )
-3.method( )
-4.method_imp( )
-5.bind( )
-6.override( )
-7.set_super( )
-8.This( )
-9.setting_start( )
-10.setting_end( )
-11.response( )
-12.ff( )
-13.retain( )
-14.release( )
+1.MCInterface
+2.MCInterfaceEnd
+3.method
+4.method_imp
+5.bind
+6.override
+7.set_super
+8.This
+9.setting_start
+10.setting_end
+11.response
+12.ff
+13.retain
+14.release
 15.id
 16.xxx
 17.nil
 18.BOOL
 19.Float
-20.MCCast( )
-21.MCCastEnd( )
-22.protocol( )
-23.protocol_imp( )
-24.error_log( )
-25.debug_log( )
-25.runtime_log( )
+20.MCCast
+21.MCCastEnd
+22.protocol
+23.protocol_imp
+24.error_log
+25.debug_log
+26.runtime_log
 ---
 
 Total **25** words.[^1]
 
 ####protocol file
+	
 	DrawableProtocol.h
 
 		//please do not include the "MCRuntime.h"
