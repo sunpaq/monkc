@@ -3,9 +3,7 @@
 method_imp(VTable, amethod, xxx)
 {
 	This(VTable);
-	// printf("class name is: %s\n", this->isa->name);
-	// printf("method id is: %d\n", cmd);
-	// printf("parameters: a/b/c is: %d/%s/%1.2f\n", a, b, c);
+	debug_log("VTable amethod\n");
 	return 1;
 }
 
@@ -33,26 +31,25 @@ method_imp(VTable, bye, xxx)
 {
 	This(VTable);
 	//do clean job
-	release(this->super_instance);
+	//release(this->super_instance);
 }
 
 method_imp(VTable, init, xxx)
 {
 	This(VTable);
-	setting_start(this, "VTable");
+	SuperInit(VTableSuper, this, nil);
 
-		this->main_color="sliver";
-
-		New(VTableSuper, vtsuper, nil);
-		set_super(this, vtsuper);
-
+	if(set_class(this, "VTable", "VTableSuper")){
 		bind(this, MT(amethod), MA(VTable, amethod));
 		bind(this, MT(bmethod), MA(VTable, bmethod));
 		bind(this, MT(cmethod), MA(VTable, cmethod));
-
+		bind(this, MT(bye), MA(VTable, bye));
 		#define BIND
 		#include "DrawableProtocol.h"
-		override(this, MT(draw), MA(VTable, draw));
+	}
 
-	setting_end(this, MA(VTable, bye));
+	override(this, MT(draw), MA(VTable, draw));
+
+	this->main_color="sliver";
+	//this->info="this is a VTable info";
 }

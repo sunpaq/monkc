@@ -3,10 +3,15 @@
 #include "MCContext.h"
 #include "VTableSuper.h"
 
+#define VTable_field VTableSuper_field\
+	double d;\
+	Float e;\
+
 MCInterface(VTable, VTableSuper);
-	int a;
-	int b;
-	int c;
+	//copy the super vars here!
+	
+	//my vars
+	VTable_field
 #define VAR
 #include "DrawableProtocol.h"
 MCInterfaceEnd(VTable, init, xxx);

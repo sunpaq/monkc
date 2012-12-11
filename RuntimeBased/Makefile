@@ -1,7 +1,10 @@
-OBJS = MCContext.o MCRuntime.o VTable.o Main.o VTableSuper.o Bird.o
+OBJS = MCString.o MCContext.o MCRuntime.o VTable.o Main.o VTableSuper.o Bird.o
 
 exec:$(OBJS)
 	gcc -w -o exec $(OBJS)
+
+MCString.o:MCString.c MCString.h
+	gcc -w -c MCString.c
 
 MCContext.o:MCContext.c MCContext.h
 	gcc -w -c MCContext.c

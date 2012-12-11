@@ -2,8 +2,9 @@
 
 method_imp(VTableSuper, show, BOOL isPrint, char* str)
 {
+	This(VTableSuper);
 	if (isPrint){
-		debug_log("%s\n", str);
+		debug_log("%s:%s\n", this->info, str);
 		return YES;
 	}else
 		return NO;
@@ -45,17 +46,18 @@ method_imp(VTableSuper, bye, xxx)
 method_imp(VTableSuper, init, xxx)
 {
 	This(VTableSuper);
-	setting_start(this, "VTableSuper");
-		this->main_color = "super-red";
-
+	if(set_class(this, "VTableSuper", "root")){
 		bind(this, MT(show), MA(VTableSuper, show));
 		bind(this, MT(bmethod), MA(VTableSuper, bmethod));
 		bind(this, MT(cmethod), MA(VTableSuper, cmethod));
-
+		bind(this, MT(bye), MA(VTableSuper, bye));
 		#define BIND
 		#include "DrawableProtocol.h"
-		override(this, MT(draw), MA(VTableSuper, draw));
-		override(this, MT(erase), MA(VTableSuper, erase));
+	}
 
-	setting_end(this, MA(VTableSuper, bye));
+	override(this, MT(draw), MA(VTableSuper, draw));
+	override(this, MT(erase), MA(VTableSuper, erase));
+	
+	this->main_color = "super-red";
+	this->info="this is a VTableSuper info";
 }

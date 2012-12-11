@@ -45,17 +45,57 @@ method_imp(MCContext, havePara, char* para)
 	return NO;
 }
 
+method_imp(MCContext, showMenuAndGetSelectionChar, int count, ...)
+{
+	This(MCContext);
+	va_list ap;
+	va_start(ap, count);
+	int i;
+	for (i = 0; i < count; ++i)
+	{
+		char* arg = va_arg(ap, const char*);
+		printf("%d.%s\n", i+1, arg);
+	}
+	printf("%s\n", "your selection is?");
+	va_end(ap);
+	this->selectionChar = get_one_char();
+	return this->selectionChar;
+}
+
+method_imp(MCContext, showConfirmAndGetBOOL, const char* confirm)
+{
+	This(MCContext);
+	printf("%s (y/n)?\n", confirm);
+	char cf = get_one_char();
+	if (cf=='y'){
+		return YES;
+	}
+	return NO;
+}
+
+method_imp(MCContext, getUserInputString, char resultString[])
+{
+	This(MCContext);
+	get_chars_until_enter(resultString);
+}
+
 method_imp(MCContext, init, int argc, char** argv)
 {
 	This(MCContext);
-	setting_start(this, "MCContext");
-		this->argc=argc;
-		this->argv=argv;
+	if(set_class(this, "MCContext", "root")){
 
 		bind(this, MT(dump), MA(MCContext, dump));
 		bind(this, MT(getPara), MA(MCContext, getPara));
 		bind(this, MT(paraEqual), MA(MCContext, paraEqual));
 		bind(this, MT(havePara), MA(MCContext, havePara));
+		bind(this, MT(showMenuAndGetSelectionChar), MA(MCContext, showMenuAndGetSelectionChar));
+		bind(this, MT(showConfirmAndGetBOOL), MA(MCContext, showConfirmAndGetBOOL));
+		bind(this, MT(getUserInputString), MA(MCContext, getUserInputString));
 
-	setting_end(this, MA(MCContext, bye));
+		bind(this, MA(MCContext, bye), MA(MCContext, bye));
+	}
+
+	this->argc=argc;
+	this->argv=argv;
+	this->selectionChar=0;
 }

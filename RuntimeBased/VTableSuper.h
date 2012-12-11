@@ -2,10 +2,13 @@
 #define __VTableSuper__
 #include "MCRuntime.h"
 
+#define VTableSuper_field int a;\
+	int b;\
+	int c;\
+	char* info;\
+
 MCInterface(VTableSuper, root);
-	int a;
-	int b;
-	int c;
+	VTableSuper_field
 #define VAR
 #include "DrawableProtocol.h"
 MCInterfaceEnd(VTableSuper, init, xxx);
