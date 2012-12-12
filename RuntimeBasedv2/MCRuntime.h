@@ -10,13 +10,19 @@ typedef double Float;
 typedef int BOOL;
 #define YES 1
 #define NO 0
-#define MAX_METHOD_NUM 100
-#define MAX_CLASS_NUM 1000
-
 #define xxx void* xxx
 #define nil ((void*)0)
 #define funcptr(name) id (*name)()
 #define funcarray(name) id (*name[MAX_METHOD_NUM])(id)
+
+#define MAX_METHOD_NUM 100
+#define MAX_CLASS_NUM 1000
+//root class
+#define INIT_METHOD_NAME "init"
+#define ROOT_CLASS_NAME "MCObject"
+#define _MCObject //just a blank mark for syntex
+id MCObject_init(void* const self, char* cmd, xxx);
+
 //meta class, the struct is a node for inherit hierarchy
 typedef struct MCClass_tag
 {
@@ -32,20 +38,37 @@ typedef struct {
 	id data;
 }MCObject;
 //for class define
-#define MCInterface(cls, super) typedef struct{ MCClass* isa; int ref_count; id data;
-#define MCInterfaceEnd(cls, cmd, ...) }cls;extern id cls##_init(void* const self, char* cmd, __VA_ARGS__)
+#define constructor(name, ...) _root;\
+typedef struct{\
+	MCClass* isa;\
+	int ref_count;\
+	id data;\
+	_##name;\
+}name;\
+extern id name##_init(void* const self, char* cmd, __VA_ARGS__)
+
+#define constructor_imp(cls, ...) _root;\
+id cls##_init(void* const self, char* cmd, __VA_ARGS__)
+
+#define New(cls, obj, ...)  error_log("----New: %s\n",#cls);\
+							cls* obj = (cls*)malloc(sizeof(cls));\
+							cls##_init(obj, 0, __VA_ARGS__)
+//for method
 #define method(cls, name, ...) extern id cls##_##name(void* const self, char* cmd, __VA_ARGS__)
-#define method_imp(cls, name, ...) id cls##_##name(void* const self, char* cmd, __VA_ARGS__)
-#define This(cls) cls* this = (cls*) self
-//MA: Method Address  MT: Method Tag
-#define MA(cls, name) cls##_##name
-#define MT(value) #value
-#define New(cls, obj, ...) error_log("----New: %s\n",#cls);cls* obj = (cls*)malloc(sizeof(cls));cls##_##init(obj, 0, __VA_ARGS__)
-#define SuperInit(cls, obj, ...) cls##_##init(obj, 0, __VA_ARGS__)
+#define method_imp(cls, name, ...)    id cls##_##name(void* const self, char* cmd, __VA_ARGS__)
+
+#define This(cls)				cls* this = (cls*) self
+#define Chis(cls, super, ...)   cls* this = (cls*) self;\
+								super##_init(this, 0, __VA_ARGS__)
+
+//MK: Method Key  MV: Method Value
+#define MV(cls, name) cls##_##name
+#define MK(value) #value
+
 //for protocol define
 #define MCCast(cls) typedef struct{ MCClass* isa; int ref_count; id data;
 #define MCCastEnd(cls) }cls;
-#define protocol(cls, name, ...) //extern id cls##_##name(void* const self, char* cmd, __VA_ARGS__)
+#define protocol(cls, name, ...)
 #define protocol_imp(cls, name, ...) static id cls##_##name(void* const self, char* cmd, __VA_ARGS__)
 
 //runtime parts

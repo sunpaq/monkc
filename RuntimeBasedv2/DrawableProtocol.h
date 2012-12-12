@@ -1,47 +1,16 @@
 //please do not include the "MCRuntime.h"
 //in protocol file!!!
 
-#ifdef VAR
-	char* main_color;
-#undef VAR
-#endif
-//----------------------------------------------------------
 #ifdef METHOD 
 protocol(DrawableProtocol, draw, xxx);
 protocol(DrawableProtocol, erase, xxx);
 protocol(DrawableProtocol, redraw, xxx);
 #undef METHOD
 #endif
-//-----------------------------------------------------------
-#ifdef IMPLEMENT
-MCCast(DrawableProtocol);
-	char* main_color;
-MCCastEnd(DrawableProtocol);
 
-protocol_imp(DrawableProtocol, draw, xxx)
-{
-	This(DrawableProtocol);
-	this->main_color = "default-red";
-	debug_log("%s:%s\n", "DrawableProtocol default draw", this->main_color);
-}
-protocol_imp(DrawableProtocol, erase, xxx)
-{
-	This(DrawableProtocol);
-	this->main_color = "default-yellow";
-	debug_log("%s:%s\n", "DrawableProtocol default erase", this->main_color);
-}
-protocol_imp(DrawableProtocol, redraw, xxx)
-{
-	This(DrawableProtocol);
-	this->main_color = "default-blue";
-	debug_log("%s:%s\n", "DrawableProtocol default redraw", this->main_color);
-}
-#undef IMPLEMENT
-#endif
-//----------------------------------------------------------
 #ifdef BIND
-bind(this, MT(draw), MA(DrawableProtocol, draw));
-bind(this, MT(erase), MA(DrawableProtocol, erase));
-bind(this, MT(redraw), MA(DrawableProtocol, redraw));
+bind(this, MK(draw), MV(DrawableProtocol, draw));
+bind(this, MK(erase), MV(DrawableProtocol, erase));
+bind(this, MK(redraw), MV(DrawableProtocol, redraw));
 #undef BIND
 #endif

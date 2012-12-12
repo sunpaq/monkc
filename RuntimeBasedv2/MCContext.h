@@ -1,13 +1,13 @@
-#ifndef __MCContext__
-#define __MCContext__
 #include "MCRuntime.h"
 #include "MCString.h"
 
-MCInterface(MCContext, root);
-	int argc;
-	char** argv;
-	char selectionChar;
-MCInterfaceEnd(MCContext, init, int argc, char** argv);
+#ifndef _MCContext
+#define _MCContext _MCObject;\
+	int argc;\
+	char** argv;\
+	char selectionChar;\
+
+constructor(MCContext, int argc, char** argv);
 
 method(MCContext, bye, xxx);
 method(MCContext, dump, xxx);

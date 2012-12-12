@@ -2,41 +2,8 @@
 #include "MCContext.h"
 //default we set log level to debug
 LOG_LEVEL = DEBUG;
-static unsigned _hash(char *s);
-static unsigned _classobj_hash(char *s);
-
-static void _nil_check(MCObject* const self, 
-	char* log1, char* log2, char* log3, 
-	char* log4, char* log5, char* log6);
-
-static void _clear_method_list(id const self_in);
-static void _init_class_list();
-static void _clear_class_list();
-static MCClass* mc_classobj_pool[MAX_CLASS_NUM];
-
-static const int NOT_RESPONSE = -1;
-static int _response_to_method(id const self_in, char *key);
-
-static void _destroy(id const instance);
-
-int main(int argc, char const *argv[])
-{
-	_init_class_list();
-
-		LOG_LEVEL = VERBOSE;
-		New(MCContext, context, argc, argv);
-		LOG_LEVEL = VERBOSE;
-
-			int res = MCContext_runloop(context);
-
-		release(context);
-
-	_clear_class_list();
-	return res;
-}
-
+//log colors
 static char* LOG_FMT = "%s%s\033[0m";
-
 static char* LOG_COLOR_NONE="\033[0m";
 static char* LOG_COLOR_BLACK="\033[0;30m";
 static char* LOG_COLOR_DARK_GRAY="\033[1;30m";
@@ -55,7 +22,50 @@ static char* LOG_COLOR_YELLOW="\033[1;33m";
 static char* LOG_COLOR_LIGHT_GRAY="\033[0;37m";
 static char* LOG_COLOR_WHITE="\033[1;37m";
 
+//global var set in _init_class_list
+static unsigned _init_method_hashkey;
+static unsigned _hash(char *s);
+static unsigned _classobj_hash(char *s);
+static void _nil_check(MCObject* const self, 
+	char* log1, char* log2, char* log3, 
+	char* log4, char* log5, char* log6);
+static void _clear_method_list(id const self_in);
+static void _init_class_list();
+static void _clear_class_list();
+static MCClass* mc_classobj_pool[MAX_CLASS_NUM];
+static const int NOT_RESPONSE = -1;
+static int _response_to_method(id const self_in, char *key);
+static void _destroy(id const instance);
 
+//C-main
+
+int main(int argc, char const *argv[])
+{
+	#ifndef __GNUC__
+	printf("%s\n%s\n%s\n%s\n%s\n%s\n",
+	"I am sorry, as the Mocha use some GNU C extentions which is very important.",
+	"your code complied in non-gcc complier will not run correctlly.",
+	"so i stop at here. please consider to use gcc. I construct Mocha use gcc-4.6.1",
+	"if you are using a new Mac. you can install a gcc from here:",
+	"",
+	"https://github.com/kennethreitz/osx-gcc-installer");
+	exit(-1);
+	#endif
+
+	_init_class_list();
+		LOG_LEVEL = VERBOSE;
+		New(MCContext, context, argc, argv);
+		LOG_LEVEL = VERBOSE;
+			int res = MCContext_runloop(context);
+		release(context);
+	_clear_class_list();
+	return res;
+}
+
+id MCObject_init(void* const self, char* cmd, xxx)
+{
+	//do nothing
+}
 
 void error_log(char* fmt, ...)
 {
@@ -68,23 +78,6 @@ void error_log(char* fmt, ...)
 		__builtin_apply(printf, args, 96);
 	}
 }
-
-/*
-char* color_fmt(char* color, char* fmt)
-{
-	static char* string;
-	str
-}
-
-void error_color_log(int no_use, ...)
-{
-	if(LOG_LEVEL!=SILENT){
-
-		printf(LOG_FMT, LOG_COLOR_RED, "[Error] - ");
-		printf(LOG_FMT, LOG_COLOR_RED, str);
-	}
-}
-*/
 
 void debug_log(char* fmt, ...)
 {
@@ -108,6 +101,7 @@ void runtime_log(char* fmt, ...)
 		void *args;
 		args = __builtin_apply_args();
 		printf(LOG_FMT, LOG_COLOR_DARK_GRAY, "[RTime] - ");
+		//printf("%s", "[RTime] - ");
 		__builtin_apply(printf, args, 96);
 	}
 }
@@ -197,7 +191,7 @@ void release(id const instance)
 	}
 	if (this->ref_count==0)
 	{
-		ff(this, MT(bye), nil);
+		ff(this, MK(bye), nil);
 		_destroy(this);
 	}
 }
@@ -390,9 +384,11 @@ static void _init_class_list()
 		mc_classobj_pool[i]==nil;
 
 	MCClass* class = (MCClass*)malloc(sizeof(MCClass));
-	class->name="root";
+	class->name = ROOT_CLASS_NAME;
 	class->super=nil;
-	mc_classobj_pool[_classobj_hash("root")]=class;
+	mc_classobj_pool[_classobj_hash(ROOT_CLASS_NAME)]=class;
+	//for init method judgement
+	_init_method_hashkey=_hash(INIT_METHOD_NAME);
 }
 
 static void _clear_class_list()
@@ -427,6 +423,5 @@ static void _destroy(id const instance)
 		"please call set_class() at the very begin of init method.");
 
 	runtime_log("----Bye: %s goodbye!\n", this->isa->name);
-	//free(this->isa);//free class obj
 	free(this);//free instance
 }

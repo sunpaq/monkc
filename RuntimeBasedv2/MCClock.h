@@ -1,10 +1,10 @@
-#ifndef __MCClock__
-#define __MCClock__
 #include <time.h>
 
-MCInterface(MCClock, root);
+#ifndef _MCClock
+#define _MCClock _MCObject;\
 
-MCInterfaceEnd(MCClock, init, xxx);
+constructor(MCClock, xxx);
+
 method(MCClock, getCurrentTimeString, xxx);
 
 #endif

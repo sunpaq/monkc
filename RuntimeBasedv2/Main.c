@@ -10,23 +10,23 @@ void menu_drive_test(MCContext* const context);
 /* main */
 int MCContext_runloop(MCContext* const context){
 	mocha_syntex_test(context);
-	menu_drive_test(context);
+	//menu_drive_test(context);
 
 }
 
 void menu_drive_test(MCContext* const context)
 {
-	int selection = ff(context, MT(showMenuAndGetSelectionChar), 3, "male", "female", "double");
+	int selection = ff(context, MK(showMenuAndGetSelectionChar), 3, "male", "female", "double");
 	//printf("selection is: %c\n", putchar(selection));
 	//printf("context->selectionChar is: %c\n", context->selectionChar);
 
-	while(ff(context, MT(showConfirmAndGetBOOL), "are you sure")!=YES){
-		ff(context, MT(showMenuAndGetSelectionChar), 3, "male", "female", "double");
+	while(ff(context, MK(showConfirmAndGetBOOL), "are you sure")!=YES){
+		ff(context, MK(showMenuAndGetSelectionChar), 3, "male", "female", "double");
 	}
 	//printf("%d\n", bb);
 	printf("%s\n", "your name please:");
 	char name[100];
-	ff(context, MT(getUserInputString), name);
+	ff(context, MK(getUserInputString), name);
 	
 	char* sex;
 	switch(selection){
@@ -49,15 +49,15 @@ void mocha_syntex_test(MCContext* const context)
 	LOG_LEVEL=VERBOSE;
 
 	//output all cmdline parameters
-	ff(context, MT(dump), nil);
+	ff(context, MK(dump), nil);
 
 	//check whether have cmdline parameter "-c"
 	BOOL res;
-	if(res = ff(context, MT(havePara), "-c"))
-		debug_log("%d %s\n", res,ff(context, MT(getPara), 1));
+	if(res = ff(context, MK(havePara), "-c"))
+		debug_log("%d %s\n", res,ff(context, MK(getPara), 1));
 
 	//check whether have cmdline parameter "-w"
-	if(ff(context, MT(havePara), "-w"))
+	if(ff(context, MK(havePara), "-w"))
 		debug_log("%s\n", "context have -w para");
 
 	//twice new test
@@ -68,41 +68,41 @@ void mocha_syntex_test(MCContext* const context)
 	ff(ret2,"draw",nil);
 
 	//protocol method call
-	ff(ret,MT(erase),nil);
-	ff(ret,MT(redraw),nil);
+	ff(ret,MK(erase),nil);
+	ff(ret,MK(redraw),nil);
 	New(VTableSuper ,ret_father, nil);
-	ff(ret_father, MT(draw), nil);
-	ff(ret_father, MT(erase), nil);
-	ff(ret_father, MT(redraw), nil);
+	ff(ret_father, MK(draw), nil);
+	ff(ret_father, MK(erase), nil);
+	ff(ret_father, MK(redraw), nil);
 
 	//nested method call
-	ff(ret, MT(bmethod), 
-		ff(ret,MT(amethod),nil), 
+	ff(ret, MK(bmethod), 
+		ff(ret,MK(amethod),nil), 
 		3.1415, "this is amethod");
 
 	//inherit test
-	ff(ret, MT(show), YES, "this is a super method called by child:VTable");
-	ff(ret2, MT(show), YES, "this is a super method called by child:VTable ret2");
-
+	ff(ret, MK(show), YES, "this is a super method called by child:VTable");
+	ret2->info="Changed Info By VTable";
+	ff(ret2, MK(show), YES, "this is a super method called by child:VTable ret2");
 
 	//polymorphism test
-	New(Bird, duck, DUCK_TYPE);
-	ff(duck, MT(fly), nil);
+	New(Bird, b1, DUCK_TYPE);
+	ff(b1, MK(fly), nil);
 
-	New(Bird, chicken, CHICKEN_TYPE);
-	ff(chicken, MT(fly), nil);
+	New(Bird, b2, CHICKEN_TYPE);
+	ff(b2, MK(fly), nil);
 
-	New(Bird, bird, NONE);
-	ff(bird, MT(fly), nil);
+	New(Bird, b3, NONE);
+	ff(b3, MK(fly), nil);
 
 	//clean up controlled by cmdline parameter
-	if(ff(context, MT(havePara), "--release")){
+	if(ff(context, MK(havePara), "--release")){
 		release(ret);
 		release(ret2);
 		release(ret_father);
-		release(duck);
-		release(chicken);
-		release(bird);
+		release(b1);
+		release(b2);
+		release(b3);
 	}
 
 	LOG_LEVEL=DEBUG;

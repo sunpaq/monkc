@@ -23,18 +23,21 @@ method_imp(VTableSuper, cmethod, int a, double b, char* c)
 	debug_log("super method c3: a/b/c is:%d/%1.2f/%s\n", a, b, c);
 }
 
-#define IMPLEMENT
-#include "DrawableProtocol.h"
-protocol_imp(VTableSuper, draw, xxx)
+protocol_imp(DrawableProtocol, draw, xxx)
 {
 	This(VTableSuper);
 	debug_log("%s:%s\n", "VTableSuper draw", this->main_color);
 }
 
-protocol_imp(VTableSuper, erase, xxx)
+protocol_imp(DrawableProtocol, erase, xxx)
 {
 	This(VTableSuper);
 	debug_log("%s:%s\n", "VTableSuper erase", this->main_color);
+}
+
+protocol_imp(DrawableProtocol, redraw, xxx){
+	This(VTableSuper);
+	debug_log("%s:%s\n", "VTableSuper redraw", this->main_color);
 }
 
 method_imp(VTableSuper, bye, xxx)
@@ -43,20 +46,21 @@ method_imp(VTableSuper, bye, xxx)
 	//do clean here
 }
 
-method_imp(VTableSuper, init, xxx)
+constructor_imp(VTableSuper, xxx)
 {
-	This(VTableSuper);
-	if(set_class(this, "VTableSuper", "root")){
-		bind(this, MT(show), MA(VTableSuper, show));
-		bind(this, MT(bmethod), MA(VTableSuper, bmethod));
-		bind(this, MT(cmethod), MA(VTableSuper, cmethod));
-		bind(this, MT(bye), MA(VTableSuper, bye));
+	Chis(VTableSuper, MCObject, nil);
+
+	if(set_class(this, "VTableSuper", "MCObject")){
+		bind(this, MK(show), MV(VTableSuper, show));
+		bind(this, MK(bmethod), MV(VTableSuper, bmethod));
+		bind(this, MK(cmethod), MV(VTableSuper, cmethod));
+		bind(this, MK(bye), MV(VTableSuper, bye));
 		#define BIND
 		#include "DrawableProtocol.h"
 	}
 
-	override(this, MT(draw), MA(VTableSuper, draw));
-	override(this, MT(erase), MA(VTableSuper, erase));
+	override(this, MK(draw), MV(DrawableProtocol, draw));
+	override(this, MK(erase), MV(DrawableProtocol, erase));
 	
 	this->main_color = "super-red";
 	this->info="this is a VTableSuper info";

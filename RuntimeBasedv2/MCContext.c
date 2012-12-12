@@ -79,20 +79,20 @@ method_imp(MCContext, getUserInputString, char resultString[])
 	get_chars_until_enter(resultString);
 }
 
-method_imp(MCContext, init, int argc, char** argv)
+constructor_imp(MCContext, int argc, char** argv)
 {
-	This(MCContext);
-	if(set_class(this, "MCContext", "root")){
+	Chis(MCContext, MCObject, nil);
+	if(set_class(this, "MCContext", "MCObject")){
 
-		bind(this, MT(dump), MA(MCContext, dump));
-		bind(this, MT(getPara), MA(MCContext, getPara));
-		bind(this, MT(paraEqual), MA(MCContext, paraEqual));
-		bind(this, MT(havePara), MA(MCContext, havePara));
-		bind(this, MT(showMenuAndGetSelectionChar), MA(MCContext, showMenuAndGetSelectionChar));
-		bind(this, MT(showConfirmAndGetBOOL), MA(MCContext, showConfirmAndGetBOOL));
-		bind(this, MT(getUserInputString), MA(MCContext, getUserInputString));
+		bind(this, MK(dump), MV(MCContext, dump));
+		bind(this, MK(getPara), MV(MCContext, getPara));
+		bind(this, MK(paraEqual), MV(MCContext, paraEqual));
+		bind(this, MK(havePara), MV(MCContext, havePara));
+		bind(this, MK(showMenuAndGetSelectionChar), MV(MCContext, showMenuAndGetSelectionChar));
+		bind(this, MK(showConfirmAndGetBOOL), MV(MCContext, showConfirmAndGetBOOL));
+		bind(this, MK(getUserInputString), MV(MCContext, getUserInputString));
 
-		bind(this, MA(MCContext, bye), MA(MCContext, bye));
+		bind(this, MK(bye), MV(MCContext, bye));
 	}
 
 	this->argc=argc;

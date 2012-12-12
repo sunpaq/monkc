@@ -16,21 +16,22 @@ method_imp(Chicken, fly, xxx)
 {
 	debug_log("%s\n", "Bird:Chicken JiJiJi fly");
 }
-method_imp(Bird, init, int type)
+
+constructor_imp(Bird, int type)
 {
-	This(Bird);
+	Chis(Bird, MCObject, nil);
 	//bind
-	if(set_class(this, "Bird", "root")){
-		bind(this, MT(fly), MA(Bird, fly));
-		bind(this, MT(bye), MA(Bird, bye));
+	if(set_class(this, "Bird", "MCObject")){
+		bind(this, MK(fly), MV(Bird, fly));
+		bind(this, MK(bye), MV(Bird, bye));
 	}
 	//override
 	if(type==DUCK_TYPE){
 		this->name="Bird:Duck";
-		override(this, MT(fly), MA(Duck, fly));
+		override(this, MK(fly), MV(Duck, fly));
 	}else if(type==CHICKEN_TYPE){
 		this->name="Bird:Chicken";
-		override(this, MT(fly), MA(Chicken, fly));
+		override(this, MK(fly), MV(Chicken, fly));
 	}
 	//var init
 	this->type=type;
