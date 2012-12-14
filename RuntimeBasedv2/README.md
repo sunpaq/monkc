@@ -11,12 +11,18 @@ a set of C macro for OOP programming
 **Mocha** use "MC" as the prefix.
 #### declear interface - write in .h file
 
-		MCInterface	( Classname, Supername );
-		int var;
-		MCInterfaceEnd( Classname, init, argument-list );
+		#ifndef _Classname
+		#define _Classname _Supername;\
+			type var1;\
+			type var2;\
+			type var3;\
+
 		method(Classname, bye, xxx);
 		method(Classname, name1, arg-list);
 		method(Classname, name2, arg-list);
+		constructor( Classname, argument-list );
+
+		#endif
 	
 #### implement methods - write in .c file
 		
@@ -38,34 +44,32 @@ a set of C macro for OOP programming
 			//do clean work
 		}
 
-		method_imp(Classname, init, argument-list )
+		constructor_imp(Classname, argument-list )
 		{
-			This(Classname);
-			setting_start(this, "Classname");
-				New(Supername, super, argument-list);
-				set_super(this, super);
+			Chis(Classname, Supername, argument-list);
 
-				bind(this, MT(name1), MA(Classname, name1));
-				bind(this, MT(name2), MA(Classname, name2));
-				override(this, MT(super_method1), MA(Supername, super_method1));
-
-			setting_end(this, MA(Classname, bye));
+			if(set_class(this, "Classname", "Supername")){
+				bind(this, MK(name1), MV(Classname, name1));
+				bind(this, MK(name2), MV(Classname, name2));
+				bind(this, MK(bye), MV(Classname, bye));
+				override(this, MK(super_method1), MV(Supername, super_method1));
+			}
 		}
 
 ####Macros and runtime functions
 
 ---
 
-1.MCInterface
-2.MCInterfaceEnd
-3.method
-4.method_imp
-5.bind
-6.override
-7.set_super
+1._Classname
+2.constructor
+3.constructor_imp
+4.method
+5.method_imp
+6.bind
+7.override
 8.This
-9.setting_start
-10.setting_end
+9.Chis
+10.set_class
 11.response
 12.ff
 13.retain
@@ -94,44 +98,13 @@ Total **25** words.[^1]
 		//please do not include the "MCRuntime.h"
 		//in protocol file!!!
 
-		#ifdef VAR
-			char* main_color;
-		#undef VAR
-		#endif
-		//----------------------------------------------------------
 		#ifdef METHOD 
 		protocol(DrawableProtocol, draw, xxx);
 		protocol(DrawableProtocol, erase, xxx);
 		protocol(DrawableProtocol, redraw, xxx);
 		#undef METHOD
 		#endif
-		//-----------------------------------------------------------
-		#ifdef IMPLEMENT
-		MCCast(DrawableProtocol);
-			char* main_color;
-		MCCastEnd(DrawableProtocol);
 
-		protocol_imp(DrawableProtocol, draw, xxx)
-		{
-			This(DrawableProtocol);
-			this->main_color = "default-red";
-			debug_log("%s:%s\n", "DrawableProtocol default draw", this->main_color);
-		}
-		protocol_imp(DrawableProtocol, erase, xxx)
-		{
-			This(DrawableProtocol);
-			this->main_color = "default-yellow";
-			debug_log("%s:%s\n", "DrawableProtocol default erase", this->main_color);
-		}
-		protocol_imp(DrawableProtocol, redraw, xxx)
-		{
-			This(DrawableProtocol);
-			this->main_color = "default-blue";
-			debug_log("%s:%s\n", "DrawableProtocol default redraw", this->main_color);
-		}
-		#undef IMPLEMENT
-		#endif
-		//----------------------------------------------------------
 		#ifdef BIND
 		bind(this, MT(draw), MA(DrawableProtocol, draw));
 		bind(this, MT(erase), MA(DrawableProtocol, erase));
@@ -139,12 +112,7 @@ Total **25** words.[^1]
 		#undef BIND
 		#endif
 
-######the VAR and METHOD part (include in .h file):
-
-		#ifdef VAR
-			char* main_color;
-		#undef VAR
-		#endif
+######the METHOD part (include in .h file):
 
 		#ifdef METHOD 
 		protocol(DrawableProtocol, draw, xxx);
@@ -157,11 +125,6 @@ it just list the vars, which is just as decleard in the interface of a class.
 
 the purpose of doing this is: we can use **#include "xx.h"** to import them direct in our class interface ! just like this:
 
-	MCInterface	( Classname )
-		int var;
-		#define VAR
-		#include "xx.h"
-	MCInterfaceEnd( Classname, init, argument-list )
 	#define METHOD
 	#include "xx.h"
 	method( Classname, name1, argument-list )
@@ -169,23 +132,21 @@ the purpose of doing this is: we can use **#include "xx.h"** to import them dire
 the result of doing this is amazing ! we have already have some feature called: "interface" or "abstract class"
 in other OOP language.
 
-######the IMPLEMENT and BIND part (include in .c file):
+######the BIND part (include in .c file):
 
 	
 	method_imp(Classname, name1, xxx)
 	{
 		printf("this is name1\n");
 	}
-	#define IMPLEMENT
-	#include "xx.h"
 
 	method_imp(Classname, init, xxx)
 	{
-		setting_start();
+		if(set_class()){
 			bind();
 			#define BIND
 			#include "xx.h"
-		setting_end();
+		}
 	}
 
 it just give implements of the methods in protocol file. as you can guess it also can be **#include "xx.h"**
@@ -198,6 +159,26 @@ it just like the Objective-C. sending message instead of function call.
 	New(VTable, ret, nil);
 	ff(ret, MT(show), YES, "this is a super method called by child:VTable");
 
+####TODO list:
+
+	1. implement the "__builtin_apply" extension on non-gcc platform
+	   make the Mocha portable.
+
+	2. wrap many popular C/UNIX libs:
+	   time.h       ->  MCClock.h
+	   pthread.h    ->  MCThread.h
+	   string.h     ->  MCString.h
+	   sys/socket.h ->  MCSocket.h
+	   math.h       ->  MCMath.h
+
+	3. a parse and some lightly added syntex to make the class define macros looks better
+
+	4. test on clang-LLVM. make sure it can works on the newst technology
+
+	5. implement a "TYPE" property of class. 
+	   to diffrences sigleton and multiton classes
+
+	6. more detailed "evolution" document.
 
 [^1]: the syntex is improving, maybe more/less keywords in the feature.
 
