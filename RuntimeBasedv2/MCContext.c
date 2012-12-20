@@ -1,13 +1,35 @@
 #include "MCContext.h"
 
-method_imp(MCContext, bye, xxx)
+static struct privateData
+{
+	/* data */
+};
+
+static char get_one_char()
+{
+	char cf = getchar();
+	while(getchar()!='\n');//clear the buff
+	return cf;
+}
+
+static void get_chars_until_enter(char resultString[])
+{
+	char tc;
+	int i=0;
+	while((tc=getchar())!='\n'){
+		resultString[i]=tc;
+		i++;
+	}
+	resultString[i]='\0';
+}
+
+method(MCContext, bye, xxx)
 {
 	runtime_log("%s\n", "MCContext goodbye");
 }
 
-method_imp(MCContext, dump, xxx)
+method(MCContext, dumpParas, xxx)
 {
-	This(MCContext);
 	int i;
 	for (i = 0; i < this->argc; ++i)
 	{
@@ -15,24 +37,22 @@ method_imp(MCContext, dump, xxx)
 	}
 }
 
-method_imp(MCContext, getPara, int index)
+method(MCContext, getPara, int index)
 {
-	This(MCContext);
 	return this->argv[index];
 }
 
-method_imp(MCContext, paraEqual, int index, char* para)
+method(MCContext, isIndexedParaEqualTo, int index, char* para)
 {
-	This(MCContext);
 	char* para1 = this->argv[index];
 	if (para1==nil)return NO;
 	if (strcmp(para1, para)==0)return YES;
 	else return NO;
 }
 
-method_imp(MCContext, havePara, char* para)
+method(MCContext, isHavePara, char* para)
 {
-	This(MCContext);if(this==nil)return NO;
+	if(this==nil)return NO;
 	int i, res;
 	for (i = 0; i < this->argc; ++i)
 	{
@@ -45,9 +65,8 @@ method_imp(MCContext, havePara, char* para)
 	return NO;
 }
 
-method_imp(MCContext, showMenuAndGetSelectionChar, int count, ...)
+method(MCContext, showMenuAndGetSelectionChar, int count, ...)
 {
-	This(MCContext);
 	va_list ap;
 	va_start(ap, count);
 	int i;
@@ -62,9 +81,8 @@ method_imp(MCContext, showMenuAndGetSelectionChar, int count, ...)
 	return this->selectionChar;
 }
 
-method_imp(MCContext, showConfirmAndGetBOOL, const char* confirm)
+method(MCContext, showConfirmAndGetBOOL, const char* confirm)
 {
-	This(MCContext);
 	printf("%s (y/n)?\n", confirm);
 	char cf = get_one_char();
 	if (cf=='y'){
@@ -73,21 +91,21 @@ method_imp(MCContext, showConfirmAndGetBOOL, const char* confirm)
 	return NO;
 }
 
-method_imp(MCContext, getUserInputString, char resultString[])
+method(MCContext, getUserInputString, char resultString[])
 {
-	This(MCContext);
 	get_chars_until_enter(resultString);
 }
 
-constructor_imp(MCContext, int argc, char** argv)
+constructor(MCContext, int argc, char** argv)
 {
-	Chis(MCContext, MCObject, nil);
+	super_init(this, MCObject, nil);
+
 	if(set_class(this, "MCContext", "MCObject")){
 
-		bind(this, MK(dump), MV(MCContext, dump));
+		bind(this, MK(dumpParas), MV(MCContext, dumpParas));
 		bind(this, MK(getPara), MV(MCContext, getPara));
-		bind(this, MK(paraEqual), MV(MCContext, paraEqual));
-		bind(this, MK(havePara), MV(MCContext, havePara));
+		bind(this, MK(isIndexedParaEqualTo), MV(MCContext, isIndexedParaEqualTo));
+		bind(this, MK(isHavePara), MV(MCContext, isHavePara));
 		bind(this, MK(showMenuAndGetSelectionChar), MV(MCContext, showMenuAndGetSelectionChar));
 		bind(this, MK(showConfirmAndGetBOOL), MV(MCContext, showConfirmAndGetBOOL));
 		bind(this, MK(getUserInputString), MV(MCContext, getUserInputString));
@@ -98,4 +116,6 @@ constructor_imp(MCContext, int argc, char** argv)
 	this->argc=argc;
 	this->argv=argv;
 	this->selectionChar=0;
+
+	return this;
 }
