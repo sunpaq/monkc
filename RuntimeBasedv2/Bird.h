@@ -5,10 +5,10 @@
 	char* name;\
 	int type;\
 
-constructor(Bird, int type);
-
+class(Bird);
 method(Bird, bye, xxx);
 method(Bird, fly, xxx);
+constructor(Bird, int type);
 
 #define DUCK_TYPE 0
 #define CHICKEN_TYPE 1
