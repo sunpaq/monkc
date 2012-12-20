@@ -17,6 +17,7 @@ a set of C macro for OOP programming
 			type var2;\
 			type var3;\
 
+		class(Classname);
 		method(Classname, bye, xxx);
 		method(Classname, name1, arg-list);
 		method(Classname, name2, arg-list);
@@ -26,27 +27,24 @@ a set of C macro for OOP programming
 	
 #### implement methods - write in .c file
 		
-		method_imp(Classname, name1, arg-list)
+		method(Classname, name1, arg-list)
 		{
-			This(Classname);
 			this->var++;
 		}
 			
-		method_imp(Classname, name2, arg-list)
+		method(Classname, name2, arg-list)
 		{
-			This(Classname);
 			this->var--;
 		}
 		
-		method_imp(Classname, bye, xxx)
+		method(Classname, bye, xxx)
 		{
-			This(Classname);
 			//do clean work
 		}
 
-		constructor_imp(Classname, argument-list )
+		constructor(Classname, argument-list )
 		{
-			Chis(Classname, Supername, argument-list);
+			super_init(this, Supername, argument-list);
 
 			if(set_class(this, "Classname", "Supername")){
 				bind(this, MK(name1), MV(Classname, name1));
@@ -60,36 +58,50 @@ a set of C macro for OOP programming
 
 ---
 
-1._Classname
-2.constructor
-3.constructor_imp
-4.method
-5.method_imp
-6.bind
-7.override
-8.This
-9.Chis
-10.set_class
+1. _Classname
+2. class
+3. method
+4. constructor
+
+5. super_init
+6. set_class
+7. bind
+8. override
+
+9. new
+10.call
 11.response
 12.ff
-13.retain
-14.release
-15.id
-16.xxx
-17.nil
-18.BOOL
-19.Float
-20.MCCast
-21.MCCastEnd
-22.protocol
-23.protocol_imp
-24.error_log
-25.debug_log
-26.runtime_log
+13.fr
+
+14.load_class
+15.get_class
+16.set_class
+
+17.retain
+18.release
+
+19.id
+20.xxx
+21.nil
+22.BOOL
+23.String
+24.Float
+25.MV
+26.MK
+27.Handle
+
+28.protocol
+29. This
+30. Cast
+
+31.error_log
+32.debug_log
+33.runtime_log
 
 ---
 
-Total **25** words.[^1]
+Total **33** words.[^1]
 
 ####protocol file
 
@@ -135,12 +147,12 @@ in other OOP language.
 ######the BIND part (include in .c file):
 
 	
-	method_imp(Classname, name1, xxx)
+	method(Classname, name1, xxx)
 	{
 		printf("this is name1\n");
 	}
 
-	method_imp(Classname, init, xxx)
+	method(Classname, init, xxx)
 	{
 		if(set_class()){
 			bind();
@@ -175,10 +187,11 @@ it just like the Objective-C. sending message instead of function call.
 
 	4. test on clang-LLVM. make sure it can works on the newst technology
 
-	5. implement a "TYPE" property of class. 
-	   to diffrences sigleton and multiton classes
+	5. method list in classobj should be read-only for instance
 
 	6. more detailed "evolution" document.
+
+	7. move more logic to MCObject
 
 [^1]: the syntex is improving, maybe more/less keywords in the feature.
 
