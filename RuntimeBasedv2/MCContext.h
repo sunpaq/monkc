@@ -1,5 +1,5 @@
 #include "MCRuntime.h"
-#include "MCString.h"
+#include "string.h"
 
 #ifndef _MCContext
 #define _MCContext _MCObject;\
@@ -7,17 +7,20 @@
 	char** argv;\
 	char selectionChar;\
 
-constructor(MCContext, int argc, char** argv);
+class(MCContext);
 
 method(MCContext, bye, xxx);
-method(MCContext, dump, xxx);
+method(MCContext, dumpParas, xxx);
 method(MCContext, getPara, int index);
-method(MCContext, paraEqual, int index, char* para);
-method(MCContext, havePara, char* para);
+method(MCContext, isIndexedParaEqualTo, int index, char* para);
+method(MCContext, isHavePara, char* para);
 method(MCContext, showMenuAndGetSelectionChar, int count, ...);
 method(MCContext, showConfirmAndGetBOOL, const char* confirm);
 method(MCContext, getUserInputString, char resultString[]);
 
+constructor(MCContext, int argc, char** argv);
+
+/*start your code in this function!*/
 int MCContext_runloop(MCContext* const context);
 
 #endif
