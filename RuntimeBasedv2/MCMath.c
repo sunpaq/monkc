@@ -1,17 +1,18 @@
 #include "MCMath.h"
 
-method_imp(MCMath, new, xxx)
+method(MCMath, new, xxx)
 {
-	This(MCMath);
+	//
 }
 
-constructor_imp(MCMath, xxx)
+constructor(MCMath, xxx)
 {
-	Chis(MCMath, MCObject, nil);
+	super_init(this, MCObject, nil);
+
 	if (set_class(this, MK(MCMath), MK(MCObject)))
 	{
 		bind(this, MK(new), MV(MCMath, new));
 	}
 
-
+	return this;
 }

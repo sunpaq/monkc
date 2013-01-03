@@ -74,8 +74,6 @@ a set of C macro for OOP programming
 12.ff
 13.fr
 
-14.load_class
-15.get_class
 16.set_class
 
 17.retain

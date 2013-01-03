@@ -8,12 +8,12 @@
 	char* info;\
 	char* main_color;\
 
-constructor(VTableSuper, xxx);
-
+class(VTableSuper);
 method(VTableSuper, bye, xxx);
 method(VTableSuper, show, BOOL isPrint, char* str);
 method(VTableSuper, bmethod, int a, double b, char* c);
 method(VTableSuper, cmethod, int a, double b, char* c);
+constructor(VTableSuper, xxx);
 
 #define METHOD
 #include "DrawableProtocol.h"

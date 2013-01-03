@@ -31,7 +31,7 @@ struct tm
 
 #ifndef _MCClock
 #define _MCClock _MCObject;\
-  struct tm rawtime;
+	struct tm rawtime;
 
 class(MCClock);
 

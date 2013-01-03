@@ -38,5 +38,5 @@ constructor(Bird, int type)
 	//var init
 	this->type=type;
 
-	return (Bird*)this;
+	return this;
 }
