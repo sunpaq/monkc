@@ -1,6 +1,10 @@
 #include "MCSocket.h"
 
+<<<<<<< HEAD
 method(MCSocket, new, xxx)
+=======
+method(MCSocket, bye, xxx)
+>>>>>>> version 0108
 {
 	//
 }
@@ -11,7 +15,7 @@ constructor(MCSocket, xxx)
 
 	if (set_class(this, MK(MCSocket), MK(MCObject)))
 	{
-		bind(this, MK(new), MV(MCSocket, new));
+		bind(this, MK(bye), MV(MCSocket, bye));
 	}
 
 	return this;

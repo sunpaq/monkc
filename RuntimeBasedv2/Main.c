@@ -28,9 +28,15 @@ void test(Handle(MCContext) const context)
 {
 	//pre load some classes
 	debug_log("%s\n", "preload some classes:");
+<<<<<<< HEAD
 	//fr(VTable_getInstance(), MK(whatIsYourClassName));
 	VTable_getInstance();VTable_releaseInstance();
 	
+=======
+	Handle(VTable) vt = VTable_getInstance();
+	ff(vt, MK(whatIsYourClassName));
+	VTable_releaseInstance();//do not call fr() on singleton class!
+>>>>>>> version 0108
 	fr(new(VTableSuper, nil), MK(whatIsYourClassName));
 	fr(new(MCProcess, nil), MK(whatIsYourClassName));
 	fr(new(MCClock, nil), MK(whatIsYourClassName));
@@ -46,6 +52,7 @@ void test(Handle(MCContext) const context)
 	}
 }
 
+<<<<<<< HEAD
 // use thread pool to management them
 
 MCMutexLock(lock);
@@ -54,6 +61,51 @@ void *init_routine()
 	MCLock(lock);
 	printf("%s\n", "init the thread only once!");
 	MCUnlock(lock);
+=======
+// use thread pool to management them ?
+
+MCMutexLockNew(lock) = MCMutexLockStaticInitializer;
+void *init_routine()
+{
+	MCMutexLock(lock);
+	printf("%s\n", "init the thread only once!");
+	MCMutexUnlock(lock);
+}
+
+MCMutexLockNew(withCond) = MCMutexLockStaticInitializer;
+MCCondLockNew(cond) = MCCondLockStaticInitializer;
+MCSpinLockNew(spin); int test_spin_count=0;
+void *wait_routine()
+{
+	MCSpinLockInit(spin ,YES);
+		
+	printf("%s\n", "wait for signal");
+	MCCondWait(cond, withCond);
+
+	printf("%s\n", "received signal!!!");
+
+	MCSpinLock(spin);
+	printf("test_spin_count is:%d\n", test_spin_count);
+	MCSpinUnlock(spin);
+}
+
+void *signal_routine()
+{
+	int i;
+	for (i = 0; i < 10; ++i)
+	{
+		printf("%d seconds to signal\n", 10-i);
+		sleep(1);
+	}
+	
+	printf("%s\n", "signal!!!");
+	MCCondSignal(cond);
+
+	MCSpinLock(spin);
+	test_spin_count++;
+	MCSpinUnlock(spin);
+
+>>>>>>> version 0108
 }
 
 /* inner runnable class */
@@ -69,25 +121,44 @@ method(MyRunnable, run, xxx)
 		sleep(1);
 	}
 }
+<<<<<<< HEAD
 constructor(MyRunnable, xxx)
 {
 	super_init(this, MCRunnable, init_routine);//worker_routine=nil
+=======
+constructor(MyRunnable, _FunctionPointer(my_init_routine))
+{
+	super_init(this, MCRunnable, my_init_routine);
+>>>>>>> version 0108
 	if (set_class(this, "MyRunnable", "MCRunnable"));
 	{
 		//override the super run
 		override(this, MK(run), MV(MyRunnable, run));
 	}
+<<<<<<< HEAD
 
+=======
+>>>>>>> version 0108
 	return this;
 }
 #endif
 
+<<<<<<< HEAD
 void mocha_lib_test()
 {
 	//test MCClock
 	Handle(MCClock) myclock = new(MCClock, nil);
 	String gmtnow = ff(myclock, MK(getCurrentGMTTimeString));
 	String now =    ff(myclock, MK(getCurrentTimeString));
+=======
+void test_MCClock()
+{
+	printf("---- test_MCClock START ----\n");
+	//test MCClock
+	Handle(MCClock) myclock = new(MCClock, nil);
+	CString gmtnow = ff(myclock, MK(getCurrentGMTTimeString));
+	CString now =    ff(myclock, MK(getCurrentTimeString));
+>>>>>>> version 0108
 
 	debug_log("\nGMT time is:%s", gmtnow);
 	debug_log("\njapan time is:%s", now);
@@ -112,6 +183,7 @@ void mocha_lib_test()
 	ff(myclock, MK(printTime));
 	ff(myclock, MK(adjustTime), 0, 0, 2, 0, 0, 0, 0);
 	ff(myclock, MK(printTime));
+<<<<<<< HEAD
 
 	//test MCProcess
 	Handle(MCProcess) p = new(MCProcess, nil);
@@ -128,6 +200,69 @@ void mocha_lib_test()
 	MCThread* m_thread = new(MCThread, new(MyRunnable, nil));
 	//start
 	ff(m_thread, MK(start), nil);
+=======
+	release(myclock);
+	printf("---- test_MCClock END ----\n");
+}
+
+void test_MCProcess()
+{
+	printf("---- test_MCProcess START ----\n");
+	//test MCProcess
+	Handle(MCProcess) p = new(MCProcess, nil);
+		ff(p, MK(printPID));
+		ff(p, MK(printPPID));
+	release(p);
+	printf("---- test_MCProcess END ----\n");
+}
+
+void test_MCString()
+{
+	printf("---- test_MCString START ----\n");
+	MCString* newstr = new(MCString, "a new string a");
+	int ix;
+	for (ix = 0; ix < 20; ++ix)
+	{
+		ff(newstr, MK(add), " + with append info");
+	}
+	ff(newstr, MK(print));
+	printf("length:%d size:%d\n", newstr->length, newstr->size);
+
+	char csbuff[newstr->size];
+	ff(newstr, MK(toCString), csbuff);
+	printf("the CString is:\n%s\n", csbuff);
+	release(newstr);
+
+	MCString* newstr2 = new(MCString, "a new string b");
+	ff(newstr2, MK(add), " + with append info");
+	ff(newstr2, MK(print));
+	release(newstr2);
+
+	MCString* astr = new(MCString, "string");
+	if (fr(new(MCString, "string"), MK(equalTo), astr))
+	{
+		printf("two string is equal!!!\n");
+	}
+	release(astr);
+
+	fr(MCString_newForHttp("www.google.com",NO), MK(print));
+
+	printf("size is: %d\n", strlen("size of string"));
+	printf("---- test_MCString END ----\n");
+}
+
+void test_MCThread()
+{
+	printf("---- test_MCThread START ----\n");
+	//test MCThread
+	MCThread* m_thread = new(MCThread, new(MyRunnable, init_routine));
+	m_thread->isRunOnce = YES;
+	//start
+	ff(m_thread, MK(start), nil);
+	ff(m_thread, MK(start), nil);
+	ff(m_thread, MK(start), nil);
+
+>>>>>>> version 0108
 	debug_log("tid is:%lu\n", m_thread->self);
 	debug_log("this is Main thread!\n");
 	//equal
@@ -136,10 +271,38 @@ void mocha_lib_test()
 		debug_log("m_thread is equal to m_thread!\n");
 	}
 
+<<<<<<< HEAD
 	// the Mocha is not thread safe now!
 	MCThread* m_thread2 = new(MCThread, new(MyRunnable, nil));
 	ff(m_thread2, MK(start), nil);
+=======
+	//the Mocha is not thread safe now!
+	MCThread* m_thread2 = new(MCThread, new(MyRunnable, nil));
+	ff(m_thread2, MK(start), nil);
 
+	//join the thread2 to thread1
+	int rescode;
+	if(rescode=ff(m_thread, MK(join), m_thread2, nil))
+	{
+		error_log("the thread join err is: %d", rescode);
+	}
+
+	//test condition lock and spin lock
+	MCThread* m_wait = new(MCThread, new(MyRunnable, wait_routine));
+	MCThread* m_signal = new(MCThread, new(MyRunnable, signal_routine));
+	ff(m_wait, MK(start), nil);
+	ff(m_signal, MK(start), nil);
+
+	printf("---- test_MCThread END ----\n");
+}
+>>>>>>> version 0108
+
+void mocha_lib_test()
+{
+	test_MCClock();
+	test_MCProcess();
+	test_MCString();
+	test_MCThread();
 }
 
 void menu_drive_test(Handle(MCContext) const context)
@@ -156,7 +319,11 @@ void menu_drive_test(Handle(MCContext) const context)
 	char name[100];
 	ff(context, MK(getUserInputString), name);
 	
+<<<<<<< HEAD
 	String sex;
+=======
+	CString sex;
+>>>>>>> version 0108
 	switch(selection){
 		case '1':
 			sex="Mr";
@@ -231,6 +398,7 @@ void mocha_syntex_test(MCContext* const context)
 	{
 		ff(birdArray[i], MK(fly));
 	}
+<<<<<<< HEAD
 
 	fr(new(Bird, DUCK_TYPE),    MK(fly));
 	fr(new(Bird, CHICKEN_TYPE), MK(fly));
@@ -241,6 +409,18 @@ void mocha_syntex_test(MCContext* const context)
 	Handle(Bird) b2 = new(Bird, CHICKEN_TYPE);
 	Handle(Bird) b3 = new(Bird, NONE);
 
+=======
+
+	fr(new(Bird, DUCK_TYPE),    MK(fly));
+	fr(new(Bird, CHICKEN_TYPE), MK(fly));
+	fr(new(Bird, NONE),         MK(fly));
+
+	//side effect: class method list change dynamically
+	Handle(Bird) b1 = new(Bird, DUCK_TYPE);
+	Handle(Bird) b2 = new(Bird, CHICKEN_TYPE);
+	Handle(Bird) b3 = new(Bird, NONE);
+
+>>>>>>> version 0108
 	ff(b1, MK(fly));
 	ff(b2, MK(fly));
 	ff(b3, MK(fly));
@@ -255,13 +435,23 @@ void mocha_syntex_test(MCContext* const context)
 
 	//exception support
 	try{
+<<<<<<< HEAD
 		//doSomething();
 		doSomething2();
+=======
+		doSomething();
+		//doSomething2();
+>>>>>>> version 0108
 	}catch(MCRuntimeException){
 		printf("%s\n", "MCRuntimeException raised");
 
 	}catch(MCIOException){
 		MCString* str = get_exception_data(MK(MCIOException));
+<<<<<<< HEAD
+=======
+		ff(str, MK(add), "@this is append info");
+		ff(str, MK(print));
+>>>>>>> version 0108
 		ff(str, MK(print));
 		printf("%s\n", "MCIOException raised");
 		release(str);
@@ -284,7 +474,10 @@ void mocha_syntex_test(MCContext* const context)
 	Handle(Bird) abird = new(Bird, DUCK_TYPE);
 	if (response(abird, MK(whatIsYourClassName)))
 		ff(abird, MK(whatIsYourClassName));
+<<<<<<< HEAD
 
+=======
+>>>>>>> version 0108
 
 }
 

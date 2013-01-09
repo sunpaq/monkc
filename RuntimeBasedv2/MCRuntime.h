@@ -19,7 +19,11 @@
 #define MAX_METHOD_NUM (MAX_METHOD_PER_CLASS*5)
 #define MAX_CLASS_NUM  1000
 
+<<<<<<< HEAD
 typedef char* String;
+=======
+typedef char* CString;
+>>>>>>> version 0108
 typedef double Float;
 typedef int BOOL;
 #define YES 1
@@ -57,7 +61,11 @@ id MCObject_init(id const this, char* cmd, xxx);
 
 //for class define
 #define class(cls) _newline;\
+<<<<<<< HEAD
 typedef struct{\
+=======
+typedef struct {\
+>>>>>>> version 0108
 	MCClass* isa;\
 	BOOL need_bind_method;\
 	int ref_count;\
@@ -67,6 +75,10 @@ typedef struct{\
 #define constructor(cls, ...)       cls* cls##_init(cls* const this, char* cmd, __VA_ARGS__)
 #define new(cls, ...)                    cls##_init(_alloc(cls), 0, __VA_ARGS__)
 //for method
+<<<<<<< HEAD
+=======
+#define returns(type)
+>>>>>>> version 0108
 #define method(cls, name, ...)        id cls##_##name(cls* const this, char* cmd, __VA_ARGS__)
 #define call(this, cls, name, ...)       cls##_##name(this, 0, __VA_ARGS__)//call other class method
 #define super_init(this, cls, ...)  do{this->need_bind_method=NO;\
@@ -102,10 +114,18 @@ int override(id const self, char *key, _FunctionPointer(value));
 BOOL response(id const obj, char *key);
 id ff(const id obj, const char *key, ...);
 //ff-release, for the fr(New(Class, nil), MK(method), nil)
+<<<<<<< HEAD
+=======
+//warning: do not fr() the singleton class, use the SClass_getInstance() and SClass_releaseInstance()
+>>>>>>> version 0108
 id fr(const id obj, const char *key, ...);
 
 //make a thread-safe allocator
 void* mc_malloc(size_t size);
+<<<<<<< HEAD
+=======
+void* mc_realloc(void* ptr, size_t size);
+>>>>>>> version 0108
 void  mc_free(void *ptr);
 
 //log colors

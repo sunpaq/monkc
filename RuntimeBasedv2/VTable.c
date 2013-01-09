@@ -5,7 +5,11 @@ static void function(){
 	printf("%s\n", "this is a private function");
 }
 
+<<<<<<< HEAD
 method(VTable, amethod, xxx)
+=======
+method(VTable, amethod, xxx) returns(int)
+>>>>>>> version 0108
 {
 	debug_log("VTable amethod\n");
 	return 1;
