@@ -50,19 +50,11 @@ method(MCClock, setRawtimeFields, int tm_sec, int tm_min, int tm_hour,
 
 method(MCClock, getTime, time_t* const result);
 method(MCClock, getRawtime, struct tm* const result);
-<<<<<<< HEAD
-method(MCClock, getTimeByString, xxx);
-method(MCClock, getCPUClocksPerSecond, clock_t* const result);
-method(MCClock, getCPUClocksSinceStart, clock_t* const result);
-method(MCClock, getCurrentTimeString, xxx);//retrun the same format as asctime: Sun Sep 16 01:03:52 1973\n\0
-method(MCClock, getCurrentGMTTimeString, xxx);
-=======
 method(MCClock, getTimeByString, xxx) 								returns(char*);
 method(MCClock, getCPUClocksPerSecond, clock_t* const result);
 method(MCClock, getCPUClocksSinceStart, clock_t* const result);
 method(MCClock, getCurrentTimeString, xxx) 							returns(char*);//retrun the same format as asctime: Sun Sep 16 01:03:52 1973\n\0
 method(MCClock, getCurrentGMTTimeString, xxx) 						returns(char*);
->>>>>>> version 0108
 
 method(MCClock, printTime, xxx);
 method(MCClock, printCurrentTime, xxx);

@@ -1,10 +1,6 @@
 #include "MCSocket.h"
 
-<<<<<<< HEAD
-method(MCSocket, new, xxx)
-=======
 method(MCSocket, bye, xxx)
->>>>>>> version 0108
 {
 	//
 }

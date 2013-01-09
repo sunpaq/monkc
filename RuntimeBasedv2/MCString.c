@@ -18,11 +18,6 @@ void get_chars_until_enter(char resultString[])
 	resultString[i]='\0';
 }
 
-<<<<<<< HEAD
-method(MCString, print, xxx)
-{
-	printf("%s\n", this->str);
-=======
 method(MCString, add, CString str)
 {
 	MCString* iterator = this;
@@ -76,7 +71,6 @@ method(MCString, bye, xxx)
 		//debug_log("MCString - free a sub string\n");
 		free(iterator);//avoid recursive release call!!
 	}
->>>>>>> version 0108
 }
 
 method(MCString, getOneChar, xxx)
@@ -89,22 +83,6 @@ method(MCString, getCharsUntilEnter, char const resultString[])
 	get_chars_until_enter(resultString);
 }
 
-<<<<<<< HEAD
-constructor(MCString, String str)
-{
-	super_init(this, MCObject, nil);
-
-	if (set_class(this, "MCString", "MCObject"))
-	{
-		bind(this, "print", MCString_print);
-		bind(this, "getOneChar", MCString_getOneChar);
-		bind(this, "getCharsUntilEnter", MCString_getCharsUntilEnter);
-	}
-
-	this->str=str;
-
-	return this;
-=======
 constructor(MCString, CString str)
 {
 	size_t len = strlen(str);
@@ -162,5 +140,4 @@ MCString* MCString_newForHttp(char* cstr, BOOL isHttps)
 
 	ff(res, MK(add), cstr);
 	return res;
->>>>>>> version 0108
 }

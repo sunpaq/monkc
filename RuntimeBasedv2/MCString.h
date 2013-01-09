@@ -3,15 +3,6 @@
 
 #ifndef _MCString
 #define _MCString _MCObject;\
-<<<<<<< HEAD
-	String str;
-
-class(MCString);
-method(MCString, print, xxx);
-method(MCString, getOneChar, xxx);
-method(MCString, getCharsUntilEnter, char const resultString[]);
-constructor(MCString, String str);
-=======
 	size_t length;\
 	size_t size;\  
 	id next;\
@@ -33,7 +24,6 @@ constructor(MCString, CString str);
 MCString* MCString_newWithCString(char* cstr);
 MCString* MCString_newWithMCString(MCString* mcstr);
 MCString* MCString_newForHttp(char* cstr, BOOL isHttps);
->>>>>>> version 0108
 
 char get_one_char();
 void get_chars_until_enter(char resultString[]);

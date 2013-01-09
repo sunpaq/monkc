@@ -38,15 +38,6 @@ int main(int argc, char const *argv[])
 	#endif
 
 	_init_class_list();
-<<<<<<< HEAD
-		LOG_LEVEL = VERBOSE;
-		MCContext* context = new(MCContext, argc, argv);
-		LOG_LEVEL = VERBOSE;
-
-		int res = MCContext_runloop(context);
-
-		LOG_LEVEL = VERBOSE;
-=======
 		LOG_LEVEL = DEBUG;
 		MCContext* context = new(MCContext, argc, argv);
 		LOG_LEVEL = DEBUG;
@@ -54,7 +45,6 @@ int main(int argc, char const *argv[])
 		int res = MCContext_runloop(context);
 
 		LOG_LEVEL = DEBUG;
->>>>>>> version 0108
 		release(context);
 	_clear_class_list();
 	//end point for pthread
@@ -66,26 +56,15 @@ int main(int argc, char const *argv[])
 }
 
 id MCObject_doNothing(id const this, char* cmd, xxx)
-<<<<<<< HEAD
 {
 	//do nothing
 }
 
 id MCObject_bye(id this, char* cmd, xxx)
-=======
->>>>>>> version 0108
 {
 	//do nothing
 }
 
-<<<<<<< HEAD
-=======
-id MCObject_bye(id this, char* cmd, xxx)
-{
-	//do nothing
-}
-
->>>>>>> version 0108
 id MCObject_init(id const this, char* cmd, xxx)
 {
 	//do nothing
@@ -358,10 +337,6 @@ BOOL response(id const obj, char *key)
 /* ff is short for [fire function] */
 id ff(const id obj, const char *key, ...)
 {
-<<<<<<< HEAD
-	pthread_mutex_lock(&_mc_runtime_mutex);
-=======
->>>>>>> version 0108
 	runtime_log("ff start\n");
 
 	_nil_check(obj,
@@ -381,48 +356,25 @@ id ff(const id obj, const char *key, ...)
 	while((res=_response_to_method(cls, key))==NOT_RESPONSE){
 		if(cls->super != nil){
 			cls = cls->super;
-<<<<<<< HEAD
-			//obj->isa = cls;
 			runtime_log("%s\n", "continue to my super");
 		}else{
 			runtime_log("[%s] reach the root class: %s return\n", key, cls->name);
-			pthread_mutex_unlock(&_mc_runtime_mutex);
-=======
-			runtime_log("%s\n", "continue to my super");
-		}else{
-			runtime_log("[%s] reach the root class: %s return\n", key, cls->name);
->>>>>>> version 0108
 			return;
 		}
 	}
 
-<<<<<<< HEAD
-	//obj->isa = cls_save;
-	runtime_log("%s obj->isa:%d\n", "ff middle", obj->isa);
-
-=======
 	pthread_mutex_lock(&_mc_runtime_mutex);
 	runtime_log("%s obj->isa:%d\n", "ff middle", obj->isa);
->>>>>>> version 0108
 	if((res < MAX_METHOD_NUM) && (cls_save->method_list[res]==0)){
 		runtime_log("----Cache method: %s+%s\n", cls_save->name, key);
 		cls_save->method_list[res]=cls->method_list[res];//new cache logic
 	}
-<<<<<<< HEAD
-
-	//runtime_log("----Call method: %s+%s\n", cls_save->name, key);
-	void *args, *result;
-	args = __builtin_apply_args();
-
-	pthread_mutex_unlock(&_mc_runtime_mutex);
-=======
 	pthread_mutex_unlock(&_mc_runtime_mutex);
 
 	runtime_log("----Call method: %s+%s\n", cls_save->name, key);
 	void *args, *result;
 	args = __builtin_apply_args();
 
->>>>>>> version 0108
 	runtime_log("%s args:%u cls:%u, cls->method_list:%u\n", "ff unlocked", args, cls, cls->method_list);
 	result = __builtin_apply(cls->method_list[res], args, 96);
 
@@ -435,10 +387,6 @@ id ff(const id obj, const char *key, ...)
 /* ff-release, for the fr(New(Class, nil), MK(method), nil)*/
 id fr(const id obj, const char *key, ...)
 {
-<<<<<<< HEAD
-	pthread_mutex_lock(&_mc_runtime_mutex);
-=======
->>>>>>> version 0108
 	//copy from ff
 	_nil_check(obj,
 		"ff(obj, key, ...)",
@@ -455,24 +403,15 @@ id fr(const id obj, const char *key, ...)
 	while((res=_response_to_method(cls, key))==NOT_RESPONSE){
 		if(cls->super != nil){
 			cls = cls->super;
-<<<<<<< HEAD
-			//obj->isa = cls;
-=======
->>>>>>> version 0108
 			//runtime_log("%s\n", "continue to my super");
 		}else{
 			runtime_log("%s_%s: %s\n", cls->name, key, 
 				"no such method! are you forget to bind()? MC_call return");
-			pthread_mutex_unlock(&_mc_runtime_mutex);
 			return;
 		}
 	}
 
-<<<<<<< HEAD
-	//obj->isa = cls_save;
-=======
 	pthread_mutex_lock(&_mc_runtime_mutex);
->>>>>>> version 0108
 	if((res < MAX_METHOD_NUM) && (cls_save->method_list[res]==0)){
 		cls_save->method_list[res]=cls->method_list[res];//new cache logic
 		runtime_log("----Cache method: %s+%s\n", cls_save->name, key);
@@ -605,8 +544,6 @@ void* mc_malloc(size_t size)
 	return ret;
 }
 
-<<<<<<< HEAD
-=======
 void* mc_realloc(void* ptr, size_t size)
 {
 	pthread_mutex_lock(&_mc_alloc_mutex);
@@ -617,7 +554,6 @@ void* mc_realloc(void* ptr, size_t size)
 	return ret;
 }
 
->>>>>>> version 0108
 pthread_mutex_t _mc_free_mutex = PTHREAD_MUTEX_INITIALIZER;
 void mc_free(void *ptr)
 {
