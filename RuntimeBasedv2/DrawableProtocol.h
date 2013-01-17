@@ -9,8 +9,8 @@ protocol(DrawableProtocol, redraw, xxx);
 #endif
 
 #ifdef BIND
-bind(this, MK(draw), MV(DrawableProtocol, draw));
-bind(this, MK(erase), MV(DrawableProtocol, erase));
-bind(this, MK(redraw), MV(DrawableProtocol, redraw));
+bind_method(this, MK(draw), MV(DrawableProtocol, draw));
+bind_method(this, MK(erase), MV(DrawableProtocol, erase));
+bind_method(this, MK(redraw), MV(DrawableProtocol, redraw));
 #undef BIND
 #endif

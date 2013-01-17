@@ -123,25 +123,25 @@ constructor(MCClock, xxx)
 
 	if (set_class(this, "MCClock", "MCObject"))
 	{
-		bind(this, MK(setTimeToNow), 			MV(MCClock, setTimeToNow));
-		bind(this, MK(setTime), 				MV(MCClock, setTime));
-		bind(this, MK(adjustTime), 				MV(MCClock, adjustTime));
+		bind_method(this, MK(setTimeToNow), 			MV(MCClock, setTimeToNow));
+		bind_method(this, MK(setTime), 				MV(MCClock, setTime));
+		bind_method(this, MK(adjustTime), 				MV(MCClock, adjustTime));
 
-		bind(this, MK(setRawtime), 				MV(MCClock, setRawtime));
-		bind(this, MK(setRawtimeFields), 		MV(MCClock, setRawtimeFields));
+		bind_method(this, MK(setRawtime), 				MV(MCClock, setRawtime));
+		bind_method(this, MK(setRawtimeFields), 		MV(MCClock, setRawtimeFields));
 
-		bind(this, MK(getTime), 				MV(MCClock, getTime));
-		bind(this, MK(getRawtime), 				MV(MCClock, getRawtime));
-		bind(this, MK(getTimeByString), 		MV(MCClock, getTimeByString));
+		bind_method(this, MK(getTime), 				MV(MCClock, getTime));
+		bind_method(this, MK(getRawtime), 				MV(MCClock, getRawtime));
+		bind_method(this, MK(getTimeByString), 		MV(MCClock, getTimeByString));
 
-		bind(this, MK(getCPUClocksPerSecond), 	MV(MCClock, getCPUClocksPerSecond));
-		bind(this, MK(getCPUClocksSinceStart), 	MV(MCClock, getCPUClocksSinceStart));
-		bind(this, MK(getCurrentTimeString), 	MV(MCClock, getCurrentTimeString));
-		bind(this, MK(getCurrentGMTTimeString), MV(MCClock, getCurrentGMTTimeString));
+		bind_method(this, MK(getCPUClocksPerSecond), 	MV(MCClock, getCPUClocksPerSecond));
+		bind_method(this, MK(getCPUClocksSinceStart), 	MV(MCClock, getCPUClocksSinceStart));
+		bind_method(this, MK(getCurrentTimeString), 	MV(MCClock, getCurrentTimeString));
+		bind_method(this, MK(getCurrentGMTTimeString), MV(MCClock, getCurrentGMTTimeString));
 
-		bind(this, MK(printTime), 				MV(MCClock, printTime));
-		bind(this, MK(printCurrentTime), 		MV(MCClock, printCurrentTime));
-		bind(this, MK(printCurrentGMTTime), 	MV(MCClock, printCurrentGMTTime));
+		bind_method(this, MK(printTime), 				MV(MCClock, printTime));
+		bind_method(this, MK(printCurrentTime), 		MV(MCClock, printCurrentTime));
+		bind_method(this, MK(printCurrentGMTTime), 	MV(MCClock, printCurrentGMTTime));
 
 	}
 

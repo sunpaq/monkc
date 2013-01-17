@@ -103,12 +103,11 @@ constructor(MCThread, MCRunnable* runnable)
 
 	super_init(this, MCObject, nil);
 	if(set_class(this, "MCThread", "MCObject")){
-		bind(this, MK(start), MV(MCThread, start));
-		bind(this, MK(stop), MV(MCThread, stop));
-		bind(this, MK(join), MV(MCThread, join));
-		bind(this, MK(detach), MV(MCThread, detach));
-		bind(this, MK(equal), MV(MCThread, equal));
-		bind(this, MK(bye), MV(MCThread, bye));
+		bind_method(this, MK(start), MV(MCThread, start));
+		bind_method(this, MK(join), MV(MCThread, join));
+		bind_method(this, MK(detach), MV(MCThread, detach));
+		bind_method(this, MK(equal), MV(MCThread, equal));
+		bind_method(this, MK(bye), MV(MCThread, bye));
 	}
 	//init the vars
 	this->once_control = PTHREAD_ONCE_INIT;

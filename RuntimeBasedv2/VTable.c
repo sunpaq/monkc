@@ -74,11 +74,11 @@ constructor(VTable, xxx)
 	super_init(this, VTableSuper, nil);
 
 	if(set_class(this, MK(VTable), MK(VTableSuper))){
-		bind(this, MK(amethod), MV(VTable, amethod));
-		bind(this, MK(amethod2), MV(VTable, amethod2));
-		bind(this, MK(bmethod), MV(VTable, bmethod));
-		bind(this, MK(cmethod), MV(VTable, cmethod));
-		bind(this, MK(bye), MV(VTable, bye));
+		bind_method(this, MK(amethod), MV(VTable, amethod));
+		bind_method(this, MK(amethod2), MV(VTable, amethod2));
+		bind_method(this, MK(bmethod), MV(VTable, bmethod));
+		bind_method(this, MK(cmethod), MV(VTable, cmethod));
+		bind_method(this, MK(bye), MV(VTable, bye));
 		#define BIND
 		#include "DrawableProtocol.h"
 	}

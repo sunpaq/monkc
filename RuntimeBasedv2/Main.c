@@ -8,20 +8,33 @@
 #include "MCException.h"
 #include "MCString.h"
 #include "MCThread.h"
+#include "MCSocket.h"
+#include "MCIO.h"
 
 void mocha_syntex_test(Handle(MCContext) const context);
 void menu_drive_test(Handle(MCContext) const context);
 void mocha_lib_test();
+void mocha_serversocket_test();
+void mocha_clientsocket_test(Handle(MCContext) const context);
+
 void test(Handle(MCContext) const context);
 
 extern void function();
 
-/* main */
+/* 
+main: Mocha hide the C main entry in MCRuntime.c
+for some prepare works to do before any customer code.
+and expose this MCContext_runloop to developers
+argc and argv are wrapped into context
+you can check the origin main code at MCRuntime.c line:27
+*/
+
 int MCContext_runloop(Handle(MCContext) const context){
 	test(context);
 
 	//static function can not be called even have "extern" declearation
 	//function();
+	return 0;
 }
 
 void test(Handle(MCContext) const context)
@@ -37,19 +50,21 @@ void test(Handle(MCContext) const context)
 
 	int selection = ff(context, 
 		MK(showMenuAndGetSelectionChar), 
-		3, "syntex_test", "menu_drive_test", "lib_test");
+		5, "syntex_test", "menu_drive_test", "lib_test", "MCSocket(Server)", "MCSocket(Client)");
 
 	switch(selection){
 		case '1':mocha_syntex_test(context);break;
 		case '2':menu_drive_test(context);break;
 		case '3':mocha_lib_test();break;
+		case '4':mocha_serversocket_test();break;
+		case '5':mocha_clientsocket_test(context);break;
 	}
 }
 
 // use thread pool to management them ?
 
 MCMutexLockNew(lock) = MCMutexLockStaticInitializer;
-void *init_routine()
+void init_routine()
 {
 	MCMutexLock(lock);
 	printf("%s\n", "init the thread only once!");
@@ -59,7 +74,7 @@ void *init_routine()
 MCMutexLockNew(withCond) = MCMutexLockStaticInitializer;
 MCCondLockNew(cond) = MCCondLockStaticInitializer;
 MCSpinLockNew(spin); int test_spin_count=0;
-void *wait_routine()
+void wait_routine()
 {
 	MCSpinLockInit(spin ,YES);
 		
@@ -73,7 +88,7 @@ void *wait_routine()
 	MCSpinUnlock(spin);
 }
 
-void *signal_routine()
+void signal_routine()
 {
 	int i;
 	for (i = 0; i < 10; ++i)
@@ -234,6 +249,109 @@ void test_MCThread()
 	ff(m_signal, MK(start), nil);
 
 	printf("---- test_MCThread END ----\n");
+}
+
+static int readline(int fd, char* const recvbuff)
+{
+	char onechar;
+	char* ptr = recvbuff;
+	int RETURN_VAL_END_OF_FILE = 0;
+	while(read(fd, &onechar, 1)!=RETURN_VAL_END_OF_FILE){
+		(*ptr++)=onechar;
+		if (onechar=='\n')return 0;
+	}
+	return -1;
+}
+
+void mocha_serversocket_test()
+{
+	MCSocket* server = new(MCSocket, MCSocket_Server_TCP, "127.0.0.1", "4000");
+	ff(server, MK(listeningStart), nil);
+	printf("%s\n", "MC server start to listenning");
+
+	char *sendbuff[1024];
+	char *recvbuff[1024];
+
+	//use select()
+	MCSelect* fdcontroler = new(MCSelect, 0, 0);
+	ff(fdcontroler, MK(addFd), MCSelect_Readfd, server->sfd);
+
+	int client_array[100];
+	memset(client_array, 0, sizeof(client_array));
+	int client_count = 0;
+
+	for(;;){
+
+		printf("%s\n", "wait for message...");
+		if(ff(fdcontroler, MK(waitForFdsetChange), nil)<=0)//no time out
+		{
+			//[<0] error [=0] time out
+			error_log("select error, or time out!\n");
+			release(fdcontroler);
+			release(server);
+			exit(-1);
+		}
+
+		if (ff(fdcontroler, MK(isFdReady), MCSelect_Readfd, server->sfd))
+		{
+			MCSocketClientInfo* request = ff(server, MK(acceptARequest), nil);
+			//get a empty client slot
+			int i;
+			for (i = 0; i < 100; ++i){
+				if(client_array[i]==0)
+				{
+					client_array[i] = request->returnSfd;
+					break;
+				}
+			}
+			
+			printf("accept a client: %d Total[%d]\n", i, ++client_count);
+			ff(fdcontroler, MK(addFd), MCSelect_Readfd, client_array[i]);
+			release(request);
+			continue;
+		}
+
+		int i;
+		for(i=0; i<100; i++){
+
+			if(client_array[i]==0)continue;
+
+			if(ff(fdcontroler, MK(isFdReady), MCSelect_Readfd, client_array[i])){
+				memset(sendbuff, 0, 1024);
+				memset(recvbuff, 0, 1024);
+
+				if(readline(client_array[i], recvbuff)==-1){
+					printf("a client quite: %d Total[%d]\n", i, --client_count);
+					ff(fdcontroler, MK(removeFd), MCSelect_Readfd, client_array[i]);
+					close(client_array[i]);
+					client_array[i]=0;
+					break;
+				}
+				
+				printf("get a message from: %d Total[%d] ---- %s", i, client_count, recvbuff);
+			}
+		}
+	}
+	release(server);
+}
+
+void mocha_clientsocket_test(Handle(MCContext) const context)
+{
+	MCSocket* client = new(MCSocket, MCSocket_Client_TCP, "127.0.0.1", "4000");
+
+	char sendbuff[1024];
+	char recvbuff[1024];
+	
+	for(;;){
+		memset(sendbuff, 0, 1024);
+		printf("%s\n", "to Server: (your message please)");
+		ff(context, MK(getUserInputString), sendbuff);
+		char* str = strcat(sendbuff, "\n");
+
+		write(client->sfd, str, strlen(str));
+	}
+
+	release(client);
 }
 
 void mocha_lib_test()

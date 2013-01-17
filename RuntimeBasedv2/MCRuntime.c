@@ -18,9 +18,9 @@ static const int NOT_RESPONSE = -1;
 static int _response_to_method(MCClass* const self_in, char *key);
 static void _destroy(id this);
 static inline MCClass* get_class(const char* name_in);
-// static void _set_single_instance(MCClass* const class, MCObject* const object);
 void* mc_malloc(size_t size);
-void  mc_free(void *ptr);
+void* mc_realloc(void* ptr, size_t size);
+void  mc_free(void* ptr);
 
 //C-main
 
@@ -243,7 +243,7 @@ void retain(id const this)
 	pthread_mutex_unlock(&_mc_mm_mutex);
 }
 
-int bind(id const self, char *key, _FunctionPointer(value))
+int bind_method(id const self, char *key, _FunctionPointer(value))
 {
 	pthread_mutex_lock(&_mc_runtime_mutex);
 	_nil_check(self,

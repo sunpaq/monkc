@@ -16,8 +16,8 @@ constructor(MCProcess, xxx)
 
 	if (set_class(this, MK(MCProcess), MK(MCObject)))
 	{
-		bind(this, MK(printPID), MV(MCProcess, printPID));
-		bind(this, MK(printPPID), MV(MCProcess, printPPID));
+		bind_method(this, MK(printPID), MV(MCProcess, printPID));
+		bind_method(this, MK(printPPID), MV(MCProcess, printPPID));
 	}
 
 	this->pid=getpid();

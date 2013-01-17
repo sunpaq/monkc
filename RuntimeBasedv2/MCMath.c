@@ -11,7 +11,7 @@ constructor(MCMath, xxx)
 
 	if (set_class(this, MK(MCMath), MK(MCObject)))
 	{
-		bind(this, MK(new), MV(MCMath, new));
+		bind_method(this, MK(new), MV(MCMath, new));
 	}
 
 	return this;

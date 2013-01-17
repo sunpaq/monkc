@@ -102,15 +102,15 @@ constructor(MCContext, int argc, char** argv)
 
 	if(set_class(this, "MCContext", "MCObject")){
 
-		bind(this, MK(dumpParas), MV(MCContext, dumpParas));
-		bind(this, MK(getPara), MV(MCContext, getPara));
-		bind(this, MK(isIndexedParaEqualTo), MV(MCContext, isIndexedParaEqualTo));
-		bind(this, MK(isHavePara), MV(MCContext, isHavePara));
-		bind(this, MK(showMenuAndGetSelectionChar), MV(MCContext, showMenuAndGetSelectionChar));
-		bind(this, MK(showConfirmAndGetBOOL), MV(MCContext, showConfirmAndGetBOOL));
-		bind(this, MK(getUserInputString), MV(MCContext, getUserInputString));
+		bind_method(this, MK(dumpParas), MV(MCContext, dumpParas));
+		bind_method(this, MK(getPara), MV(MCContext, getPara));
+		bind_method(this, MK(isIndexedParaEqualTo), MV(MCContext, isIndexedParaEqualTo));
+		bind_method(this, MK(isHavePara), MV(MCContext, isHavePara));
+		bind_method(this, MK(showMenuAndGetSelectionChar), MV(MCContext, showMenuAndGetSelectionChar));
+		bind_method(this, MK(showConfirmAndGetBOOL), MV(MCContext, showConfirmAndGetBOOL));
+		bind_method(this, MK(getUserInputString), MV(MCContext, getUserInputString));
 
-		bind(this, MK(bye), MV(MCContext, bye));
+		bind_method(this, MK(bye), MV(MCContext, bye));
 	}
 
 	this->argc=argc;

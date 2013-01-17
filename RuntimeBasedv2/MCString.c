@@ -105,13 +105,13 @@ constructor(MCString, CString str)
 	super_init(newthis, MCObject, nil);
 	if (set_class(newthis, "MCString", "MCObject"))
 	{
-		bind(newthis, "add", MCString_add);
-		bind(newthis, "print", MCString_print);
-		bind(newthis, "toCString", MCString_toCString);
-		bind(newthis, "equalTo", MCString_equalTo);
-		bind(newthis, "getOneChar", MCString_getOneChar);
-		bind(newthis, "getCharsUntilEnter", MCString_getCharsUntilEnter);
-		bind(newthis, "bye", MCString_bye);
+		bind_method(newthis, "add", MCString_add);
+		bind_method(newthis, "print", MCString_print);
+		bind_method(newthis, "toCString", MCString_toCString);
+		bind_method(newthis, "equalTo", MCString_equalTo);
+		bind_method(newthis, "getOneChar", MCString_getOneChar);
+		bind_method(newthis, "getCharsUntilEnter", MCString_getCharsUntilEnter);
+		bind_method(newthis, "bye", MCString_bye);
 	}
 	
 	newthis->length = strlen(str);

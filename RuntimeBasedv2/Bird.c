@@ -22,8 +22,8 @@ constructor(Bird, int type)
 	super_init(this, MCObject, nil);
 	//bind
 	if(set_class(this, "Bird", "MCObject")){
-		bind(this, MK(fly), MV(Bird, fly));
-		bind(this, MK(bye), MV(Bird, bye));
+		bind_method(this, MK(fly), MV(Bird, fly));
+		bind_method(this, MK(bye), MV(Bird, bye));
 	}
 	//override
 	if(type==DUCK_TYPE){

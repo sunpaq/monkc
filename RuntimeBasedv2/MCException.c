@@ -45,9 +45,9 @@ unsigned __get_exception_code(char* s)
 {
 	unsigned val = _hash(s);
 	if (_exception_list[val]==1)
-		return val;
+		return (unsigned)val;
 	else
-		return _define_exception(s);
+		return (unsigned)_define_exception(s);
 }
 
 id get_exception_data(char* key)

@@ -1,6 +1,9 @@
 #ifndef __MCRuntime__
 #define __MCRuntime__
 
+/* Mocha use many C99 standard features, make sure your compiler and platform support C99 standard */
+//#pragma warning(disable:3)
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
@@ -26,8 +29,8 @@ typedef int BOOL;
 #define NO 0
 #define xxx void* xxx
 #define nil ((void*)0)
-#define _FunctionPointer(name) void* (*name)()
-#define _FunctionArray(name) void* (*name[MAX_METHOD_NUM])()
+#define _FunctionPointer(name) void (*name)()
+#define _FunctionArray(name) void (*name[MAX_METHOD_NUM])()
 //MK: Method Key  MV: Method Value
 #define MV(cls, name) cls##_##name
 #define MK(value) #value
@@ -68,15 +71,17 @@ typedef struct {\
 #define new(cls, ...)                    cls##_init(_alloc(cls), 0, __VA_ARGS__)
 //for method
 #define returns(type)
-#define method(cls, name, ...)        id cls##_##name(cls* const this, char* cmd, __VA_ARGS__)
+#define method(cls, name, ...)     void* cls##_##name(cls* const this, char* cmd, __VA_ARGS__)
 #define call(this, cls, name, ...)       cls##_##name(this, 0, __VA_ARGS__)//call other class method
 #define super_init(this, cls, ...)  do{this->need_bind_method=NO;\
 									this->isa=nil;\
 									cls##_init(this, 0, __VA_ARGS__);\
 									this->isa=nil;\
 									this->need_bind_method=YES;}while(0)
+#define link_class(cls, super) if(set_class(this, #cls, #super))
+#define have_method(cls, met) bind_method(this, #met, cls##_##met)
 //for protocol define
-#define protocol(cls, name, ...) static id cls##_##name(id const this, char* cmd, __VA_ARGS__)
+#define protocol(cls, name, ...)  static id cls##_##name(id const this, char* cmd, __VA_ARGS__)
 #define This(cls)      ((cls*)this)
 #define Cast(cls, obj) ((cls*)obj)
 //runtime parts
@@ -97,12 +102,12 @@ BOOL set_class(id const self_in, const char* classname, const char* superclassna
 void release(id const this);
 void retain(id const this);
 
-//method handing
-int bind(id const self, char *key, _FunctionPointer(value));
+//method handling
+int bind_method(id const self, char *key, _FunctionPointer(value));//the <sys/socket> have function called "bind"
 int override(id const self, char *key, _FunctionPointer(value));
 BOOL response(id const obj, char *key);
 id ff(const id obj, const char *key, ...);
-//ff-release, for the fr(New(Class, nil), MK(method), nil)
+//ff-release, for the fr(new(Class, nil), MK(method), nil)
 //warning: do not fr() the singleton class, use the SClass_getInstance() and SClass_releaseInstance()
 id fr(const id obj, const char *key, ...);
 
