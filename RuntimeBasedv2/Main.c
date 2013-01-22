@@ -251,6 +251,28 @@ void test_MCThread()
 	printf("---- test_MCThread END ----\n");
 }
 
+void test_MCFile()
+{
+	char* str = "i_am_sun_and_i_create_this_file.";
+	char* buff[4096];
+	MCFile* tmpfile = MCFile_newReadWrite("temp.txt", 4096);
+	if(tmpfile!=nil){
+		ff(tmpfile, MK(writeToBegin), 0, str, strlen(str)+1);
+		ff(tmpfile, MK(readFromBegin), 0, sizeof(tmpfile->buffer));
+		printf("content in file is: %s strlen is:%d\n", tmpfile->buffer, strlen(str)+1);
+		release(tmpfile);
+	}
+}
+
+void mocha_lib_test()
+{
+	test_MCClock();
+	test_MCProcess();
+	test_MCString();
+	test_MCFile();
+	test_MCThread();
+}
+
 static int readline(int fd, char* const recvbuff)
 {
 	char onechar;
@@ -352,14 +374,6 @@ void mocha_clientsocket_test(Handle(MCContext) const context)
 	}
 
 	release(client);
-}
-
-void mocha_lib_test()
-{
-	test_MCClock();
-	test_MCProcess();
-	test_MCString();
-	test_MCThread();
 }
 
 void menu_drive_test(Handle(MCContext) const context)

@@ -222,7 +222,16 @@ void release(id this)
 
 	if(this->ref_count==0)
 	{
-		ff(this, MK(bye), nil);
+		//call all the "bye" method on object: this
+		//so that all the super clean work will be done
+		MCClass* iterator = this->isa;
+		while(iterator != nil){
+			_FunctionPointer(bye_method) = iterator->method_list[_hash("bye")];
+			if(bye_method!=nil) (*bye_method)(this, nil);
+			iterator = iterator->super;
+		}
+
+		//ff(this, MK(bye), nil);
 		_destroy(this);
 	}
 }
@@ -312,30 +321,27 @@ BOOL response(id const obj, char *key)
 		"obj have no class object linked. please call set_class(). the key is:",
 		key, &_mc_runtime_mutex);
 
-	MCClass* cls_save = obj->isa;
-	MCClass* cls = obj->isa;
-
+	MCClass* cls_iterator = obj->isa;
 	int res;
 	while((res=_response_to_method(obj, key))==NOT_RESPONSE){
-		if(cls->super != nil){
-			cls = cls->super;
-			obj->isa = cls;
+		if(cls_iterator->super != nil){
+			cls_iterator = cls_iterator->super;
+			obj->isa = cls_iterator;
 			//runtime_log("%s\n", "continue to my super");
 		}else{
-			runtime_log("%s_%s: %s\n", cls->name, key, 
+			runtime_log("%s_%s: %s\n", cls_iterator->name, key, 
 				"no such method! are you forget to bind()? MC_call return");
 			pthread_mutex_unlock(&_mc_runtime_mutex);
 			return NO;
 		}
 	}
 
-	obj->isa = cls_save;
 	pthread_mutex_unlock(&_mc_runtime_mutex);
 	return YES;
 }
 
 /* ff is short for [fire function] */
-id ff(const id obj, const char *key, ...)
+id ff(id const obj, const char* key, ...)
 {
 	runtime_log("ff start\n");
 
@@ -347,36 +353,32 @@ id ff(const id obj, const char *key, ...)
 		"obj have no class object linked. please call set_class(). the key is:",
 		key, &_mc_runtime_mutex);
 
-	MCClass* cls_save = obj->isa;
-	MCClass* cls = obj->isa;
-
-	runtime_log("ff before loop obj:%d, cls:%d, cls_save:%d\n", obj, cls, cls_save);
-
+	MCClass* cls_iterator = obj->isa;
 	int res;
-	while((res=_response_to_method(cls, key))==NOT_RESPONSE){
-		if(cls->super != nil){
-			cls = cls->super;
+	while((res=_response_to_method(cls_iterator, key))==NOT_RESPONSE){
+		if(cls_iterator->super != nil){
+			cls_iterator = cls_iterator->super;
 			runtime_log("%s\n", "continue to my super");
 		}else{
-			runtime_log("[%s] reach the root class: %s return\n", key, cls->name);
+			runtime_log("[%s] reach the root class: %s return\n", key, cls_iterator->name);
 			return;
 		}
 	}
 
 	pthread_mutex_lock(&_mc_runtime_mutex);
 	runtime_log("%s obj->isa:%d\n", "ff middle", obj->isa);
-	if((res < MAX_METHOD_NUM) && (cls_save->method_list[res]==0)){
-		runtime_log("----Cache method: %s+%s\n", cls_save->name, key);
-		cls_save->method_list[res]=cls->method_list[res];//new cache logic
+	if((res < MAX_METHOD_NUM) && (obj->isa->method_list[res]==0)){
+		runtime_log("----Cache method: %s+%s\n", obj->isa->name, key);
+		obj->isa->method_list[res]=cls_iterator->method_list[res];//new cache logic
 	}
 	pthread_mutex_unlock(&_mc_runtime_mutex);
 
-	runtime_log("----Call method: %s+%s\n", cls_save->name, key);
+	runtime_log("----Call method: %s+%s\n", obj->isa->name, key);
 	void *args, *result;
 	args = __builtin_apply_args();
 
-	runtime_log("%s args:%u cls:%u, cls->method_list:%u\n", "ff unlocked", args, cls, cls->method_list);
-	result = __builtin_apply(cls->method_list[res], args, 96);
+	runtime_log("%s args:%u cls:%u, cls->method_list:%u\n", "ff unlocked", args, cls_iterator, cls_iterator->method_list);
+	result = __builtin_apply(cls_iterator->method_list[res], args, 96);
 
 	if(result)
 		__builtin_return(result);
@@ -385,7 +387,7 @@ id ff(const id obj, const char *key, ...)
 }
 
 /* ff-release, for the fr(New(Class, nil), MK(method), nil)*/
-id fr(const id obj, const char *key, ...)
+id fr(id const obj, const char* key, ...)
 {
 	//copy from ff
 	_nil_check(obj,
@@ -396,32 +398,30 @@ id fr(const id obj, const char *key, ...)
 		"obj have no class object linked. please call set_class(). the key is:",
 		key, &_mc_runtime_mutex);
 
-	MCClass* cls_save = obj->isa;
-	MCClass* cls = obj->isa;
-
+	MCClass* cls_iterator = obj->isa;
 	int res;
-	while((res=_response_to_method(cls, key))==NOT_RESPONSE){
-		if(cls->super != nil){
-			cls = cls->super;
+	while((res=_response_to_method(cls_iterator, key))==NOT_RESPONSE){
+		if(cls_iterator->super != nil){
+			cls_iterator = cls_iterator->super;
 			//runtime_log("%s\n", "continue to my super");
 		}else{
-			runtime_log("%s_%s: %s\n", cls->name, key, 
+			runtime_log("%s_%s: %s\n", cls_iterator->name, key, 
 				"no such method! are you forget to bind()? MC_call return");
 			return;
 		}
 	}
 
 	pthread_mutex_lock(&_mc_runtime_mutex);
-	if((res < MAX_METHOD_NUM) && (cls_save->method_list[res]==0)){
-		cls_save->method_list[res]=cls->method_list[res];//new cache logic
-		runtime_log("----Cache method: %s+%s\n", cls_save->name, key);
+	if((res < MAX_METHOD_NUM) && (obj->isa->method_list[res]==0)){
+		obj->isa->method_list[res]=cls_iterator->method_list[res];//new cache logic
+		runtime_log("----Cache method: %s+%s\n", obj->isa->name, key);
 	}
 	pthread_mutex_unlock(&_mc_runtime_mutex);
 
-	runtime_log("----Call method: %s+%s\n", cls_save->name, key);
+	runtime_log("----Call method: %s+%s\n", obj->isa->name, key);
 	void *args, *result;
 	args = __builtin_apply_args();
-	result = __builtin_apply(cls->method_list[res], args, 96);
+	result = __builtin_apply(cls_iterator->method_list[res], args, 96);
 
 release(obj);
 

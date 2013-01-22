@@ -78,7 +78,8 @@ typedef struct {\
 									cls##_init(this, 0, __VA_ARGS__);\
 									this->isa=nil;\
 									this->need_bind_method=YES;}while(0)
-#define link_class(cls, super) if(set_class(this, #cls, #super))
+#define link_class(cls, super, ...) super_init(this, super, __VA_ARGS__);\
+									if(set_class(this, #cls, #super))
 #define have_method(cls, met) bind_method(this, #met, cls##_##met)
 //for protocol define
 #define protocol(cls, name, ...)  static id cls##_##name(id const this, char* cmd, __VA_ARGS__)
@@ -106,10 +107,10 @@ void retain(id const this);
 int bind_method(id const self, char *key, _FunctionPointer(value));//the <sys/socket> have function called "bind"
 int override(id const self, char *key, _FunctionPointer(value));
 BOOL response(id const obj, char *key);
-id ff(const id obj, const char *key, ...);
+id ff(id const obj, const char* key, ...);
 //ff-release, for the fr(new(Class, nil), MK(method), nil)
 //warning: do not fr() the singleton class, use the SClass_getInstance() and SClass_releaseInstance()
-id fr(const id obj, const char *key, ...);
+id fr(id const obj, const char* key, ...);
 
 //make a thread-safe allocator
 void* mc_malloc(size_t size);

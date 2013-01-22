@@ -141,19 +141,17 @@ method(MCSocket, sendmsg, xxx)
 
 constructor(MCSocket, MCSocketType socket_type, char* ip, char* port)
 {
-	super_init(this, MCObject, nil);
-	if (set_class(this, MK(MCSocket), MK(MCObject)))
+	link_class(MCSocket, MCObject, nil)
 	{
-		bind_method(this, MK(bye), MV(MCSocket, bye));
-		bind_method(this, MK(listeningStart), MV(MCSocket, listeningStart));//listen
-		bind_method(this, MK(acceptARequest), MV(MCSocket, acceptARequest));//accept
-		//bind_method(this, MK(connectServer), MV(MCSocket, connectServer));//connect
-		bind_method(this, MK(recv), MV(MCSocket, recv));
-		bind_method(this, MK(recvfrom), MV(MCSocket, recvfrom));
-		bind_method(this, MK(recvmsg), MV(MCSocket, recvmsg));
-		bind_method(this, MK(send), MV(MCSocket, send));
-		bind_method(this, MK(sendto), MV(MCSocket, sendto));
-		bind_method(this, MK(sendmsg), MV(MCSocket, sendmsg));
+		have_method(MCSocket, bye);
+		have_method(MCSocket, listeningStart);
+		have_method(MCSocket, acceptARequest);
+		have_method(MCSocket, recv);
+		have_method(MCSocket, recvfrom);
+		have_method(MCSocket, recvmsg);
+		have_method(MCSocket, send);
+		have_method(MCSocket, sendto);
+		have_method(MCSocket, sendmsg);
 	}
 
 	create_and_bind_socket(this, socket_type, ip, port);
