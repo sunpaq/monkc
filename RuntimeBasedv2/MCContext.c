@@ -98,19 +98,17 @@ method(MCContext, getUserInputString, char resultString[])
 
 constructor(MCContext, int argc, char** argv)
 {
-	super_init(this, MCObject, nil);
+	link_class(MCContext, MCObject, nil)
+	{
+		have_method(MCContext, dumpParas);
+		have_method(MCContext, getPara);
+		have_method(MCContext, isIndexedParaEqualTo);
+		have_method(MCContext, isHavePara);
+		have_method(MCContext, showMenuAndGetSelectionChar);
+		have_method(MCContext, showConfirmAndGetBOOL);
+		have_method(MCContext, getUserInputString);
+		have_method(MCContext, bye);
 
-	if(set_class(this, "MCContext", "MCObject")){
-
-		bind_method(this, MK(dumpParas), MV(MCContext, dumpParas));
-		bind_method(this, MK(getPara), MV(MCContext, getPara));
-		bind_method(this, MK(isIndexedParaEqualTo), MV(MCContext, isIndexedParaEqualTo));
-		bind_method(this, MK(isHavePara), MV(MCContext, isHavePara));
-		bind_method(this, MK(showMenuAndGetSelectionChar), MV(MCContext, showMenuAndGetSelectionChar));
-		bind_method(this, MK(showConfirmAndGetBOOL), MV(MCContext, showConfirmAndGetBOOL));
-		bind_method(this, MK(getUserInputString), MV(MCContext, getUserInputString));
-
-		bind_method(this, MK(bye), MV(MCContext, bye));
 	}
 
 	this->argc=argc;

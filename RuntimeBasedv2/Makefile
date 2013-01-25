@@ -1,6 +1,6 @@
 OBJS = MCRuntime.o MCString.o MCContext.o VTable.o Main.o \
 	VTableSuper.o Bird.o MCClock.o MCProcess.o MCException.o \
-	MCThread.o MCSocket.o MCIO.o\
+	MCThread.o MCSocket.o MCIO.o MCMath.o\
 
 CC = gcc -g -w -Wall -Wno-unused-variable -Wno-return-type
 AS = as
@@ -10,6 +10,9 @@ exec:$(OBJS)
 
 # MCRuntime.o:MCRuntime.s MCRuntime.h
 # 	$(AS) -o MCRuntime.o MCRuntime.s
+
+MCMath.o:MCMath.c MCMath.h
+	$(CC) -c MCMath.c
 
 MCThread.o:MCThread.c MCThread.h
 	$(CC) -c MCThread.c -lpthread

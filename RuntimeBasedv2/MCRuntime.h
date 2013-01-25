@@ -33,7 +33,7 @@ typedef int BOOL;
 #define _FunctionArray(name) void (*name[MAX_METHOD_NUM])()
 //MK: Method Key  MV: Method Value
 #define MV(cls, name) cls##_##name
-#define MK(value) #value
+#define MK(value) _hash(#value)
 #define Handle(cls) cls*
 
 //root class
@@ -56,7 +56,7 @@ typedef struct {
 	int ref_count;
 }MCObject;
 typedef MCObject* id;
-id MCObject_init(id const this, char* cmd, xxx);
+id MCObject_init(id const this, unsigned hashkey, xxx);
 
 //for class define
 #define class(cls) _newline;\
@@ -67,11 +67,12 @@ typedef struct {\
 	_##cls;\
 }cls;
 
-#define constructor(cls, ...)       cls* cls##_init(cls* const this, char* cmd, __VA_ARGS__)
+#define constructor(cls, ...)       cls* cls##_init(cls* const this, unsigned hashkey, __VA_ARGS__)
 #define new(cls, ...)                    cls##_init(_alloc(cls), 0, __VA_ARGS__)
 //for method
 #define returns(type)
-#define method(cls, name, ...)     void* cls##_##name(cls* const this, char* cmd, __VA_ARGS__)
+#define method(cls, name, ...)       void* cls##_##name(cls* const this, unsigned hashkey, __VA_ARGS__)
+#define moption(cls, opt, name, ...) void* opt##_##name(cls* const this, unsigned hashkey, __VA_ARGS__)
 #define call(this, cls, name, ...)       cls##_##name(this, 0, __VA_ARGS__)//call other class method
 #define super_init(this, cls, ...)  do{this->need_bind_method=NO;\
 									this->isa=nil;\
@@ -80,9 +81,12 @@ typedef struct {\
 									this->need_bind_method=YES;}while(0)
 #define link_class(cls, super, ...) super_init(this, super, __VA_ARGS__);\
 									if(set_class(this, #cls, #super))
-#define have_method(cls, met) bind_method(this, #met, cls##_##met)
+#define have_method(cls, met) do{bind_method(this, MK(met), MV(cls, met));\
+							  runtime_log("%s: [%d]%s\n", #cls, _hash(#met), #met);\
+							  }while(0)
+#define preload(cls, ...) release(new(cls, __VA_ARGS__))
 //for protocol define
-#define protocol(cls, name, ...)  static id cls##_##name(id const this, char* cmd, __VA_ARGS__)
+#define protocol(cls, name, ...)  static id cls##_##name(id const this, unsigned hashkey, __VA_ARGS__)
 #define This(cls)      ((cls*)this)
 #define Cast(cls, obj) ((cls*)obj)
 //runtime parts
@@ -97,6 +101,7 @@ void error_log(char* fmt, ...);
 void debug_log(char* fmt, ...);
 void runtime_log(char* fmt, ...);
 
+unsigned _hash(char *s);
 BOOL set_class(id const self_in, const char* classname, const char* superclassname);
 
 //MM
@@ -104,13 +109,13 @@ void release(id const this);
 void retain(id const this);
 
 //method handling
-int bind_method(id const self, char *key, _FunctionPointer(value));//the <sys/socket> have function called "bind"
-int override(id const self, char *key, _FunctionPointer(value));
-BOOL response(id const obj, char *key);
-id ff(id const obj, const char* key, ...);
+unsigned bind_method(id const self, unsigned hashkey, _FunctionPointer(value));//the <sys/socket> have function called "bind"
+unsigned override(id const self, unsigned hashkey, _FunctionPointer(value));
+BOOL response(id const obj, unsigned hashkey);
+id ff(id const obj, const unsigned hashkey, ...);
 //ff-release, for the fr(new(Class, nil), MK(method), nil)
 //warning: do not fr() the singleton class, use the SClass_getInstance() and SClass_releaseInstance()
-id fr(id const obj, const char* key, ...);
+id fr(id const obj, const unsigned hashkey, ...);
 
 //make a thread-safe allocator
 void* mc_malloc(size_t size);

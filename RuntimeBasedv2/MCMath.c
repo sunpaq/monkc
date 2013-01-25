@@ -7,11 +7,9 @@ method(MCMath, new, xxx)
 
 constructor(MCMath, xxx)
 {
-	super_init(this, MCObject, nil);
-
-	if (set_class(this, MK(MCMath), MK(MCObject)))
+	link_class(MCMath, MCObject, nil)
 	{
-		bind_method(this, MK(new), MV(MCMath, new));
+		have_method(MCMath, new);
 	}
 
 	return this;

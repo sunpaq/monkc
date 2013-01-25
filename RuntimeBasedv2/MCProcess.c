@@ -12,12 +12,10 @@ method(MCProcess, printPPID, xxx)
 
 constructor(MCProcess, xxx)
 {
-	super_init(this, MCObject, nil);
-
-	if (set_class(this, MK(MCProcess), MK(MCObject)))
+	link_class(MCProcess, MCObject, nil)
 	{
-		bind_method(this, MK(printPID), MV(MCProcess, printPID));
-		bind_method(this, MK(printPPID), MV(MCProcess, printPPID));
+		have_method(MCProcess, printPID);
+		have_method(MCProcess, printPPID);
 	}
 
 	this->pid=getpid();

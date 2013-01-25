@@ -71,14 +71,13 @@ void VTable_releaseInstance()
 
 constructor(VTable, xxx)
 {
-	super_init(this, VTableSuper, nil);
-
-	if(set_class(this, MK(VTable), MK(VTableSuper))){
-		bind_method(this, MK(amethod), MV(VTable, amethod));
-		bind_method(this, MK(amethod2), MV(VTable, amethod2));
-		bind_method(this, MK(bmethod), MV(VTable, bmethod));
-		bind_method(this, MK(cmethod), MV(VTable, cmethod));
-		bind_method(this, MK(bye), MV(VTable, bye));
+	link_class(VTable, VTableSuper, nil)
+	{
+		have_method(VTable, amethod);
+		have_method(VTable, amethod2);
+		have_method(VTable, bmethod);
+		have_method(VTable, cmethod);
+		have_method(VTable, bye);
 		#define BIND
 		#include "DrawableProtocol.h"
 	}

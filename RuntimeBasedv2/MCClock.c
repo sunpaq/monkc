@@ -119,31 +119,51 @@ method(MCClock, printCurrentGMTTime, xxx)
 
 constructor(MCClock, xxx)
 {
-	super_init(this, MCObject, nil);
-
-	if (set_class(this, "MCClock", "MCObject"))
+	link_class(MCClock, MCObject, nil)
 	{
-		bind_method(this, MK(setTimeToNow), 			MV(MCClock, setTimeToNow));
-		bind_method(this, MK(setTime), 				MV(MCClock, setTime));
-		bind_method(this, MK(adjustTime), 				MV(MCClock, adjustTime));
+		have_method(MCClock, setTimeToNow);
+		have_method(MCClock, setTime);
+		have_method(MCClock, adjustTime);
 
-		bind_method(this, MK(setRawtime), 				MV(MCClock, setRawtime));
-		bind_method(this, MK(setRawtimeFields), 		MV(MCClock, setRawtimeFields));
+		have_method(MCClock, setRawtime);
+		have_method(MCClock, setRawtimeFields);
 
-		bind_method(this, MK(getTime), 				MV(MCClock, getTime));
-		bind_method(this, MK(getRawtime), 				MV(MCClock, getRawtime));
-		bind_method(this, MK(getTimeByString), 		MV(MCClock, getTimeByString));
+		have_method(MCClock, getTime);
+		have_method(MCClock, getRawtime);
+		have_method(MCClock, getTimeByString);
 
-		bind_method(this, MK(getCPUClocksPerSecond), 	MV(MCClock, getCPUClocksPerSecond));
-		bind_method(this, MK(getCPUClocksSinceStart), 	MV(MCClock, getCPUClocksSinceStart));
-		bind_method(this, MK(getCurrentTimeString), 	MV(MCClock, getCurrentTimeString));
-		bind_method(this, MK(getCurrentGMTTimeString), MV(MCClock, getCurrentGMTTimeString));
+		have_method(MCClock, getCPUClocksPerSecond);
+		have_method(MCClock, getCPUClocksSinceStart);
+		have_method(MCClock, getCurrentTimeString);
+		have_method(MCClock, getCurrentGMTTimeString);
 
-		bind_method(this, MK(printTime), 				MV(MCClock, printTime));
-		bind_method(this, MK(printCurrentTime), 		MV(MCClock, printCurrentTime));
-		bind_method(this, MK(printCurrentGMTTime), 	MV(MCClock, printCurrentGMTTime));
-
+		have_method(MCClock, printTime);
+		have_method(MCClock, printCurrentTime);
+		have_method(MCClock, printCurrentGMTTime);
 	}
 
 	return this;
 }
+
+char* MCClock_rawtime2String(time_t* timeval)
+{
+	return ctime(timeval);
+}
+
+char* MCClock_settableTime2String(struct tm *tm)
+{
+	return asctime(tm);
+}
+
+struct tm* MCClock_rawtime2SettableTimeGMT(time_t* timeval)
+{
+	return gmtime(timeval);
+}
+
+struct tm* MCClock_rawtime2SettableTimeLocal(time_t* timeval)
+{
+	return localtime(timeval);
+}
+
+
+

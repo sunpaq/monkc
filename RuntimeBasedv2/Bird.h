@@ -8,6 +8,9 @@
 class(Bird);
 method(Bird, bye, xxx);
 method(Bird, fly, xxx);
+moption(Bird, Duck, fly, xxx);
+moption(Bird, Chicken, fly, xxx);
+
 constructor(Bird, int type);
 
 #define DUCK_TYPE 0

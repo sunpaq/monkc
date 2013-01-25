@@ -14,6 +14,7 @@ strftime();-------(struct to string)string format time, make a string as format 
 
 size_t
 clock_t
+
 time_t------------long
 
 struct tm
@@ -26,6 +27,10 @@ struct tm
     int tm_wday;   // days since Sunday (0 to 6 Sunday=0)
     int tm_yday;   // days since January 1 (0 to 365)
     int tm_isdst;  // Daylight Savings Time
+
+//1. rawTime: time_t
+//2. settableTime: tm
+//3. stringTime: char*
 */
 #include "MCContext.h"
 
@@ -61,6 +66,12 @@ method(MCClock, printCurrentTime, xxx);
 method(MCClock, printCurrentGMTTime, xxx);
 
 constructor(MCClock, xxx);
+
+char* MCClock_rawtime2String(time_t* timeval);
+char* MCClock_settableTime2String(struct tm *tm);
+struct tm* MCClock_rawtime2SettableTimeGMT(time_t* timeval);
+struct tm* MCClock_rawtime2SettableTimeLocal(time_t* timeval);
+
 
 #define no_change 60000
 enum weekday {

@@ -4,7 +4,7 @@ jmp_buf exception_env={};
 int exception_type=__exception_try_not_called;
 
 /* copy form << The C Programming language >> */
-static inline unsigned _hash(char *s)
+static inline unsigned _ehash(char *s)
 {
 	unsigned hashval;
 	for(hashval = 0; *s != '\0'; s++)
@@ -32,7 +32,7 @@ static unsigned _define_exception(char* s)
 {
 	_clear_exception_list();
 
-	unsigned val = _hash(s);
+	unsigned val = _ehash(s);
 	if(_exception_list[val]==1){
 		error_log("your exception name:%s is conflicted please change another name\n", s);
 		exit(-1);
@@ -43,7 +43,7 @@ static unsigned _define_exception(char* s)
 
 unsigned __get_exception_code(char* s)
 {
-	unsigned val = _hash(s);
+	unsigned val = _ehash(s);
 	if (_exception_list[val]==1)
 		return (unsigned)val;
 	else
@@ -52,12 +52,12 @@ unsigned __get_exception_code(char* s)
 
 id get_exception_data(char* key)
 {
-	return _exception_store[_hash(key)];
+	return _exception_store[_ehash(key)];
 }
 
 void set_exception_data(char* key, id e)
 {
-	id exp_obj = _exception_store[_hash(key)];
+	id exp_obj = _exception_store[_ehash(key)];
 	if(exp_obj!=nil)release(exp_obj);//auto release the old one
-	_exception_store[_hash(key)]=e;
+	_exception_store[_ehash(key)]=e;
 }

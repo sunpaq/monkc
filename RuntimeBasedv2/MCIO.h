@@ -1,4 +1,5 @@
 #include "MCContext.h"
+#include "MCBuffer.h"
 #include <fcntl.h>
 #include <unistd.h>
 
@@ -6,6 +7,9 @@
 #include <sys/ioctl.h>
 #include <sys/select.h>
 #include <sys/stat.h>
+#include <utime.h>
+#include <dirent.h>
+#include <ftw.h>
 
 /*
 << File I/O (Unbuffered I/O) >>: invoke a system call in kernel
@@ -97,9 +101,196 @@ int ioctl(int filedes, int request, ...);//Single UNIX Specification only as an 
 /dev/fd:
 fd = open("/dev/fd/0", mode); == fd = dup(0); //mode is no-use 
 
-int stat(const char *restrict pathname, struct stat *restrict buf);
-int fstat(int filedes, struct stat *buf);
-int lstat(const char *restrict pathname, struct stat *restrict buf);
+int stat(const char *restrict pathname, struct stat *restrict buf);	//for file path
+int fstat(int filedes, struct stat *buf);                          	//for file descriptor
+int lstat(const char *restrict pathname, struct stat *restrict buf);//for symbolic link
+
+struct stat {
+	mode_t st_mode; 		//file type & mode (permissions)
+	ino_t st_ino; 			//i-node number (serial number)
+	dev_t st_dev; 			//device number (file system)
+	dev_t st_rdev; 			//device number for special files
+	nlink_t st_nlink; 		//number of links
+	uid_t st_uid; 			//user ID of owner
+	gid_t st_gid; 			//group ID of owner
+	off_t st_size; 			//size in bytes, for regular files
+	time_t st_atime; 		//time of last access
+	time_t st_mtime; 		//time of last modification
+	time_t st_ctime; 		//time of last file status change
+	blksize_t st_blksize; 	//best I/O block size
+	blkcnt_t st_blocks;  	//number of disk blocks allocated
+};
+
+//types of file:
+1. Regular file               ---> S_ISREG(file_stat.st_mode)
+2. Directory file             ---> S_ISDIR(file_stat.st_mode)
+3. Block Special File         ---> S_ISCHR(file_stat.st_mode)
+4. Character Special File     ---> S_ISBLK(file_stat.st_mode)
+5. FIFO(named pipe)           ---> S_ISFIFO(file_stat.st_mode)
+6. Socket                     ---> S_ISLNK(file_stat.st_mode)
+7. Symbolic Link              ---> S_ISSOCK(file_stat.st_mode)
+
+//add by POSIX.1 they use struct stat as parameter(linux not implemented)
+8. Message Queue              ---> S_TYPEISMQ(file_stat)
+9. Semaphore                  ---> S_TYPEISSEM(file_stat)
+10.Shared Memory Object       ---> S_TYPEISSHM(file_stat)
+
+//if the owner of the file is the superuser and if the file's set-user-ID bit is set, then while that
+program file is running as a process, it has superuser privileges.
+S_ISUID() //st_uid
+S_ISGID() //st_gid
+
+//st_mode value also encodes the access permission bits for the file.
+S_IRUSR //user read
+S_IWUSR //user write
+S_IXUSR //user execute
+
+S_IRGRP //group read
+S_IWGRP //group write
+S_IXGRP //group execute
+
+S_IROTH //other read
+S_IWOTH //other write
+S_IXOTH //other execute
+
+//for process:
+real user ID
+effective user ID
+saved user ID
+
+//sequence for access permission check by kernel:
+if(process.effective_uid==0)
+	candoAnything();
+if(process.effective_uid==file.owner_id) //process owned the file
+	if(S_IRUSR(file.st_mode))
+		canRead();
+	if(S_IWUSR(file.st_mode))
+		canWrite();
+	if(S_IXUSR(file.st_mode))
+		canExecute();
+if(process.effective_gid==file.group_id)
+	if(S_IRGRP(file.st_mode))
+		canRead();
+	if(S_IWGRP(file.st_mode))
+		canWrite();
+	if(S_IXGRP(file.st_mode))
+		canExecute();
+else
+	if(S_IROTH(file.st_mode))
+		canRead();
+	if(S_IWOTH(file.st_mode))
+		canWrite();
+	if(S_IXOTH(file.st_mode))
+		canExecute();
+
+@The user ID of a new file is set to the effective user ID of the process.
+@The group ID of a new file is different between OSs
+
+//permission check use real ID instead of effective ID:
+R_OK
+W_OK
+X_OK
+F_OK ---> if file exist
+int access(const char *pathname, int mode);//0 Ok -1 ERROR
+
+//default permissions for new files of a process:
+mode_t umask(mode_t cmask);
+//example: umask(S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
+//shell-command: umask
+				 > 0002
+				 umask -S
+				 > u=rwx,g=rwx,o=rx
+
+//change the file access permissions for an existing file.
+
+<S_IRWXU read, write, and execute by user (owner)>
+<S_IRWXG read, write, and execute by group>
+<S_IRWXO read, write, and execute by other (world)>
+
+S_ISUID set-user-ID on execution
+S_ISGID set-group-ID on execution
+S_ISVTX saved-text (sticky bit)
+
+S_IRUSR read by user (owner)
+S_IWUSR write by user (owner)
+S_IXUSR execute by user (owner)
+
+S_IRGRP read by group
+S_IWGRP write by group
+S_IXGRP execute by group
+
+S_IROTH read by other (world)
+S_IWOTH write by other (world)
+S_IXOTH execute by other (world)
+
+int chmod(const char *pathname, mode_t mode);
+int fchmod(int filedes, mode_t mode);
+
+//change the file owner. on many systems only the superuser can change the file owner
+int chown(const char *pathname, uid_t owner, gid_t group);
+int fchown(int filedes, uid_t owner, gid_t group);
+int lchown(const char *pathname, uid_t owner, gid_t group);
+
+-rw-rwSrw- 1 sar
+//Note that the ls command lists the group-execute permission as S to
+//signify that the set-group-ID bit is set without the group-execute bit being set.
+
+//truncate file
+int truncate(const char *pathname, off_t length);
+int ftruncate(int filedes, off_t length);
+
+//Hard links (point to the i-node, Only the superuser can create a hard link to a directory)
+int link(const char *existingpath, const char *newpath);
+//This function creates a new directory entry, newpath, 
+//that references the existing file existingpath.
+int unlink(const char *pathname);
+//This function removes the directory entry and decrements the link count of the file referenced by pathname.
+
+//ISO C functions
+int remove(const char *pathname);
+int rename(const char *oldname, const char *newname);
+
+//Symbolic Link
+int symlink(const char *actualpath, const char *sympath);
+ssize_t readlink(const char* restrict pathname, char *restrict buf, size_t bufsize);
+//Because the open function follows a symbolic link, we need a way to open the link itself 
+//and read the name in the link. This function combines the actions of open, read, and close.
+
+//change time
+int utime(const char *pathname, const struct utimbuf *times);
+struct utimbuf {
+	time_t actime; // access time
+	time_t modtime; // modification time
+}
+
+//dirs
+int mkdir(const char *pathname, mode_t mode);
+//normally want at least one of the execute bits enabled, 
+//to allow access to filenames within the directory.
+int rmdir(const char *pathname);
+
+//POSIX
+DIR *opendir(const char *pathname);
+struct dirent *readdir(DIR *dp);
+struct dirent {
+	ino_t d_ino; // i-node number
+	char d_name[NAME_MAX + 1]; // null-terminated filename
+}
+void rewinddir(DIR *dp);
+int closedir(DIR *dp);
+//XSI
+long telldir(DIR *dp);
+void seekdir(DIR *dp, long loc);
+
+//File tree walk (ftw, nftw)
+int ftw(const char *dirpath,
+        int (*fn) (const char *fpath, const struct stat *sb, int typeflag),
+        int nopenfd);
+
+//pwd: process working directory (Every process has a current working directory.)
+int chdir(const char *pathname);
+int fchdir(int filedes);
+char *getcwd(char *buf, size_t size);
 
 */
 
@@ -108,11 +299,12 @@ int lstat(const char *restrict pathname, struct stat *restrict buf);
 	int fd;\
 	char* pathname;\
 	void* buffer;\
+	struct stat attribute;\
 
 class(MCFile);
 
 method(MCFile, readFromBegin, off_t offset, size_t nbytes);
-method(MCFile, readFromLastTime, off_t offset, size_t nbytes);
+method(MCFile, readAtLastPosition, off_t offset, size_t nbytes);
 method(MCFile, readFromEnd, off_t offset, size_t nbytes);
 
 method(MCFile, writeToBegin, off_t offset, void* buf, size_t nbytes);
@@ -121,17 +313,33 @@ method(MCFile, writeToEnd, off_t offset, void* buf, size_t nbytes);
 
 method(MCFile, duplicateFd, xxx); returns(int fd);
 method(MCFile, duplicateFdTo, int fd); returns(int newfd);
-
+method(MCFile, printAttribute, xxx);
 method(MCFile, bye, xxx);
-constructor(MCFile, char* pathname, size_t buffersize, int oflag);
-
+method(MCFile, checkPermissionUseRealIDOfProcess, int mode); returns(BOOL)
+/*
+R_OK
+W_OK
+X_OK
+F_OK ---> if file exist
+*/
 BOOL MCFile_isFileExit(char* pathname);
-MCFile* MCFile_newReadOnly(char* pathname, size_t buffersize);
-MCFile* MCFile_newWriteOnly(char* pathname, size_t buffersize);
-MCFile* MCFile_newReadWrite(char* pathname, size_t buffersize);
-
+BOOL MCFile_chmod(char* pathname, mode_t mode);
+BOOL MFFile_truncateFileTo(char* pathname, off_t length);
+mode_t MCFile_setNewFilePermissionMask4Process(mode_t cmask);
 void MCFile_flushAllCacheToDisk();
 int MCFile_flushAFileCacheToDisk(int fd); returns(int result);
+BOOL MCFile_createSymbolLink(char* pathname, char* linkname);
+BOOL MCFile_createDirectory(char* pathname);
+BOOL MCFile_removeDirectory(char* pathname);
+
+BOOL MCProcess_changeCurrentWorkingDir(char* pathname);
+BOOL MCProcess_changeCurrentWorkingDirByFd(int fd);
+char* MCProcess_getCurrentWorkingDir(MCCharBuffer* buff);
+
+constructor(MCFile, char* pathname, int oflag);
+MCFile* MCFile_newReadOnly(char* pathname);
+MCFile* MCFile_newWriteOnly(char* pathname, BOOL isClear);
+MCFile* MCFile_newReadWrite(char* pathname, BOOL isClear);
 
 #endif
 

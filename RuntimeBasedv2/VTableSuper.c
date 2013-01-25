@@ -43,13 +43,12 @@ method(VTableSuper, bye, xxx)
 
 constructor(VTableSuper, xxx)
 {
-	super_init(this, MCObject, nil);
-
-	if(set_class(this, "VTableSuper", "MCObject")){
-		bind_method(this, MK(show), MV(VTableSuper, show));
-		bind_method(this, MK(bmethod), MV(VTableSuper, bmethod));
-		bind_method(this, MK(cmethod), MV(VTableSuper, cmethod));
-		bind_method(this, MK(bye), MV(VTableSuper, bye));
+	link_class(VTableSuper, MCObject, nil)
+	{
+		have_method(VTableSuper, show);
+		have_method(VTableSuper, bmethod);
+		have_method(VTableSuper, cmethod);
+		have_method(VTableSuper, bye);
 		#define BIND
 		#include "DrawableProtocol.h"
 	}

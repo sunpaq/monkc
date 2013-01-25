@@ -10,6 +10,7 @@
 #include "MCThread.h"
 #include "MCSocket.h"
 #include "MCIO.h"
+#include "MCMath.h"
 
 void mocha_syntex_test(Handle(MCContext) const context);
 void menu_drive_test(Handle(MCContext) const context);
@@ -30,6 +31,7 @@ you can check the origin main code at MCRuntime.c line:27
 */
 
 int MCContext_runloop(Handle(MCContext) const context){
+	LOG_LEVEL = DEBUG;
 	test(context);
 
 	//static function can not be called even have "extern" declearation
@@ -47,6 +49,11 @@ void test(Handle(MCContext) const context)
 	fr(new(VTableSuper, nil), MK(whatIsYourClassName));
 	fr(new(MCProcess, nil), MK(whatIsYourClassName));
 	fr(new(MCClock, nil), MK(whatIsYourClassName));
+	preload(Bird, DUCK_TYPE);
+	preload(MCClock, nil);
+	preload(MCMath, nil);
+	preload(MCProcess, nil);
+	preload(MCString, "a");
 
 	int selection = ff(context, 
 		MK(showMenuAndGetSelectionChar), 
@@ -181,10 +188,12 @@ void test_MCString()
 {
 	printf("---- test_MCString START ----\n");
 	MCString* newstr = new(MCString, "a new string a");
+
+	unsigned add_key = MK(add);//speed up looping
 	int ix;
 	for (ix = 0; ix < 20; ++ix)
 	{
-		ff(newstr, MK(add), " + with append info");
+		ff(newstr, add_key, " + with append info");
 	}
 	ff(newstr, MK(print));
 	printf("length:%d size:%d\n", newstr->length, newstr->size);
@@ -254,14 +263,23 @@ void test_MCThread()
 void test_MCFile()
 {
 	char* str = "i_am_sun_and_i_create_this_file.";
-	char* buff[4096];
-	MCFile* tmpfile = MCFile_newReadWrite("temp.txt", 4096);
+	//char buff[4096];
+	MCCharBuffer* buff = NewMCCharBuffer(4096);
+	printf("current working directory: %s\n", MCProcess_getCurrentWorkingDir(buff));
+
+	MCFile_chmod("temp.txt" ,S_IRWXU|S_IRWXG|S_IRWXO);
+	MCFile* tmpfile = MCFile_newReadWrite("temp.txt", YES);
+	MCFile_createSymbolLink("temp.txt", "temp.link");
 	if(tmpfile!=nil){
 		ff(tmpfile, MK(writeToBegin), 0, str, strlen(str)+1);
 		ff(tmpfile, MK(readFromBegin), 0, sizeof(tmpfile->buffer));
 		printf("content in file is: %s strlen is:%d\n", tmpfile->buffer, strlen(str)+1);
+		ff(tmpfile, MK(printAttribute));
 		release(tmpfile);
 	}
+
+	free(buff);
+
 }
 
 void mocha_lib_test()
@@ -434,7 +452,7 @@ void mocha_syntex_test(MCContext* const context)
 	Handle(VTable) ret = VTable_getInstance();
 
 	//call by string
-	ff(VTable_getInstance(),"draw");
+	ff(VTable_getInstance(), MK(draw));
 
 	//protocol method call
 	ff(ret, MK(erase));
@@ -495,7 +513,7 @@ void mocha_syntex_test(MCContext* const context)
 		printf("%s\n", "MCRuntimeException raised");
 
 	}catch(MCIOException){
-		MCString* str = get_exception_data(MK(MCIOException));
+		MCString* str = get_exception_data("MCIOException");
 		ff(str, MK(add), "@this is append info");
 		ff(str, MK(print));
 		ff(str, MK(print));
@@ -524,7 +542,7 @@ void mocha_syntex_test(MCContext* const context)
 }
 
 void doSomething() throws(MCIOException) {
-	set_exception_data(MK(MCIOException), new(MCString, "this is a MCIOException reason"));
+	set_exception_data("MCIOException", new(MCString, "this is a MCIOException reason"));
 	throw(MCIOException);
 	printf("%s\n", "doSomething this should never show");
 }

@@ -1,13 +1,13 @@
 #include "MCString.h"
 
-char get_one_char()
+static char get_one_char()
 {
 	char cf = getchar();
 	while(getchar()!='\n');//clear the buff
 	return cf;
 }
 
-void get_chars_until_enter(char resultString[])
+static void get_chars_until_enter(char resultString[])
 {
 	char tc;
 	int i=0;
@@ -40,7 +40,7 @@ method(MCString, print, xxx)
 	printf("\n");
 }
 
-method(MCString, toCString, char resultString[])
+method(MCString, toCString, char const resultString[])
 {
 	MCString* iterator = this;
 	strcpy(resultString, this->buff);
@@ -105,13 +105,13 @@ constructor(MCString, CString str)
 	super_init(newthis, MCObject, nil);
 	if (set_class(newthis, "MCString", "MCObject"))
 	{
-		bind_method(newthis, "add", MCString_add);
-		bind_method(newthis, "print", MCString_print);
-		bind_method(newthis, "toCString", MCString_toCString);
-		bind_method(newthis, "equalTo", MCString_equalTo);
-		bind_method(newthis, "getOneChar", MCString_getOneChar);
-		bind_method(newthis, "getCharsUntilEnter", MCString_getCharsUntilEnter);
-		bind_method(newthis, "bye", MCString_bye);
+		bind_method(newthis, MK(add), MV(MCString, add));
+		bind_method(newthis, MK(print), MV(MCString, print));
+		bind_method(newthis, MK(toCString), MV(MCString, toCString));
+		bind_method(newthis, MK(equalTo), MV(MCString, equalTo));
+		bind_method(newthis, MK(getOneChar), MV(MCString, getOneChar));
+		bind_method(newthis, MK(getCharsUntilEnter), MV(MCString, getCharsUntilEnter));
+		bind_method(newthis, MK(bye), MV(MCString, bye));
 	}
 	
 	newthis->length = strlen(str);
