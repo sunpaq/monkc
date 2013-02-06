@@ -130,11 +130,14 @@ constructor(MCRunnable, _FunctionPointer(init_routine));
 class(MCThread);
 //global class functions
 int MCThread_cancel(MCThread* thread);
+int MCThread_join(MCThread* thread, void** result);
+int MCThread_detach(MCThread* thread);
+
 void MCThread_stop(void* result);
 pthread_t MCThread_self();
+
+
 method(MCThread, start, void* result) 							returns(int);
-method(MCThread, join, MCThread* threadToWait, void** result) 	returns(int);
-method(MCThread, detach, MCThread* thread) 						returns(int);
 method(MCThread, equal, MCThread* thread) 						returns(BOOL);
 method(MCThread, bye, xxx);
 constructor(MCThread, MCRunnable* runnable);

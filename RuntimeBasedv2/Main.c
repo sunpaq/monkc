@@ -1,16 +1,18 @@
 #include "MCContext.h"
 
+#include "MCBuffer.h"
+#include "MCClock.h"
+#include "MCException.h"
+#include "MCIO.h"
+#include "MCMath.h"
+#include "MCProcess.h"
+#include "MCSocket.h"
+#include "MCString.h"
+#include "MCThread.h"
+
 #include "VTable.h"
 #include "VTableSuper.h"
 #include "Bird.h"
-#include "MCClock.h"
-#include "MCProcess.h"
-#include "MCException.h"
-#include "MCString.h"
-#include "MCThread.h"
-#include "MCSocket.h"
-#include "MCIO.h"
-#include "MCMath.h"
 
 void mocha_syntex_test(Handle(MCContext) const context);
 void menu_drive_test(Handle(MCContext) const context);
@@ -30,12 +32,17 @@ argc and argv are wrapped into context
 you can check the origin main code at MCRuntime.c line:27
 */
 
-int MCContext_runloop(Handle(MCContext) const context){
+int main(int argc, char const *argv[])
+{
+	mc_init();
 	LOG_LEVEL = DEBUG;
-	test(context);
+	MCContext* context = new(MCContext, argc, argv);
 
-	//static function can not be called even have "extern" declearation
-	//function();
+	for(;;)
+		test(context);
+	
+	release(context);
+	mc_end();
 	return 0;
 }
 
@@ -85,7 +92,7 @@ void wait_routine()
 {
 	MCSpinLockInit(spin ,YES);
 		
-	printf("%s\n", "wait for signal");
+	printf("%s\n", "wait for signal, block here");
 	MCCondWait(cond, withCond);
 
 	printf("%s\n", "received signal!!!");
@@ -227,13 +234,14 @@ void test_MCThread()
 	//test MCThread
 	MCThread* m_thread = new(MCThread, new(MyRunnable, init_routine));
 	m_thread->isRunOnce = YES;
-	//start
+	//start once
 	ff(m_thread, MK(start), nil);
 	ff(m_thread, MK(start), nil);
 	ff(m_thread, MK(start), nil);
-
 	debug_log("tid is:%lu\n", m_thread->self);
-	debug_log("this is Main thread!\n");
+	//release(m_thread);
+	//MCThread_join(m_thread, nil);
+
 	//equal
 	if (ff(m_thread, MK(equal), m_thread))
 	{
@@ -244,18 +252,24 @@ void test_MCThread()
 	MCThread* m_thread2 = new(MCThread, new(MyRunnable, nil));
 	ff(m_thread2, MK(start), nil);
 
-	//join the thread2 to thread1
-	int rescode;
-	if(rescode=ff(m_thread, MK(join), m_thread2, nil))
+	int i;
+	for (i = 0; i < 12; ++i)
 	{
-		error_log("the thread join err is: %d", rescode);
+		debug_log("this is Main thread!\n");
+		sleep(1);
 	}
+
+	//join the m_thread, thread2 to main thread
+	MCThread_join(m_thread2, nil);
 
 	//test condition lock and spin lock
 	MCThread* m_wait = new(MCThread, new(MyRunnable, wait_routine));
 	MCThread* m_signal = new(MCThread, new(MyRunnable, signal_routine));
 	ff(m_wait, MK(start), nil);
 	ff(m_signal, MK(start), nil);
+
+	MCThread_join(m_wait, nil);
+	MCThread_join(m_signal, nil);
 
 	printf("---- test_MCThread END ----\n");
 }
@@ -279,7 +293,6 @@ void test_MCFile()
 	}
 
 	free(buff);
-
 }
 
 void mocha_lib_test()

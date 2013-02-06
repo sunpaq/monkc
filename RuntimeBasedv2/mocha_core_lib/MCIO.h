@@ -292,6 +292,7 @@ int chdir(const char *pathname);
 int fchdir(int filedes);
 char *getcwd(char *buf, size_t size);
 
+
 */
 
 #ifndef _MCFile
@@ -342,6 +343,148 @@ MCFile* MCFile_newWriteOnly(char* pathname, BOOL isClear);
 MCFile* MCFile_newReadWrite(char* pathname, BOOL isClear);
 
 #endif
+
+/*
+<<  Standard I/O Library  >> (Buffered I/O)
+
+
+concept: 
+1. Streams(in memory)
+2. FILE Object
+3. sigle-byte/multi-byte("wide") char
+4. orientation: byte-oriented/wide oriented
+
+check and change orientation:
+#include <stdio.h>
+#include <wchar.h>
+int fwide(FILE *fp, int mode);
+· If the mode argument is negative, fwide will try to make the specified stream byte-oriented.
+· If the mode argument is positive, fwide will try to make the specified stream wide-oriented.
+· If the mode argument is zero, fwide will not try to set the orientation, 
+but will still return a value identifying the stream's orientation.
+
+FILE* stdin  --->  fd = STDIN_FILENO
+FILE* stdout --->  fd = STDOUT_FILENO
+FILE* stderr --->  fd = STDERR_FILENO
+
+Buffering:
+1. Fully buffered: the whole file will be buffered in memory automatically.
+2. Line buffered: buffer a line a char until /n. usually use for terminal.
+3. Unbuffered: the same as write. usually use for standard error.
+
+default:
+1. standard error is unbuffered
+2. streams open to terminal devices are line buffered
+3. and all other streams are fully buffered.
+
+change buffering:
+void setbuf(FILE *restrict fp, char *restrict buf);
+int setvbuf(FILE *restrict fp, char *restrict buf, int mode, size_t size);
+[NULL _IOFBF/_IOLBF/_IONBF BUFSIZ]
+
+flush:
+int fflush(FILE *fp);
+[NULL: it will flush all output stream buffer]
+
+open a stream:
+FILE *fopen(const char *restrict pathname, const char *restrict type);
+FILE *freopen(const char *restrict pathname, const char *restrict type, FILE *restrict fp);
+FILE *fdopen(int filedes, const char *type);
+type:
+r/w/a/ & b & +
+
+close a stream:
+int fclose(FILE *fp);
+
+input/output functions:
+int getc(FILE *fp);  //may be a macro implement, so do not fill *fp a expression
+int fgetc(FILE *fp); //guaranteed to be a function. not macro, but function is slower than macro
+int getchar(void);   //equal getc(stdin)
+int putc(int c, FILE *fp);
+int fputc(int c, FILE *fp);
+int putchar(int c);
+
+error check:
+int ferror(FILE *fp);
+int feof(FILE *fp);
+void clearerr(FILE *fp);
+
+pushback char / peek char:
+int ungetc(int c, FILE *fp); //they don't get written back to the underlying file or device. 
+//They are kept incore in the standard I/O library's buffer for the stream.
+
+line I/O:
+char *fgets(char *restrict buf, int n, FILE *restrict fp);
+int fputs(const char *restrict str, FILE *restrict fp);
+//never use the gets and puts to avoid buffer overflow and other bugs
+
+binary I/O:
+size_t fread(void *restrict ptr, size_t size, size_t nobj, FILE *restrict fp);
+size_t fwrite(const void *restrict ptr, size_t size, size_t nobj, FILE *restrict fp);
+//we need binary I/O functions because line-at-a-time functions will stop at a null/newline
+//!!! the two function can not cross platform. binary file write on one system can not be read on the other
+
+seek file:
+1. long integer as offset
+long ftell(FILE *fp);
+int fseek(FILE *fp, long offset, int whence); //SEEK_SET/SEEK_CUR/SEEK_END
+void rewind(FILE *fp); //set position to begin of the file
+
+2. Single UNIX Specification: off_t as offset
+off_t ftello(FILE *fp);
+int fseeko(FILE *fp, off_t offset, int whence);
+
+3. ISO C standard: fpos_t as offset
+int fgetpos(FILE *restrict fp, fpos_t *restrict pos);
+int fsetpos(FILE *fp, const fpos_t *pos);
+
+4. Formatted I/O:
+int   printf(const char *restrict format, ...); //write to standard I/O
+int  fprintf(FILE *restrict fp, const char *restrict format, ...);  //write to FILE
+int  sprintf(char *restrict buf, const char *restrict format, ...); //write to buffer, can overflow the buffer
+int snprintf(char *restrict buf, size_t n, const char *restrict format, ...);//deal with buffer overflow
+
+#include <stdarg.h>
+int   vprintf(const char *restrict format, va_list arg);
+int  vfprintf(FILE *restrict fp, const char *restrict format, va_list arg);
+int  vsprintf(char *restrict buf, const char *restrict format, va_list arg);
+int vsnprintf(char *restrict buf, size_t n, const char *restrict format, va_list arg);
+
+int  scanf(const char *restrict format, ...);
+int fscanf(FILE *restrict fp, const char *restrict format, ...);
+int sscanf(const char *restrict buf, const char *restrict format, ...);
+
+5. get file descriptor
+int fileno(FILE *fp);
+
+6. create tmp file 
+(ISO C standard)
+char *tmpnam(char *ptr);
+FILE *tmpfile(void);
+
+(Single UNIX Specification)
+char *tempnam(const char *directory, const char *prefix);
+int mkstemp(char *template);
+
+7. alternative
+fio, sfio
+ASI
+uClibc
+newlibc
+*/
+
+#ifndef _MCByteStream
+#define _MCByteStream _MCObject;\
+	
+
+#ifndef _MCStream
+#define _MCStream _MCObject;\
+	FILE* fileObject;\
+
+
+#endif
+
+
 
 
 

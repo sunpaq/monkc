@@ -7,6 +7,16 @@ a set of C macro for OOP programming
 
 **Mocha**, is a set of C macros for OOP programming use pure C, the aim of Mocha is to add less syntex to support OOP. The reason to make this is as C is a language so beautiful and so powerful. and the OOP is so handful and nature for a programer. i want to mix them with the less modification
 
+## Install
+1. download the source tarball and extract it.
+2. open a terminal and "cd" to the source folder.
+3. "cd" to the "mocha_core_lib" folder and "make"
+4. "sudo make install" this will install the libmocha.a static library on your system /usr/local/bin/ and /usr/local/include/
+
+## Run some example
+1. in the source root folder "make" this will build a executable called "exec"
+2. "./exec" will run it
+
 ## Syntax
 **Mocha** use "MC" as the prefix.
 #### declear interface - write in .h file
@@ -181,7 +191,7 @@ it just like the Objective-C. sending message instead of function call.
 	   sys/socket.h ->  MCSocket.h
 	   math.h       ->  MCMath.h
 
-	3. a parse and some lightly added syntex to make the class define macros looks better
+	3. a parser and some lightly added syntex to make the class define macros looks better
 
 	4. test on clang-LLVM. make sure it can works on the newst technology
 

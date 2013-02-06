@@ -23,6 +23,15 @@ constructor(MCRunnable, _FunctionPointer(init_routine))
 
 /* MCThread */
 
+int MCThread_join(MCThread* thread, void** result)
+{
+	return pthread_join(thread->self, result);
+}
+
+int MCThread_detach(MCThread* thread)
+{
+	return pthread_detach(thread->self);
+}
 
 int MCThread_cancel(MCThread* thread)
 {
@@ -72,16 +81,6 @@ method(MCThread, start, void* result)
 	return res;
 }
 
-method(MCThread, join, MCThread* threadToWait, void** result)
-{
-	return pthread_join(threadToWait->self, result);
-}
-
-method(MCThread, detach, MCThread* thread)
-{
-	return pthread_detach(thread->self);
-}
-
 method(MCThread, equal, MCThread* thread)
 {
 	return pthread_equal(this->self, thread->self);
@@ -104,8 +103,6 @@ constructor(MCThread, MCRunnable* runnable)
 	link_class(MCThread, MCObject, nil)
 	{
 		have_method(MCThread, start);
-		have_method(MCThread, join);
-		have_method(MCThread, detach);
 		have_method(MCThread, equal);
 		have_method(MCThread, bye);
 	}

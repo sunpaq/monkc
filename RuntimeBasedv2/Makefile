@@ -1,60 +1,29 @@
-OBJS = MCRuntime.o MCString.o MCContext.o VTable.o Main.o \
-	VTableSuper.o Bird.o MCClock.o MCProcess.o MCException.o \
-	MCThread.o MCSocket.o MCIO.o MCMath.o\
+
+OBJS = Main.o VTable.o VTableSuper.o Bird.o
+
+LINK_HEAD = -I/usr/local/include/mocha
+LINK_BIN = -lpthread -L/usr/local/lib -lmocha
 
 CC = gcc -g -w -Wall -Wno-unused-variable -Wno-return-type
 AS = as
 
 exec:$(OBJS)
-	$(CC) -o exec $(OBJS) -lpthread
-
-# MCRuntime.o:MCRuntime.s MCRuntime.h
-# 	$(AS) -o MCRuntime.o MCRuntime.s
-
-MCMath.o:MCMath.c MCMath.h
-	$(CC) -c MCMath.c
-
-MCThread.o:MCThread.c MCThread.h
-	$(CC) -c MCThread.c -lpthread
-
-MCException.o:MCException.c MCException.h
-	$(CC) -c MCException.c
-
-MCProcess.o:MCProcess.c MCProcess.h
-	$(CC) -c MCProcess.c
-
-MCString.o:MCString.c MCString.h
-	$(CC) -c MCString.c
-
-MCContext.o:MCContext.c MCContext.h
-	$(CC) -c MCContext.c
-
-MCRuntime.o:MCRuntime.c MCRuntime.h
-	$(CC) -c MCRuntime.c
-
-VTable.o:VTable.c VTable.h DrawableProtocol.h
-	$(CC) -c VTable.c
+	$(CC) -o exec $(OBJS) $(LINK_BIN)
 
 Main.o:Main.c
-	$(CC) -c Main.c
+	$(CC) -c Main.c $(LINK_HEAD)
 
-VTableSuper.o:VTableSuper.c VTableSuper.h DrawableProtocol.h
-	$(CC) -c VTableSuper.c
+VTable.o:VTable.c VTable.h
+	$(CC) -c VTable.c $(LINK_HEAD)
+
+VTableSuper.o:VTableSuper.c VTableSuper.h
+	$(CC) -c VTableSuper.c $(LINK_HEAD)
 
 Bird.o:Bird.c Bird.h
-	$(CC) -c Bird.c
-
-MCClock.o:MCClock.c MCClock.h
-	$(CC) -c MCClock.c
-
-MCSocket.o:MCSocket.c MCSocket.h
-	$(CC) -c MCSocket.c
-
-MCIO.o:MCIO.c MCIO.h
-	$(CC) -c MCIO.c
+	$(CC) -c Bird.c $(LINK_HEAD)
 
 clean:
-	rm core exec $(OBJS)
+	rm exec $(OBJS)
 
 dump:
 	ulimit -c unlimited

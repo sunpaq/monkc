@@ -12,15 +12,18 @@
 #define ROOT_CLASS_NAME "MCObject"
 #define INIT_METHOD_NAME "init"
 //max memory useage for class  table is: 4Byte x 1000 = 4KB
-//max memory useage for method table is: 4Byte x 500 x 1000 = 2000KB = 2M
+//max memory useage for method table is: 4Byte x 1000 x 1000 = 4000KB = 4M
 
 //1000 classes 2M    
 //100  classes 200KB
 //10   classes 20KB
 
-#define MAX_METHOD_PER_CLASS 100
-#define MAX_METHOD_NUM (MAX_METHOD_PER_CLASS*5)
+#ifndef MAX_METHOD_NUM
+#define MAX_METHOD_NUM 1000
+#endif
+#ifndef MAX_CLASS_NUM
 #define MAX_CLASS_NUM  1000
+#endif
 
 typedef char* CString;
 typedef double Float;
@@ -122,6 +125,10 @@ void* mc_malloc(size_t size);
 void* mc_realloc(void* ptr, size_t size);
 void  mc_free(void *ptr);
 
+//language context
+void mc_init();
+void mc_end();
+
 //log colors
 static char* LOG_FMT = "%s%s\033[0m";
 static char* LOG_COLOR_NONE="\033[0m";
@@ -141,5 +148,7 @@ static char* LOG_COLOR_BROWN="\033[0;33m";
 static char* LOG_COLOR_YELLOW="\033[1;33m";
 static char* LOG_COLOR_LIGHT_GRAY="\033[0;37m";
 static char* LOG_COLOR_WHITE="\033[1;37m";
+
+
 
 #endif

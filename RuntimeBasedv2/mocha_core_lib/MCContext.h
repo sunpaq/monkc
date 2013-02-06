@@ -20,7 +20,4 @@ method(MCContext, getUserInputString, char resultString[]);
 
 constructor(MCContext, int argc, char** argv);
 
-/*start your code in this function!*/
-int MCContext_runloop(MCContext* const context);
-
 #endif

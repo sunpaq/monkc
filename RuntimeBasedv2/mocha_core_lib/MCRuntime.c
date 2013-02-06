@@ -21,9 +21,7 @@ void* mc_malloc(size_t size);
 void* mc_realloc(void* ptr, size_t size);
 void  mc_free(void* ptr);
 
-//C-main
-
-int main(int argc, char const *argv[])
+void mc_init()
 {
 	#ifndef __GNUC__
 	printf("%s\n%s\n%s\n%s\n%s\n%s\n",
@@ -36,22 +34,17 @@ int main(int argc, char const *argv[])
 	exit(-1);
 	#endif
 
+	LOG_LEVEL = DEBUG;
 	_init_class_list();
-		LOG_LEVEL = DEBUG;
-		MCContext* context = new(MCContext, argc, argv);
-		LOG_LEVEL = VERBOSE;
+}
 
-		int res = MCContext_runloop(context);
-
-		LOG_LEVEL = DEBUG;
-		release(context);
-	_clear_class_list();
+void mc_end()
+{
 	//end point for pthread
 	//main() is blocked here
 	//and the whole process will not shutdown to support the other
 	//running threads
-	pthread_exit(nil);
-	return res;
+	_clear_class_list();
 }
 
 id MCObject_doNothing(id const this, unsigned hashkey, xxx)

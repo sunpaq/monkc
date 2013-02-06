@@ -1,5 +1,6 @@
 #ifndef _MCBuffer
 #define _MCBuffer
+#include <stdio.h>
 
 typedef struct {
 	size_t size;
