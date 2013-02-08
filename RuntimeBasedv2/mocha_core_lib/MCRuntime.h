@@ -31,6 +31,7 @@ typedef int BOOL;
 #define YES 1
 #define NO 0
 #define xxx void* xxx
+#define any_t void*
 #define nil ((void*)0)
 #define _FunctionPointer(name) void (*name)()
 #define _FunctionArray(name) void (*name[MAX_METHOD_NUM])()
@@ -84,9 +85,9 @@ typedef struct {\
 									this->need_bind_method=YES;}while(0)
 #define link_class(cls, super, ...) super_init(this, super, __VA_ARGS__);\
 									if(set_class(this, #cls, #super))
-#define have_method(cls, met) do{bind_method(this, MK(met), MV(cls, met));\
-							  runtime_log("%s: [%d]%s\n", #cls, _hash(#met), #met);\
-							  }while(0)
+#define have_method(cls, met, ...)  do{bind_method(this, MK(met), MV(cls, met));\
+							  			runtime_log("%s: [%d]%s\n", #cls, _hash(#met), #met);\
+							  		}while(0)
 #define preload(cls, ...) release(new(cls, __VA_ARGS__))
 //for protocol define
 #define protocol(cls, name, ...)  static id cls##_##name(id const this, unsigned hashkey, __VA_ARGS__)
@@ -104,12 +105,14 @@ void error_log(char* fmt, ...);
 void debug_log(char* fmt, ...);
 void runtime_log(char* fmt, ...);
 
-unsigned _hash(char *s);
+unsigned _hash(const char *s);
 BOOL set_class(id const self_in, const char* classname, const char* superclassname);
 
 //MM
 void release(id const this);
 void retain(id const this);
+void _relnil(MCObject** const this);
+#define relnil(obj) _relnil(&obj)
 
 //method handling
 unsigned bind_method(id const self, unsigned hashkey, _FunctionPointer(value));//the <sys/socket> have function called "bind"

@@ -1,7 +1,16 @@
 #include "MCException.h"
 
+//init define
 jmp_buf exception_env={};
 int exception_type=__exception_try_not_called;
+
+//callend by every "endtry"
+void clean_exception_context()
+{
+	//void *memset(void *s, int c, size_t n);
+	memset(&exception_env, 0, sizeof(jmp_buf));
+	exception_type=__exception_try_not_called;
+}
 
 /* copy form << The C Programming language >> */
 static inline unsigned _ehash(char *s)
@@ -57,7 +66,11 @@ id get_exception_data(char* key)
 
 void set_exception_data(char* key, id e)
 {
+	e->ref_count=-1;//manage by here
 	id exp_obj = _exception_store[_ehash(key)];
-	if(exp_obj!=nil)release(exp_obj);//auto release the old one
+	if(exp_obj!=nil){
+		mc_free(exp_obj);
+		exp_obj=nil;
+	}//auto release the old one
 	_exception_store[_ehash(key)]=e;
 }

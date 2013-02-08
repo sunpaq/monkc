@@ -5,7 +5,7 @@ LOG_LEVEL = DEBUG;
 
 //global var set in _init_class_list
 static unsigned _init_method_hashkey;
-static unsigned _classobj_hash(char *s);
+static unsigned _classobj_hash(const char *s);
 static void _nil_check(id const self, 
 	char* log1, char* log2, char* log3, 
 	char* log4, char* log5, char* log6, pthread_mutex_t* lock);
@@ -15,7 +15,6 @@ static void _clear_class_list();
 static MCClass* mc_classobj_pool[MAX_CLASS_NUM];
 static const int NOT_RESPONSE = -1;
 static unsigned _response_to_method(MCClass* const self_in, unsigned hashkey);
-static void _destroy(id this);
 static inline MCClass* get_class(const char* name_in);
 void* mc_malloc(size_t size);
 void* mc_realloc(void* ptr, size_t size);
@@ -190,7 +189,7 @@ BOOL set_class(id const self_in, const char* classname, const char* superclassna
 }
 
 pthread_mutex_t _mc_mm_mutex = PTHREAD_MUTEX_INITIALIZER;
-void release(id this)
+void release(id const this)
 {
 	pthread_mutex_lock(&_mc_mm_mutex);
 
@@ -204,7 +203,13 @@ void release(id this)
 		pthread_mutex_unlock(&_mc_mm_mutex);
 		return;
 	}
-	if((this!=nil)&&(this->ref_count>0))
+	if (this->ref_count==-1)
+	{
+		debug_log("ref_count is -1 manage by runtime. do nothing\n");
+		pthread_mutex_unlock(&_mc_mm_mutex);
+		return;
+	}
+	if (this->ref_count>0)
 	{
 		this->ref_count--;
 		runtime_log("%s - ref_count:%d\n", this->isa->name, this->ref_count);
@@ -223,8 +228,10 @@ void release(id this)
 			iterator = iterator->super;
 		}
 
-		//ff(this, MK(bye), nil);
-		_destroy(this);
+		//destory the obj
+		runtime_log("----Destroy: goodbye!\n");
+		this->isa=nil;//unlink to the class
+		mc_free(this);
 	}
 }
 
@@ -239,9 +246,22 @@ void retain(id const this)
 		"obj have no class object linked.",
 		"please call set_class() at the very begin of init method.", &_mc_mm_mutex);
 
+	if (this->ref_count==-1)
+	{
+		debug_log("ref_count is -1 manage by runtime. do nothing\n");
+		pthread_mutex_unlock(&_mc_mm_mutex);
+		return;
+	}
+
 	this->ref_count++;
 	runtime_log("%s - ref_count:%d\n", this->isa->name, this->ref_count);
 	pthread_mutex_unlock(&_mc_mm_mutex);
+}
+
+void _relnil(MCObject** const this)
+{
+	release(*this);
+	(*this)=nil;
 }
 
 unsigned bind_method(id const self, unsigned hashkey, _FunctionPointer(value))
@@ -405,7 +425,7 @@ id fr(id const obj, unsigned hashkey, ...)
 	args = __builtin_apply_args();
 	result = __builtin_apply(cls_iterator->method_list[res], args, 96);
 
-release(obj);
+relnil(obj);
 
 	if(result)
 		__builtin_return(result);
@@ -414,7 +434,7 @@ release(obj);
 }
 
 /* copy form << The C Programming language >> */
-unsigned _hash(char *s)
+unsigned _hash(const char *s)
 {
 	//runtime_log("hash(%s) --- ", s);
 	unsigned hashval;
@@ -423,7 +443,7 @@ unsigned _hash(char *s)
 	return hashval % MAX_METHOD_NUM;
 }
 
-static inline unsigned _classobj_hash(char *s)
+static inline unsigned _classobj_hash(const char *s)
 {
 	unsigned hashval;
 	for(hashval = 0; *s != '\0'; s++)
@@ -495,26 +515,16 @@ static inline unsigned _response_to_method(MCClass* const cls, unsigned hashkey)
 }
 
 //call _destroy(this) twice the same address will cause SegmentFault
-static void _destroy(id this)
-{
-	// _nil_check(this,
-	// 	"destroy(obj).",
-	// 	"obj is nil.",
-	// 	"please check your code.",
-	// 	"destroy(obj)",
-	// 	"obj have no class object linked.",
-	// 	"please call set_class() at the very begin of init method.", nil);
-
-	if((this!=nil) && (this->isa!=nil)){
-		//runtime_log("----Bye: %s goodbye!\n", this->isa->name);
-		this->isa=nil;//unlink to the class
-		runtime_log("----Bye: goodbye!\n");
-		free(this);
-		this=nil;
-	}else{
-		error_log("release twice\n");
-	}
-}
+// static void _destroy(id const this)
+// {
+// 	if((this!=nil) && (this->isa!=nil)){
+// 		runtime_log("----Destroy: goodbye!\n");
+// 		this->isa=nil;//unlink to the class
+// 		mc_free(this);
+// 	}else{
+// 		error_log("release twice\n");
+// 	}
+// }
 
 pthread_mutex_t _mc_alloc_mutex = PTHREAD_MUTEX_INITIALIZER;
 void* mc_malloc(size_t size)

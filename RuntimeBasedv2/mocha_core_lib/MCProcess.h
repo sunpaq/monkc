@@ -8,10 +8,10 @@
 	pid_t ppid;
 
 class(MCProcess);
+constructor(MCProcess, xxx);
 
 method(MCProcess, printPID, xxx);
 method(MCProcess, printPPID, xxx);
-constructor(MCProcess, xxx);
 
 pid_t getpid(void);
 pid_t getppid(void);

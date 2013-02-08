@@ -15,6 +15,8 @@
 //the new "flexiable array" in C99 is actually useable in C89 code, just change your array size to 1
 
 class(MCString);
+constructor(MCString, CString str);
+
 method(MCString, add, CString str);
 method(MCString, print, xxx);
 method(MCString, toCString, char const resultString[]);
@@ -22,7 +24,6 @@ method(MCString, equalTo, MCString* stringToComp) 							returns(BOOL);
 method(MCString, getOneChar, xxx);
 method(MCString, getCharsUntilEnter, char const resultString[]);
 method(MCString, bye, xxx);
-constructor(MCString, CString str);
 
 MCString* MCString_newWithCString(char* cstr);
 MCString* MCString_newWithMCString(MCString* mcstr);

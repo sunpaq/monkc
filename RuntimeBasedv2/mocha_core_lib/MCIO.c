@@ -2,6 +2,120 @@
 
 /* MCFile */
 
+constructor(MCFile, char* pathname, int oflag)
+{
+	link_class(MCFile, MCObject, nil)
+	{
+		have_method(MCFile, readFromBegin, off_t offset, size_t nbytes);
+		have_method(MCFile, readAtLastPosition, off_t offset, size_t nbytes);
+		have_method(MCFile, readFromEnd, off_t offset, size_t nbytes);
+
+		have_method(MCFile, writeToBegin, off_t offset, void* buf, size_t nbytes);
+		have_method(MCFile, writeToLastTime, off_t offset, void* buf, size_t nbytes);
+		have_method(MCFile, writeToEnd, off_t offset, void* buf, size_t nbytes);
+
+		have_method(MCFile, duplicateFd, xxx); returns(int fd);
+		have_method(MCFile, duplicateFdTo, int fd); returns(int newfd);
+		have_method(MCFile, printAttribute, xxx);
+		have_method(MCFile, bye, xxx);
+		have_method(MCFile, checkPermissionUseRealIDOfProcess, int mode); returns(BOOL)
+	}
+
+	if((this->fd = open(pathname, oflag))==-1)
+		return nil;
+	this->pathname = pathname;
+	if(fstat(this->fd, &this->attribute)<0)
+		return nil;
+	this->buffer = malloc(this->attribute.st_blksize*10);
+	return this;
+}
+
+// typedef enum _MCStreamType{
+// 	readonly_fullbuffered,
+// 	readwrite_fullbuffered,
+// 	readonly_linebuffered,
+// 	readwrite_linebuffered
+// }MCStreamType;
+constructor(MCStream, MCStreamType type, CString path)
+{
+	link_class(MCStream, MCObject, nil)
+	{
+		have_method(MCStream, bye, xxx);
+		have_method(MCStream, getFileDescriptor, xxx); returns(int)
+
+		have_method(MCStream, getChar, xxx); returns(int)
+		have_method(MCStream, putChar, int charCode);
+		have_method(MCStream, pushbackChar, int charCodeToBePushBack); returns(int charCode/EOF)
+
+		have_method(MCStream, getCString, MCCharBuffer* recvBuffer); returns(CString/nil)
+		have_method(MCStream, putCString, MCCharBuffer* sendBuffer); returns(CString/nil)
+		have_method(MCStream, getMCString, xxx);                     returns(Handle(MCString))
+		have_method(MCStream, putMCString, MCString* str);           returns(Handle(MCString)/nil)
+
+		have_method(MCStream, getBianryObject, void* recvBuffer,  size_t objectSize, size_t numberOfObjs); returns(size_t)
+		have_method(MCStream, putBianryObject, void* sendBuffer,  size_t objectSize, size_t numberOfObjs); returns(size_t)
+
+		have_method(MCStream, tellOffset, xxx); returns(off_t)
+		have_method(MCStream, seekFromBegin, off_t offset); returns(BOOL)
+		have_method(MCStream, seekFromCurrent, off_t offset); returns(BOOL)
+		have_method(MCStream, seekFromEnd, off_t offset); returns(BOOL)
+	}
+	//FILE *fopen(const char *restrict pathname, const char *restrict type);
+	//type:
+	//r/w/a/ & b & +
+	//int setvbuf(FILE *restrict fp, char *restrict buf, int mode, size_t size);
+	//[NULL _IOFBF/_IOLBF/_IONBF BUFSIZ]
+
+	char* rw_type="w+";
+	int buff_mode=_IOFBF;
+	switch(type){
+		case readonly_fullbuffered:
+			rw_type="w";
+		break;
+		case readonly_linebuffered:
+			rw_type="w";buff_mode=_IOLBF;
+		break;
+		case readwrite_fullbuffered:
+			//default
+		break;
+		case readwrite_linebuffered:
+			buff_mode=_IOLBF;
+		break;
+	}
+
+	if((this->fileObject = fopen(path, rw_type))!=nil)
+		setvbuf(this->fileObject, NULL, buff_mode, BUFSIZ);
+	else
+		return nil;
+	return this;
+}
+
+constructor(MCSelect, long second, long microsecond)
+{
+	link_class(MCSelect, MCObject, nil)
+	{
+		have_method(MCSelect, waitForFdsetChange, xxx); returns(int: >0 success =0 timeout <0 error)
+		have_method(MCSelect, addFd, MCSelect_fd_type type, int fd);
+		have_method(MCSelect, removeFd, MCSelect_fd_type type, int fd);
+		have_method(MCSelect, isFdReady, MCSelect_fd_type type, int fd); returns(BOOL)
+	}
+
+	//timeout.tv_sec
+	//timeout.tv_usec
+	this->timeout.tv_sec = second;
+	this->timeout.tv_usec = microsecond;
+
+	FD_ZERO(&this->readfd_set);
+	FD_ZERO(&this->writefd_set);
+	FD_ZERO(&this->exceptionfd_set);
+
+	FD_ZERO(&this->readfd_result_set);
+	FD_ZERO(&this->writefd_result_set);
+	FD_ZERO(&this->exceptionfd_result_set);
+
+	return this;
+}
+
 method(MCFile, readFromBegin, off_t offset, size_t nbytes)
 {
 	//use pread/pwrite for atomic operation
@@ -56,7 +170,7 @@ int MCFile_flushAFileCacheToDisk(int fd)
 method(MCFile, bye, xxx)
 {
 	//release this->buffer
-	free(this->buffer);
+	mc_free(this->buffer);
 	close(this->fd);
 }
 
@@ -76,34 +190,6 @@ method(MCFile, checkPermissionUseRealIDOfProcess, int mode)
 	if ((res = access(this->pathname, mode)) != -1)
 		return YES;
 	return NO;
-}
-
-constructor(MCFile, char* pathname, int oflag)
-{
-	link_class(MCFile, MCObject, nil)
-	{
-		have_method(MCFile, readFromBegin);
-		have_method(MCFile, readFromEnd);
-		have_method(MCFile, readAtLastPosition);
-
-		have_method(MCFile, writeToBegin);
-		have_method(MCFile, writeToLastTime);
-		have_method(MCFile, writeToEnd);
-
-		have_method(MCFile, duplicateFd);
-		have_method(MCFile, duplicateFdTo);
-		have_method(MCFile, printAttribute);
-		have_method(MCFile, bye);
-		have_method(MCFile, checkPermissionUseRealIDOfProcess);
-	}
-
-	if((this->fd = open(pathname, oflag))==-1)
-		return nil;
-	this->pathname = pathname;
-	if(fstat(this->fd, &this->attribute)<0)
-		return nil;
-	this->buffer = malloc(this->attribute.st_blksize*10);
-	return this;
 }
 
 BOOL MCFile_isFileExist(char* pathname)
@@ -181,6 +267,10 @@ BOOL MCFile_removeDirectory(char* pathname)
 	return NO;
 }
 
+
+/* MCProcess */
+
+
 BOOL MCProcess_changeCurrentWorkingDir(char* pathname)
 {
 	int res;
@@ -200,6 +290,95 @@ BOOL MCProcess_changeCurrentWorkingDirByFd(int fd)
 char* MCProcess_getCurrentWorkingDir(MCCharBuffer* buff)
 {
 	return getcwd(buff->data, buff->size);
+}
+
+
+/* MCStream */
+
+
+method(MCStream, bye, xxx)
+{
+	//0=OK/EOF=ERROR
+	if(fclose(this->fileObject))
+		error_log("close file error");
+	//other clean up works
+
+}
+
+method(MCStream, getFileDescriptor, xxx) returns(int)
+{
+	return fileno(this->fileObject);
+}
+
+method(MCStream, getChar, xxx) returns(int)
+{
+	return fgetc(this->fileObject);
+}
+
+method(MCStream, putChar, int charCode)
+{
+	return fputc(charCode, this->fileObject);
+}
+
+method(MCStream, pushbackChar, int charCodeToBePushBack) returns(int charCode/EOF)
+{
+	return ungetc(charCodeToBePushBack, this->fileObject);
+}
+
+method(MCStream, getCString, MCCharBuffer* recvBuffer) returns(CString/nil)
+{
+	return fgets(recvBuffer->data, recvBuffer->size, this->fileObject);
+}
+
+method(MCStream, putCString, MCCharBuffer* sendBuffer) returns(CString/nil)
+{
+	return fputs(sendBuffer->data, this->fileObject);
+}
+
+method(MCStream, getMCString, xxx)                     returns(Handle(MCString))
+{
+	char buff[1024];
+	fgets(buff, sizeof(buff), this->fileObject);
+	return new(MCString, &buff[0]);
+}
+
+method(MCStream, putMCString, MCString* str)           returns(Handle(MCString)/nil)
+{
+	return fputs(str->buff, this->fileObject);
+}
+
+method(MCStream, getBianryObject, void* recvBuffer,  size_t objectSize, size_t numberOfObjs) returns(size_t)
+{
+	//size_t fread(void *restrict ptr, size_t size, size_t nobj, FILE *restrict fp);
+	return fread(recvBuffer, objectSize, numberOfObjs, this->fileObject);
+}
+
+method(MCStream, putBianryObject, void* sendBuffer,  size_t objectSize, size_t numberOfObjs) returns(size_t)
+{
+	//size_t fwrite(const void *restrict ptr, size_t size, size_t nobj, FILE *restrict fp);
+	return fwrite(sendBuffer, objectSize, numberOfObjs, this->fileObject);
+}
+
+method(MCStream, tellOffset, xxx) returns(off_t)
+{
+	//off_t ftello(FILE *fp);
+	return ftello(this->fileObject);
+}
+
+method(MCStream, seekFromBegin, off_t offset) returns(BOOL)
+{
+	//int fseeko(FILE *fp, off_t offset, int whence);//SEEK_SET/SEEK_CUR/SEEK_END
+	return fseeko(this->fileObject, offset, SEEK_SET);
+}
+
+method(MCStream, seekFromCurrent, off_t offset) returns(BOOL)
+{
+	return fseeko(this->fileObject, offset, SEEK_CUR);
+}
+
+method(MCStream, seekFromEnd, off_t offset) returns(BOOL)
+{
+	return fseeko(this->fileObject, offset, SEEK_END);
 }
 
 
@@ -267,29 +446,4 @@ method(MCSelect, isFdReady, MCSelect_fd_type type, int fd)
 	}
 }
 
-constructor(MCSelect, long second, long microsecond)
-{
-	link_class(MCSelect, MCObject, nil)
-	{
-		have_method(MCSelect, waitForFdsetChange);
-		have_method(MCSelect, addFd);
-		have_method(MCSelect, removeFd);
-		have_method(MCSelect, isFdReady);
-	}
-
-	//timeout.tv_sec
-	//timeout.tv_usec
-	this->timeout.tv_sec = second;
-	this->timeout.tv_usec = microsecond;
-
-	FD_ZERO(&this->readfd_set);
-	FD_ZERO(&this->writefd_set);
-	FD_ZERO(&this->exceptionfd_set);
-
-	FD_ZERO(&this->readfd_result_set);
-	FD_ZERO(&this->writefd_result_set);
-	FD_ZERO(&this->exceptionfd_result_set);
-
-	return this;
-}
 

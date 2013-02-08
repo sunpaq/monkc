@@ -1,5 +1,38 @@
 #include "MCClock.h"
 
+constructor(MCClock, xxx)
+{
+	link_class(MCClock, MCObject, nil)
+	{
+		have_method(MCClock, setTimeToNow, xxx);
+		have_method(MCClock, setTime, int tm_sec, int tm_min, int tm_hour, 
+								 int tm_mday, int tm_mon, int tm_year,
+								 int tm_wday);
+		have_method(MCClock, adjustTime, int tm_sec, int tm_min, int tm_hour, 
+		                            int tm_mday, int tm_mon, int tm_year,
+		                            int tm_wday);
+
+		have_method(MCClock, setRawtime, struct tm rawtime_in);
+		have_method(MCClock, setRawtimeFields, int tm_sec, int tm_min, int tm_hour, 
+									      int tm_mday, int tm_mon, int tm_year,
+									      int tm_wday, int tm_yday, int tm_isdst);
+
+		have_method(MCClock, getTime, time_t* const result);
+		have_method(MCClock, getRawtime, struct tm* const result);
+		have_method(MCClock, getTimeByString, xxx) 								returns(char*);
+		have_method(MCClock, getCPUClocksPerSecond, clock_t* const result);
+		have_method(MCClock, getCPUClocksSinceStart, clock_t* const result);
+		have_method(MCClock, getCurrentTimeString, xxx) 							returns(char*);//retrun the same format as asctime: Sun Sep 16 01:03:52 1973\n\0
+		have_method(MCClock, getCurrentGMTTimeString, xxx) 						returns(char*);
+
+		have_method(MCClock, printTime, xxx);
+		have_method(MCClock, printCurrentTime, xxx);
+		have_method(MCClock, printCurrentGMTTime, xxx);
+	}
+
+	return this;
+}
+
 method(MCClock, setTimeToNow, xxx)
 {
 	time_t timer = time(NULL);
@@ -117,34 +150,6 @@ method(MCClock, printCurrentGMTTime, xxx)
 	printf("%s", asctime(gmtime(&timer)));
 }
 
-constructor(MCClock, xxx)
-{
-	link_class(MCClock, MCObject, nil)
-	{
-		have_method(MCClock, setTimeToNow);
-		have_method(MCClock, setTime);
-		have_method(MCClock, adjustTime);
-
-		have_method(MCClock, setRawtime);
-		have_method(MCClock, setRawtimeFields);
-
-		have_method(MCClock, getTime);
-		have_method(MCClock, getRawtime);
-		have_method(MCClock, getTimeByString);
-
-		have_method(MCClock, getCPUClocksPerSecond);
-		have_method(MCClock, getCPUClocksSinceStart);
-		have_method(MCClock, getCurrentTimeString);
-		have_method(MCClock, getCurrentGMTTimeString);
-
-		have_method(MCClock, printTime);
-		have_method(MCClock, printCurrentTime);
-		have_method(MCClock, printCurrentGMTTime);
-	}
-
-	return this;
-}
-
 char* MCClock_rawtime2String(time_t* timeval)
 {
 	return ctime(timeval);
@@ -164,6 +169,3 @@ struct tm* MCClock_rawtime2SettableTimeLocal(time_t* timeval)
 {
 	return localtime(timeval);
 }
-
-
-

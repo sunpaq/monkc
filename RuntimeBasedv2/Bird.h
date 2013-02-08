@@ -6,12 +6,12 @@
 	int type;\
 
 class(Bird);
+constructor(Bird, int type);
+
 method(Bird, bye, xxx);
 method(Bird, fly, xxx);
 moption(Bird, Duck, fly, xxx);
 moption(Bird, Chicken, fly, xxx);
-
-constructor(Bird, int type);
 
 #define DUCK_TYPE 0
 #define CHICKEN_TYPE 1

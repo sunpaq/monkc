@@ -8,6 +8,7 @@
 	char selectionChar;\
 
 class(MCContext);
+constructor(MCContext, int argc, char** argv);
 
 method(MCContext, bye, xxx);
 method(MCContext, dumpParas, xxx);
@@ -17,7 +18,5 @@ method(MCContext, isHavePara, char* para) returns(BOOL);
 method(MCContext, showMenuAndGetSelectionChar, int count, ...) 			returns(char);
 method(MCContext, showConfirmAndGetBOOL, const char* confirm) 			returns(BOOL);
 method(MCContext, getUserInputString, char resultString[]);
-
-constructor(MCContext, int argc, char** argv);
 
 #endif

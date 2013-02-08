@@ -5,7 +5,8 @@
 	unsigned tid;\
 
 class(MCMath);
-method(MCMath, new, xxx);
 constructor(MCMath, xxx);
+
+method(MCMath, new, xxx);
 
 #endif

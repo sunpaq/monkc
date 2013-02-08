@@ -19,6 +19,8 @@ void menu_drive_test(Handle(MCContext) const context);
 void mocha_lib_test();
 void mocha_serversocket_test();
 void mocha_clientsocket_test(Handle(MCContext) const context);
+void mocha_exception_test();
+
 
 void test(Handle(MCContext) const context);
 
@@ -41,7 +43,8 @@ int main(int argc, char const *argv[])
 	for(;;)
 		test(context);
 	
-	release(context);
+	relnil(context);
+
 	mc_end();
 	return 0;
 }
@@ -49,13 +52,9 @@ int main(int argc, char const *argv[])
 void test(Handle(MCContext) const context)
 {
 	//pre load some classes
+	printf("%s\n", "----------");
 	debug_log("%s\n", "preload some classes:");
-	Handle(VTable) vt = VTable_getInstance();
-	ff(vt, MK(whatIsYourClassName));
-	VTable_releaseInstance();//do not call fr() on singleton class!
-	fr(new(VTableSuper, nil), MK(whatIsYourClassName));
-	fr(new(MCProcess, nil), MK(whatIsYourClassName));
-	fr(new(MCClock, nil), MK(whatIsYourClassName));
+
 	preload(Bird, DUCK_TYPE);
 	preload(MCClock, nil);
 	preload(MCMath, nil);
@@ -64,7 +63,7 @@ void test(Handle(MCContext) const context)
 
 	int selection = ff(context, 
 		MK(showMenuAndGetSelectionChar), 
-		5, "syntex_test", "menu_drive_test", "lib_test", "MCSocket(Server)", "MCSocket(Client)");
+		6, "syntex_test", "menu_drive_test", "lib_test", "MCSocket(Server)", "MCSocket(Client)", "MCException");
 
 	switch(selection){
 		case '1':mocha_syntex_test(context);break;
@@ -72,6 +71,7 @@ void test(Handle(MCContext) const context)
 		case '3':mocha_lib_test();break;
 		case '4':mocha_serversocket_test();break;
 		case '5':mocha_clientsocket_test(context);break;
+		case '6':mocha_exception_test();break;
 	}
 }
 
@@ -176,7 +176,7 @@ void test_MCClock()
 	ff(myclock, MK(printTime));
 	ff(myclock, MK(adjustTime), 0, 0, 2, 0, 0, 0, 0);
 	ff(myclock, MK(printTime));
-	release(myclock);
+	relnil(myclock);
 	printf("---- test_MCClock END ----\n");
 }
 
@@ -187,7 +187,7 @@ void test_MCProcess()
 	Handle(MCProcess) p = new(MCProcess, nil);
 		ff(p, MK(printPID));
 		ff(p, MK(printPPID));
-	release(p);
+	relnil(p);
 	printf("---- test_MCProcess END ----\n");
 }
 
@@ -208,21 +208,21 @@ void test_MCString()
 	char csbuff[newstr->size];
 	ff(newstr, MK(toCString), csbuff);
 	printf("the CString is:\n%s\n", csbuff);
-	release(newstr);
+	relnil(newstr);
 
 	MCString* newstr2 = new(MCString, "a new string b");
 	ff(newstr2, MK(add), " + with append info");
 	ff(newstr2, MK(print));
-	release(newstr2);
+	relnil(newstr2);
 
 	MCString* astr = new(MCString, "string");
 	if (fr(new(MCString, "string"), MK(equalTo), astr))
 	{
 		printf("two string is equal!!!\n");
 	}
-	release(astr);
+	relnil(astr);
 
-	fr(MCString_newForHttp("www.google.com",NO), MK(print));
+	//fr(MCString_newForHttp("www.google.com",NO), MK(print));
 
 	printf("size is: %d\n", strlen("size of string"));
 	printf("---- test_MCString END ----\n");
@@ -292,16 +292,46 @@ void test_MCFile()
 		release(tmpfile);
 	}
 
-	free(buff);
+	relnil(buff);
+}
+
+void test_MCStream()
+{
+	MCStream* stream = new(MCStream, readwrite_fullbuffered, "stream.txt");
+	MCCharBuffer* buff = NewMCCharBuffer(1024);
+	strcpy(buff->data, "this is a test line. haha\n");
+
+	if(stream!=nil){
+		ff(stream, MK(putCString), buff);
+		ff(stream, MK(getCString), buff);
+	}
+
+	printf("%s\n", buff->data);
+
+	relnil(buff);
+	relnil(stream);
 }
 
 void mocha_lib_test()
 {
-	test_MCClock();
-	test_MCProcess();
+	LOG_LEVEL=VERBOSE;
+
+	//test_MCClock();
+	//test_MCProcess();
+
 	test_MCString();
-	test_MCFile();
-	test_MCThread();
+
+	preload(MCProcess, nil);
+	printf("%d\n", _hash("bye"));
+
+	test_MCStream();
+
+	//test_MCFile();
+
+
+	//
+	//test_MCThread();
+
 }
 
 static int readline(int fd, char* const recvbuff)
@@ -513,11 +543,20 @@ void mocha_syntex_test(MCContext* const context)
 	//clean up controlled by cmdline parameter
 	//if(ff(context, MK(isHavePara), "--release")){
 		release(nil);
-		release(ret);
-		release(ret2);
-		release(ret_father);
+		relnil(ret);
+		relnil(ret2);
+		relnil(ret_father);
 	//}
 
+	//response
+	Handle(Bird) abird = new(Bird, DUCK_TYPE);
+	if (response(abird, MK(whatIsYourClassName)))
+		ff(abird, MK(whatIsYourClassName));
+
+}
+
+void mocha_exception_test()
+{
 	//exception support
 	try{
 		doSomething();
@@ -527,11 +566,18 @@ void mocha_syntex_test(MCContext* const context)
 
 	}catch(MCIOException){
 		MCString* str = get_exception_data("MCIOException");
-		ff(str, MK(add), "@this is append info");
-		ff(str, MK(print));
-		ff(str, MK(print));
-		printf("%s\n", "MCIOException raised");
-		release(str);
+		if (str!=nil)
+		{
+			ff(str, MK(add), "@this is append info");
+			ff(str, MK(print));
+			ff(str, MK(print));
+			printf("%s\n", "MCIOException raised");
+			//it will be auto released
+			relnil(str);
+		}else{
+			debug_log("get_exception_data return nil\n");
+		}
+
 
 	}catch(MyException){
 		printf("%s\n", "MyException raised");
@@ -546,12 +592,6 @@ void mocha_syntex_test(MCContext* const context)
 		printf("%s\n", "finally");
 
 	}endtry
-
-	//response
-	Handle(Bird) abird = new(Bird, DUCK_TYPE);
-	if (response(abird, MK(whatIsYourClassName)))
-		ff(abird, MK(whatIsYourClassName));
-
 }
 
 void doSomething() throws(MCIOException) {

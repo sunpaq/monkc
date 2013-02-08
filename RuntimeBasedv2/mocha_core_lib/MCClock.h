@@ -39,6 +39,7 @@ struct tm
 	struct tm rawtime;
 
 class(MCClock);
+constructor(MCClock, xxx);
 
 method(MCClock, setTimeToNow, xxx);
 method(MCClock, setTime, int tm_sec, int tm_min, int tm_hour, 
@@ -65,13 +66,10 @@ method(MCClock, printTime, xxx);
 method(MCClock, printCurrentTime, xxx);
 method(MCClock, printCurrentGMTTime, xxx);
 
-constructor(MCClock, xxx);
-
 char* MCClock_rawtime2String(time_t* timeval);
 char* MCClock_settableTime2String(struct tm *tm);
 struct tm* MCClock_rawtime2SettableTimeGMT(time_t* timeval);
 struct tm* MCClock_rawtime2SettableTimeLocal(time_t* timeval);
-
 
 #define no_change 60000
 enum weekday {

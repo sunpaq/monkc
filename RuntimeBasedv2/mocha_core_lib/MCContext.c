@@ -1,5 +1,27 @@
 #include "MCContext.h"
 
+constructor(MCContext, int argc, char** argv)
+{
+	link_class(MCContext, MCObject, nil)
+	{
+		have_method(MCContext, bye, xxx);
+		have_method(MCContext, dumpParas, xxx);
+		have_method(MCContext, getPara, int index) 									returns(char*);
+		have_method(MCContext, isIndexedParaEqualTo, int index, char* para) 			returns(BOOL);
+		have_method(MCContext, isHavePara, char* para) returns(BOOL);
+		have_method(MCContext, showMenuAndGetSelectionChar, int count, ...) 			returns(char);
+		have_method(MCContext, showConfirmAndGetBOOL, const char* confirm) 			returns(BOOL);
+		have_method(MCContext, getUserInputString, char resultString[]);
+
+	}
+
+	this->argc=argc;
+	this->argv=argv;
+	this->selectionChar=0;
+
+	return this;
+}
+
 static struct privateData
 {
 	/* data */
@@ -96,24 +118,3 @@ method(MCContext, getUserInputString, char resultString[])
 	get_chars_until_enter(resultString);
 }
 
-constructor(MCContext, int argc, char** argv)
-{
-	link_class(MCContext, MCObject, nil)
-	{
-		have_method(MCContext, dumpParas);
-		have_method(MCContext, getPara);
-		have_method(MCContext, isIndexedParaEqualTo);
-		have_method(MCContext, isHavePara);
-		have_method(MCContext, showMenuAndGetSelectionChar);
-		have_method(MCContext, showConfirmAndGetBOOL);
-		have_method(MCContext, getUserInputString);
-		have_method(MCContext, bye);
-
-	}
-
-	this->argc=argc;
-	this->argv=argv;
-	this->selectionChar=0;
-
-	return this;
-}

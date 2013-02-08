@@ -128,6 +128,8 @@ constructor(MCRunnable, _FunctionPointer(init_routine));
 	MCRunnable* runnable;\
 
 class(MCThread);
+constructor(MCThread, MCRunnable* runnable);
+
 //global class functions
 int MCThread_cancel(MCThread* thread);
 int MCThread_join(MCThread* thread, void** result);
@@ -140,7 +142,6 @@ pthread_t MCThread_self();
 method(MCThread, start, void* result) 							returns(int);
 method(MCThread, equal, MCThread* thread) 						returns(BOOL);
 method(MCThread, bye, xxx);
-constructor(MCThread, MCRunnable* runnable);
 #endif
 
 //if you need, you can set the attribute use the raw pthread APIs

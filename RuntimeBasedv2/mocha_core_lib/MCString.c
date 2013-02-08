@@ -1,5 +1,65 @@
 #include "MCString.h"
 
+constructor(MCString, CString str)
+{
+	if(str==nil)return nil;
+	size_t len = strlen(str);
+	MCString* newthis = nil;
+	//realloc will return a new mem if can now expand the old one!
+	if(len > 0){
+		newthis = (MCString*)mc_realloc(this, sizeof(MCString) + len + 1);
+	}else{
+		newthis = (MCString*)mc_realloc(this, sizeof(MCString) + 1);
+		error_log("MCString input string length <= 0\n");
+	}
+
+	if(newthis!=nil){
+		strncpy(newthis->buff, str, strlen(str) + 1);
+	}else{
+		error_log("mem realloc failed, nothing is in buff\n");
+		exit(-1);
+	}
+
+	super_init(newthis, MCObject, nil);
+	if (set_class(newthis, "MCString", "MCObject"))
+	{
+		have_method(MCString, add, CString str);
+		have_method(MCString, print, xxx);
+		have_method(MCString, toCString, char const resultString[]);
+		have_method(MCString, equalTo, MCString* stringToComp) 							returns(BOOL);
+		have_method(MCString, getOneChar, xxx);
+		have_method(MCString, getCharsUntilEnter, char const resultString[]);
+		have_method(MCString, bye, xxx);
+	}
+	
+	newthis->length = strlen(str);
+	newthis->size = strlen(str) + 1;
+	newthis->next = nil;
+	return newthis;
+}
+
+MCString* MCString_newWithCString(char* cstr)
+{
+	return new(MCString, cstr);
+}
+
+MCString* MCString_newWithMCString(MCString* mcstr)
+{
+	return new(MCString, mcstr->buff);
+}
+
+MCString* MCString_newForHttp(char* cstr, BOOL isHttps)
+{
+	MCString* res;
+	if (isHttps)
+		res = new(MCString, "https://");
+	else
+		res = new(MCString, "http://");
+
+	ff(res, MK(add), cstr);
+	return res;
+}
+
 static char get_one_char()
 {
 	char cf = getchar();
@@ -69,7 +129,7 @@ method(MCString, bye, xxx)
 	while(iterator->next!=nil){
 		iterator = iterator->next;
 		//debug_log("MCString - free a sub string\n");
-		free(iterator);//avoid recursive release call!!
+		mc_free(iterator);//avoid recursive release call!!
 	}
 }
 
@@ -83,61 +143,3 @@ method(MCString, getCharsUntilEnter, char const resultString[])
 	get_chars_until_enter(resultString);
 }
 
-constructor(MCString, CString str)
-{
-	size_t len = strlen(str);
-	MCString* newthis = nil;
-	//realloc will return a new mem if can now expand the old one!
-	if(len > 0){
-		newthis = (MCString*)mc_realloc(this, sizeof(MCString) + len + 1);
-	}else{
-		newthis = (MCString*)mc_realloc(this, sizeof(MCString) + 1);
-		error_log("MCString input string length <= 0\n");
-	}
-
-	if(newthis!=nil){
-		strncpy(newthis->buff, str, strlen(str) + 1);
-	}else{
-		error_log("mem realloc failed, nothing is in buff\n");
-		exit(-1);
-	}
-
-	super_init(newthis, MCObject, nil);
-	if (set_class(newthis, "MCString", "MCObject"))
-	{
-		bind_method(newthis, MK(add), MV(MCString, add));
-		bind_method(newthis, MK(print), MV(MCString, print));
-		bind_method(newthis, MK(toCString), MV(MCString, toCString));
-		bind_method(newthis, MK(equalTo), MV(MCString, equalTo));
-		bind_method(newthis, MK(getOneChar), MV(MCString, getOneChar));
-		bind_method(newthis, MK(getCharsUntilEnter), MV(MCString, getCharsUntilEnter));
-		bind_method(newthis, MK(bye), MV(MCString, bye));
-	}
-	
-	newthis->length = strlen(str);
-	newthis->size = strlen(str) + 1;
-	newthis->next = nil;
-	return newthis;
-}
-
-MCString* MCString_newWithCString(char* cstr)
-{
-	return new(MCString, cstr);
-}
-
-MCString* MCString_newWithMCString(MCString* mcstr)
-{
-	return new(MCString, mcstr->buff);
-}
-
-MCString* MCString_newForHttp(char* cstr, BOOL isHttps)
-{
-	MCString* res;
-	if (isHttps)
-		res = new(MCString, "https://");
-	else
-		res = new(MCString, "http://");
-
-	ff(res, MK(add), cstr);
-	return res;
-}

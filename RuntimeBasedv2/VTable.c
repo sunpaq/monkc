@@ -1,5 +1,46 @@
 #include "VTable.h"
 
+constructor(VTable, xxx) returns(VTable*)
+{
+	link_class(VTable, VTableSuper, nil)
+	{
+		have_method(VTable, bye, xxx);
+		have_method(VTable, amethod, xxx) 							returns(int);
+		have_method(VTable, amethod2, char* srt, int index);
+		have_method(VTable, bmethod, int a, double b, char* c);
+		have_method(VTable, cmethod, int a, double b, char* c);
+		#define BIND
+		#include "DrawableProtocol.h"
+	}
+		
+	this->main_color="sliver";
+	//this->info="this is a VTable info";
+	//instance=this;
+	return this;
+}
+
+static VTable* instance=nil;
+
+VTable* VTable_getInstance()
+{
+	if(instance==nil){
+		instance = new(VTable, nil);
+		instance->ref_count = -1;
+		return instance;
+		debug_log("return new instance: %d\n", instance);
+	}else{
+		debug_log("return old instance: %d\n", instance);
+		return instance;
+	}
+}
+
+void VTable_releaseInstance()
+{
+	debug_log("release old instance: %d\n", instance);
+	mc_free(instance);
+	instance=nil;
+}
+
 static void function(){
 	//private function
 	printf("%s\n", "this is a private function");
@@ -46,44 +87,7 @@ protocol(DrawableProtocol, redraw, xxx){
 
 method(VTable, bye, xxx)
 {
-	//do clean job
-	//release(this->super_instance);
+	//every release have no effect
 }
 
-static Handle(VTable) instance=nil;
 
-Handle(VTable) VTable_getInstance()
-{
-	if(instance==nil){
-		//return new(VTable, nil);
-		instance = new(VTable, nil);
-		return instance;
-		//printf("get single instance %s\n", instance->isa->name);
-	}else
-		return instance;
-}
-
-void VTable_releaseInstance()
-{
-	release(instance);
-	instance=nil;
-}
-
-constructor(VTable, xxx)
-{
-	link_class(VTable, VTableSuper, nil)
-	{
-		have_method(VTable, amethod);
-		have_method(VTable, amethod2);
-		have_method(VTable, bmethod);
-		have_method(VTable, cmethod);
-		have_method(VTable, bye);
-		#define BIND
-		#include "DrawableProtocol.h"
-	}
-		
-	this->main_color="sliver";
-	//this->info="this is a VTable info";
-	//instance=this;
-	return this;
-}

@@ -1,5 +1,7 @@
 #include "MCContext.h"
 #include "MCBuffer.h"
+#include "MCString.h"
+
 #include <fcntl.h>
 #include <unistd.h>
 
@@ -473,19 +475,73 @@ uClibc
 newlibc
 */
 
-#ifndef _MCByteStream
-#define _MCByteStream _MCObject;\
-	
-
+typedef enum _MCStreamType{
+	readonly_fullbuffered,
+	readwrite_fullbuffered,
+	readonly_linebuffered,
+	readwrite_linebuffered
+}MCStreamType;
+//default is a wide-char fully-buffered stream
 #ifndef _MCStream
 #define _MCStream _MCObject;\
 	FILE* fileObject;\
 
+	class(MCStream);
+	constructor(MCStream, MCStreamType type, CString path);
+
+	method(MCStream, bye, xxx);
+	method(MCStream, getFileDescriptor, xxx); returns(int)
+
+	method(MCStream, getChar, xxx); returns(int)
+	method(MCStream, putChar, int charCode);
+	method(MCStream, pushbackChar, int charCodeToBePushBack); returns(int charCode/EOF)
+
+	method(MCStream, getCString, MCCharBuffer* recvBuffer); returns(CString/nil)
+	method(MCStream, putCString, MCCharBuffer* sendBuffer); returns(CString/nil)
+	method(MCStream, getMCString, xxx);                     returns(Handle(MCString))
+	method(MCStream, putMCString, MCString* str);           returns(Handle(MCString)/nil)
+
+	method(MCStream, getBianryObject, void* recvBuffer,  size_t objectSize, size_t numberOfObjs); returns(size_t)
+	method(MCStream, putBianryObject, void* sendBuffer,  size_t objectSize, size_t numberOfObjs); returns(size_t)
+
+	method(MCStream, tellOffset, xxx); returns(off_t)
+	method(MCStream, seekFromBegin, off_t offset); returns(BOOL)
+	method(MCStream, seekFromCurrent, off_t offset); returns(BOOL)
+	method(MCStream, seekFromEnd, off_t offset); returns(BOOL)
 
 #endif
 
+#ifndef _MCByteStream
+#define _MCByteStream _MCStream;\
+	
+	class(MCByteStream);
+	method(MCStream, bye, xxx);
+	constructor(MCByteStream, MCStreamType type, CString path);
+#endif
 
+#ifndef _MCStdinStream
+#define _MCStdinStream _MCStream;\
 
+	class(MCStdinStream);
+	method(MCStdinStream, bye, xxx);
+	constructor(MCStdinStream, xxx);
+#endif
+
+#ifndef _MCStdoutStream
+#define _MCStdoutStream _MCStream;\
+
+	class(MCStdoutStream);
+	method(MCStdoutStream, bye, xxx);
+	constructor(MCStdoutStream, xxx);
+#endif
+
+#ifndef _MCStderrStream
+#define _MCStderrStream _MCStream;\
+
+	class(MCStderrStream);
+	method(MCStderrStream, bye, xxx);
+	constructor(MCStderrStream, xxx);
+#endif
 
 
 /*

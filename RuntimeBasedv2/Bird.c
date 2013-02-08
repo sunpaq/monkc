@@ -1,28 +1,11 @@
 #include "Bird.h"
 
-method(Bird, bye, xxx)
-{
-	debug_log("%s\n", "Bird: goodbye");
-}
-method(Bird, fly, xxx)
-{
-	debug_log("%s\n", "Bird: default fly");
-}
-moption(Bird, Duck, fly, xxx)
-{
-	debug_log("%s\n", "Bird:Duck GuaGuaGua fly");
-}
-moption(Bird, Chicken, fly, xxx)
-{
-	debug_log("%s\n", "Bird:Chicken JiJiJi fly");
-}
-
 constructor(Bird, int type)
 {
 	link_class(Bird, MCObject, nil)
 	{
-		have_method(Bird, fly);
-		have_method(Bird, bye);
+		have_method(Bird, bye, xxx);
+		have_method(Bird, fly, xxx);
 	}
 
 	//override
@@ -40,3 +23,22 @@ constructor(Bird, int type)
 
 	return this;
 }
+
+method(Bird, bye, xxx)
+{
+	//debug_log("%s\n", "Bird: goodbye");
+}
+method(Bird, fly, xxx)
+{
+	debug_log("%s\n", "Bird: default fly");
+}
+moption(Bird, Duck, fly, xxx)
+{
+	debug_log("%s\n", "Bird:Duck GuaGuaGua fly");
+}
+moption(Bird, Chicken, fly, xxx)
+{
+	debug_log("%s\n", "Bird:Chicken JiJiJi fly");
+}
+
+

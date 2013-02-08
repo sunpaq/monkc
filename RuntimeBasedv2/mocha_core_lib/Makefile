@@ -1,6 +1,7 @@
 LIBOBJS = MCRuntime.o MCString.o MCContext.o \
 	MCClock.o MCProcess.o MCException.o \
 	MCThread.o MCSocket.o MCIO.o MCMath.o \
+	MCBuffer.o
 
 CC = gcc -g -w -Wall -Wno-unused-variable -Wno-return-type
 AS = as
@@ -40,6 +41,9 @@ MCSocket.o:MCSocket.c MCSocket.h
 
 MCIO.o:MCIO.c MCIO.h
 	$(CC) -c MCIO.c
+
+MCBuffer.o:MCBuffer.c MCBuffer.h
+	$(CC) -c MCBuffer.c
 
 install:
 	tar -xzvf mocha.tar.gz -C /usr/local/include/

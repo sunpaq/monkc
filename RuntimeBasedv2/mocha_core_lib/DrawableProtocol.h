@@ -9,8 +9,8 @@ protocol(DrawableProtocol, redraw, xxx);
 #endif
 
 #ifdef BIND
-have_method(DrawableProtocol, draw);
-have_method(DrawableProtocol, erase);
-have_method(DrawableProtocol, redraw);
+have_method(DrawableProtocol, draw, xxx);
+have_method(DrawableProtocol, erase, xxx);
+have_method(DrawableProtocol, redraw, xxx);
 #undef BIND
 #endif

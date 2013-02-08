@@ -1,5 +1,23 @@
 #include "VTableSuper.h"
 
+constructor(VTableSuper, xxx)
+{
+	link_class(VTableSuper, MCObject, nil)
+	{
+		have_method(VTableSuper, bye, xxx);
+		have_method(VTableSuper, show, BOOL isPrint, char* str)				returns(BOOL);
+		have_method(VTableSuper, bmethod, int a, double b, char* c);
+		have_method(VTableSuper, cmethod, int a, double b, char* c);
+		#define BIND
+		#include "DrawableProtocol.h"
+	}
+	
+	this->main_color = "super-red";
+	this->info="this is a VTableSuper info";
+
+	return this;
+}
+
 method(VTableSuper, show, BOOL isPrint, char* str)
 {
 	if (isPrint){
@@ -41,20 +59,3 @@ method(VTableSuper, bye, xxx)
 	//do clean here
 }
 
-constructor(VTableSuper, xxx)
-{
-	link_class(VTableSuper, MCObject, nil)
-	{
-		have_method(VTableSuper, show);
-		have_method(VTableSuper, bmethod);
-		have_method(VTableSuper, cmethod);
-		have_method(VTableSuper, bye);
-		#define BIND
-		#include "DrawableProtocol.h"
-	}
-	
-	this->main_color = "super-red";
-	this->info="this is a VTableSuper info";
-
-	return this;
-}

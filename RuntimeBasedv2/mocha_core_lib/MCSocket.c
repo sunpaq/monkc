@@ -1,23 +1,50 @@
 #include "MCSocket.h"
 
+static void create_and_bind_socket(MCSocket* this, MCSocketType socket_type, char* ip, char* port);
+
+constructor(MCSocketClientInfo, xxx)
+{
+	link_class(MCSocketClientInfo, MCObject, nil)
+	{
+		have_method(MCSocketClientInfo, dumpInfo, xxx);
+		have_method(MCSocketClientInfo, bye, xxx);
+	}
+	return this;
+}
+
 method(MCSocketClientInfo, dumpInfo, xxx)
 {
 	printf("accept a client: %s\n", this->address.sa_data);
 }
+
 method(MCSocketClientInfo, bye, xxx)
 {
 	//nothing to do
 }
-constructor(MCSocketClientInfo, xxx)
+
+constructor(MCSocket, MCSocketType socket_type, char* ip, char* port)
 {
-	super_init(this, MCObject, nil);
-	if (set_class(this, MK(MCSocketClientInfo), MK(MCObject)))
+	link_class(MCSocket, MCObject, nil)
 	{
-		bind_method(this, MK(bye), MV(MCSocketClientInfo, bye));
-		bind_method(this, MK(dumpInfo), MV(MCSocketClientInfo, dumpInfo));
+		have_method(MCSocket, listeningStart, xxx);//listen
+		have_method(MCSocket, acceptARequest, xxx); returns(MCSocketClientInfo)
+		//have_method(MCSocket, connectServer, xxx);
+
+		have_method(MCSocket, recv, xxx);
+		have_method(MCSocket, recvfrom, xxx);
+		have_method(MCSocket, recvmsg, xxx);
+		have_method(MCSocket, send, xxx);
+		have_method(MCSocket, sendto, xxx);
+		have_method(MCSocket, sendmsg, xxx);
+
+		have_method(MCSocket, bye, xxx);
 	}
+
+	create_and_bind_socket(this, socket_type, ip, port);
 	return this;
 }
+
+
 
 static void create_and_bind_socket(MCSocket* this, MCSocketType socket_type, char* ip, char* port)
 {
@@ -139,21 +166,3 @@ method(MCSocket, sendmsg, xxx)
 
 }
 
-constructor(MCSocket, MCSocketType socket_type, char* ip, char* port)
-{
-	link_class(MCSocket, MCObject, nil)
-	{
-		have_method(MCSocket, bye);
-		have_method(MCSocket, listeningStart);
-		have_method(MCSocket, acceptARequest);
-		have_method(MCSocket, recv);
-		have_method(MCSocket, recvfrom);
-		have_method(MCSocket, recvmsg);
-		have_method(MCSocket, send);
-		have_method(MCSocket, sendto);
-		have_method(MCSocket, sendmsg);
-	}
-
-	create_and_bind_socket(this, socket_type, ip, port);
-	return this;
-}
