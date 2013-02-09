@@ -87,19 +87,19 @@ void init_routine()
 
 MCMutexLockNew(withCond) = MCMutexLockStaticInitializer;
 MCCondLockNew(cond) = MCCondLockStaticInitializer;
-MCSpinLockNew(spin); int test_spin_count=0;
+//MCSpinLockNew(spin); int test_spin_count=0;
 void wait_routine()
 {
-	MCSpinLockInit(spin ,YES);
+	//MCSpinLockInit(spin ,YES);
 		
 	printf("%s\n", "wait for signal, block here");
 	MCCondWait(cond, withCond);
 
 	printf("%s\n", "received signal!!!");
 
-	MCSpinLock(spin);
-	printf("test_spin_count is:%d\n", test_spin_count);
-	MCSpinUnlock(spin);
+	//MCSpinLock(spin);
+	//printf("test_spin_count is:%d\n", test_spin_count);
+	//MCSpinUnlock(spin);
 }
 
 void signal_routine()
@@ -114,9 +114,9 @@ void signal_routine()
 	printf("%s\n", "signal!!!");
 	MCCondSignal(cond);
 
-	MCSpinLock(spin);
-	test_spin_count++;
-	MCSpinUnlock(spin);
+	//MCSpinLock(spin);
+	//test_spin_count++;
+	//MCSpinUnlock(spin);
 
 }
 
@@ -314,7 +314,7 @@ void test_MCStream()
 
 void mocha_lib_test()
 {
-	LOG_LEVEL=VERBOSE;
+	LOG_LEVEL=DEBUG;
 
 	//test_MCClock();
 	//test_MCProcess();

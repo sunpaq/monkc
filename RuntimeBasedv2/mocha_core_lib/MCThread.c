@@ -35,7 +35,8 @@ constructor(MCThread, MCRunnable* runnable)
 		have_method(MCThread, bye, xxx);
 	}
 	//init the vars
-	this->once_control = PTHREAD_ONCE_INIT;
+	pthread_once_t ponce = PTHREAD_ONCE_INIT;
+	this->once_control = ponce;
 	this->isRunOnce = NO;//default is NO
 	this->runnable = runnable;
 	pthread_attr_init(&this->attribute);

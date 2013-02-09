@@ -128,7 +128,7 @@ static MCClass* load_class(const char* name_in, const char* super_class)
 	MCClass* class = (MCClass*)mc_malloc(sizeof(MCClass));
 
 	int i;
-	for (i = 0; i < MAX_METHOD_NUM; ++i)
+	for (i = 0; i < MAX_METHOD_NUM; i++)
 		class->method_list[i]==0;
 	//set the class name
 	class->name = name_in;
@@ -471,14 +471,14 @@ static inline void _clear_method_list(id const self_in)
 {
 	MCObject* self = (MCObject*)self_in;
 	int i;
-	for (i = 0; i < MAX_METHOD_NUM; ++i)
+	for (i = 0; i < MAX_METHOD_NUM; i++)
 		self->isa->method_list[i]==0;
 }
 
 static void _init_class_list()
 {
 	int i;
-	for (i = 0; i < MAX_CLASS_NUM; ++i)
+	for (i = 0; i < MAX_CLASS_NUM; i++)
 		mc_classobj_pool[i]==nil;
 
 	MCClass* class = (MCClass*)mc_malloc(sizeof(MCClass));
@@ -497,7 +497,7 @@ static void _init_class_list()
 static void _clear_class_list()
 {
 	int i;
-	for (i = 0; i < MAX_CLASS_NUM; ++i){
+	for (i = 0; i < MAX_CLASS_NUM; i++){
 		MCClass* tmp = mc_classobj_pool[i];
 		if(tmp!=nil)mc_free(tmp);
 	}
