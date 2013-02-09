@@ -85,7 +85,7 @@ pthread_mutex_unlock     pthread_mutex_unlock
 
 //spin lock have no static initializer
 #define MCSpinLockInit(lock, is_processes_shared)       pthread_spin_init(&lock, is_processes_shared)//YES/NO = non-zero/zero 
-#define MCSpinLockNew(lock) 							pthread_spinlock_t lock
+//#define MCSpinLockNew(lock) 							pthread_spinlock_t lock
 //no spin attribute
 #define MCSpinLockDestroy(lock) 						pthread_spin_destroy(&lock)
 #define MCSpinLock(lock) 								pthread_spin_lock(&lock)

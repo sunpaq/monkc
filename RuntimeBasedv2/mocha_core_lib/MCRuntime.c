@@ -109,15 +109,13 @@ pthread_mutex_t _mc_runtime_mutex = PTHREAD_MUTEX_INITIALIZER;
 static MCClass* load_class(const char* name_in, const char* super_class)
 {
 	//pthread_mutex_lock(&_mc_runtime_mutex);
-	MCClass* old;
-	if ((old=get_class(name_in))!=nil)
-	 	return old;
-
-	int super_hashkey = _classobj_hash(super_class);
-	if(super_hashkey>MAX_CLASS_NUM){
-		error_log("%s hashkey is out of bound\n",super_class);
+	MCClass* oldclass;
+	if ((oldclass=get_class(name_in)) != nil){
+		error_log("class name:%s hash is conflict with class name:%s hash.\n", name_in, oldclass->name);
 		exit(-1);
 	}
+
+	int super_hashkey = _classobj_hash(super_class);
 
 	MCClass* superclass = mc_classobj_pool[super_hashkey];
 	if(superclass==nil){
