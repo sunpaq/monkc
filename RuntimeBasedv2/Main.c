@@ -351,8 +351,8 @@ void mocha_lib_test()
 
 	test_MCString();
 
-	preload(MCProcess, nil);
-
+	//preload(MCProcess, nil);
+/*
 	printf("%d\n", _hash("bye"));
 	printf("%d\n", _hash("add"));
 	printf("%d\n", _hash("print"));
@@ -376,7 +376,7 @@ void mocha_lib_test()
 	printf("%d\n", _hash("seekFromBegin"));
 	printf("%d\n", _hash("seekFromCurrent"));
 	printf("%d\n", _hash("seekFromEnd"));
-
+*/
 
 	test_MCStream();
 

@@ -9,7 +9,7 @@ static unsigned _classobj_hash(const char *s);
 static void _nil_check(id const self, 
 	char* log1, char* log2, char* log3, 
 	char* log4, char* log5, char* log6, pthread_mutex_t* lock);
-static void _clear_method_list(id const self_in);
+static void _clear_method_list(MCClass* const class);
 static void _init_class_list();
 static void _clear_class_list();
 static MCClass* mc_classobj_pool[MAX_CLASS_NUM];
@@ -127,9 +127,6 @@ static MCClass* load_class(const char* name_in, const char* super_class)
 
 	MCClass* class = (MCClass*)mc_malloc(sizeof(MCClass));
 
-	int i;
-	for (i = 0; i < MAX_METHOD_NUM; i++)
-		class->method_list[i]==0;
 	//set the class name
 	class->name = name_in;
 	class->super = superclass;
@@ -141,6 +138,8 @@ static MCClass* load_class(const char* name_in, const char* super_class)
 		error_log("load_class(%s, %s) - name hash value conflict.\nplease change a name\n", name_in, super_class);
 		exit(-1);
 	}
+
+	_clear_method_list(class);
 	mc_classobj_pool[hashkey]=class;
 	//pthread_mutex_unlock(&_mc_runtime_mutex);
 	return class;
@@ -276,7 +275,7 @@ unsigned bind_method(id const self, unsigned hashkey, _FunctionPointer(value))
 		"", &_mc_runtime_mutex);
 
 	//unsigned hashkey = _hash(key);
-	if(self->isa->method_list[hashkey]!=0){
+	if(self->isa->method_list[hashkey]!=nil){
 		error_log("%s(%d):\n%s\n%s\n%s\n",
 			self->isa->name, hashkey,
 			"1. are the child called set_class()? please call bind() in if(set_class()){ }",
@@ -374,7 +373,7 @@ id ff(id const obj, unsigned hashkey, ...)
 	}
 
 	pthread_mutex_lock(&_mc_runtime_mutex);
-	if((res < MAX_METHOD_NUM) && (obj->isa->method_list[res]==0)){
+	if((res < MAX_METHOD_NUM) && (obj->isa->method_list[res]==nil)){
 		runtime_log("----Cache method: %s[%d]\n", obj->isa->name, hashkey);
 		obj->isa->method_list[res]=cls_iterator->method_list[res];//new cache logic
 	}
@@ -414,7 +413,7 @@ id fr(id const obj, unsigned hashkey, ...)
 	}
 
 	pthread_mutex_lock(&_mc_runtime_mutex);
-	if((res < MAX_METHOD_NUM) && (obj->isa->method_list[res]==0)){
+	if((res < MAX_METHOD_NUM) && (obj->isa->method_list[res]==nil)){
 		runtime_log("----Cache method: %s[%d]\n", obj->isa->name, hashkey);
 		obj->isa->method_list[res]=cls_iterator->method_list[res];//new cache logic
 	}
@@ -467,12 +466,11 @@ static inline void _nil_check(id const self,
 	}
 }
 
-static inline void _clear_method_list(id const self_in)
+static inline void _clear_method_list(MCClass* const class)
 {
-	MCObject* self = (MCObject*)self_in;
 	int i;
 	for (i = 0; i < MAX_METHOD_NUM; i++)
-		self->isa->method_list[i]==0;
+		class->method_list[i] == nil;
 }
 
 static void _init_class_list()
@@ -506,7 +504,7 @@ static void _clear_class_list()
 static inline unsigned _response_to_method(MCClass* const cls, unsigned hashkey)
 {
 	//unsigned hashkey = _hash(key);
-	if((cls->method_list!=nil)&&(cls->method_list[hashkey]==0)){
+	if((cls->method_list!=nil)&&(cls->method_list[hashkey]==nil)){
 		return NOT_RESPONSE;
 	}
 	else{
