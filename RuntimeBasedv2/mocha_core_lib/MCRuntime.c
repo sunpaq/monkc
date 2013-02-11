@@ -5,7 +5,6 @@ LOG_LEVEL = DEBUG;
 
 //global var set in _init_class_list
 static unsigned _init_method_hashkey;
-static unsigned _classobj_hash(const char *s);
 static void _nil_check(id const self, 
 	char* log1, char* log2, char* log3, 
 	char* log4, char* log5, char* log6, pthread_mutex_t* lock);
@@ -63,12 +62,13 @@ id MCObject_init(id const this, unsigned hashkey, xxx)
 
 id MCObject_whatIsYourClassName(id const this, unsigned hashkey, xxx)
 {
-	if(this!=nil&&this->isa!=nil)debug_log("My class name is:%s\n", this->isa->name);
+	if(this != nil && this->isa != nil)
+		debug_log("My class name is:%s\n", this->isa->name);
 }
 
 void error_log(char* fmt, ...)
 {
-	if(LOG_LEVEL!=SILENT){
+	if(LOG_LEVEL != SILENT){
 
 		void *args;
 		args = __builtin_apply_args();
@@ -80,8 +80,8 @@ void error_log(char* fmt, ...)
 
 void debug_log(char* fmt, ...)
 {
-	if(LOG_LEVEL!=SILENT
-	 &&LOG_LEVEL!=ERROR_ONLY){
+	if(LOG_LEVEL != SILENT
+	 &&LOG_LEVEL != ERROR_ONLY){
 
 		void *args;
 		args = __builtin_apply_args();
@@ -93,9 +93,9 @@ void debug_log(char* fmt, ...)
 
 void runtime_log(char* fmt, ...)
 {
-	if(LOG_LEVEL!=SILENT
-	 &&LOG_LEVEL!=ERROR_ONLY
-	 &&LOG_LEVEL!=DEBUG){
+	if(LOG_LEVEL != SILENT
+	 &&LOG_LEVEL != ERROR_ONLY
+	 &&LOG_LEVEL != DEBUG){
 
 		void *args;
 		args = __builtin_apply_args();
@@ -115,10 +115,10 @@ static MCClass* load_class(const char* name_in, const char* super_class)
 		exit(-1);
 	}
 
-	int super_hashkey = _classobj_hash(super_class);
+	int super_hashkey = _chash(super_class);
 
 	MCClass* superclass = mc_classobj_pool[super_hashkey];
-	if(superclass==nil){
+	if(superclass == nil){
 		error_log("there is no superclass %s.please load it first!\n", super_class);
 		exit(-1);
 	}
@@ -131,28 +131,28 @@ static MCClass* load_class(const char* name_in, const char* super_class)
 	class->method_count = 0;
 
 	//conflict check
-	int hashkey = _classobj_hash(name_in);
-	if(mc_classobj_pool[hashkey]!=nil){
+	int hashkey = _chash(name_in);
+	if(mc_classobj_pool[hashkey] != nil){
 		error_log("load_class(%s, %s) - name hash value conflict.\nplease change a name\n", name_in, super_class);
 		exit(-1);
 	}
 
 	_clear_method_list(class);
-	mc_classobj_pool[hashkey]=class;
+	mc_classobj_pool[hashkey] = class;
 	//pthread_mutex_unlock(&_mc_runtime_mutex);
 	return class;
 }
 
 static inline MCClass* get_class(const char* name_in)
 {
-	int hashkey = _classobj_hash(name_in);
+	int hashkey = _chash(name_in);
 	return mc_classobj_pool[hashkey];
 }
 
 BOOL set_class(id const self_in, const char* classname, const char* superclassname)
 {
 	pthread_mutex_lock(&_mc_runtime_mutex);
-	if (self_in==nil)
+	if (self_in == nil)
 	{
 		error_log("set_class(obj, classname).obj should not be nil\n");
 		exit(-1);
@@ -163,15 +163,15 @@ BOOL set_class(id const self_in, const char* classname, const char* superclassna
 	self_in->ref_count = 1;
 
 	//load class
-	MCClass* class=get_class(classname);
+	MCClass* class = get_class(classname);
 
-	if(self_in->need_bind_method!=YES){
+	if(self_in->need_bind_method != YES){
 		runtime_log("super_init: %s no need bind methods\n",classname);
 		pthread_mutex_unlock(&_mc_runtime_mutex);
 		return NO;
 	}
 
-	if(class!=nil){
+	if(class != nil){
 		runtime_log("class: %s already loaded\n",classname);
 		self_in->isa = class;
 		pthread_mutex_unlock(&_mc_runtime_mutex);
@@ -190,23 +190,23 @@ void release(id const this)
 {
 	pthread_mutex_lock(&_mc_mm_mutex);
 
-	if(this==nil){
+	if(this == nil){
 		error_log("%s\n", "release(nil) do nothing.");
 		pthread_mutex_unlock(&_mc_mm_mutex);
 		return;
 	}
-	if(this->isa==nil){
+	if(this->isa == nil){
 		error_log("release(%d) twice. do nothing.\n", this);
 		pthread_mutex_unlock(&_mc_mm_mutex);
 		return;
 	}
-	if (this->ref_count==-1)
+	if (this->ref_count == -1)
 	{
 		debug_log("ref_count is -1 manage by runtime. do nothing\n");
 		pthread_mutex_unlock(&_mc_mm_mutex);
 		return;
 	}
-	if (this->ref_count>0)
+	if (this->ref_count > 0)
 	{
 		this->ref_count--;
 		runtime_log("%s - ref_count:%d\n", this->isa->name, this->ref_count);
@@ -214,20 +214,20 @@ void release(id const this)
 
 	pthread_mutex_unlock(&_mc_mm_mutex);
 
-	if(this->ref_count==0)
+	if(this->ref_count == 0)
 	{
 		//call all the "bye" method on object: this
 		//so that all the super clean work will be done
 		MCClass* iterator = this->isa;
 		while(iterator != nil){
 			_FunctionPointer(bye_method) = iterator->method_list[_hash("bye")];
-			if(bye_method!=nil) (*bye_method)(this, nil);
+			if(bye_method != nil) (*bye_method)(this, nil);
 			iterator = iterator->super;
 		}
 
 		//destory the obj
 		runtime_log("----Destroy: goodbye!\n");
-		this->isa=nil;//unlink to the class
+		this->isa = nil;//unlink to the class
 		mc_free(this);
 	}
 }
@@ -243,7 +243,7 @@ void retain(id const this)
 		"obj have no class object linked.",
 		"please call set_class() at the very begin of init method.", &_mc_mm_mutex);
 
-	if (this->ref_count==-1)
+	if (this->ref_count == -1)
 	{
 		debug_log("ref_count is -1 manage by runtime. do nothing\n");
 		pthread_mutex_unlock(&_mc_mm_mutex);
@@ -258,7 +258,7 @@ void retain(id const this)
 void _relnil(MCObject** const this)
 {
 	release(*this);
-	(*this)=nil;
+	(*this) = nil;
 }
 
 unsigned bind_method(id const self, unsigned hashkey, _FunctionPointer(value))
@@ -273,7 +273,7 @@ unsigned bind_method(id const self, unsigned hashkey, _FunctionPointer(value))
 		"", &_mc_runtime_mutex);
 
 	//unsigned hashkey = _hash(key);
-	if(self->isa->method_list[hashkey]!=nil){
+	if(self->isa->method_list[hashkey] != nil){
 		error_log("%s(%d):\n%s\n%s\n%s\n",
 			self->isa->name, hashkey,
 			"1. are the child called set_class()? please call bind() in if(set_class()){ }",
@@ -371,9 +371,9 @@ id ff(id const obj, unsigned hashkey, ...)
 	}
 
 	pthread_mutex_lock(&_mc_runtime_mutex);
-	if((res < MAX_METHOD_NUM) && (obj->isa->method_list[res]==nil)){
+	if((res < MAX_METHOD_NUM) && (obj->isa->method_list[res] == nil)){
 		runtime_log("----Cache method: %s[%d]\n", obj->isa->name, hashkey);
-		obj->isa->method_list[res]=cls_iterator->method_list[res];//new cache logic
+		obj->isa->method_list[res] = cls_iterator->method_list[res];//new cache logic
 	}
 	pthread_mutex_unlock(&_mc_runtime_mutex);
 
@@ -413,7 +413,7 @@ id fr(id const obj, unsigned hashkey, ...)
 	pthread_mutex_lock(&_mc_runtime_mutex);
 	if((res < MAX_METHOD_NUM) && (obj->isa->method_list[res]==nil)){
 		runtime_log("----Cache method: %s[%d]\n", obj->isa->name, hashkey);
-		obj->isa->method_list[res]=cls_iterator->method_list[res];//new cache logic
+		obj->isa->method_list[res] = cls_iterator->method_list[res];//new cache logic
 	}
 	pthread_mutex_unlock(&_mc_runtime_mutex);
 
@@ -440,7 +440,8 @@ unsigned _hash(const char *s)
 	return hashval % MAX_METHOD_NUM;
 }
 
-static inline unsigned _classobj_hash(const char *s)
+//class obj hash
+unsigned _chash(const char *s)
 {
 	unsigned hashval;
 	for(hashval = 0; *s != '\0'; s++)
@@ -452,14 +453,14 @@ static inline void _nil_check(id const self,
 	char* log1, char* log2, char* log3, 
 	char* log4, char* log5, char* log6,
 	pthread_mutex_t* lock){
-	if(self==nil){
+	if(self == nil){
 		error_log("%s:\n%s\n%s\n", log1, log2, log3);
-		if(lock!=nil)pthread_mutex_unlock(lock);
+		if(lock != nil)pthread_mutex_unlock(lock);
 		exit(-1);
 	}
-	if(self->isa==nil){
+	if(self->isa == nil){
 		error_log("%s:\n%s\n%s\n", log4, log5, log6);
-		if(lock!=nil)pthread_mutex_unlock(lock);
+		if(lock != nil)pthread_mutex_unlock(lock);
 		exit(-1);
 	}
 }
@@ -467,27 +468,29 @@ static inline void _nil_check(id const self,
 static inline void _clear_method_list(MCClass* const class)
 {
 	int i;
-	for (i = 0; i < MAX_METHOD_NUM; i++)
-		class->method_list[i] == nil;
+	for (i = 0; i < MAX_METHOD_NUM; i++){
+		class->method_list[i] = nil;
+	}
 }
 
 static void _init_class_list()
 {
 	int i;
-	for (i = 0; i < MAX_CLASS_NUM; i++)
-		mc_classobj_pool[i]==nil;
+	for (i = 0; i < MAX_CLASS_NUM; i++){
+		mc_classobj_pool[i] = nil;
+	}
 
 	MCClass* class = (MCClass*)mc_malloc(sizeof(MCClass));
 	class->name = "MCObject";
-	class->super=nil;
+	class->super = nil;
 	//bind the builtin MCObject methods
 	class->method_list[_hash("doNothing")] = MCObject_doNothing;
 	class->method_list[_hash("bye")] = MCObject_bye;
 	class->method_list[_hash("whatIsYourClassName")] = MCObject_whatIsYourClassName;
 	//load the MCObject class
-	mc_classobj_pool[_classobj_hash("MCObject")]=class;
+	mc_classobj_pool[_chash("MCObject")] = class;
 	//for init method judgement
-	_init_method_hashkey=_hash("init");
+	_init_method_hashkey = _hash("init");
 }
 
 static void _clear_class_list()
@@ -502,7 +505,8 @@ static void _clear_class_list()
 static inline unsigned _response_to_method(MCClass* const cls, unsigned hashkey)
 {
 	//unsigned hashkey = _hash(key);
-	if((cls->method_list!=nil)&&(cls->method_list[hashkey]==nil)){
+	if((cls->method_list != nil)
+	&&(cls->method_list[hashkey] == nil)){
 		return NOT_RESPONSE;
 	}
 	else{

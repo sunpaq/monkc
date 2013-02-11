@@ -208,24 +208,26 @@ void test_MCString()
 	char csbuff[newstr->size];
 	ff(newstr, MK(toCString), csbuff);
 	printf("the CString is:\n%s\n", csbuff);
-	relnil(newstr);
 
 	MCString* newstr2 = new(MCString, "a new string b");
 	ff(newstr2, MK(add), " + with append info");
 	ff(newstr2, MK(print));
-	relnil(newstr2);
 
 	MCString* astr = new(MCString, "string");
 	if (fr(new(MCString, "string"), MK(equalTo), astr))
 	{
 		printf("two string is equal!!!\n");
 	}
-	relnil(astr);
 
-	//fr(MCString_newForHttp("www.google.com",NO), MK(print));
+	fr(MCString_newForHttp("www.google.com",NO), MK(print));
 
 	printf("size is: %d\n", strlen("size of string"));
 	printf("---- test_MCString END ----\n");
+
+	relnil(newstr);
+	relnil(newstr2);
+	relnil(astr);
+
 }
 
 void test_MCThread()

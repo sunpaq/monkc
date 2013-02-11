@@ -38,6 +38,7 @@ typedef int BOOL;
 //MK: Method Key  MV: Method Value
 #define MV(cls, name) cls##_##name
 #define MK(value) _hash(#value)
+#define CK(value) _chash(#value) 
 #define Handle(cls) cls*
 
 //root class
@@ -106,6 +107,8 @@ void debug_log(char* fmt, ...);
 void runtime_log(char* fmt, ...);
 
 unsigned _hash(const char *s);
+unsigned _chash(const char *s);
+
 BOOL set_class(id const self_in, const char* classname, const char* superclassname);
 
 //MM
