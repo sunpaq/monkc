@@ -209,7 +209,7 @@ void release(id const this)
 	if (this->ref_count > 0)
 	{
 		this->ref_count--;
-		runtime_log("%s - ref_count:%d\n", this->isa->name, this->ref_count);
+		//runtime_log("%s - ref_count:%d\n", this->isa->name, this->ref_count);
 	}
 
 	pthread_mutex_unlock(&_mc_mm_mutex);

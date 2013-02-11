@@ -4,46 +4,26 @@
 #include <stdio.h>
 
 typedef struct {
-	MCClass* isa;
-	BOOL need_bind_method;
-	int ref_count;
-	//
 	size_t size;
 	char data[];
 }MCCharBuffer;
 
 typedef struct {
-	MCClass* isa;
-	BOOL need_bind_method;
-	int ref_count;
-	//
 	size_t size;
 	int data[];
 }MCIntBuffer;
 
 typedef struct {
-	MCClass* isa;
-	BOOL need_bind_method;
-	int ref_count;
-	//
 	size_t size;
 	unsigned data[];
 }MCUnsignedBuffer;
 
 typedef struct {
-	MCClass* isa;
-	BOOL need_bind_method;
-	int ref_count;
-	//
 	size_t size;
 	long data[];
 }MCLongBuffer;
 
 typedef struct {
-	MCClass* isa;
-	BOOL need_bind_method;
-	int ref_count;
-	//
 	size_t size;
 	double data[];
 }MCDoubleBuffer;

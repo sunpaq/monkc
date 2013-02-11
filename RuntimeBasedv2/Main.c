@@ -294,7 +294,7 @@ void test_MCFile()
 		release(tmpfile);
 	}
 
-	relnil(buff);
+	free(buff);
 }
 
 void test_MCStream()
@@ -310,39 +310,9 @@ void test_MCStream()
 
 	printf("%s\n", buff->data);
 
-	relnil(buff);
+	free(buff);
 	relnil(stream);
 }
-
-/*
-method(MCString, add, CString str);
-method(MCString, print, xxx);
-method(MCString, toCString, char const resultString[]);
-method(MCString, equalTo, MCString* stringToComp) 							returns(BOOL);
-method(MCString, getOneChar, xxx);
-method(MCString, getCharsUntilEnter, char const resultString[]);
-method(MCString, bye, xxx);
-
-		have_method(MCStream, bye, xxx);
-		have_method(MCStream, getFileDescriptor, xxx); returns(int)
-
-		have_method(MCStream, getChar, xxx); returns(int)
-		have_method(MCStream, putChar, int charCode);
-		have_method(MCStream, pushbackChar, int charCodeToBePushBack); returns(int charCode/EOF)
-
-		have_method(MCStream, getCString, MCCharBuffer* recvBuffer); returns(CString/nil)
-		have_method(MCStream, putCString, MCCharBuffer* sendBuffer); returns(CString/nil)
-		have_method(MCStream, getMCString, xxx);                     returns(Handle(MCString))
-		have_method(MCStream, putMCString, MCString* str);           returns(Handle(MCString)/nil)
-
-		have_method(MCStream, getBianryObject, void* recvBuffer,  size_t objectSize, size_t numberOfObjs); returns(size_t)
-		have_method(MCStream, putBianryObject, void* sendBuffer,  size_t objectSize, size_t numberOfObjs); returns(size_t)
-
-		have_method(MCStream, tellOffset, xxx); returns(off_t)
-		have_method(MCStream, seekFromBegin, off_t offset); returns(BOOL)
-		have_method(MCStream, seekFromCurrent, off_t offset); returns(BOOL)
-		have_method(MCStream, seekFromEnd, off_t offset); returns(BOOL)
-*/
 
 void mocha_lib_test()
 {
@@ -353,32 +323,6 @@ void mocha_lib_test()
 
 	test_MCString();
 
-	//preload(MCProcess, nil);
-/*
-	printf("%d\n", _hash("bye"));
-	printf("%d\n", _hash("add"));
-	printf("%d\n", _hash("print"));
-	printf("%d\n", _hash("toCString"));
-	printf("%d\n", _hash("equalTo"));
-	printf("%d\n", _hash("getOneChar"));
-	printf("%d\n", _hash("getCharsUntilEnter"));
-
-	printf("%d\n", _hash("bye"));
-	printf("%d\n", _hash("getFileDescriptor"));
-	printf("%d\n", _hash("getChar"));
-	printf("%d\n", _hash("putChar"));
-	printf("%d\n", _hash("pushbackChar"));
-	printf("%d\n", _hash("getCString"));
-	printf("%d\n", _hash("putCString"));
-	printf("%d\n", _hash("getMCString"));
-	printf("%d\n", _hash("putMCString"));
-	printf("%d\n", _hash("getBianryObject"));
-	printf("%d\n", _hash("putBianryObject"));
-	printf("%d\n", _hash("tellOffset"));
-	printf("%d\n", _hash("seekFromBegin"));
-	printf("%d\n", _hash("seekFromCurrent"));
-	printf("%d\n", _hash("seekFromEnd"));
-*/
 
 	test_MCStream();
 
@@ -621,15 +565,14 @@ void mocha_exception_test()
 		printf("%s\n", "MCRuntimeException raised");
 
 	}catch(MCIOException){
-		MCString* str = get_exception_data("MCIOException");
+		MCString* str = (MCString*)get_exception_data("MCIOException");
 		if (str!=nil)
 		{
 			ff(str, MK(add), "@this is append info");
 			ff(str, MK(print));
-			ff(str, MK(print));
 			printf("%s\n", "MCIOException raised");
 			//it will be auto released
-			relnil(str);
+			//relnil(str);
 		}else{
 			debug_log("get_exception_data return nil\n");
 		}
@@ -637,9 +580,6 @@ void mocha_exception_test()
 
 	}catch(MyException){
 		printf("%s\n", "MyException raised");
-
-	}catch(MCIOException){
-		printf("%s\n", "my defined E(MCIOException) raised");
 
 	}catch_unknown{
 		printf("%s\n", "default handling");

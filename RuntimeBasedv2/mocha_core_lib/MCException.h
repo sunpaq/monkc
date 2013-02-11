@@ -20,13 +20,13 @@ unsigned __get_exception_code(char* key);
 /* public API */
 
 #define throws(etype)
-#define throw(etype)  if(exception_type!=__exception_try_not_called)longjmp(exception_env, __ECODE(etype))
+#define throw(etype)  if(exception_type!=__exception_try_not_called)_longjmp(exception_env, __ECODE(etype))
 
-#define try           if((exception_type=setjmp(exception_env))==__MCNoneException)
+#define try           clean_exception_context();if((exception_type = _setjmp(exception_env))==__MCNoneException)
 #define catch(etype)  else if(exception_type==__ECODE(etype))
 #define catch_unknown else
 #define finally       do
-#define endtry        while(0);clean_exception_context();
+#define endtry        while(0);
 
 #define  MAX_EXCEPTION_NUM 500
 
