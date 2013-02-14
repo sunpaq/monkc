@@ -1,14 +1,14 @@
-# Mocha-R (Runtime based version)
+# Monk-C (Runtime based version)
 a set of C macro for OOP programming
 
 ![Mou icon](https://secure.gravatar.com/avatar/63f7c4c0a269ebaf049724a024bf01b4?s=420&d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-user-420.png)
 
 ## Overview
 
-**Mocha**, is a set of C macros for OOP programming use pure C, the aim of Mocha is to add less syntex to support OOP. The reason to make this is as C is a language so beautiful and so powerful. and the OOP is so handful and nature for a programer. i want to mix them with the less modification
+**Monk-C**, is a set of C macros for OOP programming use pure C, the aim of Monk-C is to add less syntex to support OOP. The reason to make this is as C is a language so beautiful and so powerful. and the OOP is so handful and nature for a programer. i want to mix them with the less modification
 
 ## Syntax
-**Mocha** use "MC" as the prefix.
+**Monk-C** use "MC" as the prefix.
 #### declear interface - write in .h file
 
 		#ifndef _Classname
