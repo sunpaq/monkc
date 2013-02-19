@@ -80,9 +80,7 @@ typedef struct {\
 #define moption(cls, opt, name, ...) void* opt##_##name(cls* const this, unsigned hashkey, __VA_ARGS__)
 #define call(this, cls, name, ...)       cls##_##name(this, 0, __VA_ARGS__)//call other class method
 #define super_init(this, cls, ...)  do{this->need_bind_method=NO;\
-									this->isa=nil;\
 									cls##_init(this, 0, __VA_ARGS__);\
-									this->isa=nil;\
 									this->need_bind_method=YES;}while(0)
 #define link_class(cls, super, ...) super_init(this, super, __VA_ARGS__);\
 									if(set_class(this, #cls, #super))

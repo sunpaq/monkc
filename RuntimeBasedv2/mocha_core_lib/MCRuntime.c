@@ -58,12 +58,29 @@ id MCObject_bye(id this, unsigned hashkey, xxx)
 id MCObject_init(id const this, unsigned hashkey, xxx)
 {
 	//do nothing
+	this->ref_count = 1;
+	this->isa = get_class("MCObject");
+	return this;
 }
 
 id MCObject_whatIsYourClassName(id const this, unsigned hashkey, xxx)
 {
 	if(this != nil && this->isa != nil)
 		debug_log("My class name is:%s\n", this->isa->name);
+}
+
+static void load_root_class(){
+	MCClass* class = (MCClass*)mc_malloc(sizeof(MCClass));
+	class->name = "MCObject";
+	class->super = nil;
+	//bind the builtin MCObject methods
+	class->method_list[_hash("doNothing")] = MCObject_doNothing;
+	class->method_list[_hash("bye")] = MCObject_bye;
+	class->method_list[_hash("whatIsYourClassName")] = MCObject_whatIsYourClassName;
+	//load the MCObject class
+	mc_classobj_pool[_chash("MCObject")] = class;
+	//for init method judgement
+	_init_method_hashkey = _hash("init");
 }
 
 void error_log(char* fmt, ...)
@@ -488,17 +505,7 @@ static void _init_class_list()
 		mc_classobj_pool[i] = nil;
 	}
 
-	MCClass* class = (MCClass*)mc_malloc(sizeof(MCClass));
-	class->name = "MCObject";
-	class->super = nil;
-	//bind the builtin MCObject methods
-	class->method_list[_hash("doNothing")] = MCObject_doNothing;
-	class->method_list[_hash("bye")] = MCObject_bye;
-	class->method_list[_hash("whatIsYourClassName")] = MCObject_whatIsYourClassName;
-	//load the MCObject class
-	mc_classobj_pool[_chash("MCObject")] = class;
-	//for init method judgement
-	_init_method_hashkey = _hash("init");
+	load_root_class();
 }
 
 static void _clear_class_list()

@@ -469,6 +469,8 @@ void mocha_syntex_test(MCContext* const context)
 	//output all cmdline parameters
 	ff(context, MK(dumpParas));
 
+	fr(new(MCObject, nil), MK(whatIsYourClassName));
+
 	//check whether have cmdline parameter "-c"
 	BOOL res;
 	if(res = ff(context, MK(isHavePara), "-c"))
