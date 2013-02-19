@@ -158,20 +158,20 @@ BOOL set_class(id const self_in, const char* classname, const char* superclassna
 		exit(-1);
 	}
 
-	runtime_log("set_class: %s->%s\n", classname ,superclassname);
-	//init the obj vars
-	self_in->ref_count = 1;
-
-	//load class
-	MCClass* class = get_class(classname);
-
 	if(self_in->need_bind_method != YES){
 		runtime_log("super_init: %s no need bind methods\n",classname);
 		pthread_mutex_unlock(&_mc_runtime_mutex);
 		return NO;
 	}
 
-	if(class != nil){
+	runtime_log("set_class: %s->%s\n", classname ,superclassname);
+
+	//init the obj vars
+	self_in->ref_count = 1;
+	//load class
+	MCClass* class;
+	if ((class = get_class(classname)) != nil)
+	{
 		runtime_log("class: %s already loaded\n",classname);
 		self_in->isa = class;
 		pthread_mutex_unlock(&_mc_runtime_mutex);
@@ -360,12 +360,16 @@ id ff(id const obj, unsigned hashkey, ...)
 
 	MCClass* cls_iterator = obj->isa;
 	unsigned res;
+	int count = 0;
 	while((res=_response_to_method(cls_iterator, hashkey))==NOT_RESPONSE){
 		if(cls_iterator != nil){
 			cls_iterator = cls_iterator->super;
 			//runtime_log("%s\n", "continue to my super");
+		}else if(count++ >= MAX_CLASS_NUM){
+			error_log("count overflow\n");
+			return;
 		}else{
-			error_log("[%s] have no method: [%d] reach the root class: %s return\n", obj->isa->name, hashkey, cls_iterator->name);
+			error_log("[%s] have no method: [%d] reach the root class return\n", obj->isa->name, hashkey);
 			return;
 		}
 	}
@@ -400,12 +404,16 @@ id fr(id const obj, unsigned hashkey, ...)
 
 	MCClass* cls_iterator = obj->isa;
 	unsigned res;
+	int count = 0;
 	while((res=_response_to_method(cls_iterator, hashkey))==NOT_RESPONSE){
 		if(cls_iterator != nil){
 			cls_iterator = cls_iterator->super;
 			//runtime_log("%s\n", "continue to my super");
+		}else if(count++ >= MAX_CLASS_NUM){
+			error_log("count overflow\n");
+			return;
 		}else{
-			error_log("[%s] have no method: [%d] reach the root class: %s return\n", obj->isa->name, hashkey, cls_iterator->name);
+			error_log("[%s] have no method: [%d] reach the root class return\n", obj->isa->name, hashkey);
 			return;
 		}
 	}
@@ -504,7 +512,7 @@ static void _clear_class_list()
 
 static inline unsigned _response_to_method(MCClass* const cls, unsigned hashkey)
 {
-	//unsigned hashkey = _hash(key);
+	if(cls == nil) return NOT_RESPONSE;
 	if((cls->method_list != nil)
 	&&(cls->method_list[hashkey] == nil)){
 		return NOT_RESPONSE;

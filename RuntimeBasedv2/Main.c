@@ -318,20 +318,14 @@ void mocha_lib_test()
 {
 	LOG_LEVEL=DEBUG;
 
-	//test_MCClock();
-	//test_MCProcess();
+	test_MCClock();
+	test_MCProcess();
 
 	test_MCString();
-
-
 	test_MCStream();
 
-	//test_MCFile();
-
-
-	//
-	//test_MCThread();
-
+	test_MCFile();
+	test_MCThread();
 }
 
 static int readline(int fd, char* const recvbuff)
