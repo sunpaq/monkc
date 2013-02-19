@@ -6,7 +6,11 @@
 	double d;\
 	Float e;\
 
-class(VTable);
+class_begin(VTable);
+	int a;
+	int b;
+	int c;
+class_end(VTable);
 
 constructor(VTable, xxx);
 method(VTable, bye, xxx);

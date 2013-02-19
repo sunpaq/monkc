@@ -59,8 +59,8 @@ method(VTable, amethod2, char* srt, int index)
 
 method(VTable, bmethod, int a, double b, char* c)
 {
-	debug_log("method b1: a/b/c is:%d/%1.2f/%s\n", a, b, c);
-	debug_log("method b2: a/b/c is:%d/%1.2f/%s\n", a, b, c);
+	debug_log("method b1: a/b/c is:%d/%1.2f/%s\n", this->a, this->b, this->c);
+	debug_log("method private: a/b/c is:%d/%1.2f/%s\n", this->private.a, this->private.b, this->private.c);
 }
 
 method(VTable, cmethod, int a, double b, char* c)

@@ -71,6 +71,14 @@ typedef struct {\
 	int ref_count;\
 	_##cls;\
 }cls;
+#define class_begin(cls) _newline;\
+typedef struct {\
+	MCClass* isa;\
+	BOOL need_bind_method;\
+	int ref_count;\
+	_##cls;\
+	struct {
+#define class_end(cls) }private;}cls;
 
 #define constructor(cls, ...)       cls* cls##_init(cls* const this, unsigned hashkey, __VA_ARGS__)
 #define new(cls, ...)                    cls##_init(_alloc(cls), 0, __VA_ARGS__)
