@@ -12,7 +12,9 @@ constructor(MCContext, int argc, char** argv)
 		have_method(MCContext, showMenuAndGetSelectionChar, int count, ...) 			returns(char);
 		have_method(MCContext, showConfirmAndGetBOOL, const char* confirm) 			returns(BOOL);
 		have_method(MCContext, getUserInputString, char resultString[]);
-
+		have_method(MCContext, getEnvironmentVar, const char* key) returns(char*);
+		have_method(MCContext, setEnvironmentVar, const char* key, const char* value, BOOL isOverwrite) returns(RES);
+		have_method(MCContext, clearEnvironmentVar, const char* key) returns(RES);
 	}
 
 	this->argc=argc;
@@ -118,3 +120,34 @@ method(MCContext, getUserInputString, char resultString[])
 	get_chars_until_enter(resultString);
 }
 
+/*
+#include <stdlib.h>
+char *getenv(const char *name);
+int putenv(char *str); //need "key=value"
+int setenv(const char *name, const char *value, int rewrite);
+int unsetenv(const char *name);
+*/
+
+method(MCContext, getEnvironmentVar, const char* key) returns(char*)
+{
+	//char *getenv(const char *name);
+	return getenv(key);
+}
+
+method(MCContext, setEnvironmentVar, const char* key, const char* value, BOOL isOverwrite) returns(RES)
+{
+	//int setenv(const char *name, const char *value, int rewrite);
+	if (setenv(key, value, isOverwrite)==0)
+		return SUCCESS;
+	else
+		return ERROR;
+}
+
+method(MCContext, clearEnvironmentVar, const char* key) returns(RES)
+{
+	//int unsetenv(const char *name);
+	if (unsetenv(key)==0)
+		return SUCCESS;
+	else
+		return ERROR;
+}

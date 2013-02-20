@@ -3,7 +3,7 @@ LIBOBJS = MCRuntime.o MCString.o MCContext.o \
 	MCThread.o MCSocket.o MCIO.o MCMath.o \
 	MCBuffer.o
 
-CC = gcc -g -w -Wall -Wno-unused-variable -Wno-return-type
+CC = gcc -O -g -w -Wall -Wno-unused-variable -Wno-return-type
 AS = as
 
 all:$(LIBOBJS)
@@ -50,7 +50,9 @@ install:
 	mv /usr/local/include/mocha/*.a /usr/local/lib/
 
 clean:
-	rm $(LIBOBJS) mocha.tar.gz -r mocha
+	rm $(LIBOBJS) 
+	rm mocha.tar.gz 
+	rm -r mocha
 
 dump:
 	ulimit -c unlimited

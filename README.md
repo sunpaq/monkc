@@ -1,7 +1,6 @@
 # Monk-C (Runtime based version)
 a set of C macro for OOP programming
 
-![Mou icon](https://secure.gravatar.com/avatar/63f7c4c0a269ebaf049724a024bf01b4?s=420&d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-user-420.png)
 
 ## Overview
 
@@ -190,6 +189,8 @@ it just like the Objective-C. sending message instead of function call.
 	6. more detailed "evolution" document.
 
 	7. move more logic to MCObject
+
+![Mou icon](https://secure.gravatar.com/avatar/63f7c4c0a269ebaf049724a024bf01b4?s=420&d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-user-420.png)
 
 [^1]: the syntex is improving, maybe more/less keywords in the feature.
 

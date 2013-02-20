@@ -552,6 +552,26 @@ void* mc_malloc(size_t size)
 	return ret;
 }
 
+void* mc_calloc(size_t size)
+{
+	pthread_mutex_lock(&_mc_alloc_mutex);
+
+	void* ret = calloc(1, size);
+
+	pthread_mutex_unlock(&_mc_alloc_mutex);
+	return ret;
+}
+
+void* mc_alloca(size_t size)
+{
+	pthread_mutex_lock(&_mc_alloc_mutex);
+
+	void* ret = alloca(size);
+
+	pthread_mutex_unlock(&_mc_alloc_mutex);
+	return ret;
+}
+
 void* mc_realloc(void* ptr, size_t size)
 {
 	pthread_mutex_lock(&_mc_alloc_mutex);
@@ -571,3 +591,11 @@ void mc_free(void *ptr)
 
 	pthread_mutex_unlock(&_mc_free_mutex);
 }
+
+/*
+alternative allocators in APUE
+1. libmalloc
+2. vmalloc
+3. quick-fit
+4. alloca ---> can alloc mem on stack
+*/

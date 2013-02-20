@@ -21,7 +21,7 @@ constructor(MCFile, char* pathname, int oflag)
 		have_method(MCFile, checkPermissionUseRealIDOfProcess, int mode); returns(BOOL)
 	}
 
-	if((this->fd = open(pathname, oflag))==-1)
+	if((this->fd = open(pathname, oflag, 0774))==-1)
 		return nil;
 	this->pathname = pathname;
 	if(fstat(this->fd, &this->attribute)<0)

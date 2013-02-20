@@ -24,14 +24,16 @@
 #ifndef MAX_CLASS_NUM
 #define MAX_CLASS_NUM  1000
 #endif
-
 typedef char* CString;
 typedef double Float;
 typedef int BOOL;
 #define YES 1
 #define NO 0
+typedef int RES;
+#define SUCCESS 0
+#define ERROR -1
+
 #define xxx void* xxx
-#define any_t void*
 #define nil ((void*)0)
 #define _FunctionPointer(name) void (*name)()
 #define _FunctionArray(name) void (*name[MAX_METHOD_NUM])()
@@ -45,6 +47,9 @@ typedef int BOOL;
 #define _MCObject //we keep this macro blank but insert fileds to every object struct
 #define _newline  //just a blank mark for syntex
 #define _alloc(cls) (cls*)mc_malloc(sizeof(cls))//private macro, usr should not call this
+#define _alloc_clear(cls) (cls*)mc_calloc(sizeof(cls))//private macro, usr should not call this
+#define _alloc_onstack(cls) (cls*)mc_alloca(sizeof(cls))//private macro, usr should not call this
+
 //meta class, the struct is a node for inherit hierarchy
 //enum MCCLASSTYPE { SINGLETON, NORMAL };
 typedef struct MCClass_tag
@@ -82,6 +87,9 @@ typedef struct {\
 
 #define constructor(cls, ...)       cls* cls##_init(cls* const this, unsigned hashkey, __VA_ARGS__)
 #define new(cls, ...)                    cls##_init(_alloc(cls), 0, __VA_ARGS__)
+#define new_clear(cls, ...)              cls##_init(_alloc_clear(cls), 0, __VA_ARGS__)
+#define new_onstack(cls, ...)            cls##_init(_alloc_onstack(cls), 0, __VA_ARGS__)
+
 //for method
 #define returns(type)
 #define method(cls, name, ...)       void* cls##_##name(cls* const this, unsigned hashkey, __VA_ARGS__)
@@ -134,6 +142,8 @@ id fr(id const obj, const unsigned hashkey, ...);
 
 //make a thread-safe allocator
 void* mc_malloc(size_t size);
+void* mc_calloc(size_t size);
+void* mc_alloca(size_t size);
 void* mc_realloc(void* ptr, size_t size);
 void  mc_free(void *ptr);
 
@@ -160,7 +170,5 @@ static char* LOG_COLOR_BROWN="\033[0;33m";
 static char* LOG_COLOR_YELLOW="\033[1;33m";
 static char* LOG_COLOR_LIGHT_GRAY="\033[0;37m";
 static char* LOG_COLOR_WHITE="\033[1;37m";
-
-
 
 #endif

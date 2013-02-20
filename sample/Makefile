@@ -4,7 +4,7 @@ OBJS = Main.o VTable.o VTableSuper.o Bird.o
 LINK_HEAD = -I/usr/local/include/mocha
 LINK_BIN = -lpthread -L/usr/local/lib -lmocha
 
-CC = gcc -g -w -Wall -Wno-unused-variable -Wno-return-type
+CC = gcc -O -g -w -Wall -Wno-unused-variable -Wno-return-type
 AS = as
 
 exec:$(OBJS)

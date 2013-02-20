@@ -185,8 +185,7 @@ void test_MCProcess()
 	printf("---- test_MCProcess START ----\n");
 	//test MCProcess
 	Handle(MCProcess) p = new(MCProcess, nil);
-		ff(p, MK(printPID));
-		ff(p, MK(printPPID));
+		ff(p, MK(printIDs));
 	relnil(p);
 	printf("---- test_MCProcess END ----\n");
 }
@@ -461,13 +460,14 @@ void menu_drive_test(Handle(MCContext) const context)
 	printf("%s %s %s\n", sex, name, "welcome to Mars");
 }
 
-void doSomething();
-void doSomething2();
+
 
 void mocha_syntex_test(MCContext* const context)
 {
 	//output all cmdline parameters
 	ff(context, MK(dumpParas));
+
+	debug_log("PATH: [%s]\n", ff(context, MK(getEnvironmentVar), "PATH"));
 
 	fr(new(MCObject, nil), MK(whatIsYourClassName));
 
@@ -480,11 +480,11 @@ void mocha_syntex_test(MCContext* const context)
 	if(ff(context, MK(isHavePara), "-w"))
 		debug_log("%s\n", "context have -w para");
 
-	new(VTableSuper, nil);
+	new_onstack(VTableSuper, nil);
 
 	//twice new test
-	new(VTable, nil);
-	new(VTable, nil);
+	new_onstack(VTable, nil);
+	new_onstack(VTable, nil);
 
 	//get singleton instance test
 	Handle(VTable) ret2= VTable_getInstance();
@@ -551,10 +551,14 @@ void mocha_syntex_test(MCContext* const context)
 
 }
 
+void doSomething() throws(MCIOException);
+void doSomething2() throws(XXX);
+void doSomething3();
 void mocha_exception_test()
 {
 	//exception support
 	try{
+		doSomething3();
 		doSomething();
 		//doSomething2();
 	}catch(MCRuntimeException){
@@ -577,13 +581,9 @@ void mocha_exception_test()
 	}catch(MyException){
 		printf("%s\n", "MyException raised");
 
-	}catch_unknown{
-		printf("%s\n", "default handling");
-
 	}finally{
-		printf("%s\n", "finally");
-
-	}endtry
+		printf("%s\n", "finally default handling");
+	}
 }
 
 void doSomething() throws(MCIOException) {
@@ -595,4 +595,8 @@ void doSomething() throws(MCIOException) {
 void doSomething2() throws(XXX) {
 	throw(XXX);
 	printf("%s\n", "doSomething2 this should never show");
+}
+
+void doSomething3(){
+	printf("%s\n", "doSomething3 throw nothing");
 }

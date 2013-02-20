@@ -15,6 +15,10 @@ constructor(VTableSuper, xxx)
 	this->main_color = "super-red";
 	this->info="this is a VTableSuper info";
 
+	this->a = 1;
+	this->b = 2;
+	this->c = 3;
+
 	return this;
 }
 

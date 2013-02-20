@@ -19,4 +19,18 @@ method(MCContext, showMenuAndGetSelectionChar, int count, ...) 			returns(char);
 method(MCContext, showConfirmAndGetBOOL, const char* confirm) 			returns(BOOL);
 method(MCContext, getUserInputString, char resultString[]);
 
+extern char **environ;
+method(MCContext, getEnvironmentVar, const char* key) returns(char*);
+method(MCContext, setEnvironmentVar, const char* key, const char* value, BOOL isOverwrite) returns(RES);
+method(MCContext, clearEnvironmentVar, const char* key) returns(RES);
+
+/*
+#include <stdlib.h>
+char *getenv(const char *name);
+int putenv(char *str); //need "key=value"
+int setenv(const char *name, const char *value, int rewrite);
+int unsetenv(const char *name);
+*/
+
 #endif
+

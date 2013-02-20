@@ -1,8 +1,8 @@
 #include "MCException.h"
 
 //init define
-jmp_buf exception_env = {};
-int exception_type = __exception_try_not_called;
+volatile jmp_buf exception_env = {};
+volatile int exception_type = __exception_try_not_called;
 
 static BOOL _exception_list[MAX_EXCEPTION_NUM];
 static id _exception_store[MAX_EXCEPTION_NUM];

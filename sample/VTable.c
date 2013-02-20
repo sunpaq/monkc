@@ -16,6 +16,10 @@ constructor(VTable, xxx) returns(VTable*)
 	this->main_color="sliver";
 	//this->info="this is a VTable info";
 	//instance=this;
+
+	this->private.a = 4;
+	this->private.b = 5;
+	this->private.c = 6;
 	return this;
 }
 
@@ -59,8 +63,9 @@ method(VTable, amethod2, char* srt, int index)
 
 method(VTable, bmethod, int a, double b, char* c)
 {
-	debug_log("method b1: a/b/c is:%d/%1.2f/%s\n", this->a, this->b, this->c);
-	debug_log("method private: a/b/c is:%d/%1.2f/%s\n", this->private.a, this->private.b, this->private.c);
+	debug_log("method argument: a/b/c is:%d/%1.2f/%s\n", a, b, c);
+	debug_log("method super-public: a/b/c is:%d/%d/%d\n", this->a, this->b, this->c);
+	debug_log("method private: a/b/c is:%d/%d/%d\n", this->private.a, this->private.b, this->private.c);
 }
 
 method(VTable, cmethod, int a, double b, char* c)
