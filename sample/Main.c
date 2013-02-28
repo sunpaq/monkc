@@ -63,7 +63,9 @@ void test(Handle(MCContext) const context)
 
 	int selection = ff(context, 
 		MK(showMenuAndGetSelectionChar), 
-		6, "syntex_test", "menu_drive_test", "lib_test", "MCSocket(Server)", "MCSocket(Client)", "MCException");
+		8, 
+		"syntex_test", "menu_drive_test", "lib_test", "MCSocket(Server)", 
+		"MCSocket(Client)", "MCException", "MCThread", "MCProcess");
 
 	switch(selection){
 		case '1':mocha_syntex_test(context);break;
@@ -72,6 +74,9 @@ void test(Handle(MCContext) const context)
 		case '4':mocha_serversocket_test();break;
 		case '5':mocha_clientsocket_test(context);break;
 		case '6':mocha_exception_test();break;
+		case '7':test_MCThread();break;
+		case '8':test_MCProcess();break;
+
 	}
 }
 
@@ -120,30 +125,7 @@ void signal_routine()
 
 }
 
-/* inner runnable class */
-#ifndef _MyRunnable
-#define _MyRunnable _MCRunnable
-class(MyRunnable);
-method(MyRunnable, run, xxx)
-{
-	int i;
-	for (i = 0; i < 10; ++i)
-	{
-		printf("%s\n", "i am a MCThread!");
-		sleep(1);
-	}
-}
-constructor(MyRunnable, _FunctionPointer(my_init_routine))
-{
-	super_init(this, MCRunnable, my_init_routine);
-	if (set_class(this, "MyRunnable", "MCRunnable"));
-	{
-		//override the super run
-		override(this, MK(run), MV(MyRunnable, run));
-	}
-	return this;
-}
-#endif
+
 
 void test_MCClock()
 {
@@ -180,6 +162,13 @@ void test_MCClock()
 	printf("---- test_MCClock END ----\n");
 }
 
+int mcprocess_flag = 0;
+void mcprocess_atexit()
+{
+	//printf("%s\n", "this is child, mcprocess_atexit called");
+	mcprocess_flag = 1;
+}
+
 void test_MCProcess()
 {
 	printf("---- test_MCProcess START ----\n");
@@ -187,6 +176,45 @@ void test_MCProcess()
 	Handle(MCProcess) p = new(MCProcess, nil);
 		ff(p, MK(printIDs));
 	relnil(p);
+
+	MCProcess pp;//this will alloc a instance on stack?
+	call(&pp, MCProcess, init, nil);
+	ff(&pp, MK(printIDs));
+
+	pid_t pid;
+	if((pid=ff(&pp, MK(fork)))==0){
+		//child
+		atexit(mcprocess_atexit);
+		if(ff(&pp, MK(registerAtExitCallback), mcprocess_atexit)==ERROR)
+			printf("%s\n", "register atexit error");
+		printf("%s\n", "this is child");
+		sleep(2);
+		//ff(&pp, MK(exitWithStatus), 5);
+		exit(5);
+
+	}else if(pid > 0){
+		//parent
+		int sta;
+		if(ff(&pp, MK(registerAtExitCallback), mcprocess_atexit)==ERROR)
+			printf("%s\n", "register atexit error");
+
+		while(ff(&pp, MK(waitPIDChildExit), pid, &sta, WNOHANG)!=pid){
+			usleep(500*1000);
+			printf("%s\n", "this is parent...");
+		}
+
+		if(mcprocess_flag==1)printf("%s\n", "this is child, mcprocess_atexit called");
+		printf("this is parent, child exit status is:[%d]\n", 
+			ff(&pp, MK(getChildExitLowOrder8Bit), sta));
+
+		//ff(&pp, MK(exitWithStatus), 0);
+		exit(0);
+
+	}else if(pid == -1){
+		//error
+		printf("%s\n", "fork error");
+	}
+
 	printf("---- test_MCProcess END ----\n");
 }
 
@@ -231,6 +259,34 @@ void test_MCString()
 
 void test_MCThread()
 {
+	//gcc can define a function in function
+	//so this class define also can be.
+
+	/* inner runnable class */
+	#ifndef _MyRunnable
+	#define _MyRunnable _MCRunnable
+	class(MyRunnable);
+	method(MyRunnable, run, xxx)
+	{
+		int i;
+		for (i = 0; i < 10; ++i)
+		{
+			printf("%s\n", "i am a MCThread!");
+			sleep(1);
+		}
+	}
+	constructor(MyRunnable, _FunctionPointer(my_init_routine))
+	{
+		super_init(this, MCRunnable, my_init_routine);
+		if (set_class(this, "MyRunnable", "MCRunnable"));
+		{
+			//override the super run
+			override(this, MK(run), MV(MyRunnable, run));
+		}
+		return this;
+	}
+	#endif
+
 	printf("---- test_MCThread START ----\n");
 	//test MCThread
 	MCThread* m_thread = new(MCThread, new(MyRunnable, init_routine));

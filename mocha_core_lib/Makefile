@@ -50,9 +50,7 @@ install:
 	mv /usr/local/include/mocha/*.a /usr/local/lib/
 
 clean:
-	rm $(LIBOBJS) 
-	rm mocha.tar.gz 
-	rm -r mocha
+	rm $(LIBOBJS) mocha.tar.gz -r mocha
 
 dump:
 	ulimit -c unlimited

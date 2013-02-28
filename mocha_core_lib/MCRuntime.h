@@ -35,7 +35,7 @@ typedef int RES;
 
 #define xxx void* xxx
 #define nil ((void*)0)
-#define _FunctionPointer(name) void (*name)()
+#define _FunctionPointer(name) void (*name)()//no argument means you can pass anything in C!
 #define _FunctionArray(name) void (*name[MAX_METHOD_NUM])()
 //MK: Method Key  MV: Method Value
 #define MV(cls, name) cls##_##name
