@@ -1,23 +1,18 @@
 #include "MCRuntime.h"
 #include "MCContext.h"
-//default we set log level to debug
-LOG_LEVEL = DEBUG;
 
-//global var set in _init_class_list
-static unsigned _init_method_hashkey;
+static const int NOT_RESPONSE = -1;
+
+static MCClass* mc_classobj_pool[MAX_CLASS_NUM];
+static inline MCClass* get_class(const char* name_in);
+static void _init_class_list();
+static void _clear_class_list();
+
 static void _nil_check(id const self, 
 	char* log1, char* log2, char* log3, 
 	char* log4, char* log5, char* log6, pthread_mutex_t* lock);
 static void _clear_method_list(MCClass* const class);
-static void _init_class_list();
-static void _clear_class_list();
-static MCClass* mc_classobj_pool[MAX_CLASS_NUM];
-static const int NOT_RESPONSE = -1;
 static unsigned _response_to_method(MCClass* const self_in, unsigned hashkey);
-static inline MCClass* get_class(const char* name_in);
-void* mc_malloc(size_t size);
-void* mc_realloc(void* ptr, size_t size);
-void  mc_free(void* ptr);
 
 void mc_init()
 {
@@ -32,6 +27,7 @@ void mc_init()
 	exit(-1);
 	#endif
 
+	//default we set log level to debug
 	LOG_LEVEL = DEBUG;
 	_init_class_list();
 }
@@ -58,7 +54,6 @@ id MCObject_bye(id this, unsigned hashkey, xxx)
 id MCObject_init(id const this, unsigned hashkey, xxx)
 {
 	//do nothing
-	this->ref_count = 1;
 	this->isa = get_class("MCObject");
 	return this;
 }
@@ -79,8 +74,6 @@ static void load_root_class(){
 	class->method_list[_hash("whatIsYourClassName")] = MCObject_whatIsYourClassName;
 	//load the MCObject class
 	mc_classobj_pool[_chash("MCObject")] = class;
-	//for init method judgement
-	_init_method_hashkey = _hash("init");
 }
 
 void error_log(char* fmt, ...)
@@ -183,8 +176,6 @@ BOOL set_class(id const self_in, const char* classname, const char* superclassna
 
 	runtime_log("set_class: %s->%s\n", classname ,superclassname);
 
-	//init the obj vars
-	self_in->ref_count = 1;
 	//load class
 	MCClass* class;
 	if ((class = get_class(classname)) != nil)
@@ -217,11 +208,16 @@ void release(id const this)
 		pthread_mutex_unlock(&_mc_mm_mutex);
 		return;
 	}
-	if (this->ref_count == -1)
+	if (this->ref_count == REFCOUNT_NO_MM)
 	{
 		debug_log("ref_count is -1 manage by runtime. do nothing\n");
 		pthread_mutex_unlock(&_mc_mm_mutex);
 		return;
+	}
+	if (this->ref_count == REFCOUNT_ANONY_OBJ)
+	{
+		//for anony object
+		this->ref_count = 0;
 	}
 	if (this->ref_count > 0)
 	{
@@ -260,11 +256,17 @@ void retain(id const this)
 		"obj have no class object linked.",
 		"please call set_class() at the very begin of init method.", &_mc_mm_mutex);
 
-	if (this->ref_count == -1)
+	if (this->ref_count == REFCOUNT_NO_MM)
 	{
 		debug_log("ref_count is -1 manage by runtime. do nothing\n");
 		pthread_mutex_unlock(&_mc_mm_mutex);
 		return;
+	}
+
+	if (this->ref_count == REFCOUNT_ANONY_OBJ)
+	{
+		//for anony object
+		this->ref_count = 0;
 	}
 
 	this->ref_count++;
@@ -373,7 +375,7 @@ id ff(id const obj, unsigned hashkey, ...)
 		"",
 		"ff(obj, key, ...)",
 		"obj have no class object linked. please call set_class(). the key is:",
-		"", &_mc_runtime_mutex);
+		"", nil);
 
 	MCClass* cls_iterator = obj->isa;
 	unsigned res;
@@ -383,7 +385,7 @@ id ff(id const obj, unsigned hashkey, ...)
 			cls_iterator = cls_iterator->super;
 			//runtime_log("%s\n", "continue to my super");
 		}else if(count++ >= MAX_CLASS_NUM){
-			error_log("count overflow\n");
+			error_log("class count overflow\n");
 			return;
 		}else{
 			error_log("[%s] have no method: [%d] reach the root class return\n", obj->isa->name, hashkey);
@@ -402,52 +404,10 @@ id ff(id const obj, unsigned hashkey, ...)
 	void *args, *result;
 	args = __builtin_apply_args();
 	result = __builtin_apply(cls_iterator->method_list[res], args, 96);
-	if(result)
-		__builtin_return(result);
-	else
-		return;
-}
 
-/* ff-release, for the fr(New(Class, nil), MK(method), nil)*/
-id fr(id const obj, unsigned hashkey, ...)
-{
-	_nil_check(obj,
-		"ff(obj, key, ...)",
-		"obj is nil, the key is:",
-		"",
-		"ff(obj, key, ...)",
-		"obj have no class object linked. please call set_class(). the key is:",
-		"", &_mc_runtime_mutex);
-
-	MCClass* cls_iterator = obj->isa;
-	unsigned res;
-	int count = 0;
-	while((res=_response_to_method(cls_iterator, hashkey))==NOT_RESPONSE){
-		if(cls_iterator != nil){
-			cls_iterator = cls_iterator->super;
-			//runtime_log("%s\n", "continue to my super");
-		}else if(count++ >= MAX_CLASS_NUM){
-			error_log("count overflow\n");
-			return;
-		}else{
-			error_log("[%s] have no method: [%d] reach the root class return\n", obj->isa->name, hashkey);
-			return;
-		}
-	}
-
-	pthread_mutex_lock(&_mc_runtime_mutex);
-	if((res < MAX_METHOD_NUM) && (obj->isa->method_list[res]==nil)){
-		runtime_log("----Cache method: %s[%d]\n", obj->isa->name, hashkey);
-		obj->isa->method_list[res] = cls_iterator->method_list[res];//new cache logic
-	}
-	pthread_mutex_unlock(&_mc_runtime_mutex);
-
-	runtime_log("----Call method: %s[%d]\n", obj->isa->name, hashkey);
-	void *args, *result;
-	args = __builtin_apply_args();
-	result = __builtin_apply(cls_iterator->method_list[res], args, 96);
-
-relnil(obj);
+	//release the anony object
+	if(obj->ref_count == REFCOUNT_ANONY_OBJ)
+		release(obj);
 
 	if(result)
 		__builtin_return(result);
@@ -529,25 +489,21 @@ static inline unsigned _response_to_method(MCClass* const cls, unsigned hashkey)
 	}
 }
 
-//call _destroy(this) twice the same address will cause SegmentFault
-// static void _destroy(id const this)
-// {
-// 	if((this!=nil) && (this->isa!=nil)){
-// 		runtime_log("----Destroy: goodbye!\n");
-// 		this->isa=nil;//unlink to the class
-// 		mc_free(this);
-// 	}else{
-// 		error_log("release twice\n");
-// 	}
-// }
-
 pthread_mutex_t _mc_alloc_mutex = PTHREAD_MUTEX_INITIALIZER;
 void* mc_malloc(size_t size)
 {
 	pthread_mutex_lock(&_mc_alloc_mutex);
+		void* ret = malloc(size);
+		((MCObject*)ret)->ref_count = 1;
+	pthread_mutex_unlock(&_mc_alloc_mutex);
+	return ret;
+}
 
-	void* ret = malloc(size);
-
+void* mc_malloc_anony(size_t size)
+{
+	pthread_mutex_lock(&_mc_alloc_mutex);
+		void* ret = malloc(size);
+		((MCObject*)ret)->ref_count = -100;
 	pthread_mutex_unlock(&_mc_alloc_mutex);
 	return ret;
 }
@@ -555,19 +511,18 @@ void* mc_malloc(size_t size)
 void* mc_calloc(size_t size)
 {
 	pthread_mutex_lock(&_mc_alloc_mutex);
-
-	void* ret = calloc(1, size);
-
+		void* ret = calloc(1, size);
+		((MCObject*)ret)->ref_count = 1;
 	pthread_mutex_unlock(&_mc_alloc_mutex);
 	return ret;
 }
 
+//some platform not support
 void* mc_alloca(size_t size)
 {
 	pthread_mutex_lock(&_mc_alloc_mutex);
-
-	void* ret = alloca(size);
-
+		void* ret = alloca(size);
+		((MCObject*)ret)->ref_count = 1;
 	pthread_mutex_unlock(&_mc_alloc_mutex);
 	return ret;
 }
@@ -575,9 +530,7 @@ void* mc_alloca(size_t size)
 void* mc_realloc(void* ptr, size_t size)
 {
 	pthread_mutex_lock(&_mc_alloc_mutex);
-
-	void* ret = realloc(ptr, size);
-
+		void* ret = realloc(ptr, size);
 	pthread_mutex_unlock(&_mc_alloc_mutex);
 	return ret;
 }
@@ -586,9 +539,7 @@ pthread_mutex_t _mc_free_mutex = PTHREAD_MUTEX_INITIALIZER;
 void mc_free(void *ptr)
 {
 	pthread_mutex_lock(&_mc_free_mutex);
-
-	free(ptr);
-
+		free(ptr);
 	pthread_mutex_unlock(&_mc_free_mutex);
 }
 

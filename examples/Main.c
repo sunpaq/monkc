@@ -14,6 +14,9 @@
 #include "VTableSuper.h"
 #include "Bird.h"
 
+#include "MCUnitTest.h"
+#include "MyTestCase1.h"
+
 void mocha_syntex_test(Handle(MCContext) const context);
 void menu_drive_test(Handle(MCContext) const context);
 void mocha_lib_test();
@@ -207,9 +210,6 @@ void test_MCProcess()
 		printf("this is parent, child exit status is:[%d]\n", 
 			ff(&pp, MK(getChildExitLowOrder8Bit), sta));
 
-		//ff(&pp, MK(exitWithStatus), 0);
-		exit(0);
-
 	}else if(pid == -1){
 		//error
 		printf("%s\n", "fork error");
@@ -241,12 +241,12 @@ void test_MCString()
 	ff(newstr2, MK(print));
 
 	MCString* astr = new(MCString, "string");
-	if (fr(new(MCString, "string"), MK(equalTo), astr))
+	if (ff(new_anony(MCString, "string"), MK(equalTo), astr))
 	{
 		printf("two string is equal!!!\n");
 	}
 
-	fr(MCString_newForHttp("www.google.com",NO), MK(print));
+	ff(MCString_newForHttpAnony("www.google.com",NO), MK(print));
 
 	printf("size is: %d\n", strlen("size of string"));
 	printf("---- test_MCString END ----\n");
@@ -289,7 +289,7 @@ void test_MCThread()
 
 	printf("---- test_MCThread START ----\n");
 	//test MCThread
-	MCThread* m_thread = new(MCThread, new(MyRunnable, init_routine));
+	MCThread* m_thread = new(MCThread, new_anony(MyRunnable, init_routine));
 	m_thread->isRunOnce = YES;
 	//start once
 	ff(m_thread, MK(start), nil);
@@ -306,7 +306,7 @@ void test_MCThread()
 	}
 
 	//the Mocha is not thread safe now!
-	MCThread* m_thread2 = new(MCThread, new(MyRunnable, nil));
+	MCThread* m_thread2 = new(MCThread, new_anony(MyRunnable, nil));
 	ff(m_thread2, MK(start), nil);
 
 	int i;
@@ -320,8 +320,8 @@ void test_MCThread()
 	MCThread_join(m_thread2, nil);
 
 	//test condition lock and spin lock
-	MCThread* m_wait = new(MCThread, new(MyRunnable, wait_routine));
-	MCThread* m_signal = new(MCThread, new(MyRunnable, signal_routine));
+	MCThread* m_wait = new(MCThread, new_anony(MyRunnable, wait_routine));
+	MCThread* m_signal = new(MCThread, new_anony(MyRunnable, signal_routine));
 	ff(m_wait, MK(start), nil);
 	ff(m_signal, MK(start), nil);
 
@@ -525,7 +525,7 @@ void mocha_syntex_test(MCContext* const context)
 
 	debug_log("PATH: [%s]\n", ff(context, MK(getEnvironmentVar), "PATH"));
 
-	fr(new(MCObject, nil), MK(whatIsYourClassName));
+	ff(new_anony(MCObject, nil), MK(whatIsYourClassName));
 
 	//check whether have cmdline parameter "-c"
 	BOOL res;
@@ -569,19 +569,19 @@ void mocha_syntex_test(MCContext* const context)
 	ff(ret2, MK(show), YES, "this is a super method called by child:VTable ret2");
 
 	//ff-release
-	fr(new(VTableSuper, nil), MK(draw));
+	ff(new_anony(VTableSuper, nil), MK(draw));
 
 	//polymorphism test
-	Handle(Bird) birdArray[3]={new(Bird, DUCK_TYPE), new(Bird, CHICKEN_TYPE), new(Bird, NONE)};
+	Handle(Bird) birdArray[3]={new_anony(Bird, DUCK_TYPE), new_anony(Bird, CHICKEN_TYPE), new_anony(Bird, NONE)};
 	int i;
 	for (i = 0; i < 3; ++i)
 	{
 		ff(birdArray[i], MK(fly));
 	}
 
-	fr(new(Bird, DUCK_TYPE),    MK(fly));
-	fr(new(Bird, CHICKEN_TYPE), MK(fly));
-	fr(new(Bird, NONE),         MK(fly));
+	ff(new_anony(Bird, DUCK_TYPE),    MK(fly));
+	ff(new_anony(Bird, CHICKEN_TYPE), MK(fly));
+	ff(new_anony(Bird, NONE),         MK(fly));
 
 	//side effect: class method list change dynamically
 	Handle(Bird) b1 = new(Bird, DUCK_TYPE);
@@ -605,17 +605,30 @@ void mocha_syntex_test(MCContext* const context)
 	if (response(abird, MK(whatIsYourClassName)))
 		ff(abird, MK(whatIsYourClassName));
 
+
+	//
+	MCUnitTestRunner* runner = new(MCUnitTestRunner, nil);
+	MCUnitTestSuite* suite = new(MCUnitTestSuite, nil);
+	ff(suite, MK(addTestCase), new_anony(MyTestCase1, nil));
+	ff(runner, MK(addTestSuite), suite);
+
+	ff(runner, MK(runTestSuites), nil);
+
+	//relnil(runner);
+	//relnil(suite);
+
 }
 
 void doSomething() throws(MCIOException);
-void doSomething2() throws(XXX);
-void doSomething3();
+void doSomething2() throws(MCIOException);
+void doSomething3() throws(MCIOException);
 void mocha_exception_test()
 {
 	//exception support
 	try{
-		doSomething3();
 		doSomething();
+		doSomething();//this will never be reach
+
 		//doSomething2();
 	}catch(MCRuntimeException){
 		printf("%s\n", "MCRuntimeException raised");
@@ -643,16 +656,17 @@ void mocha_exception_test()
 }
 
 void doSomething() throws(MCIOException) {
-	set_exception_data("MCIOException", new(MCString, "this is a MCIOException reason"));
-	throw(MCIOException);
+	doSomething2();
 	printf("%s\n", "doSomething this should never show");
 }
 
-void doSomething2() throws(XXX) {
-	throw(XXX);
+void doSomething2() throws(MCIOException) {
+	doSomething3();
 	printf("%s\n", "doSomething2 this should never show");
 }
 
-void doSomething3(){
-	printf("%s\n", "doSomething3 throw nothing");
+void doSomething3() throws(MCIOException) {
+	set_exception_data("MCIOException", new(MCString, "this is a MCIOException reason"));
+	throw(MCIOException);
+	printf("%s\n", "doSomething3 this should never show");
 }

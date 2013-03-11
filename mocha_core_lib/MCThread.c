@@ -38,6 +38,7 @@ constructor(MCThread, MCRunnable* runnable)
 	pthread_once_t ponce = PTHREAD_ONCE_INIT;
 	this->once_control = ponce;
 	this->isRunOnce = NO;//default is NO
+	retain(runnable);
 	this->runnable = runnable;
 	pthread_attr_init(&this->attribute);
 	//if you need, you can set the attribute use the raw pthread APIs

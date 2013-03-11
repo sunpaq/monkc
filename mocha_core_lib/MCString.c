@@ -60,6 +60,29 @@ MCString* MCString_newForHttp(char* cstr, BOOL isHttps)
 	return res;
 }
 
+MCString* MCString_newWithCStringAnony(char* cstr)
+{
+	return new_anony(MCString, cstr);
+}
+
+MCString* MCString_newWithMCStringAnony(MCString* mcstr)
+{
+	return new_anony(MCString, mcstr->buff);
+}
+
+MCString* MCString_newForHttpAnony(char* cstr, BOOL isHttps)
+{
+	MCString* res;
+	if (isHttps)
+		res = new(MCString, "https://");
+	else
+		res = new(MCString, "http://");
+
+	ff(res, MK(add), cstr);
+	res->ref_count = 0;
+	return res;
+}
+
 static char get_one_char()
 {
 	char cf = getchar();
@@ -125,11 +148,10 @@ method(MCString, bye, xxx)
 {
 	//only release the added sub strings.
 	//debug_log("MCString - bye\n");
-	MCString* iterator = this;
-	while(iterator->next!=nil){
+	MCString *iterator, *save;
+	for(iterator=this->next; (save=iterator)!=nil; mc_free(save)){
 		iterator = iterator->next;
-		//debug_log("MCString - free a sub string\n");
-		mc_free(iterator);//avoid recursive release call!!
+		debug_log("MCString - free a sub string\n");
 	}
 }
 
