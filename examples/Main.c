@@ -614,8 +614,8 @@ void mocha_syntex_test(MCContext* const context)
 
 	ff(runner, MK(runTestSuites), nil);
 
-	//relnil(runner);
-	//relnil(suite);
+	relnil(runner);
+	relnil(suite);
 
 }
 
