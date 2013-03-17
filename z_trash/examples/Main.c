@@ -15,6 +15,7 @@
 #include "Bird.h"
 
 #include "MCUnitTest.h"
+#include "MyTestCase1.h"
 
 void mocha_syntex_test(Handle(MCContext) const context);
 void menu_drive_test(Handle(MCContext) const context);
@@ -22,9 +23,7 @@ void mocha_lib_test();
 void mocha_serversocket_test();
 void mocha_clientsocket_test(Handle(MCContext) const context);
 void mocha_exception_test();
-void test_MCThread();
-void test_MCProcess();
-void test_ffi();
+
 
 void test(Handle(MCContext) const context);
 
@@ -57,7 +56,7 @@ void test(Handle(MCContext) const context)
 {
 	//pre load some classes
 	printf("%s\n", "----------");
-	// debug_log("%s\n", "preload some classes:");
+	debug_log("%s\n", "preload some classes:");
 
 	preload(Bird, DUCK_TYPE);
 	preload(MCClock, nil);
@@ -65,12 +64,11 @@ void test(Handle(MCContext) const context)
 	preload(MCProcess, nil);
 	preload(MCString, "a");
 
-	int selection = call(context,
-		MCContext,
-		showMenuAndGetSelectionChar, 
-		9, 
+	int selection = ff(context, 
+		MK(showMenuAndGetSelectionChar), 
+		8, 
 		"syntex_test", "menu_drive_test", "lib_test", "MCSocket(Server)", 
-		"MCSocket(Client)", "MCException", "MCThread", "MCProcess", "ffi");
+		"MCSocket(Client)", "MCException", "MCThread", "MCProcess");
 
 	switch(selection){
 		case '1':mocha_syntex_test(context);break;
@@ -81,10 +79,8 @@ void test(Handle(MCContext) const context)
 		case '6':mocha_exception_test();break;
 		case '7':test_MCThread();break;
 		case '8':test_MCProcess();break;
-		case '9':test_ffi();break;
 
 	}
-
 }
 
 // use thread pool to management them ?
@@ -139,32 +135,32 @@ void test_MCClock()
 	printf("---- test_MCClock START ----\n");
 	//test MCClock
 	Handle(MCClock) myclock = new(MCClock, nil);
-	CString gmtnow = ff(myclock, getCurrentGMTTimeString, nil);
-	CString now = ff(myclock, getCurrentTimeString, nil);
+	CString gmtnow = ff(myclock, MK(getCurrentGMTTimeString));
+	CString now =    ff(myclock, MK(getCurrentTimeString));
 
 	debug_log("\nGMT time is:%s", gmtnow);
 	debug_log("\njapan time is:%s", now);
 
 	debug_log("%s\n", "time works fine");
-	ff(myclock, printCurrentGMTTime, nil);
-	ff(myclock, printCurrentTime, nil);
+	ff(myclock, MK(printCurrentGMTTime));
+	ff(myclock, MK(printCurrentTime));
 	
 	clock_t clocks_per_second, clocks_since_start;
-	ff(myclock, getCPUClocksPerSecond, &clocks_per_second);
-	ff(myclock, getCPUClocksSinceStart, &clocks_since_start);
+	ff(myclock, MK(getCPUClocksPerSecond), &clocks_per_second);
+	ff(myclock, MK(getCPUClocksSinceStart), &clocks_since_start);
 	debug_log("%ld\n", clocks_per_second);
 	debug_log("%ld\n", clocks_since_start);
 
 	//blank time
-	ff(myclock, printTime, nil);
+	ff(myclock, MK(printTime));
 	//set time
-	ff(myclock, setRawtimeFields, 59, 10, 21, 19, DEC, 2012, 3, 0, 0);
-	ff(myclock, printTime, nil);
+	ff(myclock, MK(setRawtimeFields), 59, 10, 21, 19, DEC, 2012, 3, 0, 0);
+	ff(myclock, MK(printTime));
 	//adjust time
-	ff(myclock, setTimeToNow, nil);
-	ff(myclock, printTime, nil);
-	ff(myclock, adjustTime, 0, 0, 2, 0, 0, 0, 0);
-	ff(myclock, printTime, nil);
+	ff(myclock, MK(setTimeToNow));
+	ff(myclock, MK(printTime));
+	ff(myclock, MK(adjustTime), 0, 0, 2, 0, 0, 0, 0);
+	ff(myclock, MK(printTime));
 	relnil(myclock);
 	printf("---- test_MCClock END ----\n");
 }
@@ -181,37 +177,38 @@ void test_MCProcess()
 	printf("---- test_MCProcess START ----\n");
 	//test MCProcess
 	Handle(MCProcess) p = new(MCProcess, nil);
-		ff(p, printIDs, nil);
+		ff(p, MK(printIDs));
 	relnil(p);
 
 	MCProcess pp;//this will alloc a instance on stack?
 	call(&pp, MCProcess, init, nil);
-	ff(&pp, printIDs, nil);
+	ff(&pp, MK(printIDs));
 
 	pid_t pid;
-	if((pid=ff(&pp, fork, nil))==0){
+	if((pid=ff(&pp, MK(fork)))==0){
 		//child
 		atexit(mcprocess_atexit);
-		if(ff(&pp, registerAtExitCallback, mcprocess_atexit)==ERROR)
+		if(ff(&pp, MK(registerAtExitCallback), mcprocess_atexit)==ERROR)
 			printf("%s\n", "register atexit error");
 		printf("%s\n", "this is child");
 		sleep(2);
+		//ff(&pp, MK(exitWithStatus), 5);
 		exit(5);
 
 	}else if(pid > 0){
 		//parent
 		int sta;
-		if(ff(&pp, registerAtExitCallback, mcprocess_atexit)==ERROR)
+		if(ff(&pp, MK(registerAtExitCallback), mcprocess_atexit)==ERROR)
 			printf("%s\n", "register atexit error");
 
-		while(ff(&pp, waitPIDChildExit, pid, &sta, WNOHANG)!=pid){
+		while(ff(&pp, MK(waitPIDChildExit), pid, &sta, WNOHANG)!=pid){
 			usleep(500*1000);
 			printf("%s\n", "this is parent...");
 		}
 
 		if(mcprocess_flag==1)printf("%s\n", "this is child, mcprocess_atexit called");
 		printf("this is parent, child exit status is:[%d]\n", 
-			ff(&pp, getChildExitLowOrder8Bit, sta));
+			ff(&pp, MK(getChildExitLowOrder8Bit), sta));
 
 	}else if(pid == -1){
 		//error
@@ -230,26 +227,26 @@ void test_MCString()
 	int ix;
 	for (ix = 0; ix < 20; ++ix)
 	{
-		_ff(newstr, add_key, " + with append info");
+		ff(newstr, add_key, " + with append info");
 	}
-	ff(newstr, print, nil);
+	ff(newstr, MK(print));
 	printf("length:%d size:%d\n", newstr->length, newstr->size);
 
 	char csbuff[newstr->size];
-	ff(newstr, toCString, csbuff);
+	ff(newstr, MK(toCString), csbuff);
 	printf("the CString is:\n%s\n", csbuff);
 
 	MCString* newstr2 = new(MCString, "a new string b");
-	ff(newstr2, add, " + with append info");
-	ff(newstr2, print, nil);
+	ff(newstr2, MK(add), " + with append info");
+	ff(newstr2, MK(print));
 
 	MCString* astr = new(MCString, "string");
-	if (ff(new_anony(MCString, "string"), equalTo, astr))
+	if (ff(new_anony(MCString, "string"), MK(equalTo), astr))
 	{
 		printf("two string is equal!!!\n");
 	}
 
-	ff(MCString_newForHttpAnony("www.google.com",NO), print, nil);
+	ff(MCString_newForHttpAnony("www.google.com",NO), MK(print));
 
 	printf("size is: %d\n", strlen("size of string"));
 	printf("---- test_MCString END ----\n");
@@ -260,6 +257,12 @@ void test_MCString()
 
 }
 
+void test_MCThread()
+{
+	//gcc can define a function in function
+	//so this class define also can be.
+
+	/* inner runnable class */
 	#ifndef _MyRunnable
 	#define _MyRunnable _MCRunnable
 	class(MyRunnable);
@@ -274,67 +277,37 @@ void test_MCString()
 	}
 	constructor(MyRunnable, _FunctionPointer(my_init_routine))
 	{
-		link_class(MyRunnable, MCRunnable, my_init_routine)
+		super_init(this, MCRunnable, my_init_routine);
+		if (set_class(this, "MyRunnable", "MCRunnable"));
 		{
-			override(MCRunnable, run, xxx);
+			//override the super run
+			override(this, MK(run), MV(MyRunnable, run));
 		}
-
 		return this;
 	}
 	#endif
 
-void test_MCThread()
-{
-	//gcc can define a function in function
-	//so this class define also can be.
-
-	/* inner runnable class */
-	// #ifndef _MyRunnable
-	// #define _MyRunnable _MCRunnable
-	// class(MyRunnable);
-	// method(MyRunnable, run, xxx)
-	// {
-	// 	int i;
-	// 	for (i = 0; i < 10; ++i)
-	// 	{
-	// 		printf("%s\n", "i am a MCThread!");
-	// 		sleep(1);
-	// 	}
-	// }
-	// constructor(MyRunnable, _FunctionPointer(my_init_routine))
-	// {
-	// 	link_class(MyRunnable, MCRunnable, my_init_routine)
-	// 	{
-	// 		override(MCRunnable, run, xxx);
-	// 	}
-
-	// 	return this;
-	// }
-	// #endif
-
 	printf("---- test_MCThread START ----\n");
-
 	//test MCThread
 	MCThread* m_thread = new(MCThread, new_anony(MyRunnable, init_routine));
 	m_thread->isRunOnce = YES;
 	//start once
-	ff(m_thread, start, nil);
-	ff(m_thread, start, nil);
-	ff(m_thread, start, nil);
-	ff(m_thread, start, nil);
+	ff(m_thread, MK(start), nil);
+	ff(m_thread, MK(start), nil);
+	ff(m_thread, MK(start), nil);
 	debug_log("tid is:%lu\n", m_thread->self);
 	//release(m_thread);
 	//MCThread_join(m_thread, nil);
 
 	//equal
-	if (ff(m_thread, equal, m_thread))
+	if (ff(m_thread, MK(equal), m_thread))
 	{
 		debug_log("m_thread is equal to m_thread!\n");
 	}
 
 	//the Mocha is not thread safe now!
 	MCThread* m_thread2 = new(MCThread, new_anony(MyRunnable, nil));
-	ff(m_thread2, start, nil);
+	ff(m_thread2, MK(start), nil);
 
 	int i;
 	for (i = 0; i < 12; ++i)
@@ -349,8 +322,8 @@ void test_MCThread()
 	//test condition lock and spin lock
 	MCThread* m_wait = new(MCThread, new_anony(MyRunnable, wait_routine));
 	MCThread* m_signal = new(MCThread, new_anony(MyRunnable, signal_routine));
-	ff(m_wait, start, nil);
-	ff(m_signal, start, nil);
+	ff(m_wait, MK(start), nil);
+	ff(m_signal, MK(start), nil);
 
 	MCThread_join(m_wait, nil);
 	MCThread_join(m_signal, nil);
@@ -369,10 +342,10 @@ void test_MCFile()
 	MCFile* tmpfile = MCFile_newReadWrite("temp.txt", YES);
 	MCFile_createSymbolLink("temp.txt", "temp.link");
 	if(tmpfile!=nil){
-		ff(tmpfile, writeToBegin, 0, str, strlen(str)+1);
-		ff(tmpfile, readFromBegin, 0, sizeof(tmpfile->buffer));
+		ff(tmpfile, MK(writeToBegin), 0, str, strlen(str)+1);
+		ff(tmpfile, MK(readFromBegin), 0, sizeof(tmpfile->buffer));
 		printf("content in file is: %s strlen is:%d\n", tmpfile->buffer, strlen(str)+1);
-		ff(tmpfile, printAttribute, nil);
+		ff(tmpfile, MK(printAttribute));
 		release(tmpfile);
 	}
 
@@ -386,8 +359,8 @@ void test_MCStream()
 	strcpy(buff->data, "this is a test line. haha\n");
 
 	if(stream!=nil){
-		ff(stream, putCString, buff);
-		ff(stream, getCString, buff);
+		ff(stream, MK(putCString), buff);
+		ff(stream, MK(getCString), buff);
 	}
 
 	printf("%s\n", buff->data);
@@ -401,11 +374,13 @@ void mocha_lib_test()
 	LOG_LEVEL=DEBUG;
 
 	test_MCClock();
+	test_MCProcess();
 
 	test_MCString();
 	test_MCStream();
 
 	test_MCFile();
+	test_MCThread();
 }
 
 static int readline(int fd, char* const recvbuff)
@@ -423,7 +398,7 @@ static int readline(int fd, char* const recvbuff)
 void mocha_serversocket_test()
 {
 	MCSocket* server = new(MCSocket, MCSocket_Server_TCP, "127.0.0.1", "4000");
-	ff(server, listeningStart, nil);
+	ff(server, MK(listeningStart), nil);
 	printf("%s\n", "MC server start to listenning");
 
 	char *sendbuff[1024];
@@ -431,7 +406,7 @@ void mocha_serversocket_test()
 
 	//use select()
 	MCSelect* fdcontroler = new(MCSelect, 0, 0);
-	ff(fdcontroler, addFd, MCSelect_Readfd, server->sfd);
+	ff(fdcontroler, MK(addFd), MCSelect_Readfd, server->sfd);
 
 	int client_array[100];
 	memset(client_array, 0, sizeof(client_array));
@@ -440,7 +415,7 @@ void mocha_serversocket_test()
 	for(;;){
 
 		printf("%s\n", "wait for message...");
-		if(ff(fdcontroler, waitForFdsetChange, nil)<=0)//no time out
+		if(ff(fdcontroler, MK(waitForFdsetChange), nil)<=0)//no time out
 		{
 			//[<0] error [=0] time out
 			error_log("select error, or time out!\n");
@@ -449,9 +424,9 @@ void mocha_serversocket_test()
 			exit(-1);
 		}
 
-		if (ff(fdcontroler, isFdReady, MCSelect_Readfd, server->sfd))
+		if (ff(fdcontroler, MK(isFdReady), MCSelect_Readfd, server->sfd))
 		{
-			MCSocketClientInfo* request = ff(server, acceptARequest, nil);
+			MCSocketClientInfo* request = ff(server, MK(acceptARequest), nil);
 			//get a empty client slot
 			int i;
 			for (i = 0; i < 100; ++i){
@@ -463,7 +438,7 @@ void mocha_serversocket_test()
 			}
 			
 			printf("accept a client: %d Total[%d]\n", i, ++client_count);
-			ff(fdcontroler, addFd, MCSelect_Readfd, client_array[i]);
+			ff(fdcontroler, MK(addFd), MCSelect_Readfd, client_array[i]);
 			release(request);
 			continue;
 		}
@@ -473,13 +448,13 @@ void mocha_serversocket_test()
 
 			if(client_array[i]==0)continue;
 
-			if(ff(fdcontroler, isFdReady, MCSelect_Readfd, client_array[i])){
+			if(ff(fdcontroler, MK(isFdReady), MCSelect_Readfd, client_array[i])){
 				memset(sendbuff, 0, 1024);
 				memset(recvbuff, 0, 1024);
 
 				if(readline(client_array[i], recvbuff)==-1){
 					printf("a client quite: %d Total[%d]\n", i, --client_count);
-					ff(fdcontroler, removeFd, MCSelect_Readfd, client_array[i]);
+					ff(fdcontroler, MK(removeFd), MCSelect_Readfd, client_array[i]);
 					close(client_array[i]);
 					client_array[i]=0;
 					break;
@@ -502,7 +477,7 @@ void mocha_clientsocket_test(Handle(MCContext) const context)
 	for(;;){
 		memset(sendbuff, 0, 1024);
 		printf("%s\n", "to Server: (your message please)");
-		ff(context, getUserInputString, sendbuff);
+		ff(context, MK(getUserInputString), sendbuff);
 		char* str = strcat(sendbuff, "\n");
 
 		write(client->sfd, str, strlen(str));
@@ -513,17 +488,17 @@ void mocha_clientsocket_test(Handle(MCContext) const context)
 
 void menu_drive_test(Handle(MCContext) const context)
 {
-	int selection = ff(context, showMenuAndGetSelectionChar, 3, "male", "female", "double");
+	int selection = ff(context, MK(showMenuAndGetSelectionChar), 3, "male", "female", "double");
 	//printf("selection is: %c\n", putchar(selection));
 	//printf("context->selectionChar is: %c\n", context->selectionChar);
 
-	while(ff(context, showConfirmAndGetBOOL, "are you sure")!=YES){
-		ff(context, showMenuAndGetSelectionChar, 3, "male", "female", "double");
+	while(ff(context, MK(showConfirmAndGetBOOL), "are you sure")!=YES){
+		ff(context, MK(showMenuAndGetSelectionChar), 3, "male", "female", "double");
 	}
 	//printf("%d\n", bb);
 	printf("%s\n", "your name please:");
 	char name[100];
-	ff(context, getUserInputString, name);
+	ff(context, MK(getUserInputString), name);
 	
 	CString sex;
 	switch(selection){
@@ -546,19 +521,19 @@ void menu_drive_test(Handle(MCContext) const context)
 void mocha_syntex_test(MCContext* const context)
 {
 	//output all cmdline parameters
-	ff(context, dumpParas, nil);
+	ff(context, MK(dumpParas));
 
-	debug_log("PATH: [%s]\n", ff(context, getEnvironmentVar, "PATH"));
+	debug_log("PATH: [%s]\n", ff(context, MK(getEnvironmentVar), "PATH"));
 
-	ff(new_anony(MCObject, nil), whatIsYourClassName, nil);
+	ff(new_anony(MCObject, nil), MK(whatIsYourClassName));
 
 	//check whether have cmdline parameter "-c"
 	BOOL res;
-	if(res = ff(context, isHavePara, "-c"))
-		debug_log("%d %s\n", res,ff(context, getPara, 1));
+	if(res = ff(context, MK(isHavePara), "-c"))
+		debug_log("%d %s\n", res,ff(context, MK(getPara), 1));
 
 	//check whether have cmdline parameter "-w"
-	if(ff(context, isHavePara, "-w"))
+	if(ff(context, MK(isHavePara), "-w"))
 		debug_log("%s\n", "context have -w para");
 
 	new_onstack(VTableSuper, nil);
@@ -572,53 +547,53 @@ void mocha_syntex_test(MCContext* const context)
 	Handle(VTable) ret = VTable_getInstance();
 
 	//call by string
-	ff(VTable_getInstance(), draw, nil);
+	ff(VTable_getInstance(), MK(draw));
 
 	//protocol method call
-	ff(ret, erase, nil);
-	ff(ret, redraw, nil);
+	ff(ret, MK(erase));
+	ff(ret, MK(redraw));
 
 	Handle(VTableSuper) ret_father = new(VTableSuper, nil);
-	ff(ret_father, draw, nil);
-	ff(ret_father, erase, nil);
-	ff(ret_father, redraw, nil);
+	ff(ret_father, MK(draw));
+	ff(ret_father, MK(erase));
+	ff(ret_father, MK(redraw));
 
 	//nested method call
-	ff(ret, bmethod, 
-		ff(ret, amethod, nil),
+	ff(ret, MK(bmethod), 
+		ff(ret,MK(amethod)),
 		3.1415, "this is amethod");
 
 	//inherit test
-	ff(ret, show, YES, "this is a super method called by child:VTable");
+	ff(ret, MK(show), YES, "this is a super method called by child:VTable");
 	ret2->info="Changed Info By VTable";
-	ff(ret2, show, YES, "this is a super method called by child:VTable ret2");
+	ff(ret2, MK(show), YES, "this is a super method called by child:VTable ret2");
 
 	//ff-release
-	ff(new_anony(VTableSuper, nil), draw, nil);
+	ff(new_anony(VTableSuper, nil), MK(draw));
 
 	//polymorphism test
 	Handle(Bird) birdArray[3]={new_anony(Bird, DUCK_TYPE), new_anony(Bird, CHICKEN_TYPE), new_anony(Bird, NONE)};
 	int i;
 	for (i = 0; i < 3; ++i)
 	{
-		ff(birdArray[i], fly, nil);
+		ff(birdArray[i], MK(fly));
 	}
 
-	ff(new_anony(Bird, DUCK_TYPE),    fly, nil);
-	ff(new_anony(Bird, CHICKEN_TYPE), fly, nil);
-	ff(new_anony(Bird, NONE),         fly, nil);
+	ff(new_anony(Bird, DUCK_TYPE),    MK(fly));
+	ff(new_anony(Bird, CHICKEN_TYPE), MK(fly));
+	ff(new_anony(Bird, NONE),         MK(fly));
 
 	//side effect: class method list change dynamically
 	Handle(Bird) b1 = new(Bird, DUCK_TYPE);
 	Handle(Bird) b2 = new(Bird, CHICKEN_TYPE);
 	Handle(Bird) b3 = new(Bird, NONE);
 
-	ff(b1, fly, nil);
-	ff(b2, fly, nil);
-	ff(b3, fly, nil);
+	ff(b1, MK(fly));
+	ff(b2, MK(fly));
+	ff(b3, MK(fly));
 
 	//clean up controlled by cmdline parameter
-	//if(ff(context, isHavePara, "--release")){
+	//if(ff(context, MK(isHavePara), "--release")){
 		release(nil);
 		relnil(ret);
 		relnil(ret2);
@@ -627,20 +602,21 @@ void mocha_syntex_test(MCContext* const context)
 
 	//response
 	Handle(Bird) abird = new(Bird, DUCK_TYPE);
-	if (response(abird, whatIsYourClassName))
-		ff(abird, whatIsYourClassName, nil);
-}
+	if (response(abird, MK(whatIsYourClassName)))
+		ff(abird, MK(whatIsYourClassName));
 
-void test_ffi()
-{
-	VTable* tobeinvoke = new(VTable, nil);
 
-	ff(tobeinvoke, cmethod, 10, 9.9, "so cool");
-	ff(tobeinvoke, testFFIint, 10, 9, 8);
-	ff(tobeinvoke, testFFIint, 100, 101, 102);
-	ff(tobeinvoke, testFFIint, 200, 201, 202);
+	//
+	MCUnitTestRunner* runner = new(MCUnitTestRunner, nil);
+	MCUnitTestSuite* suite = new(MCUnitTestSuite, nil);
+	ff(suite, MK(addTestCase), new_anony(MyTestCase1, nil));
+	ff(runner, MK(addTestSuite), suite);
 
-	relnil(tobeinvoke);
+	ff(runner, MK(runTestSuites), nil);
+
+	relnil(runner);
+	relnil(suite);
+
 }
 
 void doSomething() throws(MCIOException);
@@ -661,8 +637,8 @@ void mocha_exception_test()
 		MCString* str = (MCString*)get_exception_data("MCIOException");
 		if (str!=nil)
 		{
-			ff(str, add, "@this is append info");
-			ff(str, print, nil);
+			ff(str, MK(add), "@this is append info");
+			ff(str, MK(print));
 			printf("%s\n", "MCIOException raised");
 			//it will be auto released
 			//relnil(str);

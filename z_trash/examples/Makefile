@@ -1,10 +1,10 @@
 
-OBJS = Main.o VTable.o VTableSuper.o Bird.o
+OBJS = Main.o VTable.o VTableSuper.o Bird.o MyTestCase1.o
 
-LINK_HEAD = -I/usr/local/include/monkc
-LINK_BIN = -lpthread -L/usr/local/lib -lmonkc -L/opt/local/lib -lffi
+LINK_HEAD = -I/usr/local/include/mocha
+LINK_BIN = -lpthread -L/usr/local/lib -lmocha
 
-CC = clang -O -g -w -Wall -Wno-unused-variable -Wno-return-type
+CC = gcc -O -g -w -Wall -Wno-unused-variable -Wno-return-type
 AS = as
 
 exec:$(OBJS)
@@ -21,6 +21,9 @@ VTableSuper.o:VTableSuper.c VTableSuper.h
 
 Bird.o:Bird.c Bird.h
 	$(CC) -c Bird.c $(LINK_HEAD)
+
+MyTestCase1.o:MyTestCase1.c MyTestCase1.h
+	$(CC) -c MyTestCase1.c $(LINK_HEAD)
 
 clean:
 	rm exec $(OBJS)

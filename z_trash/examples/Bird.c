@@ -4,20 +4,19 @@ constructor(Bird, int type)
 {
 	link_class(Bird, MCObject, nil)
 	{
-		binding(Bird, bye, xxx);
-		binding(Bird, fly, xxx);
-
+		have_method(Bird, bye, xxx);
+		have_method(Bird, fly, xxx);
 	}
 
 	//override
 	if(type==DUCK_TYPE){
 		this->name="Bird:Duck";
-		override(Duck, fly, xxx);
+		override(this, MK(fly), MV(Duck, fly));
 	}else if(type==CHICKEN_TYPE){
 		this->name="Bird:Chicken";
-		override(Chicken, fly, xxx);
+		override(this, MK(fly), MV(Chicken, fly));
 	}else if(type==NONE){
-		override(Bird, fly, xxx);
+		override(this, MK(fly), MV(Bird, fly));
 	}
 	//var init
 	this->type=type;

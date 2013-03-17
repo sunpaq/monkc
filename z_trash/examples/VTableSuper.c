@@ -4,10 +4,10 @@ constructor(VTableSuper, xxx)
 {
 	link_class(VTableSuper, MCObject, nil)
 	{
-		binding(VTableSuper, bye, xxx);
-		binding(VTableSuper, show, BOOL isPrint, char* str)				returns(BOOL);
-		binding(VTableSuper, bmethod, int a, double b, char* c);
-		binding(VTableSuper, cmethod, int a, double b, char* c);
+		have_method(VTableSuper, bye, xxx);
+		have_method(VTableSuper, show, BOOL isPrint, char* str)				returns(BOOL);
+		have_method(VTableSuper, bmethod, int a, double b, char* c);
+		have_method(VTableSuper, cmethod, int a, double b, char* c);
 		#define BIND
 		#include "DrawableProtocol.h"
 	}
