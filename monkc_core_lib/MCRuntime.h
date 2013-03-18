@@ -8,7 +8,7 @@
 #include <stdlib.h>
 #include <stdarg.h>
 #include <pthread.h>
-#include <ffi/ffi.h>
+#include <ffi.h>
 
 #define ROOT_CLASS_NAME "MCObject"
 #define INIT_METHOD_NAME "init"
@@ -41,6 +41,8 @@ typedef int RES;
 //MK: Method Key  MV: Method Value
 #define MV(cls, name) cls##_##name
 #define MK(value) _hash(#value)
+#define MS(count, ...) count, (MCTYPES*[]){__VA_ARGS__}
+#define MSNA           2, (MCTYPES*[]){P,P}
 #define CK(value) _chash(#value) 
 #define Handle(cls) cls*
 
@@ -49,17 +51,23 @@ typedef int RES;
 #define _newline  //just a blank mark for syntex
 #define _alloc(cls) (cls*)mc_malloc(sizeof(cls))//private macro, usr should not call this
 #define _alloc_clear(cls) (cls*)mc_calloc(sizeof(cls))//private macro, usr should not call this
-#define _alloc_onstack(cls) (cls*)mc_alloca(sizeof(cls))//private macro, usr should not call this
+//#define _alloc_onstack(cls) (cls*)mc_alloca(sizeof(cls))//private macro, usr should not call this
 #define _alloc_anony(cls) (cls*)mc_malloc_anony(sizeof(cls))//private macro, usr should not call this
 
+typedef struct MCMethodSign_struct
+{
+	ffi_cif cif;
+	_FunctionPointer(funcptr);
+	int argcount;
+	ffi_type* typelist[];
+}MCMethodSign;
+
 //meta class, the struct is a node for inherit hierarchy
-//enum MCCLASSTYPE { SINGLETON, NORMAL };
 typedef struct MCClass_struct
 {
 	struct MCClass_struct* super;
 	int method_count;
-	_FunctionArray(method_list);
-	_FunctionArray(invoke_method_list);
+	MCMethodSign* method_list[MAX_METHOD_NUM];
 	char* name;
 }MCClass;
 //for type cast, every object have the 3 var members
@@ -91,7 +99,7 @@ typedef struct cls##_struct{\
 #define constructor(cls, ...)       cls* cls##_init(cls* const this, unsigned hashkey, __VA_ARGS__)
 #define new(cls, ...)                    cls##_init(_alloc(cls), 0, __VA_ARGS__)
 #define new_clear(cls, ...)              cls##_init(_alloc_clear(cls), 0, __VA_ARGS__)
-#define new_onstack(cls, ...)            cls##_init(_alloc_onstack(cls), 0, __VA_ARGS__)
+//#define new_onstack(cls, ...)            cls##_init(_alloc_onstack(cls), 0, __VA_ARGS__)
 #define new_anony(cls, ...)         	 cls##_init(_alloc_anony(cls), 0, __VA_ARGS__)
 #define preload(cls, ...) 			release(new(cls, __VA_ARGS__))
 
@@ -107,25 +115,15 @@ typedef struct cls##_struct{\
 									this->need_bind_method=YES;}while(0)
 #define link_class(cls, super, ...) super_init(this, super, __VA_ARGS__);\
 									if(set_class(this, #cls, #super))
-#define binding(cls, met, ...)  	do{_binding(this, MK(met), MV(cls, met));\
-							  			runtime_log("%s: [%d]%s\n", #cls, _hash(#met), #met);\
-							  		}while(0)
-#define override(cls, met, ...) 	_override(this, MK(met), MV(cls, met))
+#define binding(sign, cls, met, ...)  	do{_binding(sign, this, MK(met), MV(cls, met));\
+							  				runtime_log("%s: [%d]%s\n", #cls, _hash(#met), #met);\
+							  			}while(0)
+#define override(sign, cls, met, ...) 	_override(sign, this, MK(met), MV(cls, met))
 
 //for protocol define
 #define protocol(cls, name, ...)  	static id cls##_##name(id const this, unsigned hashkey, __VA_ARGS__)
 #define This(cls)      				((cls*)this)
 #define Cast(cls, obj) 				((cls*)obj)
-
-//logs
-#define SILENT     0
-#define ERROR_ONLY 1
-#define DEBUG      2
-#define VERBOSE    3
-int LOG_LEVEL;
-void error_log(char* fmt, ...);
-void debug_log(char* fmt, ...);
-void runtime_log(char* fmt, ...);
 
 unsigned _hash(const char *s);
 unsigned _chash(const char *s);
@@ -142,46 +140,6 @@ void _relnil(MCObject** const this);
 
 //method handling
 //the <sys/socket> have function called "bind"
-unsigned _binding(id const self, unsigned hashkey, _FunctionPointer(value));
-unsigned _override(id const self, unsigned hashkey, _FunctionPointer(value));
-BOOL _response(id const obj, unsigned hashkey);
-void* _ff(id const obj, const unsigned hashkey, ...);
-
-//make a thread-safe allocator
-void* mc_malloc(size_t size);
-void* mc_malloc_anony(size_t size);
-void* mc_calloc(size_t size);
-void* mc_alloca(size_t size);
-void* mc_realloc(void* ptr, size_t size);
-void  mc_free(void *ptr);
-
-//language context
-void mc_init();
-void mc_end();
-
-//log colors
-static char* LOG_FMT = "%s%s\033[0m";
-static char* LOG_COLOR_NONE="\033[0m";
-static char* LOG_COLOR_BLACK="\033[0;30m";
-static char* LOG_COLOR_DARK_GRAY="\033[1;30m";
-static char* LOG_COLOR_BLUE="\033[0;34m";
-static char* LOG_COLOR_LIGHT_BLUE="\033[1;34m";
-static char* LOG_COLOR_GREEN="\033[0;32m";
-static char* LOG_COLOR_LIGHT_GREEN="\033[1;32m";
-static char* LOG_COLOR_CYAN="\033[0;36m";
-static char* LOG_COLOR_LIGHT_CYAN="\033[1;36m";
-static char* LOG_COLOR_RED="\033[0;31m";
-static char* LOG_COLOR_LIGHT_RED="\033[1;31m";
-static char* LOG_COLOR_PURPLE="\033[0;35m";
-static char* LOG_COLOR_LIGHT_PURPLE="\033[1;35m";
-static char* LOG_COLOR_BROWN="\033[0;33m";
-static char* LOG_COLOR_YELLOW="\033[1;33m";
-static char* LOG_COLOR_LIGHT_GRAY="\033[0;37m";
-static char* LOG_COLOR_WHITE="\033[1;37m";
-
-#define MS(count, ...) count, (MCTYPES*[]){__VA_ARGS__}
-#define MSNA           2, (MCTYPES*[]){P,P}
-
 typedef enum {
 	I,
 	U,
@@ -191,16 +149,53 @@ typedef enum {
 	D,
 	P
 }MCTYPES;
+unsigned _binding(int count, MCTYPES types[], id const self, unsigned hashkey, _FunctionPointer(value));
+unsigned _override(int count, MCTYPES types[], id const self, unsigned hashkey, _FunctionPointer(value));
+BOOL _response(id const obj, unsigned hashkey);
+void* _ff(id const obj, const unsigned hashkey, ...);
 
-typedef struct MCMethodSign_struct
-{
-	ffi_cif cif;
-	_FunctionPointer(funcptr);
-	int argcount;
-	ffi_type* typelist[];
-}MCMethodSign;
+//make a thread-safe allocator
+void* mc_malloc(size_t size);
+void* mc_malloc_anony(size_t size);
+void* mc_calloc(size_t size);
+//void* mc_alloca(size_t size);
+void* mc_realloc(void* ptr, size_t size);
+void  mc_free(void *ptr);
 
-#define binding2(sign, cls, met, ...) mcprepare(sign, this, MK(met), MV(cls, met))
-void mcprepare(int count, MCTYPES types[], id obj, unsigned key,  _FunctionPointer(funcptr));
+//language context
+void mc_init();
+void mc_end();
+
+//logs
+int LOG_LEVEL;
+
+#define SILENT     0
+#define ERROR_ONLY 1
+#define DEBUG      2
+#define VERBOSE    3
+//log colors
+#define LOG_COLOR_NONE "\033[0m"
+#define LOG_COLOR_BLACK "\033[0;30m"
+#define LOG_COLOR_DARK_GRAY "\033[1;30m"
+#define LOG_COLOR_BLUE "\033[0;34m"
+#define LOG_COLOR_LIGHT_BLUE "\033[1;34m"
+#define LOG_COLOR_GREEN "\033[0;32m"
+#define LOG_COLOR_LIGHT_GREEN "\033[1;32m"
+#define LOG_COLOR_CYAN "\033[0;36m"
+#define LOG_COLOR_LIGHT_CYAN "\033[1;36m"
+#define LOG_COLOR_RED "\033[0;31m"
+#define LOG_COLOR_LIGHT_RED "\033[1;31m"
+#define LOG_COLOR_PURPLE "\033[0;35m"
+#define LOG_COLOR_LIGHT_PURPLE "\033[1;35m"
+#define LOG_COLOR_BROWN "\033[0;33m"
+#define LOG_COLOR_YELLOW "\033[1;33m"
+#define LOG_COLOR_LIGHT_GRAY "\033[0;37m"
+#define LOG_COLOR_WHITE "\033[1;37m"
+
+#define LOG_FMT "%s%s\033[0m"
+
+void error_log(char* fmt, ...);
+void debug_log(char* fmt, ...);
+void runtime_log(char* fmt, ...);
 
 #endif

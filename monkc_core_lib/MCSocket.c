@@ -6,8 +6,8 @@ constructor(MCSocketClientInfo, xxx)
 {
 	link_class(MCSocketClientInfo, MCObject, nil)
 	{
-		binding(MCSocketClientInfo, dumpInfo, xxx);
-		binding(MCSocketClientInfo, bye, xxx);
+		binding(MSNA, MCSocketClientInfo, dumpInfo, xxx);
+		binding(MSNA, MCSocketClientInfo, bye, xxx);
 	}
 	return this;
 }
@@ -26,18 +26,18 @@ constructor(MCSocket, MCSocketType socket_type, char* ip, char* port)
 {
 	link_class(MCSocket, MCObject, nil)
 	{
-		binding(MCSocket, listeningStart, xxx);//listen
-		binding(MCSocket, acceptARequest, xxx); returns(MCSocketClientInfo)
+		binding(MSNA, MCSocket, listeningStart, xxx);//listen
+		binding(MSNA, MCSocket, acceptARequest, xxx); returns(MCSocketClientInfo*)
 		//have_method(MCSocket, connectServer, xxx);
 
-		binding(MCSocket, recv, xxx);
-		binding(MCSocket, recvfrom, xxx);
-		binding(MCSocket, recvmsg, xxx);
-		binding(MCSocket, send, xxx);
-		binding(MCSocket, sendto, xxx);
-		binding(MCSocket, sendmsg, xxx);
+		binding(MSNA, MCSocket, recv, xxx);
+		binding(MSNA, MCSocket, recvfrom, xxx);
+		binding(MSNA, MCSocket, recvmsg, xxx);
+		binding(MSNA, MCSocket, send, xxx);
+		binding(MSNA, MCSocket, sendto, xxx);
+		binding(MSNA, MCSocket, sendmsg, xxx);
 
-		binding(MCSocket, bye, xxx);
+		binding(MSNA, MCSocket, bye, xxx);
 	}
 
 	create_and_bind_socket(this, socket_type, ip, port);

@@ -4,24 +4,15 @@ constructor(VTable, xxx) returns(VTable*)
 {
 	link_class(VTable, VTableSuper, nil)
 	{
-		binding(VTable, bye, xxx);
-		binding(VTable, amethod, xxx) 							returns(int);
-		binding(VTable, amethod2, char* srt, int index);
-		binding(VTable, bmethod, int a, double b, char* c);
-		binding(VTable, cmethod, int a, double b, char* c);
-		binding(VTable, testFFIint, int a, int b, int c);
+		binding(MSNA, VTable, bye, xxx);
+		binding(MS(2,I,P), VTable, amethod, xxx) returns(int);
+		binding(MS(3,P,P,I), VTable, amethod2, char* srt, int index);
+		binding(MS(4,P,I,D,P), VTable, bmethod, int a, double b, char* c);
+		binding(MS(4,P,I,D,P), VTable, cmethod, int a, double b, char* c);
+		binding(MS(4,P,I,I,I), VTable, testFFIint, int a, int b, int c);
 
 		#define BIND
 		#include "DrawableProtocol.h"
-
-		//for test
-		//void mcprepare(id obj, unsigned key, int count, MCTYPES*[] types, _FunctionPointer(funcptr));
-		//mcprepare(this, MK(cmethod), MS(4, P, I, D, P), MV(VTable, cmethod));
-		//mcprepare(this, MK(testFFIint), MS(4, P, I, I, I), MV(VTable, testFFIint));
-		binding2(MSNA, VTable, bye, xxx);
-		binding2(MSNA, VTable, amethod, xxx) returns(int);
-		binding2(MS(4,P,I,D,P), VTable, cmethod, int a, double b, char* c);
-		binding2(MS(4,P,I,I,I), VTable, testFFIint, int a, int b, int c);
 
 	}
 		
@@ -82,16 +73,16 @@ method(VTable, bmethod, int a, double b, char* c)
 
 method(VTable, cmethod, int a, double b, char* c)
 {
-	debug_log("method c1: a/b/c is:%d/%1.2f/%s\n", a, b, c);
-	debug_log("method c2: a/b/c is:%d/%1.2f/%s\n", a, b, c);
-	debug_log("method c3: a/b/c is:%d/%1.2f/%s\n", a, b, c);
+	printf("method c1: a/b/c is:%d/%1.2f/%s\n", a, b, c);
+	printf("method c2: a/b/c is:%d/%1.2f/%s\n", a, b, c);
+	printf("method c3: a/b/c is:%d/%1.2f/%s\n", a, b, c);
 }
 
 method(VTable, testFFIint, int a, int b, int c)
 {
-	debug_log("testFFIint: a/b/c is:%d/%d/%d\n", a, b, c);
-	debug_log("testFFIint: a/b/c is:%d/%d/%d\n", a, b, c);
-	debug_log("testFFIint: a/b/c is:%d/%d/%d\n", a, b, c);
+	printf("testFFIint: a/b/c is:%d/%d/%d\n", a, b, c);
+	printf("testFFIint: a/b/c is:%d/%d/%d\n", a, b, c);
+	printf("testFFIint: a/b/c is:%d/%d/%d\n", a, b, c);
 }
 
 protocol(DrawableProtocol, erase, xxx){

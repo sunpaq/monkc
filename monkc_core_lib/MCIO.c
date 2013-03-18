@@ -6,19 +6,20 @@ constructor(MCFile, char* pathname, int oflag)
 {
 	link_class(MCFile, MCObject, nil)
 	{
-		binding(MCFile, readFromBegin, off_t offset, size_t nbytes);
-		binding(MCFile, readAtLastPosition, off_t offset, size_t nbytes);
-		binding(MCFile, readFromEnd, off_t offset, size_t nbytes);
+		//can only be used by call()
+		// binding(MCFile, readFromBegin, off_t offset, size_t nbytes);
+		// binding(MCFile, readAtLastPosition, off_t offset, size_t nbytes);
+		// binding(MCFile, readFromEnd, off_t offset, size_t nbytes);
 
-		binding(MCFile, writeToBegin, off_t offset, void* buf, size_t nbytes);
-		binding(MCFile, writeToLastTime, off_t offset, void* buf, size_t nbytes);
-		binding(MCFile, writeToEnd, off_t offset, void* buf, size_t nbytes);
+		// binding(MCFile, writeToBegin, off_t offset, void* buf, size_t nbytes);
+		// binding(MCFile, writeToLastTime, off_t offset, void* buf, size_t nbytes);
+		// binding(MCFile, writeToEnd, off_t offset, void* buf, size_t nbytes);
 
-		binding(MCFile, duplicateFd, xxx); returns(int fd);
-		binding(MCFile, duplicateFdTo, int fd); returns(int newfd);
-		binding(MCFile, printAttribute, xxx);
-		binding(MCFile, bye, xxx);
-		binding(MCFile, checkPermissionUseRealIDOfProcess, int mode); returns(BOOL)
+		binding(MS(2,I,P), MCFile, duplicateFd, xxx); returns(int fd);
+		binding(MS(2,I,I), MCFile, duplicateFdTo, int fd); returns(int newfd);
+		binding(MSNA, MCFile, printAttribute, xxx);
+		binding(MSNA, MCFile, bye, xxx);
+		binding(MS(2,I,I), MCFile, checkPermissionUseRealIDOfProcess, int mode); returns(BOOL)
 	}
 
 	if((this->fd = open(pathname, oflag, 0774))==-1)
@@ -40,25 +41,25 @@ constructor(MCStream, MCStreamType type, CString path)
 {
 	link_class(MCStream, MCObject, nil)
 	{
-		binding(MCStream, bye, xxx);
-		binding(MCStream, getFileDescriptor, xxx); returns(int)
+		binding(MSNA, MCStream, bye, xxx);
+		binding(MS(2,I,P), MCStream, getFileDescriptor, xxx); returns(int)
 
-		binding(MCStream, getChar, xxx); returns(int)
-		binding(MCStream, putChar, int charCode);
-		binding(MCStream, pushbackChar, int charCodeToBePushBack); returns(int charCode/EOF)
+		binding(MS(2,I,P), MCStream, getChar, xxx); returns(int)
+		binding(MS(2,P,I), MCStream, putChar, int charCode);
+		binding(MS(2,I,I), MCStream, pushbackChar, int charCodeToBePushBack); returns(int charCode/EOF)
 
-		binding(MCStream, getCString, MCCharBuffer* recvBuffer); returns(CString/nil)
-		binding(MCStream, putCString, MCCharBuffer* sendBuffer); returns(CString/nil)
-		binding(MCStream, getMCString, xxx);                     returns(Handle(MCString))
-		binding(MCStream, putMCString, MCString* str);           returns(Handle(MCString)/nil)
+		binding(MS(2,P,P), MCStream, getCString, MCCharBuffer* recvBuffer); returns(CString/nil)
+		binding(MS(2,P,P), MCStream, putCString, MCCharBuffer* sendBuffer); returns(CString/nil)
+		binding(MS(2,P,P), MCStream, getMCString, xxx);                     returns(Handle(MCString))
+		binding(MS(2,P,P), MCStream, putMCString, MCString* str);           returns(Handle(MCString)/nil)
 
-		binding(MCStream, getBianryObject, void* recvBuffer,  size_t objectSize, size_t numberOfObjs); returns(size_t)
-		binding(MCStream, putBianryObject, void* sendBuffer,  size_t objectSize, size_t numberOfObjs); returns(size_t)
+		//binding(MS(2,P,P), MCStream, getBianryObject, void* recvBuffer,  size_t objectSize, size_t numberOfObjs); returns(size_t)
+		//binding(MCStream, putBianryObject, void* sendBuffer,  size_t objectSize, size_t numberOfObjs); returns(size_t)
 
-		binding(MCStream, tellOffset, xxx); returns(off_t)
-		binding(MCStream, seekFromBegin, off_t offset); returns(BOOL)
-		binding(MCStream, seekFromCurrent, off_t offset); returns(BOOL)
-		binding(MCStream, seekFromEnd, off_t offset); returns(BOOL)
+		//binding(MCStream, tellOffset, xxx); returns(off_t)
+		//binding(MCStream, seekFromBegin, off_t offset); returns(BOOL)
+		//binding(MCStream, seekFromCurrent, off_t offset); returns(BOOL)
+		//binding(MCStream, seekFromEnd, off_t offset); returns(BOOL)
 	}
 	//FILE *fopen(const char *restrict pathname, const char *restrict type);
 	//type:
@@ -94,10 +95,10 @@ constructor(MCSelect, long second, long microsecond)
 {
 	link_class(MCSelect, MCObject, nil)
 	{
-		binding(MCSelect, waitForFdsetChange, xxx); returns(int: >0 success =0 timeout <0 error)
-		binding(MCSelect, addFd, MCSelect_fd_type type, int fd);
-		binding(MCSelect, removeFd, MCSelect_fd_type type, int fd);
-		binding(MCSelect, isFdReady, MCSelect_fd_type type, int fd); returns(BOOL)
+		binding(MS(2,I,P), MCSelect, waitForFdsetChange, xxx); returns(int: >0 success =0 timeout <0 error)
+		binding(MS(3,P,I,I), MCSelect, addFd, MCSelect_fd_type type, int fd);
+		binding(MS(3,P,I,I), MCSelect, removeFd, MCSelect_fd_type type, int fd);
+		binding(MS(3,I,I,I), MCSelect, isFdReady, MCSelect_fd_type type, int fd); returns(BOOL)
 	}
 
 	//timeout.tv_sec

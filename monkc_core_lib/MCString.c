@@ -23,13 +23,13 @@ constructor(MCString, CString str)
 	super_init(newthis, MCObject, nil);
 	if (set_class(newthis, "MCString", "MCObject"))
 	{
-		binding(MCString, add, CString str);
-		binding(MCString, print, xxx);
-		binding(MCString, toCString, char const resultString[]);
-		binding(MCString, equalTo, MCString* stringToComp) 							returns(BOOL);
-		binding(MCString, getOneChar, xxx);
-		binding(MCString, getCharsUntilEnter, char const resultString[]);
-		binding(MCString, bye, xxx);
+		binding(MSNA, MCString, add, CString str);
+		binding(MSNA, MCString, print, xxx);
+		binding(MSNA, MCString, toCString, char const resultString[]);
+		binding(MS(2,I,P), MCString, equalTo, MCString* stringToComp) 							returns(BOOL);
+		binding(MSNA, MCString, getOneChar, xxx);
+		binding(MSNA, MCString, getCharsUntilEnter, char const resultString[]);
+		binding(MSNA, MCString, bye, xxx);
 	}
 	
 	newthis->length = strlen(str);

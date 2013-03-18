@@ -55,11 +55,11 @@ constructor(MCUnitTestCase, MCUnitTestResult* resultRef)
 {
 	link_class(MCUnitTestCase, MCObject, nil)
 	{
-		binding(MCUnitTestCase, bye, xxx);
-		binding(MCUnitTestCase, setUp, xxx);
-		binding(MCUnitTestCase, tearDown, xxx);
-		binding(MCUnitTestCase, runTests, xxx);
-		binding(MCUnitTestCase, runATestMethod, char* errmsg);
+		binding(MSNA, MCUnitTestCase, bye, xxx);
+		binding(MSNA, MCUnitTestCase, setUp, xxx);
+		binding(MSNA, MCUnitTestCase, tearDown, xxx);
+		binding(MSNA, MCUnitTestCase, runTests, xxx);
+		binding(MSNA, MCUnitTestCase, runATestMethod, char* errmsg);
 	}
 
 	retain(resultRef);
@@ -143,9 +143,9 @@ constructor(MCUnitTestSuite, xxx)
 {
 	link_class(MCUnitTestSuite, MCObject, nil)
 	{
-		binding(MCUnitTestSuite, bye, xxx);
-		binding(MCUnitTestSuite, addTestCase, MCUnitTestCase* tcase);
-		binding(MCUnitTestSuite, runTestCases, xxx);
+		binding(MSNA, MCUnitTestSuite, bye, xxx);
+		binding(MS(2,P,P), MCUnitTestSuite, addTestCase, MCUnitTestCase* tcase);
+		binding(MSNA, MCUnitTestSuite, runTestCases, xxx);
 	}
 
 	this->first_case = nil;
@@ -188,9 +188,9 @@ constructor(MCUnitTestResult, xxx)
 {
 	link_class(MCUnitTestResult, MCObject, nil)
 	{
-		binding(MCUnitTestResult, bye, xxx);
-		binding(MCUnitTestResult, addSuccessInfo, char* succinfo);
-		binding(MCUnitTestResult, addFailInfo, char* failinfo);
+		binding(MSNA, MCUnitTestResult, bye, xxx);
+		binding(MSNA, MCUnitTestResult, addSuccessInfo, char* succinfo);
+		binding(MSNA, MCUnitTestResult, addFailInfo, char* failinfo);
 	}
 
 	return this;
@@ -224,9 +224,9 @@ constructor(MCUnitTestRunner, xxx)
 {
 	link_class(MCUnitTestRunner, MCObject, nil)
 	{
-		binding(MCUnitTestRunner, bye, xxx);
-		binding(MCUnitTestRunner, addTestSuite, MCUnitTestSuite* testSuite);
-		binding(MCUnitTestRunner, runTestSuites, xxx);
+		binding(MSNA, MCUnitTestRunner, bye, xxx);
+		binding(MS(2,P,P), MCUnitTestRunner, addTestSuite, MCUnitTestSuite* testSuite);
+		binding(MSNA, MCUnitTestRunner, runTestSuites, xxx);
 	}
 
 	this->first_suite = nil;

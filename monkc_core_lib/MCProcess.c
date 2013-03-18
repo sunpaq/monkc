@@ -4,30 +4,30 @@ constructor(MCProcess, xxx)
 {
 	link_class(MCProcess, MCObject, nil)
 	{
-		binding(MCProcess, printIDs, xxx);
-		binding(MCProcess, fork, xxx) returns(0 in child/child-pid in parent/-1 on error);
-		binding(MCProcess, vfork, xxx) returns(0 in child/child-pid in parent/-1 on error);
+		binding(MSNA, MCProcess, printIDs, xxx);
+		binding(MS(2,I,P), MCProcess, fork, xxx) returns(0 in child/child-pid in parent/-1 on error);
+		binding(MS(2,I,P), MCProcess, vfork, xxx) returns(0 in child/child-pid in parent/-1 on error);
 
-		binding(MCProcess, registerAtExitCallback, _FunctionPointer(func));
-		binding(MCProcess, exitWithStatus, int status);
-		binding(MCProcess, waitAnyChildExit, int* statusAddr) returns(pid_t);
-		binding(MCProcess, waitPIDChildExit, pid_t pid, int* statusAddr, MCProcessOptions options) returns(pid_t);
+		binding(MS(2,P,P), MCProcess, registerAtExitCallback, _FunctionPointer(func));
+		binding(MS(2,P,I), MCProcess, exitWithStatus, int status);
+		binding(MS(2,I,P), MCProcess, waitAnyChildExit, int* statusAddr) returns(pid_t);
+		binding(MS(4,I,I,P,I), MCProcess, waitPIDChildExit, pid_t pid, int* statusAddr, MCProcessOptions options) returns(pid_t);
 
-		binding(MCProcess, isChildExitNormal, int status) returns(BOOL);
-		binding(MCProcess, getChildExitLowOrder8Bit, int status) returns(int);
+		binding(MS(2,I,I), MCProcess, isChildExitNormal, int status) returns(BOOL);
+		binding(MS(2,I,I), MCProcess, getChildExitLowOrder8Bit, int status) returns(int);
 
-		binding(MCProcess, isChildExitBySignal, int status) returns(BOOL);
-		binding(MCProcess, getChildTerminateSignal, int status) returns(int signalNum);
-		binding(MCProcess, isCoreDumpFileGenerated, int status) returns(BOOL);
+		binding(MS(2,I,I), MCProcess, isChildExitBySignal, int status) returns(BOOL);
+		binding(MS(2,I,I), MCProcess, getChildTerminateSignal, int status) returns(int signalNum);
+		binding(MS(2,I,I), MCProcess, isCoreDumpFileGenerated, int status) returns(BOOL);
 
-		binding(MCProcess, isChildStopped, int status) returns(BOOL);
-		binding(MCProcess, getChildStopSignal, int status) returns(int signalNum);
-		binding(MCProcess, isChildContinued, int status) returns(BOOL);
+		binding(MS(2,I,I), MCProcess, isChildStopped, int status) returns(BOOL);
+		binding(MS(2,I,I), MCProcess, getChildStopSignal, int status) returns(int signalNum);
+		binding(MS(2,I,I), MCProcess, isChildContinued, int status) returns(BOOL);
 
-		binding(MCProcess, waitAnyChildExitGetResourceUseage, 
+		binding(MS(4,I,P,I,P), MCProcess, waitAnyChildExitGetResourceUseage, 
 			int* statusAddr, int options, MCProcessRUseage* useage) returns(pid_t);
 
-		binding(MCProcess, waitPIDChildExitGetResourceUseage, pid_t pid,
+		binding(MS(4,I,I,P,I,P), MCProcess, waitPIDChildExitGetResourceUseage, pid_t pid,
 			int* statusAddr, int options, MCProcessRUseage* useage) returns(pid_t);
 	}
 

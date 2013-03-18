@@ -4,30 +4,30 @@ constructor(MCClock, xxx)
 {
 	link_class(MCClock, MCObject, nil)
 	{
-		binding(MCClock, setTimeToNow, xxx);
-		binding(MCClock, setTime, int tm_sec, int tm_min, int tm_hour, 
+		binding(MSNA, MCClock, setTimeToNow, xxx);
+		binding(MS(8,P,I,I,I,I,I,I,I), MCClock, setTime, int tm_sec, int tm_min, int tm_hour, 
 								 int tm_mday, int tm_mon, int tm_year,
 								 int tm_wday);
-		binding(MCClock, adjustTime, int tm_sec, int tm_min, int tm_hour, 
+		binding(MS(8,P,I,I,I,I,I,I,I), MCClock, adjustTime, int tm_sec, int tm_min, int tm_hour, 
 		                            int tm_mday, int tm_mon, int tm_year,
 		                            int tm_wday);
 
-		binding(MCClock, setRawtime, struct tm rawtime_in);
-		binding(MCClock, setRawtimeFields, int tm_sec, int tm_min, int tm_hour, 
+		//binding(MCClock, setRawtime, struct tm rawtime_in);
+		binding(MS(10,P,I,I,I,I,I,I,I,I,I), MCClock, setRawtimeFields, int tm_sec, int tm_min, int tm_hour, 
 									      int tm_mday, int tm_mon, int tm_year,
 									      int tm_wday, int tm_yday, int tm_isdst);
 
-		binding(MCClock, getTime, time_t* const result);
-		binding(MCClock, getRawtime, struct tm* const result);
-		binding(MCClock, getTimeByString, xxx) 								returns(char*);
-		binding(MCClock, getCPUClocksPerSecond, clock_t* const result);
-		binding(MCClock, getCPUClocksSinceStart, clock_t* const result);
-		binding(MCClock, getCurrentTimeString, xxx) 							returns(char*);//retrun the same format as asctime: Sun Sep 16 01:03:52 1973\n\0
-		binding(MCClock, getCurrentGMTTimeString, xxx) 						returns(char*);
+		binding(MS(2,P,P), MCClock, getTime, time_t* const result);
+		binding(MS(2,P,P), MCClock, getRawtime, struct tm* const result);
+		binding(MSNA, MCClock, getTimeByString, xxx) 								returns(char*);
+		binding(MS(2,P,P), MCClock, getCPUClocksPerSecond, clock_t* const result);
+		binding(MS(2,P,P), MCClock, getCPUClocksSinceStart, clock_t* const result);
+		binding(MSNA, MCClock, getCurrentTimeString, xxx) 						returns(char*);//retrun the same format as asctime: Sun Sep 16 01:03:52 1973\n\0
+		binding(MSNA, MCClock, getCurrentGMTTimeString, xxx) 						returns(char*);
 
-		binding(MCClock, printTime, xxx);
-		binding(MCClock, printCurrentTime, xxx);
-		binding(MCClock, printCurrentGMTTime, xxx);
+		binding(MSNA, MCClock, printTime, xxx);
+		binding(MSNA, MCClock, printCurrentTime, xxx);
+		binding(MSNA, MCClock, printCurrentGMTTime, xxx);
 	}
 
 	return this;

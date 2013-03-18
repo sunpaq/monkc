@@ -276,7 +276,7 @@ void test_MCString()
 	{
 		link_class(MyRunnable, MCRunnable, my_init_routine)
 		{
-			override(MCRunnable, run, xxx);
+			override(MSNA, MyRunnable, run, xxx);
 		}
 
 		return this;
@@ -513,12 +513,12 @@ void mocha_clientsocket_test(Handle(MCContext) const context)
 
 void menu_drive_test(Handle(MCContext) const context)
 {
-	int selection = ff(context, showMenuAndGetSelectionChar, 3, "male", "female", "double");
+	int selection = call(context, MCContext, showMenuAndGetSelectionChar, 3, "male", "female", "double");
 	//printf("selection is: %c\n", putchar(selection));
 	//printf("context->selectionChar is: %c\n", context->selectionChar);
 
 	while(ff(context, showConfirmAndGetBOOL, "are you sure")!=YES){
-		ff(context, showMenuAndGetSelectionChar, 3, "male", "female", "double");
+		call(context, MCContext, showMenuAndGetSelectionChar, 3, "male", "female", "double");
 	}
 	//printf("%d\n", bb);
 	printf("%s\n", "your name please:");
@@ -561,11 +561,11 @@ void mocha_syntex_test(MCContext* const context)
 	if(ff(context, isHavePara, "-w"))
 		debug_log("%s\n", "context have -w para");
 
-	new_onstack(VTableSuper, nil);
+	//new_onstack(VTableSuper, nil);
 
 	//twice new test
-	new_onstack(VTable, nil);
-	new_onstack(VTable, nil);
+	//new_onstack(VTable, nil);
+	//new_onstack(VTable, nil);
 
 	//get singleton instance test
 	Handle(VTable) ret2= VTable_getInstance();

@@ -4,31 +4,18 @@ constructor(MCContext, int argc, char** argv)
 {
 	link_class(MCContext, MCObject, nil)
 	{
-		binding(MCContext, bye, xxx);
-		binding(MCContext, dumpParas, xxx);
-		binding(MCContext, getPara, int index) 									returns(char*);
-		binding(MCContext, isIndexedParaEqualTo, int index, char* para) 			returns(BOOL);
-		binding(MCContext, isHavePara, char* para) returns(BOOL);
-		binding(MCContext, showMenuAndGetSelectionChar, int count, ...) 			returns(char);
-		binding(MCContext, showConfirmAndGetBOOL, const char* confirm) 			returns(BOOL);
-		binding(MCContext, getUserInputString, char resultString[]);
-		binding(MCContext, getEnvironmentVar, const char* key) returns(char*);
-		binding(MCContext, setEnvironmentVar, const char* key, const char* value, BOOL isOverwrite) returns(RES);
-		binding(MCContext, clearEnvironmentVar, const char* key) returns(RES);
-
-		//binding2
-		binding2(MS(2,P,P), MCContext, bye, xxx);
-		binding2(MS(2,P,P), MCContext, dumpParas, xxx);
-		binding2(MS(2,P,I), MCContext, getPara, int index) 									returns(char*);
-		binding2(MS(3,P,I,P), MCContext, isIndexedParaEqualTo, int index, char* para) 			returns(BOOL);
-		binding2(MS(2,P,P), MCContext, isHavePara, char* para) returns(BOOL);
+		binding(MS(2,P,P), MCContext, bye, xxx);
+		binding(MS(2,P,P), MCContext, dumpParas, xxx);
+		binding(MS(2,P,I), MCContext, getPara, int index) 									returns(char*);
+		binding(MS(3,P,I,P), MCContext, isIndexedParaEqualTo, int index, char* para) 			returns(BOOL);
+		binding(MS(2,P,P), MCContext, isHavePara, char* para) returns(BOOL);
 		//No va_args support, you can only access it by call()
-		//binding2(MCContext, showMenuAndGetSelectionChar, MS(2,), int count, ...) 			returns(char);
-		binding2(MS(2,P,P), MCContext, showConfirmAndGetBOOL, const char* confirm) 			returns(BOOL);
-		binding2(MS(2,P,P), MCContext, getUserInputString, char resultString[]);
-		binding2(MS(2,P,P), MCContext, getEnvironmentVar, const char* key) returns(char*);
-		binding2(MS(4,P,P,P,I), MCContext, setEnvironmentVar, const char* key, const char* value, BOOL isOverwrite) returns(RES);
-		binding2(MS(2,P,P), MCContext, clearEnvironmentVar, const char* key) returns(RES);
+		//binding(MCContext, showMenuAndGetSelectionChar, MS(2,), int count, ...) 			returns(char);
+		binding(MS(2,P,P), MCContext, showConfirmAndGetBOOL, const char* confirm) 			returns(BOOL);
+		binding(MS(2,P,P), MCContext, getUserInputString, char resultString[]);
+		binding(MS(2,P,P), MCContext, getEnvironmentVar, const char* key) returns(char*);
+		binding(MS(4,P,P,P,I), MCContext, setEnvironmentVar, const char* key, const char* value, BOOL isOverwrite) returns(RES);
+		binding(MS(2,P,P), MCContext, clearEnvironmentVar, const char* key) returns(RES);
 	}
 
 	this->argc=argc;

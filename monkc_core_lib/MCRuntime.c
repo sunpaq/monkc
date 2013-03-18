@@ -13,6 +13,8 @@ static void _nil_check(id const self,
 	char* log4, char* log5, char* log6, pthread_mutex_t* lock);
 static void _clear_method_list(MCClass* const class);
 static unsigned _response_to_method(MCClass* const self_in, unsigned hashkey);
+static inline void _prepare_ffi_call(int count, MCTYPES types[], MCClass* class, unsigned key,  _FunctionPointer(funcptr));
+static inline void _cache_method(id obj, unsigned resultkey, MCMethodSign* resultvalue);
 
 void mc_init()
 {
@@ -69,27 +71,24 @@ static void load_root_class(){
 	class->name = "MCObject";
 	class->super = nil;
 	//bind the builtin MCObject methods
-	class->method_list[_hash("doNothing")] = MCObject_doNothing;
-	class->method_list[_hash("bye")] = MCObject_bye;
-	class->method_list[_hash("whatIsYourClassName")] = MCObject_whatIsYourClassName;
+	_prepare_ffi_call(MS(2,P,P), class, MK(doNothing), MV(MCObject, doNothing));
+	_prepare_ffi_call(MS(2,P,P), class, MK(bye), MV(MCObject, bye));
+	_prepare_ffi_call(MS(2,P,P), class, MK(whatIsYourClassName), MV(MCObject, whatIsYourClassName));
+
 	//load the MCObject class
 	mc_classobj_pool[_chash("MCObject")] = class;
 }
 
-static char logbuff[1024];
+static char log_buf[1024];
 void error_log(char* fmt, ...)
 {
 	if(LOG_LEVEL != SILENT){
-
-		// void *args;
-		// args = __builtin_apply_args();
-		va_list args;
-		va_start(args, fmt);
-			printf(LOG_FMT, LOG_COLOR_RED, "[Error] - ");
-			vsprintf(logbuff, fmt, args);
-			printf("%s\n", logbuff);
-		va_end(args);
-		//__builtin_apply(printf, args, 96);
+		printf(LOG_FMT, LOG_COLOR_RED, "[Error] - ");
+		va_list ap;
+		va_start(ap, fmt);
+			vsprintf(log_buf, fmt, ap);
+			printf("%s", log_buf);
+		va_end(ap);
 	}
 }
 
@@ -97,16 +96,12 @@ void debug_log(char* fmt, ...)
 {
 	if(LOG_LEVEL != SILENT
 	 &&LOG_LEVEL != ERROR_ONLY){
-
-		//void *args;
-		//args = __builtin_apply_args();
-		va_list args;
-		va_start(args, fmt);
-			printf(LOG_FMT, LOG_COLOR_LIGHT_BLUE, "[Debug] - ");
-			vsprintf(logbuff, fmt, args);
-			printf("%s\n", logbuff);
-		va_end(args);
-		//__builtin_apply(printf, args, 96);
+		printf(LOG_FMT, LOG_COLOR_LIGHT_BLUE, "[Debug] - ");
+		va_list ap;
+		va_start(ap, fmt);
+			vsprintf(log_buf, fmt, ap);
+			printf("%s", log_buf);
+		va_end(ap);
 	}
 }
 
@@ -115,16 +110,12 @@ void runtime_log(char* fmt, ...)
 	if(LOG_LEVEL != SILENT
 	 &&LOG_LEVEL != ERROR_ONLY
 	 &&LOG_LEVEL != DEBUG){
-
-		//void *args;
-		//args = __builtin_apply_args();
-		va_list args;
-		va_start(args, fmt);
-			printf(LOG_FMT, LOG_COLOR_DARK_GRAY, "[RTime] - ");
-			vsprintf(logbuff, fmt, args);
-			printf("%s\n", logbuff);
-		va_end(args);
-		//__builtin_apply(printf, args, 96);
+		printf(LOG_FMT, LOG_COLOR_DARK_GRAY, "[RTime] - ");
+		va_list ap;
+		va_start(ap, fmt);
+			vsprintf(log_buf, fmt, ap);
+			printf("%s", log_buf);
+		va_end(ap);
 	}
 }
 
@@ -246,8 +237,9 @@ void release(id const this)
 		//so that all the super clean work will be done
 		MCClass* iterator = this->isa;
 		while(iterator != nil){
-			_FunctionPointer(bye_method) = iterator->method_list[_hash("bye")];
-			if(bye_method != nil) (*bye_method)(this, nil);
+			MCMethodSign* asign = iterator->method_list[_hash("bye")];
+			//_FunctionPointer(bye_method) = asign->funcptr;
+			if((asign!=nil)&&(asign->funcptr!=nil)) (*(asign->funcptr))(this, nil);
 			iterator = iterator->super;
 		}
 
@@ -293,14 +285,14 @@ void _relnil(MCObject** const this)
 	(*this) = nil;
 }
 
-unsigned _binding(id const self, unsigned hashkey, _FunctionPointer(value))
+unsigned _binding(int count, MCTYPES types[], id const self, unsigned hashkey, _FunctionPointer(value))
 {
 	pthread_mutex_lock(&_mc_runtime_mutex);
 	_nil_check(self,
-		"bind(obj, key, MA)",
+		"binding(sign, obj, key, ...)",
 		"obj is nil, the key is:",
 		"",
-		"bind(obj, key, MA)",
+		"binding(sign, obj, key, ...)",
 		"obj have no class object linked. please call set_class(). the key is:",
 		"", &_mc_runtime_mutex);
 
@@ -320,14 +312,15 @@ unsigned _binding(id const self, unsigned hashkey, _FunctionPointer(value))
 		pthread_mutex_unlock(&_mc_runtime_mutex);
 		exit(-1);
 	}
-	self->isa->method_list[hashkey] = value;
+	
+	_prepare_ffi_call(count, types, self->isa, hashkey, value);
 	self->isa->method_count++;
 	//runtime_log("add a method, hash index:%d\n", hashkey);
 	pthread_mutex_unlock(&_mc_runtime_mutex);
 	return hashkey;
 }
 
-unsigned _override(id const self, unsigned hashkey, _FunctionPointer(value))
+unsigned _override(int count, MCTYPES types[], id const self, unsigned hashkey, _FunctionPointer(value))
 {
 	pthread_mutex_lock(&_mc_runtime_mutex);
 	_nil_check(self,
@@ -338,13 +331,13 @@ unsigned _override(id const self, unsigned hashkey, _FunctionPointer(value))
 		"obj have no class object linked. please call setting_start(). the key is:",
 		"", &_mc_runtime_mutex);
 
-	//unsigned hashkey = _hash(hashkey);
 	if(self->isa->method_count > MAX_METHOD_NUM-1){
 		error_log("method index out of bound\n");
 		pthread_mutex_unlock(&_mc_runtime_mutex);
 		exit(-1);
 	}
-	self->isa->method_list[hashkey] = value;
+
+	_prepare_ffi_call(count, types, self->isa, hashkey, value);
 	self->isa->method_count++;
 	//runtime_log("add a method, hash index:%d\n",hashkey);
 	pthread_mutex_unlock(&_mc_runtime_mutex);
@@ -378,58 +371,6 @@ BOOL _response(id const obj, unsigned hashkey)
 	pthread_mutex_unlock(&_mc_runtime_mutex);
 	return YES;
 }
-
-/* ff is short for [fire function] */
-/*
-id _ff(id const obj, unsigned hashkey, ...)
-{
-	_nil_check(obj,
-		"ff(obj, key, ...)",
-		"obj is nil, the key is:",
-		"",
-		"ff(obj, key, ...)",
-		"obj have no class object linked. please call set_class(). the key is:",
-		"", nil);
-
-	MCClass* cls_iterator = obj->isa;
-	unsigned res;
-	int count = 0;
-	while((res=_response_to_method(cls_iterator, hashkey))==NOT_RESPONSE){
-		if(cls_iterator != nil){
-			cls_iterator = cls_iterator->super;
-			//runtime_log("%s\n", "continue to my super");
-		}else if(count++ >= MAX_CLASS_NUM){
-			error_log("class count overflow\n");
-			return;
-		}else{
-			error_log("[%s] have no method: [%d] reach the root class return\n", obj->isa->name, hashkey);
-			return;
-		}
-	}
-
-	//new cache logic. only do cache when there are no such method in child.
-	pthread_mutex_lock(&_mc_runtime_mutex);
-	if((res < MAX_METHOD_NUM) && (obj->isa->method_list[res] == nil)){
-		runtime_log("----Cache method: %s[%d]\n", obj->isa->name, hashkey);
-		obj->isa->method_list[res] = cls_iterator->method_list[res];
-	}
-	pthread_mutex_unlock(&_mc_runtime_mutex);
-
-	runtime_log("----Call method: %s[%d]\n", obj->isa->name, hashkey);
-	void *args, *result;
-	args = __builtin_apply_args();
-	result = __builtin_apply(cls_iterator->method_list[res], args, 96);
-
-	//release the anony object
-	if(obj->ref_count == REFCOUNT_ANONY_OBJ)
-		release(obj);
-
-	if(result)
-		__builtin_return(result);
-	else
-		return;
-}
-*/
 
 /* copy form << The C Programming language >> */
 unsigned _hash(const char *s)
@@ -471,7 +412,6 @@ static inline void _clear_method_list(MCClass* const class)
 	int i;
 	for (i = 0; i < MAX_METHOD_NUM; i++){
 		class->method_list[i] = nil;
-		class->invoke_method_list[i] = nil;
 	}
 }
 
@@ -499,18 +439,6 @@ static inline unsigned _response_to_method(MCClass* const cls, unsigned hashkey)
 	if(cls == nil) return NOT_RESPONSE;
 	if((cls->method_list != nil)
 	&&(cls->method_list[hashkey] == nil)){
-		return NOT_RESPONSE;
-	}
-	else{
-		return hashkey;
-	}
-}
-
-static inline unsigned _response_to_invoke_method(MCClass* const cls, unsigned hashkey)
-{
-	if(cls == nil) return NOT_RESPONSE;
-	if((cls->invoke_method_list != nil)
-	&&(cls->invoke_method_list[hashkey] == nil)){
 		return NOT_RESPONSE;
 	}
 	else{
@@ -546,6 +474,7 @@ void* mc_calloc(size_t size)
 	return ret;
 }
 
+/*
 //some platform not support
 void* mc_alloca(size_t size)
 {
@@ -555,6 +484,7 @@ void* mc_alloca(size_t size)
 	pthread_mutex_unlock(&_mc_alloc_mutex);
 	return ret;
 }
+*/
 
 void* mc_realloc(void* ptr, size_t size)
 {
@@ -580,39 +510,17 @@ alternative allocators in APUE
 4. alloca ---> can alloc mem on stack
 */
 
-/*
-typedef enum {
-	MCINT,
-	MCUNSIGNED,
-	MCLONG,
-	MCCHAR,
-	MCFLOAT,
-	MCDOUBLE,
-	MCADDR
-}MCTYPES;
-
-typedef struct MCMethodSign_struct
-{
-	ffi_cif cif;
-	_FunctionPointer(funcptr);
-	int argcount;
-	ffi_type* typelist[];
-}MCMethodSign;
-*/
-
 //anonymous array in C:
 //void func(char*[] arg);
 //func((char*[]){"a", "b", "c"});
-void mcprepare(int count, MCTYPES types[], id obj, unsigned key,  _FunctionPointer(funcptr))
+static inline void _prepare_ffi_call(int count, MCTYPES types[], MCClass* class, unsigned key,  _FunctionPointer(funcptr))
 {
+	//prepare ffi call
 	int i;
 	int typelist_count = count-1+2;// - returnval + obj + key
 	MCMethodSign* asign = mc_malloc(sizeof(MCMethodSign)+(typelist_count)*sizeof(ffi_type*));
 	ffi_type* rettype;
 
-	//error_log("argument array length is:%d", sizeof(*types)/sizeof(MCTYPES));
-	// MCTYPES typesarr[count];
-	// typesarr = types;
 	asign->typelist[0] = &ffi_type_pointer;
 	asign->typelist[1] = &ffi_type_uint;
 
@@ -649,25 +557,29 @@ void mcprepare(int count, MCTYPES types[], id obj, unsigned key,  _FunctionPoint
 				else asign->typelist[i+1] = &ffi_type_pointer;
 			break;
 		}
-
 	}
 
-	//prepare
-	if (ffi_prep_cif(&asign->cif, FFI_DEFAULT_ABI, 
+	ffi_status res;
+	if (res = ffi_prep_cif(&asign->cif, FFI_DEFAULT_ABI, 
 		typelist_count, rettype, asign->typelist) == FFI_OK)
 	{
 		asign->funcptr = funcptr;
 		asign->argcount = typelist_count;
+		//save
+		class->method_list[key] = asign;
 	}
-
-	//save
-	obj->isa->invoke_method_list[key] = asign;
-
+	else if(res == FFI_BAD_TYPEDEF){
+		error_log("%s\n", "FFI_BAD_TYPEDEF");
+		exit(-1);
+	}
+	else if(res == FFI_BAD_ABI){
+		error_log("%s\n", "FFI_BAD_ABI");
+		exit(-1);
+	}
 }
 
 void* _ff(id obj, unsigned key, ...)
 {
-	void* returnval;
 
 	//get the method sign
 	_nil_check(obj,
@@ -681,7 +593,7 @@ void* _ff(id obj, unsigned key, ...)
 	MCClass* cls_iterator = obj->isa;
 	unsigned res;
 	int count = 0;
-	while((res=_response_to_invoke_method(cls_iterator, key))==NOT_RESPONSE){
+	while((res=_response_to_method(cls_iterator, key))==NOT_RESPONSE){
 		if(cls_iterator != nil){
 			cls_iterator = cls_iterator->super;
 			//runtime_log("%s\n", "continue to my super");
@@ -693,8 +605,10 @@ void* _ff(id obj, unsigned key, ...)
 			return;
 		}
 	}
+	_cache_method(obj, res, cls_iterator->method_list[res]);
+
  
-    MCMethodSign* asign = obj->isa->invoke_method_list[key];
+    MCMethodSign* asign = obj->isa->method_list[res];
 	void* values[asign->argcount];
 	//result containers
 	int int_ret[asign->argcount];
@@ -750,6 +664,9 @@ void* _ff(id obj, unsigned key, ...)
 		}
 	va_end(ap);
 
+	runtime_log("----Call method: %s[%d]\n", obj->isa->name, key);
+	//void ffi_call()
+	void* returnval;
 	ffi_call(&(asign->cif), asign->funcptr, &returnval, values);
 
 	//release the anony object
@@ -758,3 +675,66 @@ void* _ff(id obj, unsigned key, ...)
 
 	return returnval;
 }
+
+static inline void _cache_method(id obj, unsigned resultkey, MCMethodSign* resultvalue)
+{
+	//new cache logic. only do cache when there are no such method in child.
+	pthread_mutex_lock(&_mc_runtime_mutex);
+	if((resultkey < MAX_METHOD_NUM) && (obj->isa->method_list[resultkey] == nil)){
+		runtime_log("----Cache method: %s[%d]\n", obj->isa->name, resultkey);
+		obj->isa->method_list[resultkey] = resultvalue;
+	}
+	pthread_mutex_unlock(&_mc_runtime_mutex);
+}
+
+/* ff is short for [fire function] */
+/*
+id _ff(id const obj, unsigned hashkey, ...)
+{
+	_nil_check(obj,
+		"ff(obj, key, ...)",
+		"obj is nil, the key is:",
+		"",
+		"ff(obj, key, ...)",
+		"obj have no class object linked. please call set_class(). the key is:",
+		"", nil);
+
+	MCClass* cls_iterator = obj->isa;
+	unsigned res;
+	int count = 0;
+	while((res=_response_to_method(cls_iterator, hashkey))==NOT_RESPONSE){
+		if(cls_iterator != nil){
+			cls_iterator = cls_iterator->super;
+			//runtime_log("%s\n", "continue to my super");
+		}else if(count++ >= MAX_CLASS_NUM){
+			error_log("class count overflow\n");
+			return;
+		}else{
+			error_log("[%s] have no method: [%d] reach the root class return\n", obj->isa->name, hashkey);
+			return;
+		}
+	}
+
+	//new cache logic. only do cache when there are no such method in child.
+	pthread_mutex_lock(&_mc_runtime_mutex);
+	if((res < MAX_METHOD_NUM) && (obj->isa->method_list[res] == nil)){
+		runtime_log("----Cache method: %s[%d]\n", obj->isa->name, hashkey);
+		obj->isa->method_list[res] = cls_iterator->method_list[res];
+	}
+	pthread_mutex_unlock(&_mc_runtime_mutex);
+
+	runtime_log("----Call method: %s[%d]\n", obj->isa->name, hashkey);
+	void *args, *result;
+	args = __builtin_apply_args();
+	result = __builtin_apply(cls_iterator->method_list[res], args, 96);
+
+	//release the anony object
+	if(obj->ref_count == REFCOUNT_ANONY_OBJ)
+		release(obj);
+
+	if(result)
+		__builtin_return(result);
+	else
+		return;
+}
+*/

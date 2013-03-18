@@ -9,8 +9,8 @@ protocol(DrawableProtocol, redraw, xxx);
 #endif
 
 #ifdef BIND
-binding(DrawableProtocol, draw, xxx);
-binding(DrawableProtocol, erase, xxx);
-binding(DrawableProtocol, redraw, xxx);
+binding(MSNA, DrawableProtocol, draw, xxx);
+binding(MSNA, DrawableProtocol, erase, xxx);
+binding(MSNA, DrawableProtocol, redraw, xxx);
 #undef BIND
 #endif

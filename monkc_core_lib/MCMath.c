@@ -4,8 +4,8 @@ constructor(MCMath, xxx)
 {
 	link_class(MCMath, MCObject, nil)
 	{
-		binding(MCMath, bye, xxx);
-		binding(MCMath, addInteger2, int a, int b) returns(int sum);
+		binding(MSNA, MCMath, bye, xxx);
+		binding(MS(3,I,I,I), MCMath, addInteger2, int a, int b) returns(int sum);
 	}
 
 	return this;

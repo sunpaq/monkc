@@ -2,9 +2,9 @@
 OBJS = Main.o MyTestCase1.o
 
 LINK_HEAD = -I/usr/local/include/monkc
-LINK_BIN = -lpthread -L/usr/local/lib -lmonkc
+LINK_BIN = -lpthread -L/usr/local/lib -lmonkc -lffi
 
-CC = gcc -O -g -w -Wall -Wno-unused-variable -Wno-return-type
+CC = clang -O -g -w -Wall -Wno-unused-variable -Wno-return-type
 AS = as
 
 exec:$(OBJS)

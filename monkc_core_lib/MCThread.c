@@ -8,7 +8,7 @@ constructor(MCRunnable, _FunctionPointer(init_routine))
 {	
 	link_class(MCRunnable, MCObject, nil)
 	{
-		binding(MCRunnable, run, xxx);
+		binding(MSNA, MCRunnable, run, xxx);
 	}
 
 	this->init_routine = init_routine;
@@ -30,9 +30,9 @@ constructor(MCThread, MCRunnable* runnable)
 
 	link_class(MCThread, MCObject, nil)
 	{
-		binding(MCThread, start, void* result) 							returns(int);
-		binding(MCThread, equal, MCThread* thread) 						returns(BOOL);
-		binding(MCThread, bye, xxx);
+		binding(MS(2,I,P), MCThread, start, void* result) 			returns(int);
+		binding(MS(2,I,P), MCThread, equal, MCThread* thread) 		returns(BOOL);
+		binding(MSNA, MCThread, bye, xxx);
 	}
 	//init the vars
 	pthread_once_t ponce = PTHREAD_ONCE_INIT;

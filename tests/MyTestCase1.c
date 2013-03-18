@@ -4,11 +4,11 @@ constructor(MyTestCase1, xxx)
 {
 	link_class(MyTestCase1, MCUnitTestCase, new_anony(MCUnitTestResult, nil))
 	{
-		binding(MyTestCase1, testMehod1, xxx);
-		binding(MyTestCase1, testMehod2, xxx);
-		binding(MyTestCase1, testMehod3, xxx);
-		override(MyTestCase1, setUp, xxx);
-		override(MyTestCase1, tearDown, xxx);
+		binding(MSNA, MyTestCase1, testMehod1, xxx);
+		binding(MSNA, MyTestCase1, testMehod2, xxx);
+		binding(MSNA, MyTestCase1, testMehod3, xxx);
+		override(MSNA, MyTestCase1, setUp, xxx);
+		override(MSNA, MyTestCase1, tearDown, xxx);
 	}
 
 	return this;
