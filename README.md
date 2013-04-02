@@ -1,10 +1,22 @@
 # Monk-C (Runtime based version)
-a set of C macro for OOP programming
+a toolkit for OOP programming in C language
 
+![Mou icon](https://secure.gravatar.com/avatar/63f7c4c0a269ebaf049724a024bf01b4?s=420&d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-user-420.png)
 
 ## Overview
 
-**Monk-C**, is a set of C macros for OOP programming use pure C, the aim of Monk-C is to add less syntex to support OOP. The reason to make this is as C is a language so beautiful and so powerful. and the OOP is so handful and nature for a programer. i want to mix them with the less modification
+**Monk-C**, is a toolkit for OOP programming use pure C. the aim of Monk-C is to support OOP in pure C with some tiny C macros, functions and even a light preprocessor. Monk-C is inspired by Apple Objective-C and gcc builtin "Constructing Calls". It is tiny and primitive but full of fun. I use it to play with my RaspberryPi and it really vary suitable for the ARM/Linux based embeded systems. It is open source under BSD license(3-clause license). I written it under the X86/Linux platform and X86/MacOS ARM/Linux is also fully tested and supportted both 32bit and 64bit.
+
+#### supported platforms:
+
+	[CPUArch/OS/Compiler]
+
+	IA-32/Linux/gcc&clang    OK
+	X86-64/Linux/gcc&clang
+	IA-32/MacOS/gcc&clang
+	X86-64/MacOS/gcc&clang
+	ARM32/Linux/gcc&clang
+	ARM64/Linux/gcc&clang
 
 ## Syntax
 **Monk-C** use "MC" as the prefix.
@@ -17,15 +29,31 @@ a set of C macro for OOP programming
 			type var3;\
 
 		class(Classname);
+
+		constructor( Classname, argument-list );
+
 		method(Classname, bye, xxx);
 		method(Classname, name1, arg-list);
 		method(Classname, name2, arg-list);
-		constructor( Classname, argument-list );
 
 		#endif
 	
 #### implement methods - write in .c file
 		
+		constructor(Classname, argument-list )
+		{
+			link_class(Classname, Supername, super-init-args)
+			{
+				binding(Classname, bye, xxx);
+				binding(Classname, name1, arg-list);
+				binding(Classname, name2, arg-list);
+				override(Classname, supermethod, arg-list);
+			}
+
+			this->var1 = 0;
+			return this;
+		}
+
 		method(Classname, name1, arg-list)
 		{
 			this->var++;
@@ -41,17 +69,12 @@ a set of C macro for OOP programming
 			//do clean work
 		}
 
-		constructor(Classname, argument-list )
-		{
-			super_init(this, Supername, argument-list);
+####method calling
 
-			if(set_class(this, "Classname", "Supername")){
-				bind(this, MK(name1), MV(Classname, name1));
-				bind(this, MK(name2), MV(Classname, name2));
-				bind(this, MK(bye), MV(Classname, bye));
-				override(this, MK(super_method1), MV(Supername, super_method1));
-			}
-		}
+	it just like the Objective-C. sending message instead of function call.
+
+	VTable ret = new(VTable, nil);
+	ff(ret, show, YES, "this is a super method called by child:VTable");
 
 ####Macros and runtime functions
 
@@ -62,21 +85,18 @@ a set of C macro for OOP programming
 3. method
 4. constructor
 
-5. super_init
-6. set_class
-7. bind
-8. override
+5. link_class
+6. binding
+7. override
 
 9. new
 10.call
 11.response
 12.ff
-13.fr
-
-16.set_class
 
 17.retain
 18.release
+19.relnil
 
 19.id
 20.xxx
@@ -104,9 +124,6 @@ Total **33** words.[^1]
 
 	DrawableProtocol.h
 
-		//please do not include the "MCRuntime.h"
-		//in protocol file!!!
-
 		#ifdef METHOD 
 		protocol(DrawableProtocol, draw, xxx);
 		protocol(DrawableProtocol, erase, xxx);
@@ -115,9 +132,9 @@ Total **33** words.[^1]
 		#endif
 
 		#ifdef BIND
-		bind(this, MT(draw), MA(DrawableProtocol, draw));
-		bind(this, MT(erase), MA(DrawableProtocol, erase));
-		bind(this, MT(redraw), MA(DrawableProtocol, redraw));
+		binding(DrawableProtocol, draw, xxx);
+		binding(DrawableProtocol, erase, xxx);
+		binding(DrawableProtocol, redraw, xxx);
 		#undef BIND
 		#endif
 
@@ -143,16 +160,11 @@ in other OOP language.
 
 ######the BIND part (include in .c file):
 
-	
-	method(Classname, name1, xxx)
+	constructor(Classname, xxx)
 	{
-		printf("this is name1\n");
-	}
-
-	method(Classname, init, xxx)
-	{
-		if(set_class()){
-			bind();
+		link_class()
+		{
+			binding(Classname, method1, xxx);
 			#define BIND
 			#include "xx.h"
 		}
@@ -161,36 +173,20 @@ in other OOP language.
 it just give implements of the methods in protocol file. as you can guess it also can be **#include "xx.h"**
 to our .c files. we use this to simulate some **inherit** and **Polymorphism** feature.
 
-####method calling
-
-it just like the Objective-C. sending message instead of function call.
-
-	New(VTable, ret, nil);
-	ff(ret, MT(show), YES, "this is a super method called by child:VTable");
-
 ####TODO list:
 
-	1. implement the "__builtin_apply" extension on non-gcc platform
-	   make the Mocha portable.
+	1. more test use MCUnitTest framework.
 
-	2. wrap many popular C/UNIX libs:
-	   time.h       ->  MCClock.h
-	   pthread.h    ->  MCThread.h
-	   string.h     ->  MCString.h
-	   sys/socket.h ->  MCSocket.h
-	   math.h       ->  MCMath.h
+	2. test runtime on arm/linux platform.
 
-	3. a parse and some lightly added syntex to make the class define macros looks better
+	3. a parser and some lightly added syntex to make the class define macros looks better
 
-	4. test on clang-LLVM. make sure it can works on the newst technology
+	4. method list in classobj should be read-only for instance
+	(allow add method only)
 
-	5. method list in classobj should be read-only for instance
+	5. more detailed document.
 
-	6. more detailed "evolution" document.
-
-	7. move more logic to MCObject
-
-![Mou icon](https://secure.gravatar.com/avatar/63f7c4c0a269ebaf049724a024bf01b4?s=420&d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-user-420.png)
+	6. move more logic to MCObject
 
 [^1]: the syntex is improving, maybe more/less keywords in the feature.
 
