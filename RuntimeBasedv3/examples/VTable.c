@@ -7,8 +7,8 @@ constructor(VTable, xxx) returns(VTable*)
 		binding(VTable, bye, xxx);
 		binding(VTable, amethod, xxx) 							returns(int);
 		binding(VTable, amethod2, char* srt, int index);
-		binding(VTable, bmethod, int a, double b, char* c);
-		binding(VTable, cmethod, int a, double b, char* c);
+		binding(VTable, bmethod, int a, vector b, char* c);
+		binding(VTable, cmethod, int a, vector b, char* c);
 
 		#define BIND
 		#include "DrawableProtocol.h"
@@ -63,16 +63,16 @@ method(VTable, amethod2, char* srt, int index)
 	debug_log("VTable amethod2: %s\n", srt);
 }
 
-method(VTable, bmethod, int a, double b, char* c)
+method(VTable, bmethod, int a, vector b, char* c)
 {
-	debug_log("method argument: a/b/c is:%d/%1.2f/%s\n", a, b, c);
+	debug_log("method argument: a/b/c is:%d/%1.2f/%s\n", a, popvx(b), c);
 	debug_log("method super-public: a/b/c is:%d/%d/%d\n", this->a, this->b, this->c);
 	debug_log("method private: a/b/c is:%d/%d/%d\n", this->private.a, this->private.b, this->private.c);
 }
 
-method(VTable, cmethod, int a, double b, char* c)
+method(VTable, cmethod, int a, vector b, char* c)
 {
-	debug_log("method c1: a/b/c is:%d/%1.2f/%s\n", a, b, c);
+	debug_log("method c1: a/b/c is:%d/%1.2f/%s\n", a, popvx(b), c);
 }
 
 protocol(DrawableProtocol, erase, xxx){

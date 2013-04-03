@@ -27,6 +27,28 @@
 #endif
 typedef char* CString;
 typedef double Float;
+//vectors
+typedef double vector;
+typedef struct{
+	double x,
+	double y
+} vector2;
+typedef struct{
+	double x,
+	double y,
+	double z,
+} vector3;
+typedef struct{
+	double x,
+	double y,
+	double z,
+	double t,
+} vector4;
+vector* vector(vector f);
+vector2* vector2(vector x, vector y);
+vector3* vector3(vector x, vector y, vector z);
+vector4* vector4(vector x, vector y, vector z, vector t);
+
 typedef int BOOL;
 #define YES 1
 #define NO 0

@@ -56,7 +56,7 @@ __ff:
 
 	//save stack registers
 	pushq %rbp
-	movq %rsp, %rbp
+	movq %rsp %rbp
 	//va arguments function call need the %rax to be the count of SSE(float, double) type argument
 	pushq %rax
 	//save the parameters
@@ -73,7 +73,7 @@ __ff:
 	//the _resolve_method deal with no floating point data. so no need to save xmm0~xmm15
 	//return value will in the %rax
 	call __resolve_method
-	movq %rax, %r10
+	movq %rax %r10
 
 	//restore parameters
 	popq %r9
@@ -85,7 +85,7 @@ __ff:
 	//restore count of float
 	popq %rax
 	//restore stack registers
-	movq %rbp, %rsp
+	movq %rbp %rsp
 	popq %rbp
 	//confirm return address not nil
 	cmpq $0, %r10
@@ -96,5 +96,4 @@ __ff:
 	//stack frame of method() is prepared by caller of ff() and cleaned by it.
 	jmp	*%r10
 0:
-	ret 
-
+	ret

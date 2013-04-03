@@ -25,20 +25,40 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-.text
-.globl _ff
-.align 8
-_ff:
-	stmfd sp!, {a1-a4,fp,lr}
-	add fp, sp, #4
+#include <stdarg.h>
 
-	bl _resolve_method
-	mov ip, a1
+//logs
+int LOG_LEVEL;
 
-	ldmfd sp!, {a1-a4,fp,lr}
+#define SILENT     0
+#define ERROR_ONLY 1
+#define DEBUG      2
+#define VERBOSE    3
+//log colors
+#define LOG_COLOR_NONE "\033[0m"
+#define LOG_COLOR_BLACK "\033[0;30m"
+#define LOG_COLOR_DARK_GRAY "\033[1;30m"
+#define LOG_COLOR_BLUE "\033[0;34m"
+#define LOG_COLOR_LIGHT_BLUE "\033[1;34m"
+#define LOG_COLOR_GREEN "\033[0;32m"
+#define LOG_COLOR_LIGHT_GREEN "\033[1;32m"
+#define LOG_COLOR_CYAN "\033[0;36m"
+#define LOG_COLOR_LIGHT_CYAN "\033[1;36m"
+#define LOG_COLOR_RED "\033[0;31m"
+#define LOG_COLOR_LIGHT_RED "\033[1;31m"
+#define LOG_COLOR_PURPLE "\033[0;35m"
+#define LOG_COLOR_LIGHT_PURPLE "\033[1;35m"
+#define LOG_COLOR_BROWN "\033[0;33m"
+#define LOG_COLOR_YELLOW "\033[1;33m"
+#define LOG_COLOR_LIGHT_GRAY "\033[0;37m"
+#define LOG_COLOR_WHITE "\033[1;37m"
 
-	cmp ip, #0
-	beq 0f	
-	bx ip
-0:
-	bx lr
+#define LOG_FMT "%s%s\033[0m"
+
+void error_log(char* fmt, ...);
+void debug_log(char* fmt, ...);
+void runtime_log(char* fmt, ...);
+//with tags
+void error_logt(char* tag, char* fmt, ...);
+void debug_logt(char* tag, char* fmt, ...);
+void runtime_logt(char* tag, char* fmt, ...);

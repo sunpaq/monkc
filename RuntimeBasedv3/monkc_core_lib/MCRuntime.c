@@ -1,4 +1,4 @@
-	/*
+/*
 Copyright (c) <2013>, <Sun Yuli>
 All rights reserved.
 
@@ -27,35 +27,42 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "MCRuntime.h"
 
+/*
+	Pre declears
+*/
+
+extern unsigned _hash(const char *s);
+extern unsigned _chash(const char *s);
+extern void _init_vector_stack();
+extern void _init_wector_stack();
+extern void _init_class_list();
+extern void _clear_class_list();
+
 static const int NOT_RESPONSE = -1;
-
-static MCClass* mc_classobj_pool[MAX_CLASS_NUM];
-static inline MCClass* get_class(const char* name_in);
-static void _init_class_list();
-static void _clear_class_list();
-
+static unsigned _response_to_method(MCClass* const self_in, unsigned hashkey);
 static void _nil_check(id const self, 
 	char* log1, char* log2, char* log3, 
 	char* log4, char* log5, char* log6, pthread_mutex_t* lock);
-static void _clear_method_list(MCClass* const class);
-static unsigned _response_to_method(MCClass* const self_in, unsigned hashkey);
 
-//object pool for annoymous objects
-static MCObject* mc_anony_pool[100];
+/*
+	Anonymous objects pool for automatic memory management
+*/
+
+static MCObject* mc_anony_pool[ANONY_POOL_SIZE];
 static unsigned mc_anony_count = 0;
 static void _init_anony_pool()
 {
 	int i;
-	for (i = 0; i < 100; i++)
+	for (i = 0; i < ANONY_POOL_SIZE; i++)
 		mc_anony_pool[i]=nil;
 }
 
-static void _push_anony_obj(MCObject* anony)
+void _push_anony_obj(MCObject* anony)
 {
 	if(anony==nil)return;
 
 	mc_anony_count++;
-	if(mc_anony_count > 100) mc_anony_count=0;
+	if(mc_anony_count > ANONY_POOL_SIZE) mc_anony_count=0;
 	if(mc_anony_pool[mc_anony_count] != nil)
 		relnil(mc_anony_pool[mc_anony_count]);
 	
@@ -68,9 +75,13 @@ static void _pop_anony_obj(MCObject* anony)
 {
 	if(anony==nil)return;
 	int i;
-	for (i = 0; i < 100; i++)
+	for (i = 0; i < ANONY_POOL_SIZE; i++)
 		if(mc_anony_pool[i]==anony)mc_anony_pool[i]=nil;
 }
+
+/*
+	Runtime Start and End
+*/
 
 void mc_init()
 {
@@ -88,7 +99,9 @@ void mc_init()
 	//default we set log level to debug
 	LOG_LEVEL = DEBUG;
 	_init_class_list();
-	//_init_float_pool();
+	_init_anony_pool();
+	_init_vector_stack();
+	_init_wector_stack();
 }
 
 void mc_end()
@@ -100,121 +113,13 @@ void mc_end()
 	_clear_class_list();
 }
 
-void MCObject_doNothing(id const this, unsigned hashkey, xxx)
-{
-	//do nothing
-}
-
-void MCObject_bye(id this, unsigned hashkey, xxx)
-{
-	//do nothing
-}
-
-id MCObject_init(id const this, unsigned hashkey, xxx)
-{
-	//do nothing
-	this->isa = get_class("MCObject");
-	return this;
-}
-
-void MCObject_whatIsYourClassName(id const this, unsigned hashkey, xxx)
-{
-	if(this != nil && this->isa != nil)
-		debug_log("My class name is:%s\n", this->isa->name);
-}
-
-static void load_root_class(){
-	MCClass* class = (MCClass*)mc_malloc(sizeof(MCClass));
-	class->name = "MCObject";
-	class->super = nil;
-	//bind the builtin MCObject methods
-	class->method_list[_hash("doNothing")]=MCObject_doNothing;
-	class->method_list[_hash("whatIsYourClassName")]=MCObject_whatIsYourClassName;
-	class->method_list[_hash("bye")]=MCObject_bye;
-
-	//load the MCObject class
-	mc_classobj_pool[_chash("MCObject")] = class;
-}
-
-pthread_mutex_t _mc_runtime_mutex = PTHREAD_MUTEX_INITIALIZER;
-static MCClass* load_class(const char* name_in, const char* super_class)
-{
-	//pthread_mutex_lock(&_mc_runtime_mutex);
-	MCClass* oldclass;
-	if ((oldclass=get_class(name_in)) != nil){
-		error_log("class name:%s hash is conflict with class name:%s hash.\n", name_in, oldclass->name);
-		exit(-1);
-	}
-
-	int super_hashkey = _chash(super_class);
-
-	MCClass* superclass = mc_classobj_pool[super_hashkey];
-	if(superclass == nil){
-		error_log("there is no superclass %s.please load it first!\n", super_class);
-		exit(-1);
-	}
-
-	MCClass* class = (MCClass*)mc_malloc(sizeof(MCClass));
-
-	//set the class name
-	class->name = name_in;
-	class->super = superclass;
-	class->method_count = 0;
-
-	//conflict check
-	int hashkey = _chash(name_in);
-	if(mc_classobj_pool[hashkey] != nil){
-		error_log("load_class(%s, %s) - name hash value conflict.\nplease change a name\n", name_in, super_class);
-		exit(-1);
-	}
-
-	_clear_method_list(class);
-	mc_classobj_pool[hashkey] = class;
-	//pthread_mutex_unlock(&_mc_runtime_mutex);
-	return class;
-}
-
-static inline MCClass* get_class(const char* name_in)
-{
-	int hashkey = _chash(name_in);
-	return mc_classobj_pool[hashkey];
-}
-
-BOOL set_class(id const self_in, const char* classname, const char* superclassname)
-{
-	pthread_mutex_lock(&_mc_runtime_mutex);
-	if (self_in == nil)
-	{
-		error_log("set_class(obj, classname).obj should not be nil\n");
-		exit(-1);
-	}
-
-	if(self_in->need_bind_method != YES){
-		runtime_log("super_init: %s no need bind methods\n",classname);
-		pthread_mutex_unlock(&_mc_runtime_mutex);
-		return NO;
-	}
-
-	runtime_log("set_class: %s->%s\n", classname ,superclassname);
-
-	//load class
-	MCClass* class;
-	if ((class = get_class(classname)) != nil)
-	{
-		runtime_log("class: %s already loaded\n",classname);
-		self_in->isa = class;
-		pthread_mutex_unlock(&_mc_runtime_mutex);
-		return NO;
-	}else{
-		runtime_log("load_class: %s\n", classname);
-		class = load_class(classname, superclassname);
-		self_in->isa = class;
-		pthread_mutex_unlock(&_mc_runtime_mutex);
-		return YES;
-	}
-}
+/*
+	Memory Management Part
+*/
 
 pthread_mutex_t _mc_mm_mutex = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t _mc_runtime_mutex = PTHREAD_MUTEX_INITIALIZER;
+
 void release(id const this)
 {
 	pthread_mutex_lock(&_mc_mm_mutex);
@@ -302,6 +207,10 @@ void _relnil(MCObject** const this)
 	release(*this);
 	(*this) = nil;
 }
+
+/*
+	Method Binding and Reflection Part
+*/
 
 unsigned _binding(id const self, unsigned hashkey, _FunctionPointer(value))
 {
@@ -392,67 +301,9 @@ BOOL _response(id const obj, unsigned hashkey)
 	return YES;
 }
 
-/* copy form << The C Programming language >> */
-unsigned _hash(const char *s)
-{
-	//runtime_log("hash(%s) --- ", s);
-	unsigned hashval;
-	for(hashval = 0; *s != '\0'; s++)
-		hashval = *s + 31 * hashval;
-	return hashval % MAX_METHOD_NUM;
-}
-
-//class obj hash
-unsigned _chash(const char *s)
-{
-	unsigned hashval;
-	for(hashval = 0; *s != '\0'; s++)
-		hashval = *s + 31 * hashval;
-	return hashval % MAX_CLASS_NUM;
-}
-
-static inline void _nil_check(id const self, 
-	char* log1, char* log2, char* log3, 
-	char* log4, char* log5, char* log6,
-	pthread_mutex_t* lock){
-	if(self == nil){
-		error_log("%s:\n%s\n%s\n", log1, log2, log3);
-		if(lock != nil)pthread_mutex_unlock(lock);
-		exit(-1);
-	}
-	if(self->isa == nil){
-		error_log("%s:\n%s\n%s\n", log4, log5, log6);
-		if(lock != nil)pthread_mutex_unlock(lock);
-		exit(-1);
-	}
-}
-
-static inline void _clear_method_list(MCClass* const class)
-{
-	int i;
-	for (i = 0; i < MAX_METHOD_NUM; i++){
-		class->method_list[i] = nil;
-	}
-}
-
-static void _init_class_list()
-{
-	int i;
-	for (i = 0; i < MAX_CLASS_NUM; i++){
-		mc_classobj_pool[i] = nil;
-	}
-
-	load_root_class();
-}
-
-static void _clear_class_list()
-{
-	int i;
-	for (i = 0; i < MAX_CLASS_NUM; i++){
-		MCClass* tmp = mc_classobj_pool[i];
-		if(tmp!=nil)mc_free(tmp);
-	}
-}
+/*
+	Method calling
+*/
 
 static inline unsigned _response_to_method(MCClass* const cls, unsigned hashkey)
 {
@@ -465,59 +316,6 @@ static inline unsigned _response_to_method(MCClass* const cls, unsigned hashkey)
 		return hashkey;
 	}
 }
-
-pthread_mutex_t _mc_alloc_mutex = PTHREAD_MUTEX_INITIALIZER;
-void* mc_malloc(size_t size)
-{
-	pthread_mutex_lock(&_mc_alloc_mutex);
-		void* ret = malloc(size);
-		((MCObject*)ret)->ref_count = 1;
-	pthread_mutex_unlock(&_mc_alloc_mutex);
-	return ret;
-}
-
-void* mc_malloc_anony(size_t size)
-{
-	pthread_mutex_lock(&_mc_alloc_mutex);
-		void* ret = malloc(size);
-		((MCObject*)ret)->ref_count = REFCOUNT_ANONY_OBJ;
-		_push_anony_obj((MCObject*)ret);
-	pthread_mutex_unlock(&_mc_alloc_mutex);
-	return ret;
-}
-
-void* mc_calloc(size_t size)
-{
-	pthread_mutex_lock(&_mc_alloc_mutex);
-		void* ret = calloc(1, size);
-		((MCObject*)ret)->ref_count = 1;
-	pthread_mutex_unlock(&_mc_alloc_mutex);
-	return ret;
-}
-
-void* mc_realloc(void* ptr, size_t size)
-{
-	pthread_mutex_lock(&_mc_alloc_mutex);
-		void* ret = realloc(ptr, size);
-	pthread_mutex_unlock(&_mc_alloc_mutex);
-	return ret;
-}
-
-pthread_mutex_t _mc_free_mutex = PTHREAD_MUTEX_INITIALIZER;
-void mc_free(void *ptr)
-{
-	pthread_mutex_lock(&_mc_free_mutex);
-		free(ptr);
-	pthread_mutex_unlock(&_mc_free_mutex);
-}
-
-/*
-alternative allocators in APUE
-1. libmalloc
-2. vmalloc
-3. quick-fit
-4. alloca ---> can alloc mem on stack
-*/
 
 void* _resolve_method(id const obj, const unsigned hashkey)
 {
@@ -556,87 +354,20 @@ void* _resolve_method(id const obj, const unsigned hashkey)
 	return cls_iterator->method_list[res];
 }
 
-static char log_buf[1024];
-void error_log(char* fmt, ...)
-{
-	if(LOG_LEVEL != SILENT){
-		printf(LOG_FMT, LOG_COLOR_RED, "[Error] - ");
-		va_list ap;
-		va_start(ap, fmt);
-			vsprintf(log_buf, fmt, ap);
-			printf("%s", log_buf);
-		va_end(ap);
+//the _ff() function is implement in assemblly language in folder /MCRuntimeAsm
+
+static inline void _nil_check(id const self, 
+	char* log1, char* log2, char* log3, 
+	char* log4, char* log5, char* log6,
+	pthread_mutex_t* lock){
+	if(self == nil){
+		error_log("%s:\n%s\n%s\n", log1, log2, log3);
+		if(lock != nil)pthread_mutex_unlock(lock);
+		exit(-1);
 	}
-}
-
-void debug_log(char* fmt, ...)
-{
-	if(LOG_LEVEL != SILENT
-	 &&LOG_LEVEL != ERROR_ONLY){
-		printf(LOG_FMT, LOG_COLOR_LIGHT_BLUE, "[Debug] - ");
-		va_list ap;
-		va_start(ap, fmt);
-			vsprintf(log_buf, fmt, ap);
-			printf("%s", log_buf);
-		va_end(ap);
-	}
-}
-
-void runtime_log(char* fmt, ...)
-{
-	if(LOG_LEVEL != SILENT
-	 &&LOG_LEVEL != ERROR_ONLY
-	 &&LOG_LEVEL != DEBUG){
-		printf(LOG_FMT, LOG_COLOR_DARK_GRAY, "[RTime] - ");
-		va_list ap;
-		va_start(ap, fmt);
-			vsprintf(log_buf, fmt, ap);
-			printf("%s", log_buf);
-		va_end(ap);
-	}
-}
-
-void error_logt(char* tag, char* fmt, ...)
-{
-	if(LOG_LEVEL != SILENT){
-		printf(LOG_FMT, LOG_COLOR_RED, "[Error] - ");
-		printf(LOG_FMT, LOG_COLOR_DARK_GRAY, tag);
-
-		va_list ap;
-		va_start(ap, fmt);
-			vsprintf(log_buf, fmt, ap);
-			printf("%s", log_buf);
-		va_end(ap);
-	}
-}
-
-void debug_logt(char* tag, char* fmt, ...)
-{
-	if(LOG_LEVEL != SILENT
-	 &&LOG_LEVEL != ERROR_ONLY){
-		printf(LOG_FMT, LOG_COLOR_LIGHT_BLUE, "[Debug] - ");
-		printf(LOG_FMT, LOG_COLOR_DARK_GRAY, tag);
-
-		va_list ap;
-		va_start(ap, fmt);
-			vsprintf(log_buf, fmt, ap);
-			printf("%s", log_buf);
-		va_end(ap);
-	}
-}
-
-void runtime_logt(char* tag, char* fmt, ...)
-{
-	if(LOG_LEVEL != SILENT
-	 &&LOG_LEVEL != ERROR_ONLY
-	 &&LOG_LEVEL != DEBUG){
-		printf(LOG_FMT, LOG_COLOR_DARK_GRAY, "[RTime] - ");
-		printf(LOG_FMT, LOG_COLOR_DARK_GRAY, tag);
-
-		va_list ap;
-		va_start(ap, fmt);
-			vsprintf(log_buf, fmt, ap);
-			printf("%s", log_buf);
-		va_end(ap);
+	if(self->isa == nil){
+		error_log("%s:\n%s\n%s\n", log4, log5, log6);
+		if(lock != nil)pthread_mutex_unlock(lock);
+		exit(-1);
 	}
 }

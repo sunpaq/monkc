@@ -16,17 +16,17 @@
 
 #include "MCUnitTest.h"
 
-void mocha_syntex_test(Handle(MCContext) const context);
-void menu_drive_test(Handle(MCContext) const context);
+void mocha_syntex_test(MCContext* context);
+void menu_drive_test(MCContext* context);
 void mocha_lib_test();
 void mocha_serversocket_test();
-void mocha_clientsocket_test(Handle(MCContext) const context);
+void mocha_clientsocket_test(MCContext* context);
 void mocha_exception_test();
 void test_MCThread();
 void test_MCProcess();
 void test_ffi();
 
-void test(Handle(MCContext) const context);
+void test(MCContext* context);
 
 extern void function();
 
@@ -53,7 +53,7 @@ int main(int argc, char const *argv[])
 	return 0;
 }
 
-void test(Handle(MCContext) const context)
+void test(MCContext* context)
 {
 	//pre load some classes
 	printf("%s\n", "----------");
@@ -138,7 +138,7 @@ void test_MCClock()
 {
 	printf("---- test_MCClock START ----\n");
 	//test MCClock
-	Handle(MCClock) myclock = new(MCClock, nil);
+	MCClock* myclock = new(MCClock, nil);
 	char* gmtnow = ff(myclock, getCurrentGMTTimeString, nil);
 	char* now = ff(myclock, getCurrentTimeString, nil);
 
@@ -181,7 +181,7 @@ void test_MCProcess()
 	printf("---- test_MCProcess START ----\n");
 
 	//test MCProcess
-	Handle(MCProcess) p = new(MCProcess, nil);
+	MCProcess* p = new(MCProcess, nil);
 		ff(p, printIDs, nil);
 	relnil(p);
 
@@ -491,7 +491,7 @@ void mocha_serversocket_test()
 	release(server);
 }
 
-void mocha_clientsocket_test(Handle(MCContext) const context)
+void mocha_clientsocket_test(MCContext* context)
 {
 	MCSocket* client = new(MCSocket, MCSocket_Client_TCP, "127.0.0.1", "4000");
 
@@ -510,7 +510,7 @@ void mocha_clientsocket_test(Handle(MCContext) const context)
 	release(client);
 }
 
-void menu_drive_test(Handle(MCContext) const context)
+void menu_drive_test(MCContext* context)
 {
 	int selection = call(context, MCContext, showMenuAndGetSelectionChar, 3, "male", "female", "double");
 	//printf("selection is: %c\n", putchar(selection));
@@ -542,7 +542,7 @@ void menu_drive_test(Handle(MCContext) const context)
 
 
 
-void mocha_syntex_test(MCContext* const context)
+void mocha_syntex_test(MCContext* context)
 {
 	//output all cmdline parameters
 	ff(context, dumpParas, nil);
@@ -567,8 +567,8 @@ void mocha_syntex_test(MCContext* const context)
 	new_onstack(VTable, nil);
 
 	//get singleton instance test
-	Handle(VTable) ret2= VTable_getInstance();
-	Handle(VTable) ret = VTable_getInstance();
+	VTable* ret2= VTable_getInstance();
+	VTable* ret = VTable_getInstance();
 
 	//call by string
 	ff(VTable_getInstance(), draw, nil);
@@ -577,7 +577,7 @@ void mocha_syntex_test(MCContext* const context)
 	ff(ret, erase, nil);
 	ff(ret, redraw, nil);
 
-	Handle(VTableSuper) ret_father = new(VTableSuper, nil);
+	VTableSuper* ret_father = new(VTableSuper, nil);
 	ff(ret_father, draw, nil);
 	ff(ret_father, erase, nil);
 	ff(ret_father, redraw, nil);
@@ -585,7 +585,7 @@ void mocha_syntex_test(MCContext* const context)
 	//nested method call
 	ff(ret, bmethod, 
 		ff(ret, amethod, nil),
-		3.1415, "this is amethod");
+		pushv(3.1415), "this is amethod");
 
 	//inherit test
 	ff(ret, show, YES, "this is a super method called by child:VTable");
@@ -596,7 +596,7 @@ void mocha_syntex_test(MCContext* const context)
 	ff(new_anony(VTableSuper, nil), draw, nil);
 
 	//polymorphism test
-	Handle(Bird) birdArray[3]={new_anony(Bird, DUCK_TYPE), new_anony(Bird, CHICKEN_TYPE), new_anony(Bird, NONE)};
+	Bird* birdArray[3]={new_anony(Bird, DUCK_TYPE), new_anony(Bird, CHICKEN_TYPE), new_anony(Bird, NONE)};
 	int i;
 	for (i = 0; i < 3; ++i)
 	{
@@ -608,9 +608,9 @@ void mocha_syntex_test(MCContext* const context)
 	ff(new_anony(Bird, NONE),         fly, nil);
 
 	//side effect: class method list change dynamically
-	Handle(Bird) b1 = new(Bird, DUCK_TYPE);
-	Handle(Bird) b2 = new(Bird, CHICKEN_TYPE);
-	Handle(Bird) b3 = new(Bird, NONE);
+	Bird* b1 = new(Bird, DUCK_TYPE);
+	Bird* b2 = new(Bird, CHICKEN_TYPE);
+	Bird* b3 = new(Bird, NONE);
 
 	ff(b1, fly, nil);
 	ff(b2, fly, nil);
@@ -625,7 +625,7 @@ void mocha_syntex_test(MCContext* const context)
 	//}
 
 	//response
-	Handle(Bird) abird = new(Bird, DUCK_TYPE);
+	Bird* abird = new(Bird, DUCK_TYPE);
 	if (response(abird, whatIsYourClassName))
 		ff(abird, whatIsYourClassName, nil);
 
@@ -638,8 +638,8 @@ void test_ffi()
 	VTable* tobeinvoke = new(VTable, nil);
 	char* socool = "so cool";
 
-	ff(tobeinvoke, bmethod, 10, 9.99, "so cool");
-	ff(tobeinvoke, cmethod, 10, 9.88, socool);
+	ff(tobeinvoke, bmethod, 10, pushv(9.99), "so cool");
+	ff(tobeinvoke, cmethod, 10, pushv(9.88), socool);
 
 	relnil(tobeinvoke);
 }

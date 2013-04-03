@@ -16,6 +16,79 @@ static unsigned _response_to_method(MCClass* const self_in, unsigned hashkey);
 static inline void _prepare_ffi_call(int count, MCTYPES types[], MCClass* class, unsigned key,  _FunctionPointer(funcptr));
 static inline void _cache_method(id obj, unsigned resultkey, MCMethodSign* resultvalue);
 
+//VectorStacks
+static const int VEC_STACK_SIZE = 10;
+static int current_vector = 0;
+static int current_vector2 = 0;
+static int current_vector3 = 0;
+static int current_vector4 = 0;
+
+static vector vector_stack[VEC_STACK_SIZE];
+static vector2 vector2_stack[VEC_STACK_SIZE];
+static vector3 vector3_stack[VEC_STACK_SIZE];
+static vector4 vector4_stack[VEC_STACK_SIZE];
+static void _init_vector_stack()
+{
+	int i;
+	for (i = 0; i < VEC_STACK_SIZE; i++)
+	{
+		vector_stack[i] = 0.0f;
+		vector2_stack[i] = {0.0f, 0.0f};
+		vector3_stack[i] = {0.0f, 0.0f, 0.0f};
+		vector4_stack[i] = {0.0f, 0.0f, 0.0f, 0.0f};
+	}
+}
+
+vector* vector(vector f)
+{
+	if(current_vector >= VEC_STACK_SIZE)
+		current_vector=0;
+
+	vector_stack[current_vector]=f;
+	vector* ret = &vector_stack[current_vector];
+	current_vector++;
+	return ret;
+}
+
+vector2* vector2(vector x, vector y)
+{
+	if(current_vector2 >= VEC_STACK_SIZE)
+		current_vector2=0;
+
+	vector2 v2 = {x, y};
+
+	vector2_stack[current_vector2]=v2;
+	vector2* ret = &vector2_stack[current_vector2];
+	current_vector2++;
+	return ret;
+}
+
+vector3* vector3(vector x, vector y, vector z)
+{
+	if(current_vector3 >= VEC_STACK_SIZE)
+		current_vector3=0;
+
+	vector3 v3 = {x, y, z};
+
+	vector3_stack[current_vector3]=v3;
+	vector3* ret = &vector3_stack[current_vector3];
+	current_vector3++;
+	return ret;
+}
+
+vector4* vector4(vector x, vector y, vector z, vector t)
+{
+	if(current_vector4 >= VEC_STACK_SIZE)
+		current_vector4=0;
+
+	vector4 v4 = {x, y, z, t};
+
+	vector4_stack[current_vector4]=v4;
+	vector4* ret = &vector4_stack[current_vector4];
+	current_vector4++;
+	return ret;
+}
+
 void mc_init()
 {
 	#ifndef __GNUC__
@@ -32,6 +105,7 @@ void mc_init()
 	//default we set log level to debug
 	LOG_LEVEL = DEBUG;
 	_init_class_list();
+	_init_vector_stack();
 }
 
 void mc_end()

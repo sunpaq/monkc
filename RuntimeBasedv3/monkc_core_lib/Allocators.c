@@ -25,20 +25,62 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-.text
-.globl _ff
-.align 8
-_ff:
-	stmfd sp!, {a1-a4,fp,lr}
-	add fp, sp, #4
+#include "MCRuntime.h"
 
-	bl _resolve_method
-	mov ip, a1
+/*
+	Memory Allocators
 
-	ldmfd sp!, {a1-a4,fp,lr}
+	alternative allocators in APUE
+	1. libmalloc
+	2. vmalloc
+	3. quick-fit
+	4. alloca ---> can alloc mem on stack
+*/
 
-	cmp ip, #0
-	beq 0f	
-	bx ip
-0:
-	bx lr
+pthread_mutex_t _mc_alloc_mutex = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t _mc_free_mutex = PTHREAD_MUTEX_INITIALIZER;
+
+void* mc_malloc(size_t size)
+{
+	pthread_mutex_lock(&_mc_alloc_mutex);
+		void* ret = malloc(size);
+		((MCObject*)ret)->ref_count = 1;
+	pthread_mutex_unlock(&_mc_alloc_mutex);
+	return ret;
+}
+
+extern void _push_anony_obj(MCObject* anony);
+void* mc_malloc_anony(size_t size)
+{
+	pthread_mutex_lock(&_mc_alloc_mutex);
+		void* ret = malloc(size);
+		((MCObject*)ret)->ref_count = REFCOUNT_ANONY_OBJ;
+		_push_anony_obj((MCObject*)ret);
+	pthread_mutex_unlock(&_mc_alloc_mutex);
+	return ret;
+}
+
+void* mc_calloc(size_t size)
+{
+	pthread_mutex_lock(&_mc_alloc_mutex);
+		void* ret = calloc(1, size);
+		((MCObject*)ret)->ref_count = 1;
+	pthread_mutex_unlock(&_mc_alloc_mutex);
+	return ret;
+}
+
+void* mc_realloc(void* ptr, size_t size)
+{
+	pthread_mutex_lock(&_mc_alloc_mutex);
+		void* ret = realloc(ptr, size);
+	pthread_mutex_unlock(&_mc_alloc_mutex);
+	return ret;
+}
+
+void mc_free(void *ptr)
+{
+	pthread_mutex_lock(&_mc_free_mutex);
+		free(ptr);
+	pthread_mutex_unlock(&_mc_free_mutex);
+}
+

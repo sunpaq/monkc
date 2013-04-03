@@ -25,20 +25,28 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-.text
-.globl _ff
-.align 8
-_ff:
-	stmfd sp!, {a1-a4,fp,lr}
-	add fp, sp, #4
+#include "MCRuntime.h"
 
-	bl _resolve_method
-	mov ip, a1
+/*
+	Tools Part: Hash and nil pointer check
+*/
 
-	ldmfd sp!, {a1-a4,fp,lr}
+//copy form << The C Programming language >>
+unsigned _hash(const char *s)
+{
+	//runtime_log("hash(%s) --- ", s);
+	unsigned hashval;
+	for(hashval = 0; *s != '\0'; s++)
+		hashval = *s + 31 * hashval;
+	return hashval % MAX_METHOD_NUM;
+}
 
-	cmp ip, #0
-	beq 0f	
-	bx ip
-0:
-	bx lr
+//class obj hash
+unsigned _chash(const char *s)
+{
+	unsigned hashval;
+	for(hashval = 0; *s != '\0'; s++)
+		hashval = *s + 31 * hashval;
+	return hashval % MAX_CLASS_NUM;
+}
+
