@@ -20,7 +20,7 @@ TestMCClock.o:TestMCClock.c TestMCClock.h
 	$(CC) -c TestMCClock.c $(LINK_HEAD)
 
 clean:
-	rm -f exec $(OBJS)
+	rm -f exec $(OBJS) core
 
 dump:
 	ulimit -c unlimited

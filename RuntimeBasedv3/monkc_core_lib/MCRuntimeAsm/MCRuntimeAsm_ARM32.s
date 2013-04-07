@@ -30,9 +30,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .align 8
 _ff:
 	stmfd sp!, {a1-a4,fp,lr}
-	add fp, sp, #4
 
-	bl _resolve_method
+	bl _response_to
 	mov ip, a1
 
 	ldmfd sp!, {a1-a4,fp,lr}

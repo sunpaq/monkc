@@ -41,7 +41,7 @@ you can check the origin main code at MCRuntime.c line:27
 int main(int argc, char const *argv[])
 {
 	mc_init();
-	LOG_LEVEL = DEBUG;
+	LOG_LEVEL = VERBOSE;
 	MCContext* context = new(MCContext, argc, argv);
 
 	for(;;)
@@ -57,7 +57,7 @@ void test(MCContext* context)
 {
 	//pre load some classes
 	printf("%s\n", "----------");
-	// debug_log("%s\n", "preload some classes:");
+	debug_log("%s\n", "preload some classes:");
 
 	preload(Bird, DUCK_TYPE);
 	preload(MCClock, nil);
@@ -596,25 +596,25 @@ void mocha_syntex_test(MCContext* context)
 	ff(new_anony(VTableSuper, nil), draw, nil);
 
 	//polymorphism test
-	Bird* birdArray[3]={new_anony(Bird, DUCK_TYPE), new_anony(Bird, CHICKEN_TYPE), new_anony(Bird, NONE)};
-	int i;
-	for (i = 0; i < 3; ++i)
-	{
-		ff(birdArray[i], fly, nil);
-	}
+	// Bird* birdArray[3]={new_anony(Bird, DUCK_TYPE), new_anony(Bird, CHICKEN_TYPE), new_anony(Bird, NONE)};
+	// int i;
+	// for (i = 0; i < 3; i++)
+	// {
+	// 	ff(birdArray[i], fly, nil);
+	// }
 
-	ff(new_anony(Bird, DUCK_TYPE),    fly, nil);
-	ff(new_anony(Bird, CHICKEN_TYPE), fly, nil);
-	ff(new_anony(Bird, NONE),         fly, nil);
+	// ff(new_anony(Bird, DUCK_TYPE),    fly, nil);
+	// ff(new_anony(Bird, CHICKEN_TYPE), fly, nil);
+	// ff(new_anony(Bird, NONE),         fly, nil);
 
 	//side effect: class method list change dynamically
-	Bird* b1 = new(Bird, DUCK_TYPE);
-	Bird* b2 = new(Bird, CHICKEN_TYPE);
-	Bird* b3 = new(Bird, NONE);
+	// Bird* b1 = new(Bird, DUCK_TYPE);
+	// Bird* b2 = new(Bird, CHICKEN_TYPE);
+	// Bird* b3 = new(Bird, NONE);
 
-	ff(b1, fly, nil);
-	ff(b2, fly, nil);
-	ff(b3, fly, nil);
+	// ff(b1, fly, nil);
+	// ff(b2, fly, nil);
+	// ff(b3, fly, nil);
 
 	//clean up controlled by cmdline parameter
 	//if(ff(context, isHavePara, "--release")){
@@ -626,7 +626,7 @@ void mocha_syntex_test(MCContext* context)
 
 	//response
 	Bird* abird = new(Bird, DUCK_TYPE);
-	if (response(abird, whatIsYourClassName))
+	if (response_to(abird, whatIsYourClassName))
 		ff(abird, whatIsYourClassName, nil);
 
 	ff(abird, youCanNotResponseThis, nil);

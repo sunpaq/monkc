@@ -26,7 +26,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 #ifndef VEC_STACK_SIZE
-#define VEC_STACK_SIZE 10
+#define VEC_STACK_SIZE 100
 #endif
 
 //the types can not be used in Monk-C method arguments:

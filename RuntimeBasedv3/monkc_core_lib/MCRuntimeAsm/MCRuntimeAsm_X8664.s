@@ -56,7 +56,7 @@ __ff:
 
 	//save stack registers
 	pushq %rbp
-	movq %rsp %rbp
+	movq %rsp, %rbp
 	//va arguments function call need the %rax to be the count of SSE(float, double) type argument
 	pushq %rax
 	//save the parameters
@@ -72,8 +72,8 @@ __ff:
 	//both pointer and int type are machine type INTEGER
 	//the _resolve_method deal with no floating point data. so no need to save xmm0~xmm15
 	//return value will in the %rax
-	call __resolve_method
-	movq %rax %r10
+	call __response_to
+	movq %rax, %r10
 
 	//restore parameters
 	popq %r9
@@ -85,7 +85,7 @@ __ff:
 	//restore count of float
 	popq %rax
 	//restore stack registers
-	movq %rbp %rsp
+	movq %rbp, %rsp
 	popq %rbp
 	//confirm return address not nil
 	cmpq $0, %r10
@@ -97,3 +97,45 @@ __ff:
 	jmp	*%r10
 0:
 	ret
+
+
+.text
+.globl	_mc_compareAndSwap
+.align	8, 0x90
+
+_mc_compareAndSwap:
+
+	pushq %rbp
+	movq %rsp, %rbp
+	//rdi addr
+	//rsi oldval
+	//rdx newval
+
+	//dest addr in edx
+	//old value in eax
+	movl %esi, %eax
+	shrq $32, %rsi
+	movl %esi, %edx
+
+	movl %edx, %ebx
+	shrq $32, %rdx
+	movl %edx, %ecx
+	//new value in ecx
+	//atomic compare and swap
+	lock cmpxchg8b (%rdi)
+	jne	.false
+
+	movq $0, %rax
+
+	movq %rbp, %rsp
+	popq %rbp
+	ret
+
+.false:
+	movq $-1, %rax
+
+	movq %rbp, %rsp
+	popq %rbp
+	ret
+
+

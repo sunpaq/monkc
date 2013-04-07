@@ -53,7 +53,8 @@ install:
 	mv /usr/local/include/lemontea/*.a /usr/local/lib/
 
 clean:
-	rm -f $(LIBOBJS) lemontea.tar.gz -r lemontea
+	rm -f $(LIBOBJS) lemontea.tar.gz 
+	rm -f -r lemontea
 
 dump:
 	ulimit -c unlimited

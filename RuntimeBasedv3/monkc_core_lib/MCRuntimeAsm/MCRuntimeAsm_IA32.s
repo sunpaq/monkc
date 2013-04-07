@@ -41,7 +41,7 @@ _ff:
 	//pass parameters
 	pushl 12(%ebp)
 	pushl 8(%ebp)
-	call _resolve_method
+	call _response_to
 	addl $8, %esp
 	//restore stack pointers
 	movl %ebp, %esp
@@ -55,4 +55,42 @@ _ff:
 	//stack frame of method() is prepared by caller of ff() and cleaned by it.
 	jmp	*%eax
 0:
+	ret
+
+
+.text
+.globl	mc_compareAndSwap
+.align	16, 0x90
+.type	mc_compareAndSwap, @function
+
+mc_compareAndSwap:
+
+#start
+	pushl %ebp
+	movl %esp, %ebp
+	#8(%ebp)  addr
+	#12(%ebp) oldval
+	#16(%ebp) newval
+
+	#dest addr in edx
+	movl 8(%ebp), %edx
+	#old value in eax
+	movl 12(%ebp), %eax
+	#new value in ecx
+	movl 16(%ebp), %ecx
+	#atomic compare and swap
+	lock cmpxchgl %ecx, (%edx)
+	jne	.false
+
+#true
+	movl $0, %eax
+
+	movl %ebp, %esp
+	popl %ebp
+	ret
+.false:
+	movl $-1, %eax
+
+	movl %ebp, %esp
+	popl %ebp
 	ret

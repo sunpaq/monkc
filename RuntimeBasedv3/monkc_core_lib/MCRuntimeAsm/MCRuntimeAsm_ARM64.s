@@ -33,7 +33,7 @@ _ff:
 	add fp, sp, #4
 	//pass parameters via a1, a2
 	//return value will in the a1
-	bl _resolve_method
+	bl _response_to
 	mov ip, a1
 	//restore registers
 	ldmfd sp!, {a1-a4,fp,lr}

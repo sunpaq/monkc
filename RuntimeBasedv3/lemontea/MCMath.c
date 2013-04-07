@@ -13,6 +13,8 @@ constructor(MCMath, xxx)
 
 method(MCMath, bye, xxx)
 {
+	call(this, MCObject, bye, nil);
+
 	debug_log("%s\n", "MCMath bye bye");
 }
 

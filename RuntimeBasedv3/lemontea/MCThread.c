@@ -113,6 +113,7 @@ method(MCThread, equal, MCThread* thread)
 
 method(MCThread, bye, xxx)
 {
+	call(this, MCObject, bye, nil);
 	pthread_attr_destroy(&this->attribute);
 	relnil(this->runnable);
 }

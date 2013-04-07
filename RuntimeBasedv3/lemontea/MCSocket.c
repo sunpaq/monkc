@@ -20,6 +20,8 @@ method(MCSocketClientInfo, dumpInfo, xxx)
 method(MCSocketClientInfo, bye, xxx)
 {
 	//nothing to do
+
+	call(this, MCObject, bye, nil);
 }
 
 constructor(MCSocket, MCSocketType socket_type, char* ip, char* port)
@@ -115,6 +117,7 @@ static void create_and_bind_socket(MCSocket* this, MCSocketType socket_type, cha
 
 method(MCSocket, bye, xxx)
 {
+	call(this, MCObject, bye, nil);
 	//
 	close(this->sfd);
 }

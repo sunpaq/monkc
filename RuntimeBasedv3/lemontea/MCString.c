@@ -146,8 +146,9 @@ method(MCString, equalTo, MCString* stringToComp)
 
 method(MCString, bye, xxx)
 {
+	call(this, MCObject, bye, nil);
 	//only release the added sub strings.
-	//debug_log("MCString - bye\n");
+	debug_log("MCString - bye\n");
 	MCString *iterator, *save;
 	for(iterator=this->next; (save=iterator)!=nil; mc_free(save)){
 		iterator = iterator->next;

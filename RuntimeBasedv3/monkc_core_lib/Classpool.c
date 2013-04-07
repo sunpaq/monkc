@@ -28,15 +28,15 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "MCRuntime.h"
 
 //extern
-extern pthread_mutex_t _mc_runtime_mutex;
+//extern pthread_mutex_t _mc_runtime_mutex;
 
 //public
 BOOL set_class(id const self_in, const char* classname, const char* superclassname);
 
-void MCObject_doNothing(id const this, unsigned hashkey, xxx);
-void MCObject_bye(id this, unsigned hashkey, xxx);
-id MCObject_init(id const this, unsigned hashkey, xxx);
-void MCObject_whatIsYourClassName(id const this, unsigned hashkey, xxx);
+void MCObject_doNothing(id const this, const char* methodname, xxx);
+void MCObject_bye(id this, const char* methodname, xxx);
+id MCObject_init(id const this, const char* methodname, xxx);
+void MCObject_whatIsYourClassName(id const this, const char* methodname, xxx);
 
 void _init_class_list();
 void _clear_class_list();
@@ -74,7 +74,7 @@ static MCClass* load_class(const char* name_in, const char* super_class)
 		exit(-1);
 	}
 
-	MCClass* class = (MCClass*)mc_malloc(sizeof(MCClass));
+	MCClass* class = (MCClass*)malloc(sizeof(MCClass));
 
 	//set the class name
 	class->name = name_in;
@@ -89,6 +89,7 @@ static MCClass* load_class(const char* name_in, const char* super_class)
 	}
 
 	_clear_method_list(class);
+	//all thread will do the same operation no need lock free
 	mc_classobj_pool[hashkey] = class;
 	//pthread_mutex_unlock(&_mc_runtime_mutex);
 	return class;
@@ -102,7 +103,6 @@ static inline MCClass* _get_class(const char* name_in)
 
 BOOL set_class(id const self_in, const char* classname, const char* superclassname)
 {
-	pthread_mutex_lock(&_mc_runtime_mutex);
 	if (self_in == nil)
 	{
 		error_log("set_class(obj, classname).obj should not be nil\n");
@@ -111,47 +111,45 @@ BOOL set_class(id const self_in, const char* classname, const char* superclassna
 
 	if(self_in->need_bind_method != YES){
 		runtime_log("super_init: %s no need bind methods\n",classname);
-		pthread_mutex_unlock(&_mc_runtime_mutex);
 		return NO;
 	}
 
 	runtime_log("set_class: %s->%s\n", classname ,superclassname);
 
+	//all thread will do the same operation no need lock free
 	//load class
 	MCClass* class;
 	if ((class = _get_class(classname)) != nil)
 	{
 		runtime_log("class: %s already loaded\n",classname);
 		self_in->isa = class;
-		pthread_mutex_unlock(&_mc_runtime_mutex);
 		return NO;
 	}else{
 		runtime_log("load_class: %s\n", classname);
 		class = load_class(classname, superclassname);
 		self_in->isa = class;
-		pthread_mutex_unlock(&_mc_runtime_mutex);
 		return YES;
 	}
 }
 
-void MCObject_doNothing(id const this, unsigned hashkey, xxx)
+void MCObject_doNothing(id const this, const char* methodname, xxx)
 {
 	//do nothing
 }
 
-void MCObject_bye(id this, unsigned hashkey, xxx)
+void MCObject_bye(id this, const char* methodname, xxx)
 {
 	//do nothing
 }
 
-id MCObject_init(id const this, unsigned hashkey, xxx)
+id MCObject_init(id const this, const char* methodname, xxx)
 {
 	//do nothing
 	this->isa = _get_class("MCObject");
 	return this;
 }
 
-void MCObject_whatIsYourClassName(id const this, unsigned hashkey, xxx)
+void MCObject_whatIsYourClassName(id const this, const char* methodname, xxx)
 {
 	if(this != nil && this->isa != nil)
 		debug_log("My class name is:%s\n", this->isa->name);
@@ -159,14 +157,24 @@ void MCObject_whatIsYourClassName(id const this, unsigned hashkey, xxx)
 
 static void _load_root_class()
 {
-	MCClass* class = (MCClass*)mc_malloc(sizeof(MCClass));
+	MCClass* class = (MCClass*)malloc(sizeof(MCClass));
 	class->name = "MCObject";
 	class->super = nil;
 	//bind the builtin MCObject methods
-	class->method_list[_hash("doNothing")]=MCObject_doNothing;
-	class->method_list[_hash("whatIsYourClassName")]=MCObject_whatIsYourClassName;
-	class->method_list[_hash("bye")]=MCObject_bye;
-
+	MCMethod* met1 = (MCMethod*)malloc(sizeof(MCMethod));
+	MCMethod* met2 = (MCMethod*)malloc(sizeof(MCMethod));
+	MCMethod* met3 = (MCMethod*)malloc(sizeof(MCMethod));
+	//init
+	met1->addr = MCObject_doNothing;
+	met1->name = "doNothing";
+	met2->addr = MCObject_whatIsYourClassName;
+	met2->name = "whatIsYourClassName";
+	met3->addr = MCObject_bye;
+	met3->name = "bye";
+	//bind
+	class->method_list[_hash("doNothing")]=met1;
+	class->method_list[_hash("whatIsYourClassName")]=met2;
+	class->method_list[_hash("bye")]=met3;
 	//load the MCObject class
 	mc_classobj_pool[_chash("MCObject")] = class;
 }

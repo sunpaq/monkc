@@ -75,6 +75,8 @@ constructor(MCUnitTestCase, MCUnitTestResult* resultRef)
 
 method(MCUnitTestCase, bye, xxx)
 {
+	call(this, MCObject, bye, nil);
+
 	if(this->unitTestResultRef!=nil)
 		relnil(this->unitTestResultRef);
 }
@@ -163,6 +165,8 @@ constructor(MCUnitTestSuite, xxx)
 
 method(MCUnitTestSuite, bye, xxx)
 {
+	call(this, MCObject, bye, nil);
+
 	MCUnitTestCase *iter, *save;
 	for(iter=this->first_case; (save=iter)!=nil; release(save))
 		iter = iter->next_case;
@@ -205,6 +209,8 @@ constructor(MCUnitTestResult, xxx)
 method(MCUnitTestResult, bye, xxx)
 {
 	//
+	call(this, MCObject, bye, nil);
+
 }
 
 method(MCUnitTestResult, addSuccessInfo, char* succinfo)
@@ -243,6 +249,8 @@ constructor(MCUnitTestRunner, xxx)
 
 method(MCUnitTestRunner, bye, xxx)
 {
+	call(this, MCObject, bye, nil);
+
 	MCUnitTestSuite *iter, *save;
 	for(iter=this->first_suite; (save=iter)!=nil; release(save))
 		iter = iter->next_suite;

@@ -14,7 +14,7 @@ constructor(VTable, xxx) returns(VTable*)
 		#include "DrawableProtocol.h"
 
 	}
-		
+	
 	this->main_color="sliver";
 	//this->info="this is a VTable info";
 	//instance=this;

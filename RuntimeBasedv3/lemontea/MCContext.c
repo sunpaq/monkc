@@ -50,6 +50,8 @@ static void get_chars_until_enter(char resultString[])
 
 method(MCContext, bye, xxx)
 {
+	call(this, MCObject, bye, nil);
+	
 	runtime_log("%s\n", "MCContext goodbye");
 }
 

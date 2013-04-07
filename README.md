@@ -1,7 +1,7 @@
 # Monk-C (Runtime based version)
 a toolkit for OOP programming in C language
 
-
+![Mou icon](https://secure.gravatar.com/avatar/63f7c4c0a269ebaf049724a024bf01b4?s=420&d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-user-420.png)
 
 ## Overview
 
@@ -190,4 +190,3 @@ to our .c files. we use this to simulate some **inherit** and **Polymorphism** f
 
 [^1]: the syntex is improving, maybe more/less keywords in the feature.
 
-![Mou icon](https://secure.gravatar.com/avatar/63f7c4c0a269ebaf049724a024bf01b4?s=420&d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-user-420.png)

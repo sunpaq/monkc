@@ -23,7 +23,7 @@ Bird.o:Bird.c Bird.h
 	$(CC) -c Bird.c $(LINK_HEAD)
 
 clean:
-	rm -f exec $(OBJS)
+	rm -f exec $(OBJS) temp.* stream.txt core 
 
 dump:
 	ulimit -c unlimited

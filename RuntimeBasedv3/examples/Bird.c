@@ -10,15 +10,15 @@ constructor(Bird, int type)
 	}
 
 	//override
-	if(type==DUCK_TYPE){
-		this->name="Bird:Duck";
-		override(Duck, fly, xxx);
-	}else if(type==CHICKEN_TYPE){
-		this->name="Bird:Chicken";
-		override(Chicken, fly, xxx);
-	}else if(type==NONE){
-		override(Bird, fly, xxx);
-	}
+	// if(type==DUCK_TYPE){
+	// 	this->name="Bird:Duck";
+	// 	override(Duck, fly, xxx);
+	// }else if(type==CHICKEN_TYPE){
+	// 	this->name="Bird:Chicken";
+	// 	override(Chicken, fly, xxx);
+	// }else if(type==NONE){
+	// 	override(Bird, fly, xxx);
+	// }
 	//var init
 	this->type=type;
 

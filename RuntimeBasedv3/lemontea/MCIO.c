@@ -169,6 +169,7 @@ int MCFile_flushAFileCacheToDisk(int fd)
 
 method(MCFile, bye, xxx)
 {
+	call(this, MCObject, bye, nil);
 	//release this->buffer
 	mc_free(this->buffer);
 	close(this->fd);
@@ -298,6 +299,8 @@ char* MCProcess_getCurrentWorkingDir(MCCharBuffer* buff)
 
 method(MCStream, bye, xxx)
 {
+	call(this, MCObject, bye, nil);
+
 	//0=OK/EOF=ERROR
 	if(fclose(this->fileObject))
 		error_log("close file error");
