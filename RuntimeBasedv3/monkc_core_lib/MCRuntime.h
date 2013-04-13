@@ -45,6 +45,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //100  classes 200KB
 //10   classes 20KB
 
+#ifndef MAX_METHOD_NAME_CHAR_NUM
+#define MAX_METHOD_NAME_CHAR_NUM 100
+#endif
 #ifndef MAX_METHOD_NUM
 #define MAX_METHOD_NUM 1000
 #endif
@@ -69,7 +72,7 @@ typedef int RES;
 typedef struct MCMethod_struct
 {
 	_FunctionPointer(addr);
-	char* name;
+	char name[MAX_METHOD_NAME_CHAR_NUM];
 }MCMethod;
 #define _MethodArray(name) MCMethod* name[MAX_METHOD_NUM]
 //MK: Method Key  MV: Method Value CK: Class Key
@@ -94,6 +97,7 @@ typedef struct MCClass_struct
 	int method_count;
 	//_FunctionArray(method_list);
 	_MethodArray(method_list);
+	BOOL is_binding_flag;
 	char* name;
 }MCClass;
 //for type cast, every object have the 3 var members
@@ -125,8 +129,7 @@ typedef struct cls##_struct{\
 									this->need_bind_method=YES;}while(0)
 #define link_class(cls, super, ...) super_init(this, super, __VA_ARGS__);\
 									if(set_class(this, #cls, #super))
-#define binding(cls, met, ...)  	do{_binding(this, MK(met), MV(cls, met));\
-							  		runtime_log("%s: [%d]%s\n", #cls, _hash(#met), #met);}while(0)
+#define binding(cls, met, ...)  	_binding(this, MK(met), MV(cls, met))
 #define override(cls, met, ...) 	_override(this, MK(met), MV(cls, met))
 #define method(cls, name, ...) 			void* cls##_##name(cls* const this, const char* methodname, __VA_ARGS__)
 #define moption(cls, opt, name, ...) 	void* opt##_##name(cls* const this, const char* methodname, __VA_ARGS__)
@@ -197,6 +200,7 @@ unsigned _chash(const char *s);
 //lock free
 //void mc_compareAndSwapInner(int* addr, int newval);
 int mc_compareAndSwap(int* addr, int oldval, int newval);
-
+void mc_copyName(MCMethod* method, const char* name);
+int mc_compareName(MCMethod* method, const char* name);
 
 #endif

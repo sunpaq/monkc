@@ -166,11 +166,14 @@ static void _load_root_class()
 	MCMethod* met3 = (MCMethod*)malloc(sizeof(MCMethod));
 	//init
 	met1->addr = MCObject_doNothing;
-	met1->name = "doNothing";
+	//met1->name = "doNothing";
+	mc_copyName(met1, "doNothing");
 	met2->addr = MCObject_whatIsYourClassName;
-	met2->name = "whatIsYourClassName";
+	//met2->name = "whatIsYourClassName";
+	mc_copyName(met2, "whatIsYourClassName");
 	met3->addr = MCObject_bye;
-	met3->name = "bye";
+	mc_copyName(met3, "bye");
+	//met3->name = "bye";
 	//bind
 	class->method_list[_hash("doNothing")]=met1;
 	class->method_list[_hash("whatIsYourClassName")]=met2;

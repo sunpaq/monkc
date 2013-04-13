@@ -6,14 +6,13 @@
 int main(int argc, char const *argv[])
 {
 	mc_init();
-
+	LOG_LEVEL = VERBOSE;
 	//while(1){
 		MCUnitTestRunner* runner = new(MCUnitTestRunner, nil);
 		MCUnitTestSuite* suite = new(MCUnitTestSuite, nil);
 		
 		ff(suite, addTestCase, new_anony(TestMCRuntime, nil));
 		ff(suite, addTestCase, new_anony(TestMCClock, nil));
-		//ff(suite, addTestCase, new_anony(MyTestCase1, nil));
 
 		ff(runner, addTestSuite, suite);
 		ff(runner, runTestSuites, nil);

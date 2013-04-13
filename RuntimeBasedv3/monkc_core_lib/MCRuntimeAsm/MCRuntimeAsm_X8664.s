@@ -100,42 +100,19 @@ __ff:
 
 
 .text
-.globl	_mc_compareAndSwap
+.globl	mc_compareAndSwap
 .align	8, 0x90
 
-_mc_compareAndSwap:
+mc_compareAndSwap:
 
-	pushq %rbp
-	movq %rsp, %rbp
-	//rdi addr
-	//rsi oldval
-	//rdx newval
-
-	//dest addr in edx
-	//old value in eax
-	movl %esi, %eax
-	shrq $32, %rsi
-	movl %esi, %edx
-
-	movl %edx, %ebx
-	shrq $32, %rdx
-	movl %edx, %ecx
-	//new value in ecx
-	//atomic compare and swap
-	lock cmpxchg8b (%rdi)
+	movq %rsi, %rax
+	lock cmpxchgq %rdx, (%rdi)
 	jne	.false
 
 	movq $0, %rax
-
-	movq %rbp, %rsp
-	popq %rbp
 	ret
-
 .false:
 	movq $-1, %rax
-
-	movq %rbp, %rsp
-	popq %rbp
 	ret
 
 

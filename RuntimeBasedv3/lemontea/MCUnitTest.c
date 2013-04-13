@@ -93,12 +93,13 @@ method(MCUnitTestCase, tearDown, xxx)
 	runtime_log("----MCUnitTestCase tearDown\n");
 }
 
-static void runMethodByKey(MCUnitTestCase* this, unsigned key)
+static void runMethodByPointer(MCUnitTestCase* this, MCMethod* amethod)
 {
 	ff(this, setUp, nil);
+	runtime_log("%s\n", "runMethodByPointer start");
 
 	try{
-		_ff(this, key, nil);
+		_ff(this, amethod->name, nil);
 		//if exception generated, this line will never be reached
 	}
 	catch(MCAssertYESException){
@@ -123,7 +124,7 @@ static void runMethodByKey(MCUnitTestCase* this, unsigned key)
 		error_log("MCAssertEqualsException\n");
 	}
 	finally{
-		error_log("testcase: %s at method: [%d]\n", this->isa->name, key);
+		error_log("testcase: %s at method: [%s]\n", this->isa->name, amethod->name);
 	}
 
 	ff(this, tearDown, nil);
@@ -133,16 +134,38 @@ method(MCUnitTestCase, runTests, xxx)
 {
 	runtime_log("%s\n", "MCUnitTestCase runTests");
 	unsigned i;
+	unsigned bye_key = _hash("bye");
+	unsigned setUp_key = _hash("setUp");
+	unsigned tearDown_key = _hash("tearDown");
+
+	MCMethod* amethod;
+	if(this==nil || this->isa==nil)
+		return;
+
+	runtime_log("%s\n", "MCUnitTestCase runTests before for loop");
 	for (i = 0; i < MAX_METHOD_NUM; i++)
 	{
-		//(*this->method_list[i])();
-		if(this->isa->method_list[i]!=nil)runMethodByKey(this, i);
+		//runtime_log("MCUnitTestCase runTests in for loop index:[%d]\n", i);
+		amethod = this->isa->method_list[i];
+		if(amethod!=nil 
+		&& amethod->addr!=nil 
+		&& amethod->name!=nil
+		&& i!=bye_key
+		&& i!=setUp_key
+		&& i!=tearDown_key){
+			runtime_log("%s\n", "MCUnitTestCase runTests hit a matched method");
+			if(this==nil || amethod==nil){
+				error_log("MCUnitTestCase runTests this pointer is nil\n");
+			}
+
+			runMethodByPointer(this, amethod);
+		}
 	}
 }
 
 method(MCUnitTestCase, runATestMethod, char* methodName)
 {
-	runMethodByKey(this, MK(methodName));
+	runMethodByPointer(this, this->isa->method_list[_hash(methodName)]);
 }
 
 /* Test Suite */

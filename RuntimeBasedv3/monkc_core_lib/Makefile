@@ -73,6 +73,8 @@ Classpool.o:Classpool.c MCRuntime.h
 	$(CC) -c Classpool.c
 
 install:
+	rm -f -r /usr/local/include/monkc
+	rm -f /usr/local/lib/libmonkc.a
 	tar -xzvf monkc.tar.gz -C /usr/local/include/
 	mv /usr/local/include/monkc/*.a /usr/local/lib/
 

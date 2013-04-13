@@ -49,6 +49,8 @@ MCUnitTest.o:MCUnitTest.c MCUnitTest.h
 	$(CC) -c MCUnitTest.c $(LINK_HEAD)
 
 install:
+	rm -f -r /usr/local/include/lemontea
+	rm -f /usr/local/lib/liblemontea.a
 	tar -xzvf lemontea.tar.gz -C /usr/local/include/
 	mv /usr/local/include/lemontea/*.a /usr/local/lib/
 

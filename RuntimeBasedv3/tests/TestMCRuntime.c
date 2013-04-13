@@ -70,13 +70,18 @@ constructor(TestMCRuntime, xxx)
 method(TestMCRuntime, setUp, xxx)
 {
 	call(this, MCUnitTestCase, setUp, nil);
+	runtime_log("----TestMCRuntime setUp");
 	this->mockobj = new(TestMCRuntimeMockObj, nil);
+	if (this->mockobj==nil){
+		error_log("TestMCRuntime setUp failed");
+		exit(-1);
+	}
 
 }
 
 method(TestMCRuntime, tearDown, xxx)
 {
-	call(this, MCUnitTestCase, setUp, nil);
+	call(this, MCUnitTestCase, tearDown, nil);
 	relnil(this->mockobj);
 
 }
