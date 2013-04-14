@@ -175,8 +175,8 @@ unsigned _override(id const self, const char* methodname, _FunctionPointer(value
 //BOOL _response(id const obj, const char* methodname);
 void* _ff(id const obj, const char* methodname, ...);
 void* _response_to(id const obj, const char* methodname);
-void* _jump(id const obj, void* addr, ...);
-void _clean_stack();
+void* _push_jump(id const obj, void* addr, ...);
+void* _clean_jump2(id const obj, void* addr, ...);
 
 //make a thread-safe allocator
 void* mc_malloc(size_t size);

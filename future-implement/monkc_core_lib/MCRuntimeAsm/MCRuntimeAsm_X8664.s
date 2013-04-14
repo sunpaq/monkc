@@ -99,6 +99,35 @@ __ff:
 	ret
 
 
+;declares:
+;void* _push_jump(id const obj, void* addr, ...);
+;void* _clean_jump2(id const obj, void* addr, ...);
+
+.text
+.globl _push_jump
+.align 8, 0x90
+_push_jump:
+	cmpq $0, 16(%rsp)		; confirm return address not nil
+	je 0f
+	jmp *16(%rsp)
+0:
+	ret
+
+
+
+.text
+.globl _clean_jump2
+.align 8, 0x90
+_clean_jump2:
+	movq %rbp, %rsp			; unwind the current start frame
+	popq %rbp				;
+	cmpq $0, 16(%rsp)		
+	je 0f
+	jmp *16(%rsp)
+0:
+	ret
+
+
 .text
 .globl	mc_compareAndSwap
 .align	8, 0x90

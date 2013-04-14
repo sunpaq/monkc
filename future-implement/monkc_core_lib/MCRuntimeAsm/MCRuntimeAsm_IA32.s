@@ -25,72 +25,70 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-//void* _ff(id const obj, const unsigned hashkey, ...);
-//void* _resolve_method(id const obj, const unsigned hashkey);
+
 .text
 .globl _ff
-//4 byte align, fill the unaligned parts with "nop" instrucment
-.align 4, 0x90
+.align 4, 0x90	;4 byte align, fill the unaligned parts with "nop" instrucment
 _ff:
-	//we can get the argument by esp+4n at the very first
-	//caller of _ff() will prepare the argumnets in reverse order
-	//here is the meaning of c-language arguments copy-in-copy-out
-	//save stack pointers
+				;we can get the argument by esp+4n at the very first
+				;caller of _ff() will prepare the argumnets in reverse order
+				;here is the meaning of c-language arguments copy-in-copy-out
+				;save stack pointers
 	pushl %ebp
 	movl %esp, %ebp
-	//pass parameters
-	pushl 12(%ebp)
+	pushl 12(%ebp)	;pass parameters
 	pushl 8(%ebp)
 	call _response_to
 	addl $8, %esp
-	//restore stack pointers
-	movl %ebp, %esp
+	movl %ebp, %esp	;restore stack pointers
 	popl %ebp
-	//confirm return address not nil
-	cmpl $0, %eax
+	cmpl $0, %eax	;confirm return address not nil
 	je 0f
-	//jump to the method with current stack frame. and did not return back here.
-	//this code made the method() call just like the ff() call. it takes what arguments
-	//ff() take. and return values at where ff() called. 
-	//stack frame of method() is prepared by caller of ff() and cleaned by it.
+				;jump to the method with current stack frame. and did not return back here.
+				;this code made the method() call just like the ff() call. it takes what arguments
+				;ff() take. and return values at where ff() called. 
+				;stack frame of method() is prepared by caller of ff() and cleaned by it.
 	jmp	*%eax
 0:
 	ret
 
-//void _clean_stack();
+
+;declares:
+;void* _push_jump(id const obj, void* addr, ...);
+;void* _clean_jump2(id const obj, void* addr, ...);
+
 .text
-.globl _clean_stack
-//4 byte align, fill the unaligned parts with "nop" instrucment
+.globl _push_jump
 .align 4, 0x90
-_clean_stack:
-	leave
-
-
-
-//void* _jump(_FunctionPointer(addr), id const obj, ...);
-.text
-.globl _jump
-//4 byte align, fill the unaligned parts with "nop" instrucment
-.align 4, 0x90
-_jump:
-	//confirm return address not nil
-	pushl %ebp
-	movl %esp, %ebp
-	#xorl %eax, %eax
-	movl 12(%ebp), %ebx
-	#addl $96, %esp
-	#cmpl $0, %eax
-	#subl _jump, %eax
-	#je 0f
-	#movl %ebp, %esp
-	#popl %ebp
-	leave
-	jmp	*%ebx
-	#movl %ebp, %esp
-	#popl %ebp
+_push_jump:
+	cmpl $0, 8(%esp)		; confirm return address not nil
+	je 0f
+	jmp *8(%esp)
+0:
 	ret
-#0:
-	#ret
+
+.text
+.globl _clean_jump2
+.align 4, 0x90
+_clean_jump2:
+	pushl %esp				; align to make the same offset as BP
+	;movl 4(%esp), %eax		; no need to change address
+	;movl %eax, 4(%ebp)		;
+	movl 8(%esp), %eax		; this ptr
+	movl %eax, 8(%ebp)		;
+	movl 12(%esp), %eax		; entry addr
+	movl %eax, 12(%ebp)		; 
+	movl 16(%esp), %eax		; arg1
+	movl %eax, 16(%ebp)		;
+	movl 20(%esp), %eax		; arg2
+	movl %eax, 20(%ebp)		;
+	movl %ebp, %esp			; unwind the current start frame
+	popl %ebp				;
+	cmpl $0, 8(%esp)		
+	je 0f
+	jmp *8(%esp)
+0:
+	ret
 
 
 .text
