@@ -25,19 +25,96 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+
+;infos about ARM 32 platform:
+;
+;stack-align: 	public(8byte) non-public(4byte)
+;frame-pointer: fp is r11 in ARM mode / r7 in thumb mode
+;keep-fp:		-mapcs-frame will keep the fp not to be optimized out
+
+
 .text
 .globl _ff
-.align 8
+.p2align 3 #; 8byte (double word) align: public interface need 8byte
 _ff:
 	stmfd sp!, {a1-a4,fp,lr}
-
 	bl _response_to
 	mov ip, a1
-
 	ldmfd sp!, {a1-a4,fp,lr}
-
 	cmp ip, #0
 	beq 0f	
 	bx ip
+0:
+	bx lr
+
+
+;void* _push_jump(id const obj, void* addr, ...);
+
+.text
+.globl _push_jump
+.p2align 3 			; 8byte align
+_push_jump:
+	cmp $0, a2		; confirm return address not nil
+	beq 0f
+	bx a2
+0:
+	bx lr
+
+
+;void* _clean_jump2(id const obj, void* addr, ...);
+
+.text
+.globl _clean_jump1
+.p2align 3, 0x90
+_clean_jump1:
+	mov sp, r11		; unwind the current start frame
+	ldr r11		
+	cmp a2, #0		
+	beq 0f
+	bx a2
+0:
+	bx lr
+
+
+.text
+.globl _clean_jump2
+.p2align 3, 0x90
+_clean_jump2:
+	mov sp, r11			; unwind the current start frame
+	ldr r11		
+	cmp a2, #0		
+	beq 0f
+	bx a2
+0:
+	bx lr
+
+
+.text
+.globl _clean_jump3
+.p2align 3, 0x90
+_clean_jump3:
+	ldmfd sp, {v1-v2}	; get the rl, +arg1	
+	mov [r11, #8], v2 	; change the 2nd (raddr, +arg1) to v2
+	mov sp, r11			; unwind the current start frame
+	ldr r11		
+	cmp a2, #0		
+	beq 0f
+	bx a2
+0:
+	bx lr
+
+
+.text
+.globl _clean_jump4
+.p2align 3, 0x90
+_clean_jump4:
+	ldmfd sp, {v1-v3}	; get the rl, +arg1, +arg2
+	mov [r11, #8], v2 	; change the 2nd (raddr, +arg1, +arg2) to v2
+	mov [r11, #12], v3 	; change the 3rd (raddr, +arg1, +arg2) to v3
+	mov sp, r11			; unwind the current start frame
+	ldr r11		
+	cmp a2, #0		
+	beq 0f
+	bx a2
 0:
 	bx lr

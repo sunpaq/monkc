@@ -67,93 +67,101 @@ typedef int RES;
 
 #define xxx void* xxx
 #define nil ((void*)0)
-#define _FunctionPointer(name) void (*name)()//no argument means you can pass anything in C!
-#define _FunctionArray(name) void (*name[MAX_METHOD_NUM])()
+#define S(value) #value
+#define A_B(a, b) a##_##b
+
+//method info struct
 typedef struct MCMethod_struct
 {
-	_FunctionPointer(addr);
+	void* addr;
 	char name[MAX_METHOD_NAME_CHAR_NUM];
 }MCMethod;
-#define _MethodArray(name) MCMethod* name[MAX_METHOD_NUM]
-//MK: Method Key  MV: Method Value CK: Class Key
-#define MV(cls, name) cls##_##name
-//#define MK(value) _hash(#value)
-//#define CK(value) _chash(#value)
-#define MK(value) #value
-#define CK(value) #value
-
-//root class
-#define _MCObject //we keep this macro blank but insert fileds to every object struct
-#define _newline  //just a blank mark for syntex
-#define _alloc(cls) (cls*)mc_malloc(sizeof(cls))//private macro, usr should not call this
-#define _alloc_clear(cls) (cls*)mc_calloc(sizeof(cls))//private macro, usr should not call this
-#define _alloc_onstack(cls) (cls*)alloca(sizeof(cls))//private macro, usr should not call this
-#define _alloc_anony(cls) (cls*)mc_malloc_anony(sizeof(cls))//private macro, usr should not call this
 
 //meta class, the struct is a node for inherit hierarchy
 typedef struct MCClass_struct
 {
-	struct MCClass_struct* super;
 	int method_count;
-	//_FunctionArray(method_list);
-	_MethodArray(method_list);
-	BOOL is_binding_flag;
+	MCMethod* method_list[MAX_METHOD_NUM];
 	char* name;
 }MCClass;
+
 //for type cast, every object have the 3 var members
-typedef struct {
+typedef struct MCObject_struct
+{
+	struct MCObject_struct* super;
 	MCClass* isa;
-	BOOL need_bind_method;
+	MCClass* saved_isa;
+	MCClass* mode;
 	int ref_count;
 }MCObject;
+
+//id is a object pointer for any class
 typedef MCObject* id;
 
+//use for message sending
+typedef struct MCMessage_struct
+{
+	id object;
+	void* addr;
+}MCMessage;
+
 //for class define
+#define implements(protocol)
+#define extends(super)
 #define class(cls) _newline;\
 typedef struct cls##_struct{\
+	struct cls##_struct* super;\
 	MCClass* isa;\
-	BOOL need_bind_method;\
-	int ref_count;\
-	_##cls;\
-}cls;
-#define class_begin(cls) _newline;\
-typedef struct cls##_struct{\
-	MCClass* isa;\
-	BOOL need_bind_method;\
-	int ref_count;\
-	_##cls;\
-	struct {
-#define class_end(cls) }private;}cls;
-#define constructor(cls, ...)		cls* cls##_init(cls* const this, const char* methodname, __VA_ARGS__)
-#define super_init(this, cls, ...)  do{this->need_bind_method=NO;cls##_init(this, "init", __VA_ARGS__);\
-									this->need_bind_method=YES;}while(0)
-#define link_class(cls, super, ...) super_init(this, super, __VA_ARGS__);\
-									if(set_class(this, #cls, #super))
-#define binding(cls, met, ...)  	_binding(this, MK(met), MV(cls, met))
-#define override(cls, met, ...) 	_override(this, MK(met), MV(cls, met))
-#define method(cls, name, ...) 			void* cls##_##name(cls* const this, const char* methodname, __VA_ARGS__)
-#define moption(cls, opt, name, ...) 	void* opt##_##name(cls* const this, const char* methodname, __VA_ARGS__)
-#define returns(type)
+	MCClass* saved_isa;\
+	MCClass* mode;\
+	int ref_count;
+#define end(cls) }cls;\
+MCClass* cls##_load(MCClass* const class);\
+cls* cls##_init(cls* const this);\
+void cls##_clean(cls* const this);
 
-//for create object
-#define new(cls, ...)                    cls##_init(_alloc(cls), "init", __VA_ARGS__)
-#define new_clear(cls, ...)              cls##_init(_alloc_clear(cls), "init", __VA_ARGS__)
-#define new_onstack(cls, ...)            cls##_init(_alloc_onstack(cls), "init", __VA_ARGS__)
-#define new_anony(cls, ...)         	 cls##_init(_alloc_anony(cls), "init", __VA_ARGS__)
-#define preload(cls, ...) 				 release(new(cls, __VA_ARGS__))
+//callback function pointer types
+typedef MCClass* (*loaderFP)(MCClass*);
+typedef MCObject* (*initerFP)(MCObject*);
+typedef void (*cleanerFP)(MCObject*);
 
-//for call method
-#define ff(obj, met, ...) 				_ff(obj, MK(met), __VA_ARGS__)
-#define call(this, cls, name, ...)      cls##_##name(this, #name, __VA_ARGS__)//call other class method
-#define response_to(obj, met) 			_response_to(obj, MK(met))
+//callbacks
+#define loader(cls)					MCClass* cls##_load(MCClass* const class)
+#define initer(cls)						cls* cls##_init(cls* const this)
+#define cleaner(cls)					void cls##_clean(cls* const this)
 
-//for protocol define
-#define protocol(cls, name, ...)  	static id cls##_##name(id const this, const char* methodname, __VA_ARGS__)
+//callback caller
+#define load(cls)					_load(S(cls), cls##_load)
+#define init(obj, cls)			    cls##_init(obj)
+#define clean(obj, cls)				cls##_clean(obj)
+
+//method binding
+#define binding(cls, met, ...)  	_binding(class, S(met), A_B(cls, met))
+#define override(cls, met, ...) 	_override(class, S(met), A_B(cls, met))
+#define method(cls, name, ...) 		void* cls##_##name(cls* const this, const void* entry, __VA_ARGS__)
+#define protocol(pro, name, ...)  	static void* pro##_##name(id const this, const void* entry, __VA_ARGS__)
 #define This(cls)      				((cls*)this)
 #define Cast(cls, obj) 				((cls*)obj)
+#define returns(type)
 
-//Classpool
-BOOL set_class(id const self_in, const char* classname, const char* superclassname);
+//allocators
+#define _alloc(cls) 				(cls*)mc_malloc(sizeof(cls))//private macro, usr should not call this
+#define _alloc_clear(cls) 			(cls*)mc_calloc(sizeof(cls))//private macro, usr should not call this
+#define _alloc_onstack(cls) 		(cls*)alloca(sizeof(cls))//private macro, usr should not call this
+#define _alloc_anony(cls) 			(cls*)mc_malloc_anony(sizeof(cls))//private macro, usr should not call this
+
+//for create object
+#define new(cls)					_new(_alloc(cls), S(cls), cls##_load, cls##_init)
+#define new_clear(cls, ...)         _new(_alloc_clear(cls), S(cls), cls##_load, cls##_init)
+#define new_onstack(cls, ...)       _new(_alloc_onstack(cls), S(cls), cls##_load, cls##_init)
+#define new_anony(cls, ...)         _new(_alloc_anony(cls), S(cls), cls##_load, cls##_init)
+
+//for call method
+#define call(this, cls, name, ...)      cls##_##name(this, cls##_##name, __VA_ARGS__)//call other class method
+#define response_to(obj, met) 			_response_to(obj, S(met))
+#define ff(obj, met, ...)				_push_jump(_response_to(obj, S(met)), __VA_ARGS__)
+#define shift(obj, mode)				_shift(obj, S(mode), mode##_load)
+#define shift_back(obj)					_shift_back(obj)
 
 //Reference Count
 #define REFCOUNT_NO_MM 		-1
@@ -164,19 +172,20 @@ void retain(id const this);
 void _relnil(MCObject** const this);
 
 //method handling
-// unsigned _binding(id const self, unsigned hashkey, _FunctionPointer(value));
-// unsigned _override(id const self, unsigned hashkey, _FunctionPointer(value));
-unsigned _binding(id const self, const char* methodname, _FunctionPointer(value));
-unsigned _override(id const self, const char* methodname, _FunctionPointer(value));
+unsigned _binding(MCClass* const class, const char* methodname, void* value);
+unsigned _override(MCClass* const class, const char* methodname, void* value);
 
-// BOOL _response(id const obj, unsigned hashkey);
-// void* _ff(id const obj, const unsigned hashkey, ...);
-// void* _resolve_method(id const obj, const unsigned hashkey);
-//BOOL _response(id const obj, const char* methodname);
-void* _ff(id const obj, const char* methodname, ...);
-void* _response_to(id const obj, const char* methodname);
-void* _push_jump(id const obj, void* addr, ...);
-void* _clean_jump2(id const obj, void* addr, ...);
+MCMessage _response_to(id const obj, const char* methodname);
+MCMessage _self_response_to(id const obj, const char* methodname);
+MCMessage make_msg(id const obj, const void* entry);
+
+void* _push_jump(MCMessage msg, ...);
+void* _clean_jump1(MCMessage msg, ...);
+void* _clean_jump2(MCMessage msg, ...);
+void* _clean_jump3(MCMessage msg, ...);
+void* _clean_jump4(MCMessage msg, ...);
+void _shift(id const obj, const char* modename, loaderFP loader);
+void _shift_back(id const obj);
 
 //make a thread-safe allocator
 void* mc_malloc(size_t size);
@@ -189,20 +198,20 @@ void  mc_free(void *ptr);
 void mc_init();
 void mc_end();
 
-//Root class
-id MCObject_init(id const this, const char* methodname, xxx);
-void MCObject_doNothing(id const this, const char* methodname, xxx);
-void MCObject_whatIsYourClassName(id const this, const char* methodname, xxx);
-void MCObject_bye(id this, const char* methodname, xxx);
-
 //hash
 unsigned _hash(const char *s);
 unsigned _chash(const char *s);
 
 //lock free
-//void mc_compareAndSwapInner(int* addr, int newval);
-int mc_compareAndSwap(int* addr, int oldval, int newval);
+int mc_compareAndSwapInteger(int* addr, int oldval, int newval);
+int mc_compareAndSwapPointer(void** addr, void* oldval, void* newval);
+
+//string operate
 void mc_copyName(MCMethod* method, const char* name);
 int mc_compareName(MCMethod* method, const char* name);
+
+//class pool
+MCClass* _load(const char* name_in, loaderFP loader);
+id _new(id const this, const char* name_in, loaderFP loader, initerFP initer);
 
 #endif

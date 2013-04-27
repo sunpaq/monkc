@@ -27,26 +27,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "MCRuntime.h"
 
-//extern
-//extern pthread_mutex_t _mc_runtime_mutex;
-
 //public
-BOOL set_class(id const self_in, const char* classname, const char* superclassname);
-
-void MCObject_doNothing(id const this, const char* methodname, xxx);
-void MCObject_bye(id this, const char* methodname, xxx);
-id MCObject_init(id const this, const char* methodname, xxx);
-void MCObject_whatIsYourClassName(id const this, const char* methodname, xxx);
-
 void _init_class_list();
 void _clear_class_list();
 
 //private
 static MCClass* mc_classobj_pool[MAX_CLASS_NUM];
-static inline void _clear_method_list(MCClass* const class);
-static MCClass* load_class(const char* name_in, const char* super_class);
-static inline MCClass* _get_class(const char* name_in);
-static void _load_root_class();
 
 //implements
 static inline void _clear_method_list(MCClass* const class)
@@ -57,139 +43,61 @@ static inline void _clear_method_list(MCClass* const class)
 	}
 }
 
-static MCClass* load_class(const char* name_in, const char* super_class)
+MCClass* _load(const char* name_in, loaderFP loader)
 {
-	//pthread_mutex_lock(&_mc_runtime_mutex);
-	MCClass* oldclass;
-	if ((oldclass=_get_class(name_in)) != nil){
-		error_log("class name:%s hash is conflict with class name:%s hash.\n", name_in, oldclass->name);
-		exit(-1);
+	unsigned hashkey = _chash(name_in);
+	if(mc_classobj_pool[hashkey] == nil){
+		//new a class object
+		MCClass* aclass = (MCClass*)malloc(sizeof(MCClass));
+		_clear_method_list(aclass);
+		//setting
+		aclass->name = name_in;
+		(*loader)(aclass);
+		if(mc_classobj_pool[hashkey]==nil)
+			mc_classobj_pool[hashkey] = aclass;
+		else
+			error_log("class[%s] is conflict with class[%s], please change a name.\n", 
+				name_in, mc_classobj_pool[hashkey]->name);
 	}
 
-	int super_hashkey = _chash(super_class);
-
-	MCClass* superclass = mc_classobj_pool[super_hashkey];
-	if(superclass == nil){
-		error_log("there is no superclass %s.please load it first!\n", super_class);
-		exit(-1);
-	}
-
-	MCClass* class = (MCClass*)malloc(sizeof(MCClass));
-
-	//set the class name
-	class->name = name_in;
-	class->super = superclass;
-	class->method_count = 0;
-
-	//conflict check
-	int hashkey = _chash(name_in);
-	if(mc_classobj_pool[hashkey] != nil){
-		error_log("load_class(%s, %s) - name hash value conflict.\nplease change a name\n", name_in, super_class);
-		exit(-1);
-	}
-
-	_clear_method_list(class);
-	//all thread will do the same operation no need lock free
-	mc_classobj_pool[hashkey] = class;
-	//pthread_mutex_unlock(&_mc_runtime_mutex);
-	return class;
-}
-
-static inline MCClass* _get_class(const char* name_in)
-{
-	int hashkey = _chash(name_in);
 	return mc_classobj_pool[hashkey];
 }
 
-BOOL set_class(id const self_in, const char* classname, const char* superclassname)
+id _new(id const this, const char* name_in, loaderFP loader, initerFP initer)
 {
-	if (self_in == nil)
-	{
-		error_log("set_class(obj, classname).obj should not be nil\n");
-		exit(-1);
-	}
-
-	if(self_in->need_bind_method != YES){
-		runtime_log("super_init: %s no need bind methods\n",classname);
-		return NO;
-	}
-
-	runtime_log("set_class: %s->%s\n", classname ,superclassname);
-
-	//all thread will do the same operation no need lock free
-	//load class
-	MCClass* class;
-	if ((class = _get_class(classname)) != nil)
-	{
-		runtime_log("class: %s already loaded\n",classname);
-		self_in->isa = class;
-		return NO;
-	}else{
-		runtime_log("load_class: %s\n", classname);
-		class = load_class(classname, superclassname);
-		self_in->isa = class;
-		return YES;
-	}
-}
-
-void MCObject_doNothing(id const this, const char* methodname, xxx)
-{
-	//do nothing
-}
-
-void MCObject_bye(id this, const char* methodname, xxx)
-{
-	//do nothing
-}
-
-id MCObject_init(id const this, const char* methodname, xxx)
-{
-	//do nothing
-	this->isa = _get_class("MCObject");
+	this->isa = _load(name_in, loader);
+	this->saved_isa = this->isa;
+	this->mode = nil;
+	this->super = nil;
+	(*initer)(this);
 	return this;
 }
 
-void MCObject_whatIsYourClassName(id const this, const char* methodname, xxx)
+void _shift(id const obj, const char* modename, loaderFP loader)
 {
-	if(this != nil && this->isa != nil)
-		debug_log("My class name is:%s\n", this->isa->name);
+	unsigned modehashkey = _chash(modename);
+	if(mc_classobj_pool[modehashkey] != nil
+	&&mc_classobj_pool[modehashkey] == obj->mode)
+		runtime_log("mode class[%s] already loaded\n", obj->mode->name);
+	else
+		obj->mode = _load(modename, loader);
+	obj->isa = obj->mode;
+	runtime_log("obj[%p/%s] shift to mode[%s]\n", 
+		obj, obj->saved_isa->name, obj->isa->name);
 }
 
-static void _load_root_class()
+void _shift_back(id const obj)
 {
-	MCClass* class = (MCClass*)malloc(sizeof(MCClass));
-	class->name = "MCObject";
-	class->super = nil;
-	//bind the builtin MCObject methods
-	MCMethod* met1 = (MCMethod*)malloc(sizeof(MCMethod));
-	MCMethod* met2 = (MCMethod*)malloc(sizeof(MCMethod));
-	MCMethod* met3 = (MCMethod*)malloc(sizeof(MCMethod));
-	//init
-	met1->addr = MCObject_doNothing;
-	//met1->name = "doNothing";
-	mc_copyName(met1, "doNothing");
-	met2->addr = MCObject_whatIsYourClassName;
-	//met2->name = "whatIsYourClassName";
-	mc_copyName(met2, "whatIsYourClassName");
-	met3->addr = MCObject_bye;
-	mc_copyName(met3, "bye");
-	//met3->name = "bye";
-	//bind
-	class->method_list[_hash("doNothing")]=met1;
-	class->method_list[_hash("whatIsYourClassName")]=met2;
-	class->method_list[_hash("bye")]=met3;
-	//load the MCObject class
-	mc_classobj_pool[_chash("MCObject")] = class;
+	obj->isa = obj->saved_isa;
+	runtime_log("obj[%p/%s] shift to mode[%s]\n", 
+		obj, obj->saved_isa->name, obj->isa->name);
 }
 
 void _init_class_list()
 {
 	int i;
-	for (i = 0; i < MAX_CLASS_NUM; i++){
+	for (i = 0; i < MAX_CLASS_NUM; i++)
 		mc_classobj_pool[i] = nil;
-	}
-
-	_load_root_class();
 }
 
 void _clear_class_list()

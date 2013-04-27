@@ -25,26 +25,106 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+
+;infos about ARM 64 platform:
+;
+;stack-align: 	public(16byte) non-public(16byte)
+;frame-pointer: fp is r11 in ARM mode / r7 in thumb mode
+;keep-fp:		-mapcs-frame will keep the fp not to be optimized out
+
+
 .text
 .globl _ff
-.align 16
+.p2align 4 #; 16byte (quad word) align public interface need 16byte
 _ff:
 	stmfd sp!, {a1-a4,fp,lr}
 	add fp, sp, #4
-	//pass parameters via a1, a2
-	//return value will in the a1
+	#;pass parameters via a1, a2
+	#;return value will in the a1
 	bl _response_to
 	mov ip, a1
-	//restore registers
+	#;restore registers
 	ldmfd sp!, {a1-a4,fp,lr}
-	//confirm return address not nil
+	#;confirm return address not nil
 	cmp ip, #0
 	beq 0f
-	//jump to the method with current stack frame. and did not return back here.
-	//this code made the method() call just like the ff() call. it takes what arguments
-	//ff() take. and return values at where ff() called. 
-	//stack frame of method() is prepared by caller of ff() and cleaned by it.
+	#;jump to the method with current stack frame. and did not return back here.
+	#;this code made the method() call just like the ff() call. it takes what arguments
+	#;ff() take. and return values at where ff() called. 
+	#;stack frame of method() is prepared by caller of ff() and cleaned by it.
 	
 	bx ip
+0:
+	bx lr
+
+
+;void* _push_jump(id const obj, void* addr, ...);
+
+.text
+.globl _push_jump
+.p2align 4 			; 8byte align
+_push_jump:
+	cmp $0, a2		; confirm return address not nil
+	beq 0f
+	bx a2
+0:
+	bx lr
+
+
+;void* _clean_jump2(id const obj, void* addr, ...);
+
+.text
+.globl _clean_jump1
+.p2align 4, 0x90
+_clean_jump1:
+	mov sp, r11		; unwind the current start frame
+	ldr r11		
+	cmp a2, #0		
+	beq 0f
+	bx a2
+0:
+	bx lr
+
+
+.text
+.globl _clean_jump2
+.p2align 4, 0x90
+_clean_jump2:
+	mov sp, r11			; unwind the current start frame
+	ldr r11		
+	cmp a2, #0		
+	beq 0f
+	bx a2
+0:
+	bx lr
+
+
+.text
+.globl _clean_jump3
+.p2align 4, 0x90
+_clean_jump3:
+	ldmfd sp, {v1-v2}	; get the rl, +arg1	
+	mov [r11, #8], v2 	; change the 2nd (raddr, +arg1) to v2
+	mov sp, r11			; unwind the current start frame
+	ldr r11		
+	cmp a2, #0		
+	beq 0f
+	bx a2
+0:
+	bx lr
+
+
+.text
+.globl _clean_jump4
+.p2align 4, 0x90
+_clean_jump4:
+	ldmfd sp, {v1-v3}	; get the rl, +arg1, +arg2
+	mov [r11, #8], v2 	; change the 2nd (raddr, +arg1, +arg2) to v2
+	mov [r11, #12], v3 	; change the 3rd (raddr, +arg1, +arg2) to v3
+	mov sp, r11			; unwind the current start frame
+	ldr r11		
+	cmp a2, #0		
+	beq 0f
+	bx a2
 0:
 	bx lr

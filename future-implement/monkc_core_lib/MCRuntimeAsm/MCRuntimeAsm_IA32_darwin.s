@@ -27,9 +27,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
 .text
-.globl _ff
-.p2align 2, 0x90	#;16 byte align, fill the unaligned parts with "nop" instrucment
-_ff:
+.globl __ff
+.p2align 4, 0x90	#;16 byte align, fill the unaligned parts with "nop" instrucment
+__ff:
 				#;we can get the argument by esp+4n at the very first
 				#;caller of _ff() will prepare the argumnets in reverse order
 				#;here is the meaning of c-language arguments copy-in-copy-out
@@ -59,9 +59,9 @@ _ff:
 #;esp+12->msg.addr
 
 .text
-.globl _push_jump
-.p2align 2, 0x90
-_push_jump:
+.globl __push_jump
+.p2align 4, 0x90
+__push_jump:
 	cmpl $0, 8(%esp)
 	je 0f					#; confirm return address not nil
 	jmp *8(%esp)
@@ -70,18 +70,20 @@ _push_jump:
 
 
 .text
-.globl _clean_jump1
-.p2align 2, 0x90
-_clean_jump1:
+.globl __clean_jump1
+.p2align 4, 0x90
+__clean_jump1:
 	pushl %esp				#; align to make the same offset as BP
-	#;movl 4(%esp), %eax	#; no need to change address
-	#;movl %eax, 4(%ebp)	#;
-	movl 8(%esp), %eax		#; this ptr = msg.object
+	;movl 4(%esp), %eax		#; no need to change address
+	;movl %eax, 4(%ebp)		#;
+	movl 12(%esp), %eax		#; this ptr = msg.object
 	movl %eax, 8(%ebp)		#;
-	movl 12(%esp), %ecx		#; entry addr = msg.addr
-	movl %ecx, 12(%ebp)		#; 
-	movl 16(%esp), %eax		#; arg1
-	movl %eax, 16(%ebp)		#;
+	movl 12(%esp), %eax		#; msg.object
+	movl %eax, 12(%ebp)		#; 
+	movl 16(%esp), %ecx		#; msg.addr
+	movl %ecx, 16(%ebp)		#;
+	movl 20(%esp), %eax		#; arg1
+	movl %eax, 20(%ebp)		#;
 	movl %ebp, %esp			#; unwind the current start frame
 	popl %ebp				#;
 	cmpl $0, %ecx		
@@ -92,20 +94,22 @@ _clean_jump1:
 
 
 .text
-.globl _clean_jump2
-.p2align 2, 0x90
-_clean_jump2:
+.globl __clean_jump2
+.p2align 4, 0x90
+__clean_jump2:
 	pushl %esp				#; align to make the same offset as BP
-	#;movl 4(%esp), %eax	#; no need to change address
-	#;movl %eax, 4(%ebp)	#;
-	movl 8(%esp), %eax		#; this ptr = msg.object
+	;movl 4(%esp), %eax		#; no need to change address
+	;movl %eax, 4(%ebp)		#;
+	movl 12(%esp), %eax		#; this ptr = msg.object
 	movl %eax, 8(%ebp)		#;
-	movl 12(%esp), %ecx		#; entry addr = msg.addr
-	movl %ecx, 12(%ebp)		#; 
-	movl 16(%esp), %eax		#; arg1
-	movl %eax, 16(%ebp)		#;
-	movl 20(%esp), %eax		#; arg2
+	movl 12(%esp), %eax		#; msg.object
+	movl %eax, 12(%ebp)		#; 
+	movl 16(%esp), %ecx		#; msg.addr
+	movl %ecx, 16(%ebp)		#;
+	movl 20(%esp), %eax		#; arg1
 	movl %eax, 20(%ebp)		#;
+	movl 24(%esp), %eax		#; arg2
+	movl %eax, 24(%ebp)		#;
 	movl %ebp, %esp			#; unwind the current start frame
 	popl %ebp				#;
 	cmpl $0, %ecx
@@ -116,49 +120,23 @@ _clean_jump2:
 
 
 .text
-.globl _clean_jump3
-.p2align 2, 0x90
-_clean_jump3:
+.globl __clean_jump3
+.p2align 4, 0x90
+__clean_jump3:
 	pushl %esp				#; align to make the same offset as BP
-	#;movl 4(%esp), %eax	#; no need to change address
-	#;movl %eax, 4(%ebp)	#;
-	movl 8(%esp), %eax		#; this ptr = msg.object
+	;movl 4(%esp), %eax		#; no need to change address
+	;movl %eax, 4(%ebp)		#;
+	movl 12(%esp), %eax		#; this ptr = msg.object
 	movl %eax, 8(%ebp)		#;
-	movl 12(%esp), %ecx		#; entry addr = msg.addr
-	movl %ecx, 12(%ebp)		#; 
-	movl 16(%esp), %eax		#; arg1
-	movl %eax, 16(%ebp)		#;
-	movl 20(%esp), %eax		#; arg2
+	movl 12(%esp), %eax		#; msg.object
+	movl %eax, 12(%ebp)		#; 
+	movl 16(%esp), %ecx		#; msg.addr
+	movl %ecx, 16(%ebp)		#;
+	movl 20(%esp), %eax		#; arg1
 	movl %eax, 20(%ebp)		#;
-	movl 24(%esp), %eax		#; arg3
+	movl 24(%esp), %eax		#; arg2
 	movl %eax, 24(%ebp)		#;
-	movl %ebp, %esp			#; unwind the current start frame
-	popl %ebp				#;
-	cmpl $0, %ecx		
-	je 0f
-	jmp *%ecx
-0:
-	ret
-
-
-.text
-.globl _clean_jump4
-.p2align 2, 0x90
-_clean_jump4:
-	pushl %esp				#; align to make the same offset as BP
-	#;movl 4(%esp), %eax	#; no need to change address
-	#;movl %eax, 4(%ebp)	#;
-	movl 8(%esp), %eax		#; this ptr = msg.object
-	movl %eax, 8(%ebp)		#;
-	movl 12(%esp), %ecx		#; entry addr = msg.object
-	movl %ecx, 12(%ebp)		#; 
-	movl 16(%esp), %eax		#; arg1
-	movl %eax, 16(%ebp)		#;
-	movl 20(%esp), %eax		#; arg2
-	movl %eax, 20(%ebp)		#;
-	movl 24(%esp), %eax		#; arg3
-	movl %eax, 24(%ebp)		#;
-	movl 28(%esp), %eax		#; arg4
+	movl 28(%esp), %eax		#; arg3
 	movl %eax, 28(%ebp)		#;
 	movl %ebp, %esp			#; unwind the current start frame
 	popl %ebp				#;
@@ -170,9 +148,39 @@ _clean_jump4:
 
 
 .text
-.globl	mc_compareAndSwapInteger
-.p2align 2, 0x90
-mc_compareAndSwapInteger:
+.globl __clean_jump4
+.p2align 4, 0x90
+__clean_jump4:
+	pushl %esp				#; align to make the same offset as BP
+	;movl 4(%esp), %eax		#; no need to change address
+	;movl %eax, 4(%ebp)		#;
+	movl 12(%esp), %eax		#; this ptr = msg.object
+	movl %eax, 8(%ebp)		#;
+	movl 12(%esp), %eax		#; msg.object
+	movl %eax, 12(%ebp)		#; 
+	movl 16(%esp), %ecx		#; msg.addr
+	movl %ecx, 16(%ebp)		#;
+	movl 20(%esp), %eax		#; arg1
+	movl %eax, 20(%ebp)		#;
+	movl 24(%esp), %eax		#; arg2
+	movl %eax, 24(%ebp)		#;
+	movl 28(%esp), %eax		#; arg3
+	movl %eax, 28(%ebp)		#;
+	movl 32(%esp), %eax		#; arg4
+	movl %eax, 32(%ebp)		#;
+	movl %ebp, %esp			#; unwind the current start frame
+	popl %ebp				#;
+	cmpl $0, %ecx		
+	je 0f
+	jmp *%ecx
+0:
+	ret
+
+
+.text
+.globl	_mc_compareAndSwapInteger
+.p2align 4, 0x90
+_mc_compareAndSwapInteger:
 	pushl %ebp				
 	movl %esp, %ebp
 	 						#; 8(%ebp)  addr
@@ -198,9 +206,9 @@ mc_compareAndSwapInteger:
 
 
 .text
-.globl	mc_compareAndSwapPointer
-.p2align 2, 0x90
-mc_compareAndSwapPointer:
+.globl	_mc_compareAndSwapPointer
+.p2align 4, 0x90
+_mc_compareAndSwapPointer:
 	pushl %ebp				
 	movl %esp, %ebp
 	 						#; 8(%ebp)  addr
