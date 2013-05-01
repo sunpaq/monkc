@@ -66,13 +66,12 @@ void _push_anony_obj(MCObject* anony)
 	//lock free
 	for(;;)
 	{
-		oldcount = mc_anony_count;//lock
-		oldobj = mc_anony_pool[mc_anony_count];
+		oldcount = mc_getIntegerForCAS(&mc_anony_count);//lock
+		oldobj = mc_getPointerForCAS(&mc_anony_pool[mc_anony_count]);
 		tmpcount = oldcount;
 		tmpobj = oldobj;
-		tmpobj = anony;
 
-		if(tmpobj == nil)
+		if(anony == nil)
 			return;
 		if(tmpcount >= ANONY_POOL_SIZE)
 			tmpcount = 0;
@@ -80,7 +79,7 @@ void _push_anony_obj(MCObject* anony)
 			tmpcount = tmpcount + 1;
 
 		if(!mc_compareAndSwapInteger(&mc_anony_count, oldcount, tmpcount)
-		&&!mc_compareAndSwapPointer(&mc_anony_pool[mc_anony_count], oldobj, tmpobj))
+		&&!mc_compareAndSwapPointer(&mc_anony_pool[mc_anony_count], oldobj, anony))
 		{
 			break;
 		}
@@ -148,9 +147,9 @@ void release(id const this)
 	runtime_log("release begin CAS\n");
 	for(;;)
 	{
-		oldobj = this;//lock
+		oldobj = mc_getPointerForCAS(&this);//lock
+		oldcount = mc_getIntegerForCAS(&this->ref_count);
 		oldclass = this->isa;
-		oldcount = this->ref_count;
 		tmpobj = oldobj;
 		tmpclass = oldclass;
 		tmpcount = oldcount;
@@ -213,9 +212,9 @@ void retain(id const this)
 	runtime_log("begin CAS\n");
 	for(;;)
 	{
-		oldobj = this;//lock
+		oldobj = mc_getPointerForCAS(&this);//lock
+		oldcount = mc_getIntegerForCAS(&this->ref_count);
 		oldclass = this->isa;
-		oldcount = this->ref_count;
 		tmpobj = oldobj;
 		tmpclass = oldclass;
 		tmpcount = oldcount;
@@ -243,7 +242,6 @@ void retain(id const this)
 		tmpcount++;//try to plus 1
 
 		if (!mc_compareAndSwapPointer(&this, oldobj, tmpobj)
-		&&!mc_compareAndSwapPointer(&this->isa, oldclass, tmpclass)
 		&&!mc_compareAndSwapInteger(&this->ref_count, oldcount, tmpcount))//unlock
 		{
 			break;
@@ -284,8 +282,8 @@ unsigned _binding(MCClass* const class, const char* methodname, void* value)
 	int oldcount;
 	for(;;)
 	{
-		oldmethod = (MCMethod*)class->method_list[hashkey];//lock
-		oldcount = class->method_count;
+		oldmethod = (MCMethod*)mc_getPointerForCAS(&class->method_list[hashkey]);//lock
+		oldcount = mc_getIntegerForCAS(class->method_count);
 		if(oldmethod!=nil)
 			break;
 		if(oldcount > MAX_METHOD_NUM-1){
@@ -332,8 +330,8 @@ unsigned _override(MCClass* const class, const char* methodname, void* value)
 	int oldcount;
 	for(;;)
 	{
-		oldmethod = class->method_list[hashkey];//lock
-		oldcount = class->method_count;
+		oldmethod = (MCMethod*)mc_getPointerForCAS(&class->method_list[hashkey]);//lock
+		oldcount = mc_getIntegerForCAS(class->method_count);
 		if(oldmethod!=nil)
 			break;
 		if(oldcount > MAX_METHOD_NUM-1){

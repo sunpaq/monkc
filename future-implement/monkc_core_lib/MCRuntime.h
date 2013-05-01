@@ -203,6 +203,8 @@ unsigned _hash(const char *s);
 unsigned _chash(const char *s);
 
 //lock free
+int mc_getIntegerForCAS(int* target);
+void* mc_getPointerForCAS(void** target);
 int mc_compareAndSwapInteger(int* addr, int oldval, int newval);
 int mc_compareAndSwapPointer(void** addr, void* oldval, void* newval);
 

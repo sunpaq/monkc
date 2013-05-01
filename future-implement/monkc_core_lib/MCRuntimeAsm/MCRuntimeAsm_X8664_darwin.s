@@ -108,6 +108,26 @@ __clean_jump4:
 	ret
 
 
+#;int mc_getIntegerForCAS(int* target);
+#;void* mc_getPointerForCAS(void* target);
+
+.text
+.globl _mc_getIntegerForCAS
+.p2align 4, 0x90
+_mc_getIntegerForCAS:
+	xorq %rax, %rax
+	movq 8(%rsp), %rax
+	ret
+
+.text
+.globl _mc_getPointerForCAS
+.p2align 4, 0x90
+_mc_getPointerForCAS:
+	xorq %rax, %rax
+	movq 8(%rsp), %rax
+	ret
+
+
 .text
 .globl	_mc_compareAndSwapInteger
 .p2align 4, 0x90

@@ -118,3 +118,51 @@ _clean_jump4:
 	bx a2
 0:
 	bx lr
+
+
+#;int mc_getIntegerForCAS(int* target);
+#;void* mc_getPointerForCAS(void* target);
+
+.text
+.globl _mc_getIntegerForCAS
+.p2align 3, 0x90
+_mc_getIntegerForCAS:
+	ldrex r0, [a1]
+	bx lr
+
+.text
+.globl mc_getPointerForCAS
+.p2align 3, 0x90
+mc_getPointerForCAS:
+	ldrex r0, [a1]
+	bx lr
+
+#;int mc_compareAndSwapInteger(int* addr, int oldval, int newval);
+
+.text
+.globl	mc_compareAndSwapInteger
+.p2align 3, 0x90
+mc_compareAndSwapInteger:
+	strex r0, a3, [a1]
+	cmp r0, #0
+	beq 0f
+	mov r0, #0
+	bx lr
+0:
+	mov r0, #-1
+	bx lr
+
+
+.text
+.globl	mc_compareAndSwapPointer
+.p2align 4, 0x90
+mc_compareAndSwapPointer:
+	strex r0, a3, [a1]
+	cmp r0, #0
+	beq 0f
+	mov r0, #0
+	bx lr
+0:
+	mov r0, #-1
+	bx lr
+	
