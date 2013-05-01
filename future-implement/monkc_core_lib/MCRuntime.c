@@ -283,7 +283,7 @@ unsigned _binding(MCClass* const class, const char* methodname, void* value)
 	for(;;)
 	{
 		oldmethod = (MCMethod*)mc_getPointerForCAS(&class->method_list[hashkey]);//lock
-		oldcount = mc_getIntegerForCAS(class->method_count);
+		oldcount = mc_getIntegerForCAS(&class->method_count);
 		if(oldmethod!=nil)
 			break;
 		if(oldcount > MAX_METHOD_NUM-1){
@@ -331,7 +331,7 @@ unsigned _override(MCClass* const class, const char* methodname, void* value)
 	for(;;)
 	{
 		oldmethod = (MCMethod*)mc_getPointerForCAS(&class->method_list[hashkey]);//lock
-		oldcount = mc_getIntegerForCAS(class->method_count);
+		oldcount = mc_getIntegerForCAS(&class->method_count);
 		if(oldmethod!=nil)
 			break;
 		if(oldcount > MAX_METHOD_NUM-1){

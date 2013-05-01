@@ -83,7 +83,7 @@ int main(int argc, char const *argv[])
 	mc_init();
 		LOG_LEVEL = VERBOSE;
 
-		test_method_jumpping();
+//		test_method_jumpping();
 
 		test_object_life_cycle();
 

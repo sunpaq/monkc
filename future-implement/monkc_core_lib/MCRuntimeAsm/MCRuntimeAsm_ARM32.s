@@ -26,16 +26,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 
-;infos about ARM 32 platform:
-;
-;stack-align: 	public(8byte) non-public(4byte)
-;frame-pointer: fp is r11 in ARM mode / r7 in thumb mode
-;keep-fp:		-mapcs-frame will keep the fp not to be optimized out
-
 
 .text
 .globl _ff
-.p2align 3 #; 8byte (double word) align: public interface need 8byte
+.p2align 3
 _ff:
 	stmfd sp!, {a1-a4,fp,lr}
 	bl _response_to
@@ -48,27 +42,25 @@ _ff:
 	bx lr
 
 
-;void* _push_jump(id const obj, void* addr, ...);
 
 .text
 .globl _push_jump
-.p2align 3 			; 8byte align
+.p2align 3 			
 _push_jump:
-	cmp $0, a2		; confirm return address not nil
+	cmp a2, #0		
 	beq 0f
 	bx a2
 0:
 	bx lr
 
 
-;void* _clean_jump2(id const obj, void* addr, ...);
 
 .text
 .globl _clean_jump1
 .p2align 3, 0x90
 _clean_jump1:
-	mov sp, r11		; unwind the current start frame
-	ldr r11		
+	mov sp, r11	
+	ldr r11, [sp]		
 	cmp a2, #0		
 	beq 0f
 	bx a2
@@ -80,8 +72,8 @@ _clean_jump1:
 .globl _clean_jump2
 .p2align 3, 0x90
 _clean_jump2:
-	mov sp, r11			; unwind the current start frame
-	ldr r11		
+	mov sp, r11		
+	ldr r11, [sp]		
 	cmp a2, #0		
 	beq 0f
 	bx a2
@@ -93,10 +85,12 @@ _clean_jump2:
 .globl _clean_jump3
 .p2align 3, 0x90
 _clean_jump3:
-	ldmfd sp, {v1-v2}	; get the rl, +arg1	
-	mov [r11, #8], v2 	; change the 2nd (raddr, +arg1) to v2
-	mov sp, r11			; unwind the current start frame
-	ldr r11		
+	ldmfd sp, {v1-v2}		
+	mov r12, r11
+	add r12, #8
+	mov r12, v2 	
+	mov sp, r11
+	ldr r11, [sp]		
 	cmp a2, #0		
 	beq 0f
 	bx a2
@@ -108,11 +102,14 @@ _clean_jump3:
 .globl _clean_jump4
 .p2align 3, 0x90
 _clean_jump4:
-	ldmfd sp, {v1-v3}	; get the rl, +arg1, +arg2
-	mov [r11, #8], v2 	; change the 2nd (raddr, +arg1, +arg2) to v2
-	mov [r11, #12], v3 	; change the 3rd (raddr, +arg1, +arg2) to v3
-	mov sp, r11			; unwind the current start frame
-	ldr r11		
+	ldmfd sp, {v1-v3}	
+	mov r12, r11
+	add r12, #8
+	mov r12, v2 	
+	add r12, #4
+	mov r12, v3 
+	mov sp, r11		
+	ldr r11, [sp] 		
 	cmp a2, #0		
 	beq 0f
 	bx a2
@@ -120,31 +117,29 @@ _clean_jump4:
 	bx lr
 
 
-#;int mc_getIntegerForCAS(int* target);
-#;void* mc_getPointerForCAS(void* target);
-
 .text
-.globl _mc_getIntegerForCAS
+.globl mc_getIntegerForCAS
 .p2align 3, 0x90
-_mc_getIntegerForCAS:
-	ldrex r0, [a1]
+mc_getIntegerForCAS:
+	ldrex v1, [a1]
+	mov r0, v1
 	bx lr
 
 .text
 .globl mc_getPointerForCAS
 .p2align 3, 0x90
 mc_getPointerForCAS:
-	ldrex r0, [a1]
+	ldrex v1, [a1]
+	mov r0, v1
 	bx lr
 
-#;int mc_compareAndSwapInteger(int* addr, int oldval, int newval);
 
 .text
 .globl	mc_compareAndSwapInteger
 .p2align 3, 0x90
 mc_compareAndSwapInteger:
-	strex r0, a3, [a1]
-	cmp r0, #0
+	strex a2, a3, [a1]
+	cmp a2, #0
 	beq 0f
 	mov r0, #0
 	bx lr
@@ -157,8 +152,8 @@ mc_compareAndSwapInteger:
 .globl	mc_compareAndSwapPointer
 .p2align 4, 0x90
 mc_compareAndSwapPointer:
-	strex r0, a3, [a1]
-	cmp r0, #0
+	strex a2, a3, [a1]
+	cmp a2, #0
 	beq 0f
 	mov r0, #0
 	bx lr
