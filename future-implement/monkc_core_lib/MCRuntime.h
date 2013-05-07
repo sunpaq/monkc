@@ -38,24 +38,27 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "Log.h"
 #include "Vectors.h"
 
-//max memory useage for class  table is: 4Byte x 1000 = 4KB
-//max memory useage for method table is: 4Byte x 1000 x 1000 = 4000KB = 4M
+//max memory useage for class  table is: 4Byte x 4000 = 16KB
+//max memory useage for method table is: 4Byte x 4000 x 1000 = 16000KB = 16M
 
-//1000 classes 2M    
-//100  classes 200KB
-//10   classes 20KB
+//1000 classes 16M    
+//100  classes 1.6M
+//10   classes 160KB
+
+//MAX_METHOD_NUM set to 4 time of the space needed
+//10level x 100 x 4 = 4000
 
 #ifndef MAX_METHOD_NAME_CHAR_NUM
 #define MAX_METHOD_NAME_CHAR_NUM 100
 #endif
 #ifndef MAX_METHOD_NUM
-#define MAX_METHOD_NUM 1000
+#define MAX_METHOD_NUM 4000
 #endif
 #ifndef MAX_CLASS_NUM
 #define MAX_CLASS_NUM  1000
 #endif
 #ifndef ANONY_POOL_SIZE
-#define ANONY_POOL_SIZE 100
+#define ANONY_POOL_SIZE 1000
 #endif
 
 typedef int BOOL;
@@ -179,11 +182,7 @@ MCMessage _response_to(id const obj, const char* methodname);
 MCMessage _self_response_to(id const obj, const char* methodname);
 MCMessage make_msg(id const obj, const void* entry);
 
-void* _push_jump(MCMessage msg, ...);
-void* _clean_jump1(MCMessage msg, ...);
-void* _clean_jump2(MCMessage msg, ...);
-void* _clean_jump3(MCMessage msg, ...);
-void* _clean_jump4(MCMessage msg, ...);
+
 void _shift(id const obj, const char* modename, loaderFP loader);
 void _shift_back(id const obj);
 
@@ -202,12 +201,6 @@ void mc_end();
 unsigned _hash(const char *s);
 unsigned _chash(const char *s);
 
-//lock free
-int mc_getIntegerForCAS(int* target);
-void* mc_getPointerForCAS(void** target);
-int mc_compareAndSwapInteger(int* addr, int oldval, int newval);
-int mc_compareAndSwapPointer(void** addr, void* oldval, void* newval);
-
 //string operate
 void mc_copyName(MCMethod* method, const char* name);
 int mc_compareName(MCMethod* method, const char* name);
@@ -215,5 +208,14 @@ int mc_compareName(MCMethod* method, const char* name);
 //class pool
 MCClass* _load(const char* name_in, loaderFP loader);
 id _new(id const this, const char* name_in, loaderFP loader, initerFP initer);
+
+//write by asm
+void* _push_jump(MCMessage msg, ...);
+void* _clean_jump1(MCMessage msg, ...);
+void* _clean_jump2(MCMessage msg, ...);
+void* _clean_jump3(MCMessage msg, ...);
+void* _clean_jump4(MCMessage msg, ...);
+void mc_atomic_set_integer(int* target, int value);
+void mc_atomic_set_pointer(void** target, void* value);
 
 #endif

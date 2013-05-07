@@ -25,34 +25,6 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-
-.text
-.globl _ff
-.p2align 2, 0x90	#;16 byte align, fill the unaligned parts with "nop" instrucment
-_ff:
-				#;we can get the argument by esp+4n at the very first
-				#;caller of _ff() will prepare the argumnets in reverse order
-				#;here is the meaning of c-language arguments copy-in-copy-out
-				#;save stack pointers
-	pushl %ebp
-	movl %esp, %ebp
-	pushl 12(%ebp)	#;pass parameters
-	pushl 8(%ebp)
-	call _response_to
-	addl $8, %esp
-	movl %ebp, %esp	#;restore stack pointers
-	popl %ebp
-	cmpl $0, %eax	#;confirm return address not nil
-	je 0f
-				#;jump to the method with current stack frame. and did not return back here.
-				#;this code made the method() call just like the ff() call. it takes what arguments
-				#;ff() take. and return values at where ff() called. 
-				#;stack frame of method() is prepared by caller of ff() and cleaned by it.
-	jmp	*%eax
-0:
-	ret
-
-
 #;void* _push_jump(id const obj, MCMessage msg, ...);
 #;esp+4->obj
 #;esp+8->msg.object
@@ -168,76 +140,49 @@ _clean_jump4:
 0:
 	ret
 
-#;int mc_getIntegerForCAS(int* target);
-#;void* mc_getPointerForCAS(void* target);
+
+#;void mc_atomic_set_integer(int* target, int value);
+#;void mc_atomic_set_pointer(void** target, void* value);
 
 .text
-.globl mc_getIntegerForCAS
+.globl	mc_atomic_set_integer
 .p2align 2, 0x90
-mc_getIntegerForCAS:
-	xorl %eax, %eax
-	movl 4(%esp), %eax
-	ret
-
-.text
-.globl mc_getPointerForCAS
-.p2align 2, 0x90
-mc_getPointerForCAS:
-	xorl %eax, %eax
-	movl 4(%esp), %eax
-	ret
-
-.text
-.globl	mc_compareAndSwapInteger
-.p2align 2, 0x90
-mc_compareAndSwapInteger:
+mc_atomic_set_integer:
 	pushl %ebp				
 	movl %esp, %ebp
 	 						#; 8(%ebp)  addr
-							#; 12(%ebp) oldval
-							#; 16(%ebp) newval
+							#; 12(%ebp) newval
+0:
 	movl 8(%ebp), %edx		#; dest addr in edx
-	movl 12(%ebp), %eax		#; old value in eax
-	movl 16(%ebp), %ecx		#; new value in ecx
+	movl 0(%edx), %eax		#; old value in eax
+	movl 12(%ebp), %ecx		#; new value in ecx
 
 	lock cmpxchgl %ecx, (%edx) 	#; atomic compare and swap
 	xorl %eax, %eax
-	jne	0f
+	jne	0b
 
-	movl $0, %eax			#; true
-	movl %ebp, %esp
-	popl %ebp
-	ret
-0:
-	movl $-1, %eax
 	movl %ebp, %esp
 	popl %ebp
 	ret
 
 
 .text
-.globl	mc_compareAndSwapPointer
+.globl	mc_atomic_set_pointer
 .p2align 2, 0x90
-mc_compareAndSwapPointer:
+mc_atomic_set_pointer:
 	pushl %ebp				
 	movl %esp, %ebp
 	 						#; 8(%ebp)  addr
-							#; 12(%ebp) oldval
-							#; 16(%ebp) newval
+							#; 12(%ebp) newval
+0:
 	movl 8(%ebp), %edx		#; dest addr in edx
-	movl 12(%ebp), %eax		#; old value in eax
-	movl 16(%ebp), %ecx		#; new value in ecx
+	movl 0(%edx), %eax		#; old value in eax
+	movl 12(%ebp), %ecx		#; new value in ecx
 
 	lock cmpxchgl %ecx, (%edx) 	#; atomic compare and swap
 	xorl %eax, %eax
-	jne	0f
+	jne	0b
 
-	movl $0, %eax			#; true
-	movl %ebp, %esp
-	popl %ebp
-	ret
-0:
-	movl $-1, %eax
 	movl %ebp, %esp
 	popl %ebp
 	ret

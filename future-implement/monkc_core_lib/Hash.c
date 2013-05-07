@@ -32,6 +32,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 //copy form << The C Programming language >>
+//BKDR Hash Function
 unsigned _hash(const char *s)
 {
 	//runtime_log("hash(%s) --- ", s);

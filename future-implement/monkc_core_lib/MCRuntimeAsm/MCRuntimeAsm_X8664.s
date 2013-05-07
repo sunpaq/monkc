@@ -42,57 +42,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #;define preserved_reg4 %r14
 #;define preserved_reg5 %r15
 
-#;void* _ff(id const obj, const unsigned hashkey, ...);
-#;void* _resolve_method(id const obj, const unsigned hashkey);
-
-.text
-.globl _ff
-.p2align 4, 0x90 #;16 byte align, X86_64 will round up arguments to 8 byte
-_ff:
-	#;we can get the argument by esp+4n at the very first
-	#;caller of _ff() will prepare the argumnets in reverse order
-	#;here is the meaning of c-language arguments copy-in-copy-out
-
-	#;save stack registers
-	pushq %rbp
-	movq %rsp, %rbp
-	#;va arguments function call need the %rax to be the count of SSE(float, double) type argument
-	pushq %rax
-	#;save the parameters
-	pushq %rdi
-	pushq %rsi
-	pushq %rdx
-	pushq %rcx
-	pushq %r8
-	pushq %r9
-	#;pass parameters via %rdi %rsi
-	#;both pointer and int type are machine type INTEGER
-	#;the _resolve_method deal with no floating point data. so no need to save xmm0~xmm15
-	#;return value will in the %rax
-	call __response_to
-	movq %rax, %r10
-	#;restore parameters
-	popq %r9
-	popq %r8
-	popq %rcx
-	popq %rdx
-	popq %rsi
-	popq %rdi
-	#;restore count of float
-	popq %rax
-	#;restore stack registers
-	movq %rbp, %rsp
-	popq %rbp
-	#;confirm return address not nil
-	cmpq $0, %r10
-	je 0f
-	#;jump to the method with current stack frame. and did not return back here.
-	#;this code made the method() call just like the ff() call. it takes what arguments
-	#;ff() take. and return values at where ff() called. 
-	#;stack frame of method() is prepared by caller of ff() and cleaned by it.
-	jmp	*%r10
-0:
-	ret
 
 #;void* _push_jump(id const obj, void* addr, ...);
 
@@ -160,53 +109,28 @@ _clean_jump4:
 	ret
 
 
-#;int mc_getIntegerForCAS(int* target);
-#;void* mc_getPointerForCAS(void* target);
+
+#;define int_arg1 %rdi
+#;define int_arg2 %rsi
+#;define int_arg3 %rdx
 
 .text
-.globl mc_getIntegerForCAS
+.globl	mc_atomic_set_integer
 .p2align 4, 0x90
-mc_getIntegerForCAS:
-	xorq %rax, %rax
-	movq 8(%rsp), %rax
-	ret
-
-.text
-.globl mc_getPointerForCAS
-.p2align 4, 0x90
-mc_getPointerForCAS:
-	xorq %rax, %rax
-	movq 8(%rsp), %rax
-	ret
-
-
-.text
-.globl	mc_compareAndSwapInteger
-.p2align 4, 0x90
-mc_compareAndSwapInteger:
-	movq %rsi, %rax
-	lock cmpxchgq %rdx, (%rdi)
-	xorq %rax, %rax
-	jne	0f
-
-	movq $0, %rax
-	ret
+mc_atomic_set_integer:
 0:
-	movq $-1, %rax
+	movq (%rdi), %rax
+	lock cmpxchgq %rsi, (%rdi)
+	jne	0b
 	ret
 
 
 .text
-.globl	mc_compareAndSwapPointer
+.globl	mc_atomic_set_pointer
 .p2align 4, 0x90
-mc_compareAndSwapPointer:
-	movq %rsi, %rax
-	lock cmpxchgq %rdx, (%rdi)
-	xorq %rax, %rax
-	jne	0f
-
-	movq $0, %rax
-	ret
+mc_atomic_set_pointer:
 0:
-	movq $-1, %rax
+	movq (%rdi), %rax
+	lock cmpxchgq %rsi, (%rdi)
+	jne	0b
 	ret

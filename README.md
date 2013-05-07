@@ -20,99 +20,122 @@ a toolkit for OOP programming in C language
 **Monk-C** use "MC" as the prefix.
 #### declear interface - write in .h file
 
-		#ifndef _Classname
-		#define _Classname _Supername;\
-			type var1;\
-			type var2;\
-			type var3;\
+	#include "MCRuntime.h"
+	#include "BirdFather.h"
 
-		class(Classname);
+	#ifndef Bird_
+	#define Bird_
 
-		constructor( Classname, argument-list );
+	implements(Flyable);
+	extends(BirdFather);
 
-		method(Classname, bye, xxx);
-		method(Classname, name1, arg-list);
-		method(Classname, name2, arg-list);
+	class(Bird);
+		char* name;
+		int type;
+	end(Bird);
 
-		#endif
+	method(Bird, bye, xxx);
+	method(Bird, initWithType, int type);
+	method(Bird, fly, xxx);
+	method(Bird, fatherAge, xxx);
+
+	#endif
 	
 #### implement methods - write in .c file
 		
-		constructor(Classname, argument-list )
-		{
-			link_class(Classname, Supername, super-init-args)
-			{
-				binding(Classname, bye, xxx);
-				binding(Classname, name1, arg-list);
-				binding(Classname, name2, arg-list);
-				override(Classname, supermethod, arg-list);
-			}
+	#include "Bird.h"
 
-			this->var1 = 0;
-			return this;
-		}
+	initer(Bird)
+	{
+		this->super = new(BirdFather);
+		this->type = 3;
+		debug_logt("Bird", "[%p] init called\n", this);
+	}
 
-		method(Classname, name1, arg-list)
-		{
-			this->var++;
-		}
-			
-		method(Classname, name2, arg-list)
-		{
-			this->var--;
-		}
-		
-		method(Classname, bye, xxx)
-		{
-			//do clean work
-		}
+	method(Bird, bye, xxx)
+	{
+		debug_logt(this->isa->name, "[%p] bye called\n", this);
+
+		release(this->super);
+	}
+
+	void funcA(Bird* this, int arg1)
+	{
+		debug_log("i am local function A\n");
+	}
+
+	protocol(Flyable, duckFly, xxx)
+	{
+		debug_log("%s\n", "Bird:Duck GuaGuaGua fly");
+	}
+
+	protocol(Flyable, chickenFly, xxx)
+	{
+		debug_log("%s\n", "Bird:Chicken JiJiJi fly");
+	}
+
+	method(Bird, initWithType, int type)
+	{
+		this->type = type;
+		return this;
+	}
+
+	method(Bird, fatherAge, xxx)
+	{
+		debug_logt(this->isa->name, "my father age is: %d\n", Cast(BirdFather, this->super)->age);
+	}
+
+	method(Bird, fly, xxx)
+	{
+		debug_log("Bird[%p->%p]: default fly type %d\n", this, this->super, this->type);
+		funcA(this, 100);
+	}
+
+	loader(Bird)
+	{
+		debug_logt(class->name, "load called\n");
+		#include "Flyable.p"
+
+		binding(Bird, initWithType, int type);
+		binding(Bird, bye, xxx);
+		binding(Bird, fly, xxx);
+		binding(Bird, fatherAge, xxx);
+	}
 
 ####method calling
 
 	it just like the Objective-C. sending message instead of function call.
 
-	VTable ret = new(VTable, nil);
-	ff(ret, show, YES, "this is a super method called by child:VTable");
+	Bird* bird = new(Bird);
+	ff(bird, fly, nil);
 
 ####Macros and runtime functions
 
 ---
 
-1. _Classname
-2. class
-3. method
-4. constructor
+1. class
+2. end
+3. initer
+4. loader
+5. method
+6. protocol
 
-5. link_class
-6. binding
-7. override
+7. binding
+8. override
 
 9. new
 10.call
-11.response
-12.ff
+11.ff
 
-17.retain
-18.release
-19.relnil
+12.retain
+13.release
+14.relnil
 
-19.id
-20.xxx
-21.nil
-22.BOOL
-23.String
-24.Float
-25.MV
-26.MK
-27.Handle
+15.shift
+16.shift_back
 
-28.protocol
-29. This
-30. Cast
-
-31.error_log
-32.debug_log
-33.runtime_log
+17. This
+18. Cast
 
 ---
 
@@ -120,56 +143,25 @@ Total **33** words.[^1]
 
 ####protocol file
 
-	DrawableProtocol.h
+	<Flyable.p>
 
-		#ifdef METHOD 
-		protocol(DrawableProtocol, draw, xxx);
-		protocol(DrawableProtocol, erase, xxx);
-		protocol(DrawableProtocol, redraw, xxx);
-		#undef METHOD
-		#endif
+	binding(Flyable, duckFly, xxx);
+	binding(Flyable, chickenFly, xxx);
 
-		#ifdef BIND
-		binding(DrawableProtocol, draw, xxx);
-		binding(DrawableProtocol, erase, xxx);
-		binding(DrawableProtocol, redraw, xxx);
-		#undef BIND
-		#endif
-
-######the METHOD part (include in .h file):
-
-		#ifdef METHOD 
-		protocol(DrawableProtocol, draw, xxx);
-		protocol(DrawableProtocol, erase, xxx);
-		protocol(DrawableProtocol, redraw, xxx);
-		#undef METHOD
-		#endif
-
-it just list the vars, which is just as decleard in the interface of a class.
-
-the purpose of doing this is: we can use **#include "xx.h"** to import them direct in our class interface ! just like this:
-
-	#define METHOD
-	#include "xx.h"
-	method( Classname, name1, argument-list )
-	
-the result of doing this is amazing ! we have already have some feature called: "interface" or "abstract class"
-in other OOP language.
 
 ######the BIND part (include in .c file):
 
-	constructor(Classname, xxx)
+	loader(Bird)
 	{
-		link_class()
-		{
-			binding(Classname, method1, xxx);
-			#define BIND
-			#include "xx.h"
-		}
+		debug_logt(class->name, "load called\n");
+		#include "Flyable.p"
+
+		binding(Bird, initWithType, int type);
+		binding(Bird, bye, xxx);
+		binding(Bird, fly, xxx);
+		binding(Bird, fatherAge, xxx);
 	}
 
-it just give implements of the methods in protocol file. as you can guess it also can be **#include "xx.h"**
-to our .c files. we use this to simulate some **inherit** and **Polymorphism** feature.
 
 ####TODO list:
 

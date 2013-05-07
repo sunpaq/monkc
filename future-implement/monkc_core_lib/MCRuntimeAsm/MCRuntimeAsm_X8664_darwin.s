@@ -42,6 +42,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #;define preserved_reg4 %r14
 #;define preserved_reg5 %r15
 
+
 #;void* _push_jump(id const obj, void* addr, ...);
 
 .text
@@ -108,54 +109,28 @@ __clean_jump4:
 	ret
 
 
-#;int mc_getIntegerForCAS(int* target);
-#;void* mc_getPointerForCAS(void* target);
+
+#;define int_arg1 %rdi
+#;define int_arg2 %rsi
+#;define int_arg3 %rdx
 
 .text
-.globl _mc_getIntegerForCAS
+.globl	_mc_atomic_set_integer
 .p2align 4, 0x90
-_mc_getIntegerForCAS:
-	xorq %rax, %rax
-	movq 8(%rsp), %rax
-	ret
-
-.text
-.globl _mc_getPointerForCAS
-.p2align 4, 0x90
-_mc_getPointerForCAS:
-	xorq %rax, %rax
-	movq 8(%rsp), %rax
-	ret
-
-
-.text
-.globl	_mc_compareAndSwapInteger
-.p2align 4, 0x90
-_mc_compareAndSwapInteger:
-	movq %rsi, %rax
-	lock cmpxchgq %rdx, (%rdi)
-	xorq %rax, %rax 
-	jne	0f
-	
-	movq $0, %rax
-	ret
+_mc_atomic_set_integer:
 0:
-	movq $-1, %rax
+	movq (%rdi), %rax
+	lock cmpxchgq %rsi, (%rdi)
+	jne	0b
 	ret
 
 
 .text
-.globl	_mc_compareAndSwapPointer
+.globl	_mc_atomic_set_pointer
 .p2align 4, 0x90
-_mc_compareAndSwapPointer:
-	movq %rsi, %rax
-	lock cmpxchgq %rdx, (%rdi)
-	xorq %rax, %rax
-	jne	0f
-
-	movq $0, %rax
-	ret
+_mc_atomic_set_pointer:
 0:
-	movq $-1, %rax
+	movq (%rdi), %rax
+	lock cmpxchgq %rsi, (%rdi)
+	jne	0b
 	ret
-

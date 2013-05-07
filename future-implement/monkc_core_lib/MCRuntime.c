@@ -59,34 +59,15 @@ static void _init_anony_pool()
 
 void _push_anony_obj(MCObject* anony)
 {
-	//if(anony==nil)return;
-
-	int oldcount, tmpcount;
-	MCObject *oldobj, *tmpobj;
-	//lock free
-	for(;;)
-	{
-		oldcount = mc_getIntegerForCAS(&mc_anony_count);//lock
-		oldobj = mc_getPointerForCAS(&mc_anony_pool[mc_anony_count]);
-		tmpcount = oldcount;
-		tmpobj = oldobj;
-
-		if(anony == nil)
-			return;
-		if(tmpcount >= ANONY_POOL_SIZE)
-			tmpcount = 0;
-		else
-			tmpcount = tmpcount + 1;
-
-		if(!mc_compareAndSwapInteger(&mc_anony_count, oldcount, tmpcount)
-		&&!mc_compareAndSwapPointer(&mc_anony_pool[mc_anony_count], oldobj, anony))
-		{
-			break;
-		}
-	}
-
-	//operate on the saved old object is thread safe
-	if(oldobj!=nil)relnil(oldobj);
+	if(anony==nil)return;
+	if(mc_anony_count >= ANONY_POOL_SIZE)
+		mc_atomic_set_integer(&mc_anony_count, 0);
+	else
+		mc_atomic_set_integer(&mc_anony_count, mc_anony_count+1);
+	if(mc_anony_pool[mc_anony_count]!=nil)
+		relnil(mc_anony_pool[mc_anony_count]);
+	else
+		mc_atomic_set_pointer(&mc_anony_pool[mc_anony_count], anony);
 }
 
 //pop do not release the obj, when a anony obj is poped from pool
@@ -140,121 +121,56 @@ void mc_end()
 
 void release(id const this)
 {
-	int oldcount, tmpcount;
-	MCObject *oldobj, *tmpobj;
-	MCClass *oldclass, *tmpclass;
-
-	runtime_log("release begin CAS\n");
-	for(;;)
-	{
-		oldobj = mc_getPointerForCAS(&this);//lock
-		oldcount = mc_getIntegerForCAS(&this->ref_count);
-		oldclass = this->isa;
-		tmpobj = oldobj;
-		tmpclass = oldclass;
-		tmpcount = oldcount;
-
-		if(tmpobj == nil)
-		{
-			error_log("%s\n", "release(nil) do nothing.");
-			return;
-		}
-		if (tmpclass == nil)
-		{
-			error_log("release(%d) twice. do nothing.\n", this);
-			return;
-		}
-		if (tmpcount == REFCOUNT_NO_MM)
-		{
-			debug_log("ref_count is -1 manage by runtime. do nothing\n");
-			return;
-		}
-
-		//try to set the ref_count to 0
-		if(tmpcount == REFCOUNT_ANONY_OBJ)
-			tmpcount = 0;
-		//try to minus 1
-		if(tmpcount > 0)
-			tmpcount--;
-
-		if (!mc_compareAndSwapPointer(&this, oldobj, tmpobj)
-		&&!mc_compareAndSwapInteger(&this->ref_count, oldcount, tmpcount))//unlock
-		{
-			break;
-		}else{
-			runtime_log("release CAS fail: this[%p/%p] count[%d/%d]\n", oldobj, this, oldcount, this->ref_count);
-		}	 
+	if(this==nil){
+		error_log("%s\n", "release(nil) do nothing.");
+		return;
 	}
-	runtime_log("release end CAS\n");
-
-	//no other thread call release
-	//operate on the saved old object is thread safe
-	if(tmpcount == 0)
+	if(this->isa==nil){
+		error_log("release(%d) twice. do nothing.\n", this);
+		return;
+	}
+	if(this->ref_count == REFCOUNT_NO_MM){
+		debug_log("ref_count is -1 manage by runtime. do nothing\n");
+		return;
+	}
+	if(this->ref_count == REFCOUNT_ANONY_OBJ){
+		mc_atomic_set_integer(&this->ref_count, 0);
+		_pop_anony_obj(this);
+	}
+	if(this->ref_count > 0){
+		mc_atomic_set_integer(&this->ref_count, this->ref_count-1);
+	}
+	if(this->ref_count == 0)
 	{
 		//call the "bye" method on object
 		_push_jump(_self_response_to(this, "bye"), nil);
-
-		if(oldcount == REFCOUNT_ANONY_OBJ)
-			_pop_anony_obj(oldobj);
-
 		//destory the obj
 		runtime_log("----free[%p]: goodbye!\n", this);
-		if(this!=nil)mc_free(this);
+		mc_free(this);
 	}
 }
 
 void retain(id const this)
 {
-	int oldcount, tmpcount;
-	MCObject *oldobj, *tmpobj;
-	MCClass *oldclass, *tmpclass;
-
-	runtime_log("begin CAS\n");
-	for(;;)
-	{
-		oldobj = mc_getPointerForCAS(&this);//lock
-		oldcount = mc_getIntegerForCAS(&this->ref_count);
-		oldclass = this->isa;
-		tmpobj = oldobj;
-		tmpclass = oldclass;
-		tmpcount = oldcount;
-
-		if(tmpobj == nil)
-		{
-			error_log("%s\n", "retain(nil) do nothing.");
-			return;
-		}
-		if (tmpclass == nil)
-		{
-			error_log("retain(obj) obj have no class linked. do nothing.\n");
-			return;
-		}
-		if (tmpcount == REFCOUNT_NO_MM)
-		{
-			debug_log("ref_count is -1 manage by runtime. do nothing\n");
-			return;
-		}
-
-		//try to set the ref_count to 0
-		if(tmpcount == REFCOUNT_ANONY_OBJ)			
-			tmpcount = 0;
-			
-		tmpcount++;//try to plus 1
-
-		if (!mc_compareAndSwapPointer(&this, oldobj, tmpobj)
-		&&!mc_compareAndSwapInteger(&this->ref_count, oldcount, tmpcount))//unlock
-		{
-			break;
-		}
+	if(this == nil){
+		error_log("%s\n", "retain(nil) do nothing.");
+		return;
 	}
-	runtime_log("end CAS\n");
+	if(this->isa == nil){
+		error_log("retain(obj) obj have no class linked. do nothing.\n");
+		return;
+	}
+	if(this->ref_count == REFCOUNT_NO_MM){
+		debug_log("ref_count is -1 manage by runtime. do nothing\n");
+		return;
+	}
+	if(this->ref_count == REFCOUNT_ANONY_OBJ){
+		mc_atomic_set_integer(&this->ref_count, 0);
+		_pop_anony_obj(this);
+	}
 
-	//no other thread call release
-	//operate on the saved old object is thread safe
-	if(oldcount == REFCOUNT_ANONY_OBJ)
-		_pop_anony_obj(oldobj);
-	
-	runtime_log("%s - ref_count:%d\n", oldclass->name, tmpcount);
+	mc_atomic_set_integer(&this->ref_count, this->ref_count+1);
+	runtime_log("%s - ref_count:%d\n", this->isa->name, this->ref_count);
 }
 
 void _relnil(MCObject** const this)
@@ -270,6 +186,11 @@ void _relnil(MCObject** const this)
 unsigned _binding(MCClass* const class, const char* methodname, void* value)
 {
 	if(class==nil)return;
+	if(class->method_count > MAX_METHOD_NUM-1){
+		error_log("method index out of bound\n");
+		//need some clean for ARM maybe
+		exit(-1);
+	}
 
 	//prepare
 	unsigned hashkey = _hash(methodname);
@@ -277,27 +198,13 @@ unsigned _binding(MCClass* const class, const char* methodname, void* value)
 	method->addr = value;
 	mc_copyName(method, methodname);
 
-	//save
+	//change
 	MCMethod* oldmethod;
-	int oldcount;
-	for(;;)
-	{
-		oldmethod = (MCMethod*)mc_getPointerForCAS(&class->method_list[hashkey]);//lock
-		oldcount = mc_getIntegerForCAS(&class->method_count);
-		if(oldmethod!=nil)
-			break;
-		if(oldcount > MAX_METHOD_NUM-1){
-			error_log("method index out of bound\n");
-			//need some clean for ARM maybe
-			exit(-1);
-		}
-
-		if(!mc_compareAndSwapPointer(&class->method_list[hashkey], oldmethod, method)
-		&& !mc_compareAndSwapInteger(&class->method_count, oldcount, oldcount+1))
-		{
-			runtime_log("binding a method, hash index:[%s/%d]\n", methodname, hashkey);
-			return hashkey;
-		}
+	if((oldmethod = class->method_list[hashkey])==nil){
+		mc_atomic_set_pointer(&class->method_list[hashkey], method);
+		mc_atomic_set_integer(&class->method_count, class->method_count+1);
+		runtime_log("binding a method, hash index:[%s/%d]\n", methodname, hashkey);
+		return hashkey;
 	}
 	
 	//clean up
@@ -318,6 +225,11 @@ unsigned _binding(MCClass* const class, const char* methodname, void* value)
 unsigned _override(MCClass* const class, const char* methodname, void* value)
 {
 	if(class==nil)return;
+	if(class->method_count > MAX_METHOD_NUM-1){
+		error_log("method index out of bound\n");
+		//need some clean for ARM maybe
+		exit(-1);
+	}
 
 	//prepare
 	unsigned hashkey = _hash(methodname);
@@ -325,27 +237,13 @@ unsigned _override(MCClass* const class, const char* methodname, void* value)
 	method->addr = value;
 	mc_copyName(method, methodname);
 
-	//save
+	//change
 	MCMethod* oldmethod;
-	int oldcount;
-	for(;;)
-	{
-		oldmethod = (MCMethod*)mc_getPointerForCAS(&class->method_list[hashkey]);//lock
-		oldcount = mc_getIntegerForCAS(&class->method_count);
-		if(oldmethod!=nil)
-			break;
-		if(oldcount > MAX_METHOD_NUM-1){
-			error_log("method index out of bound\n");
-			//need some clean for ARM maybe
-			exit(-1);
-		}
-
-		if(!mc_compareAndSwapPointer(&class->method_list[hashkey], oldmethod, method)
-		&& !mc_compareAndSwapInteger(&class->method_count, oldcount, oldcount+1))
-		{
-			runtime_log("override a method, hash index:[%s/%d]\n", methodname, hashkey);
-			return hashkey;
-		}
+	if((oldmethod = class->method_list[hashkey])==nil){
+		mc_atomic_set_pointer(&class->method_list[hashkey], method);
+		mc_atomic_set_integer(&class->method_count, class->method_count+1);
+		runtime_log("override a method, hash index:[%s/%d]\n", methodname, hashkey);
+		return hashkey;
 	}
 	
 	//clean up
