@@ -186,3 +186,4 @@ mc_atomic_set_pointer:
 	movl %ebp, %esp
 	popl %ebp
 	ret
+

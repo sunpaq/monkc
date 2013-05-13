@@ -58,6 +58,7 @@ void test_object_life_cycle()
 		relnil(father);
 }
 
+//not use
 void test_mode_shift()
 {
 	Bird* bird = new(Bird);
@@ -87,7 +88,7 @@ int main(int argc, char const *argv[])
 
 		test_object_life_cycle();
 
-		test_mode_shift();
+		//test_mode_shift();
 
 	mc_end();
 	return 0;

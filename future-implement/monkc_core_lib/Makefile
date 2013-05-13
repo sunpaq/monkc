@@ -1,10 +1,15 @@
 
+ANDROID_NDK_PATH = ~/android-ndk-r7b
+ARM_TOOLCHAIN_PATH = $(ANDROID_NDK_PATH)/toolchains/arm-linux-androideabi-4.4.3/prebuilt/linux-x86/bin/
+
 #compiler settings
 CC86 = clang -O3 -fno-omit-frame-pointer -g -w -Wall -Wno-unused-variable -Wno-return-type
-CCARM = clang -O3 -mapcs-frame -g -w -Wall -Wno-unused-variable -Wno-return-type
+CCARM = $(ARM_TOOLCHAIN_PATH)arm-linux-androideabi-gcc -O3 -g -w -Wall -Wno-unused-variable -Wno-return-type
+AS86 = as
+ASARM = $(ARM_TOOLCHAIN_PATH)arm-linux-androideabi-as
 
 CC = $(CC86)
-AS = as
+AS = $(AS86)
 
 #asm object settings
 ASM_IA32 = MCRuntimeAsm_IA32.o
@@ -17,11 +22,11 @@ ASM_ARM64 = MCRuntimeAsm_ARM64.o
 ASM = $(ASM_IA32)
 
 #c object settings
-LIBOBJS = Main.o Bird.o Bird_Engle.o BirdFather.o MCRuntime.o Hash.o Vectors.o Allocators.o Log.o Classpool.o
+LIBOBJS = Main.o Bird.o Bird_Engle.o BirdFather.o MCRuntime.o HashTable.o Vectors.o Allocators.o Log.o
 
 #default is IA-32 cpus
-exec:$(LIBOBJS) $(ASM)
-	$(CC) -o exec $(LIBOBJS) $(ASM)
+exec:$(ASM) $(LIBOBJS)
+	$(CC) -o exec $(ASM) $(LIBOBJS)
 
 #asm objects
 MCRuntimeAsm_IA32.o:MCRuntimeAsm/MCRuntimeAsm_IA32.s MCRuntime.h
@@ -37,9 +42,11 @@ MCRuntimeAsm_X8664_darwin.o:MCRuntimeAsm/MCRuntimeAsm_X8664_darwin.s MCRuntime.h
 	$(AS) -o MCRuntimeAsm_X8664_darwin.o MCRuntimeAsm/MCRuntimeAsm_X8664_darwin.s
 
 MCRuntimeAsm_ARM32.o:MCRuntimeAsm/MCRuntimeAsm_ARM32.s MCRuntime.h
+	export PATH=$(PATH):$(ARM_TOOLCHAIN_PATH)
 	$(AS) -o MCRuntimeAsm_ARM32.o MCRuntimeAsm/MCRuntimeAsm_ARM32.s
 
 MCRuntimeAsm_ARM64.o:MCRuntimeAsm/MCRuntimeAsm_ARM64.s MCRuntime.h
+	export PATH=$(PATH):$(ARM_TOOLCHAIN_PATH)
 	$(AS) -o MCRuntimeAsm_ARM64.o MCRuntimeAsm/MCRuntimeAsm_ARM64.s
 
 #c objects
@@ -58,8 +65,8 @@ BirdFather.o:BirdFather.c BirdFather.h
 MCRuntime.o:MCRuntime.c MCRuntime.h
 	$(CC) -c MCRuntime.c
 
-Hash.o:Hash.c MCRuntime.h
-	$(CC) -c Hash.c
+HashTable.o:HashTable.c MCRuntime.h
+	$(CC) -c HashTable.c
 
 Vectors.o:Vectors.c Vectors.h
 	$(CC) -c Vectors.c
@@ -69,9 +76,6 @@ Allocators.o:Allocators.c MCRuntime.h
 
 Log.o:Log.c Log.h
 	$(CC) -c Log.c
-
-#Classpool.o:Classpool.c MCRuntime.h
-#	$(CC) -c Classpool.c
 
 install:
 	rm -f -r /usr/local/include/monkc

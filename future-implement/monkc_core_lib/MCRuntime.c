@@ -39,11 +39,6 @@ extern void _clear_class_list();
 void ff_from_root(id const obj, const char* methodname);
 void ff_to_root(id const obj, const char* methodname);
 
-//private
-static void _nil_check(id const self, 
-	char* log1, char* log2, char* log3, 
-	char* log4, char* log5, char* log6, pthread_mutex_t* lock);
-
 /*
 	Anonymous objects pool for automatic memory management
 */
@@ -91,27 +86,28 @@ static void _pop_anony_obj(MCObject* anony)
 	Runtime Start and End
 */
 
-void mc_init()
-{
-	//default we set log level to debug
-	LOG_LEVEL = DEBUG;
-	_init_class_list();
-	//_init_anony_pool();
-	//_init_vector_stack();
-	//_init_wector_stack();
-	runtime_log("mc_init finished\n");
-}
-
 void mc_check()
 {
 	MCObject* obj = (MCObject*)malloc(sizeof(MCObject));
 	runtime_log("sizeof obj pointer is: %p", obj);
+	//do some checks
+}
 
+void mc_init()
+{
+	//default we set log level to debug
+	LOG_LEVEL = DEBUG;
+	init_class_table();
+	//_init_class_list();
+	//_init_anony_pool();
+	//_init_vector_stack();
+	//_init_wector_stack();
+	mc_check();
+	runtime_log("mc_init finished\n");
 }
 
 void mc_end()
 {
-	_clear_class_list();
 	runtime_log("mc_end finished\n");
 }
 
@@ -183,83 +179,26 @@ void _relnil(MCObject** const this)
 	Method Binding and Reflection Part
 */
 
-unsigned _binding(MCClass* const class, const char* methodname, void* value)
+unsigned _binding(MCClass* const aclass, const char* methodname, void* value)
 {
-	if(class==nil)return;
-	if(class->method_count > MAX_METHOD_NUM-1){
-		error_log("method index out of bound\n");
-		//need some clean for ARM maybe
-		exit(-1);
-	}
-
+	if(aclass==nil)return;
 	//prepare
-	unsigned hashkey = _hash(methodname);
 	MCMethod* method = (MCMethod*)malloc(sizeof(MCMethod));
 	method->addr = value;
-	mc_copyName(method, methodname);
-
-	//change
-	MCMethod* oldmethod;
-	if((oldmethod = class->method_list[hashkey])==nil){
-		mc_atomic_set_pointer(&class->method_list[hashkey], method);
-		mc_atomic_set_integer(&class->method_count, class->method_count+1);
-		runtime_log("binding a method, hash index:[%s/%d]\n", methodname, hashkey);
-		return hashkey;
-	}
-	
-	//clean up
-	if(mc_compareName(oldmethod, methodname)==0){
-		//no conflict already binded.
-		error_log("binding: class[%s] method[%s/%d] have already binded. clean temp MCMethod\n", 
-			class->name, methodname, hashkey);
-		free(method);
-	}else{
-		//conflict
-		error_log("binding: class[%s] method[%s/%d] is conflict with oldmethod[%s/%d] please chanege a name\n", 
-			class->name, methodname, hashkey, oldmethod->name, hashkey);
-		exit(-1);
-	}
-	return hashkey;
+	mc_copyMethodName(method, methodname);
+	//insert	
+	return set_method(&(aclass->table), &method, NO);
 }
 
-unsigned _override(MCClass* const class, const char* methodname, void* value)
+unsigned _override(MCClass* const aclass, const char* methodname, void* value)
 {
-	if(class==nil)return;
-	if(class->method_count > MAX_METHOD_NUM-1){
-		error_log("method index out of bound\n");
-		//need some clean for ARM maybe
-		exit(-1);
-	}
-
+	if(aclass==nil)return;
 	//prepare
-	unsigned hashkey = _hash(methodname);
 	MCMethod* method = (MCMethod*)malloc(sizeof(MCMethod));
 	method->addr = value;
-	mc_copyName(method, methodname);
-
-	//change
-	MCMethod* oldmethod;
-	if((oldmethod = class->method_list[hashkey])==nil){
-		mc_atomic_set_pointer(&class->method_list[hashkey], method);
-		mc_atomic_set_integer(&class->method_count, class->method_count+1);
-		runtime_log("override a method, hash index:[%s/%d]\n", methodname, hashkey);
-		return hashkey;
-	}
-	
-	//clean up
-	if(mc_compareName(oldmethod, methodname)==0){
-		//no conflict already binded.
-		error_log("override: class[%s] method[%s/%d] have already binded. clean old MCMethod and rebind new\n", 
-			class->name, methodname, hashkey);
-		free(oldmethod);
-		class->method_list[hashkey]=method;
-	}else{
-		//conflict
-		error_log("override: class[%s] method[%s/%d] is conflict with oldmethod[%s/%d] please chanege a name\n", 
-			class->name, methodname, hashkey, oldmethod->name, hashkey);
-		exit(-1);
-	}
-	return hashkey;
+	mc_copyMethodName(method, methodname);
+	//insert	
+	return set_method(&(aclass->table), &method, YES);
 }
 
 MCMessage make_msg(id const obj, const void* entry)
@@ -270,7 +209,7 @@ MCMessage make_msg(id const obj, const void* entry)
 	tmpmsg.addr = entry;
 	return tmpmsg;
 }
-
+/*
 void ff_from_root(id const obj, const char* methodname)
 {	
 	runtime_log("<ff_from_root> start\n");
@@ -315,43 +254,38 @@ void ff_to_root(id const obj, const char* methodname)
 			_push_jump(make_msg(iter, amethod->addr), nil);
 	}
 }
+*/
 
 MCMessage _self_response_to(id const obj, const char* methodname)
 {
-	_nil_check(obj,
-		"_response_to(obj, name)",
-		"obj is nil, name is:",
-		methodname,
-		"_response_to(obj, name)",
-		"obj have no class object linked. please call set_class(). the key is:",
-		"", nil);
 	//we will return a struct
 	MCMessage tmpmsg = {nil, nil};
-	MCMethod* amet = obj->isa->method_list[_hash(methodname)];
-	if(amet!=nil)
-	{
-		tmpmsg.object = obj;
-		tmpmsg.addr = amet->addr;
+	if(obj == nil || obj->isa == nil){
+		error_log("_self_response_to(obj) obj is nil or obj->isa is nil. return {nil, nil}\n");
 		return tmpmsg;
 	}
-	else{
+
+	MCMethod* res;
+	if((res=get_method_by_name(&(obj->isa->table), methodname)) != nil){
+		tmpmsg.object = obj;
+		tmpmsg.addr = res->addr;
+		return tmpmsg;
+	}else{
 		return tmpmsg;
 	}
 }
 
 MCMessage _response_to(id const obj, const char* methodname)
 {
-	_nil_check(obj,
-		"_response_to(obj, name)",
-		"obj is nil, name is:",
-		methodname,
-		"_response_to(obj, name)",
-		"obj have no class object linked. please call set_class(). the key is:",
-		"", nil);
 	//we will return a struct
 	MCMessage tmpmsg = {nil, nil};
+	if(obj == nil || obj->isa == nil){
+		error_log("_response_to(obj) obj is nil or obj->isa is nil. return {nil, nil}\n");
+		return tmpmsg;
+	}
 
-	unsigned hashkey = _hash(methodname);
+	unsigned level;
+	unsigned index = get_index_by_name(&(obj->isa->table), methodname, &level);
 	MCObject* obj_iterator = obj;
 	MCObject* first_hit_obj = nil;
 	MCObject* last_hit_obj = nil;
@@ -360,7 +294,8 @@ MCMessage _response_to(id const obj, const char* methodname)
 
 	//for root object
 	if(obj_iterator->super==nil){
-		if((amethod=obj_iterator->isa->method_list[hashkey]) != nil){
+		if((amethod=obj_iterator->isa->table->data[index]) != nil
+		&& index <= get_size_by_level(obj_iterator->isa->table->level)) {
 			hit_count = 1;
 			first_hit_obj = obj_iterator;
 			last_hit_obj = obj_iterator;
@@ -370,9 +305,8 @@ MCMessage _response_to(id const obj, const char* methodname)
 		for(obj_iterator = obj; 
 			obj_iterator!= nil;
 			obj_iterator = obj_iterator->super){
-
-			if((amethod=obj_iterator->isa->method_list[hashkey]) != nil)
-			{
+			if((amethod=obj_iterator->isa->table->data[index]) != nil
+			&& index <= get_size_by_level(obj_iterator->isa->table->level)) {
 				hit_count++;
 				if(first_hit_obj==nil)first_hit_obj = obj_iterator;
 				last_hit_obj = obj_iterator;
@@ -385,7 +319,7 @@ MCMessage _response_to(id const obj, const char* methodname)
 	if(hit_count == 0)
 	{
 		if(obj->isa->name!=nil && methodname!=nil)
-			error_log("class[%s] can not response to method[%s/%d]\n", obj->isa->name, methodname, hashkey);
+			error_log("class[%s] can not response to method[%s/%d]\n", obj->isa->name, methodname, index);
 		return tmpmsg;
 	}
 
@@ -393,7 +327,7 @@ MCMessage _response_to(id const obj, const char* methodname)
 	else if(hit_count == 1)
 	{
 		tmpmsg.object = last_hit_obj;
-		tmpmsg.addr = last_hit_obj->isa->method_list[hashkey]->addr;
+		tmpmsg.addr = last_hit_obj->isa->table->data[index]->addr;
 		return tmpmsg;
 	}
 
@@ -404,16 +338,16 @@ MCMessage _response_to(id const obj, const char* methodname)
 			obj_iterator!= last_hit_obj->super;
 			obj_iterator = obj_iterator->super){
 			//get the method obj
-			amethod = obj_iterator->isa->method_list[hashkey];
+			amethod = obj_iterator->isa->table->data[index];
 			//nil check
 			if(amethod!=nil && amethod->name!=nil)
 			{
-				runtime_log("hit a method [%s/%d] to match [%s]\n", amethod->name, hashkey, methodname);
-				if(mc_compareName(amethod, methodname) == 0)
+				runtime_log("hit a method [%s/%d] to match [%s]\n", amethod->name, index, methodname);
+				if(mc_compareMethodName(amethod, methodname) == 0)
 				{
 					runtime_log("method name matched! we return the method address\n");
 					tmpmsg.object = obj_iterator;
-					tmpmsg.addr = obj_iterator->isa->method_list[hashkey]->addr;
+					tmpmsg.addr = obj_iterator->isa->table->data[index]->addr;
 					return tmpmsg;
 				}
 			}
@@ -421,26 +355,7 @@ MCMessage _response_to(id const obj, const char* methodname)
 	}
 }
 
-//the _ff() function is implement in assemblly language in folder /MCRuntimeAsm
-//the mc_compareAndSwap() is implement in assemblly language in folder /MCRuntimeAsm
-
-static inline void _nil_check(id const self, 
-	char* log1, char* log2, char* log3, 
-	char* log4, char* log5, char* log6,
-	pthread_mutex_t* lock){
-	if(self == nil){
-		error_log("%s:\n%s\n%s\n", log1, log2, log3);
-		//if(lock != nil)pthread_mutex_unlock(lock);
-		exit(-1);
-	}
-	if(self->isa == nil){
-		error_log("%s:\n%s\n%s\n", log4, log5, log6);
-		//if(lock != nil)pthread_mutex_unlock(lock);
-		exit(-1);
-	}
-}
-
-void mc_copyName(MCMethod* method, const char* name)
+void mc_copyMethodName(MCMethod* method, const char* name)
 {
 	if(sizeof(*name) >= MAX_METHOD_NAME_CHAR_NUM)
 		error_log("method name[%s] length is large than Max method name char number: %d\n", 
@@ -449,7 +364,21 @@ void mc_copyName(MCMethod* method, const char* name)
 	method->name[MAX_METHOD_NAME_CHAR_NUM-1]='\0';
 }
 
-int mc_compareName(MCMethod* method, const char* name)
+int mc_compareMethodName(MCMethod* method, const char* name)
 {
 	return strncmp(method->name, name, MAX_METHOD_NAME_CHAR_NUM);
+}
+
+void mc_copyClassName(MCClass* aclass, const char* name)
+{
+	if(sizeof(*name) >= MAX_CLASS_NAME_CHAR_NUM)
+		error_log("class name[%s] length is large than Max class name char number: %d\n", 
+			name, MAX_CLASS_NAME_CHAR_NUM);
+	strncpy(aclass->name, name, MAX_CLASS_NAME_CHAR_NUM-1);
+	aclass->name[MAX_CLASS_NAME_CHAR_NUM-1]='\0';
+}
+
+int mc_compareClassName(MCClass* aclass, const char* name)
+{
+	return strncmp(aclass->name, name, MAX_CLASS_NAME_CHAR_NUM);
 }

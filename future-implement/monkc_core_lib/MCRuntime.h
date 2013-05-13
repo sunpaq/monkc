@@ -33,7 +33,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <pthread.h>
+//#include <pthread.h>
 
 #include "Log.h"
 #include "Vectors.h"
@@ -51,8 +51,20 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef MAX_METHOD_NAME_CHAR_NUM
 #define MAX_METHOD_NAME_CHAR_NUM 100
 #endif
+#ifndef MAX_CLASS_NAME_CHAR_NUM
+#define MAX_CLASS_NAME_CHAR_NUM 50
+#endif
+//56*4=224 @ 223(ng) 227(ok) 229(ng) 233(ng) 239(ng) 241(ng) 251(ng)
+//56*5=280 @ 281(ng) 283(ng) 293(ok) 307(ok) 311(ng) 313(ng) 317(ng)
+//56*6=336 @ 337(ng) 347(ng) 349(ng) 353(ok) 359(ng) 367(ng) 373(ng)
+//56*10=560@ 563(ok) 569(ok) 571(ok) 577(ok) 587(ng) 593(ng) 599(ok)  
+//		   @ 601(ok) 607(ok) 613(ok) 617(ok) 619(ng) 631(ok) 641(ng)
+//56*13=728@ 733(ng) 739 743 751 757 761 769
+//56*15=840@ 853(ng) 857 859 863 877 881 883
+//56*20=1120@ 1123 1129 1151 1153 1163 1171 1181
+
 #ifndef MAX_METHOD_NUM
-#define MAX_METHOD_NUM 4000
+#define MAX_METHOD_NUM 101
 #endif
 #ifndef MAX_CLASS_NUM
 #define MAX_CLASS_NUM  1000
@@ -77,15 +89,22 @@ typedef int RES;
 typedef struct MCMethod_struct
 {
 	void* addr;
+	unsigned index;
 	char name[MAX_METHOD_NAME_CHAR_NUM];
 }MCMethod;
+
+typedef struct MCHashTable_struct
+{
+	unsigned level;
+	MCMethod* data[];
+}MCHashTable;
 
 //meta class, the struct is a node for inherit hierarchy
 typedef struct MCClass_struct
 {
 	int method_count;
-	MCMethod* method_list[MAX_METHOD_NUM];
-	char* name;
+	char name[MAX_CLASS_NAME_CHAR_NUM];
+	MCHashTable* table;
 }MCClass;
 
 //for type cast, every object have the 3 var members
@@ -175,8 +194,8 @@ void retain(id const this);
 void _relnil(MCObject** const this);
 
 //method handling
-unsigned _binding(MCClass* const class, const char* methodname, void* value);
-unsigned _override(MCClass* const class, const char* methodname, void* value);
+unsigned _binding(MCClass* const aclass, const char* methodname, void* value);
+unsigned _override(MCClass* const aclass, const char* methodname, void* value);
 
 MCMessage _response_to(id const obj, const char* methodname);
 MCMessage _self_response_to(id const obj, const char* methodname);
@@ -197,17 +216,32 @@ void  mc_free(void *ptr);
 void mc_init();
 void mc_end();
 
-//hash
-unsigned _hash(const char *s);
-unsigned _chash(const char *s);
+//hash table
+unsigned hash(const char *s);
+void init_table(MCHashTable** const table_p, unsigned initlevel);
+unsigned set_method(MCHashTable** const table_p, MCMethod** const method_p, BOOL isOverride);
+unsigned set_class(const MCClass* aclass);
+unsigned get_size_by_level(const unsigned level);
+unsigned get_index_by_hash(const MCHashTable** table_p, const unsigned hashval, unsigned* resultlevel);
+unsigned get_index_by_name(const MCHashTable** table_p, const char* name, unsigned* resultlevel);
+MCMethod* get_method_by_name(const MCHashTable** table_p, const char* name);
+MCMethod* get_method_by_hash(const MCHashTable** table_p, const unsigned hashval);
+MCMethod* get_method_by_index(const MCHashTable** table_p, const unsigned index);
+MCClass* get_class_by_name(const char* name);
+MCClass* get_class_by_hash(const unsigned hashval);
+MCClass* get_class_by_index(const unsigned index);
 
 //string operate
-void mc_copyName(MCMethod* method, const char* name);
-int mc_compareName(MCMethod* method, const char* name);
+void mc_copyMethodName(MCMethod* method, const char* name);
+int mc_compareMethodName(MCMethod* method, const char* name);
+void mc_copyClassName(MCClass* aclass, const char* name);
+int mc_compareClassName(MCClass* aclass, const char* name);
 
 //class pool
 MCClass* _load(const char* name_in, loaderFP loader);
 id _new(id const this, const char* name_in, loaderFP loader, initerFP initer);
+MCClass* _get_class(unsigned index);
+void _set_class(unsigned index, MCClass* aclass);
 
 //write by asm
 void* _push_jump(MCMessage msg, ...);
