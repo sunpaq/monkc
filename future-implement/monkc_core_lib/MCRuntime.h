@@ -88,7 +88,10 @@ typedef int RES;
 //method info struct
 typedef struct MCMethod_struct
 {
+	struct MCMethod_struct* next;
 	void* addr;
+	unsigned level;
+	unsigned hash;
 	unsigned index;
 	char name[MAX_METHOD_NAME_CHAR_NUM];
 }MCMethod;
@@ -103,6 +106,9 @@ typedef struct MCHashTable_struct
 typedef struct MCClass_struct
 {
 	int method_count;
+	unsigned level;
+	unsigned hash;
+	unsigned index;
 	char name[MAX_CLASS_NAME_CHAR_NUM];
 	MCHashTable* table;
 }MCClass;
@@ -201,10 +207,6 @@ MCMessage _response_to(id const obj, const char* methodname);
 MCMessage _self_response_to(id const obj, const char* methodname);
 MCMessage make_msg(id const obj, const void* entry);
 
-
-void _shift(id const obj, const char* modename, loaderFP loader);
-void _shift_back(id const obj);
-
 //make a thread-safe allocator
 void* mc_malloc(size_t size);
 void* mc_malloc_anony(size_t size);
@@ -220,12 +222,10 @@ void mc_end();
 unsigned hash(const char *s);
 void init_table(MCHashTable** const table_p, unsigned initlevel);
 unsigned set_method(MCHashTable** const table_p, MCMethod** const method_p, BOOL isOverride);
-unsigned set_class(const MCClass* aclass);
+unsigned set_class(MCClass* const aclass);
 unsigned get_size_by_level(const unsigned level);
-unsigned get_index_by_hash(const MCHashTable** table_p, const unsigned hashval, unsigned* resultlevel);
-unsigned get_index_by_name(const MCHashTable** table_p, const char* name, unsigned* resultlevel);
 MCMethod* get_method_by_name(const MCHashTable** table_p, const char* name);
-MCMethod* get_method_by_hash(const MCHashTable** table_p, const unsigned hashval);
+MCMethod* get_method_by_hash(const MCHashTable** table_p, const unsigned hashval, const char* refname);
 MCMethod* get_method_by_index(const MCHashTable** table_p, const unsigned index);
 MCClass* get_class_by_name(const char* name);
 MCClass* get_class_by_hash(const unsigned hashval);

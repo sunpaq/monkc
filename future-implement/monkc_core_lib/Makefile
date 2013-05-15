@@ -22,7 +22,7 @@ ASM_ARM64 = MCRuntimeAsm_ARM64.o
 ASM = $(ASM_IA32)
 
 #c object settings
-LIBOBJS = Main.o Bird.o Bird_Engle.o BirdFather.o MCRuntime.o HashTable.o Vectors.o Allocators.o Log.o
+LIBOBJS = Main.o Bird.o BirdFather.o MCRuntime.o HashTable.o Vectors.o Allocators.o Log.o
 
 #default is IA-32 cpus
 exec:$(ASM) $(LIBOBJS)
@@ -55,9 +55,6 @@ Main.o:Main.c
 
 Bird.o:Bird.c Bird.h
 	$(CC) -c Bird.c
-
-Bird_Engle.o:Bird_Engle.c Bird_Engle.h
-	$(CC) -c Bird_Engle.c
 
 BirdFather.o:BirdFather.c BirdFather.h
 	$(CC) -c BirdFather.c

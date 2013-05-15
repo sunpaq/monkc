@@ -107,6 +107,7 @@ loader(Bird)
 
 	binding(Bird, initWithType, int type);
 	binding(Bird, bye, xxx);
+	binding(Bird, bye, xxx);
 	binding(Bird, fly, xxx);
 	binding(Bird, fatherAge, xxx);
 

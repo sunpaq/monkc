@@ -184,8 +184,11 @@ unsigned _binding(MCClass* const aclass, const char* methodname, void* value)
 	if(aclass==nil)return;
 	//prepare
 	MCMethod* method = (MCMethod*)malloc(sizeof(MCMethod));
+	method->next = nil;
 	method->addr = value;
+	method->hash = hash(methodname);
 	mc_copyMethodName(method, methodname);
+	//level will be setted in set_method
 	//insert	
 	return set_method(&(aclass->table), &method, NO);
 }
@@ -284,19 +287,25 @@ MCMessage _response_to(id const obj, const char* methodname)
 		return tmpmsg;
 	}
 
-	unsigned level;
-	unsigned index = get_index_by_name(&(obj->isa->table), methodname, &level);
+	// unsigned level;
+	// unsigned index;
+	// if((index=get_index_by_name(&(obj->isa->table), methodname, &level)) == 65535)
+	// 	_response_to(obj->super, methodname);
+
 	MCObject* obj_iterator = obj;
 	MCObject* first_hit_obj = nil;
 	MCObject* last_hit_obj = nil;
 	MCMethod* amethod = nil;
 	int hit_count = 0;
+	unsigned index = 65535;
+	unsigned level = 0;
+	unsigned hashval = hash(methodname);
 
 	//for root object
 	if(obj_iterator->super==nil){
-		if((amethod=obj_iterator->isa->table->data[index]) != nil
-		&& index <= get_size_by_level(obj_iterator->isa->table->level)) {
+		if((amethod=get_method_by_hash(&(obj_iterator->isa->table), hashval, methodname)) != nil) {
 			hit_count = 1;
+			index = amethod->index;
 			first_hit_obj = obj_iterator;
 			last_hit_obj = obj_iterator;
 		}
@@ -305,9 +314,9 @@ MCMessage _response_to(id const obj, const char* methodname)
 		for(obj_iterator = obj; 
 			obj_iterator!= nil;
 			obj_iterator = obj_iterator->super){
-			if((amethod=obj_iterator->isa->table->data[index]) != nil
-			&& index <= get_size_by_level(obj_iterator->isa->table->level)) {
+			if((amethod=get_method_by_hash(&(obj_iterator->isa->table), hashval, methodname)) != nil) {
 				hit_count++;
+				index = amethod->index;
 				if(first_hit_obj==nil)first_hit_obj = obj_iterator;
 				last_hit_obj = obj_iterator;
 			}
@@ -319,7 +328,10 @@ MCMessage _response_to(id const obj, const char* methodname)
 	if(hit_count == 0)
 	{
 		if(obj->isa->name!=nil && methodname!=nil)
-			error_log("class[%s] can not response to method[%s/%d]\n", obj->isa->name, methodname, index);
+			error_log("class[%s/level=%d] can not response to method[%s/%d/%d]\n", 
+				obj->isa->name, obj->isa->table->level, 
+				methodname, hashval, 
+				hashval % get_size_by_level(obj->isa->table->level));
 		return tmpmsg;
 	}
 
@@ -342,7 +354,7 @@ MCMessage _response_to(id const obj, const char* methodname)
 			//nil check
 			if(amethod!=nil && amethod->name!=nil)
 			{
-				runtime_log("hit a method [%s/%d] to match [%s]\n", amethod->name, index, methodname);
+				runtime_log("hit a method [%s/%d] to match [%s/%d]\n", amethod->name, index, methodname, index);
 				if(mc_compareMethodName(amethod, methodname) == 0)
 				{
 					runtime_log("method name matched! we return the method address\n");

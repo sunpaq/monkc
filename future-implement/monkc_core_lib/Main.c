@@ -1,6 +1,5 @@
 #include "MCRuntime.h"
 #include "Bird.h"
-#include "Bird_Engle.h"
 #include "BirdFather.h"
 
 int jumpTarget(id const this, const void* entry, int arg1, int arg2)
@@ -58,20 +57,6 @@ void test_object_life_cycle()
 		relnil(father);
 }
 
-//not use
-void test_mode_shift()
-{
-	Bird* bird = new(Bird);
-	//mode change
-	shift(bird, Bird_Engle);
-		ff(bird, engleFly, nil);
-		ff(bird, engleFatherAge, nil);
-		ff(bird, engleFight, nil);
-		ff(bird, engleEat, nil);
-	shift_back(bird);
-	relnil(bird);
-}
-
 void test_method_jumpping()
 {
 	debug_log("start\n");
@@ -87,8 +72,6 @@ int main(int argc, char const *argv[])
 //		test_method_jumpping();
 
 		test_object_life_cycle();
-
-		//test_mode_shift();
 
 	mc_end();
 	return 0;
