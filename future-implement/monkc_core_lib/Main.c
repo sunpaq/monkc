@@ -1,6 +1,8 @@
 #include "MCRuntime.h"
 #include "Bird.h"
 #include "BirdFather.h"
+#include "BirdCatA.h"
+#include "BirdModeA.h"
 
 int jumpTarget(id const this, const void* entry, int arg1, int arg2)
 {
@@ -51,10 +53,20 @@ void test_object_life_cycle()
 		ff(father, fly, nil);
 		debug_log("%s is child of %s\n", bird->isa->name, bird->super->isa->name);
 
+		Bird* birdcat = new_category(Bird, CatA);
+		ff(birdcat, catmethodA, nil);
+		ff(birdcat, fly, nil);
+		ff(bird, catmethodA, nil);
+		
+		shift(bird, Bird, ModeA);
+			ff(bird, modemethodC, nil);
+		shift_back(bird);
+
 		relnil(bird);
 		relnil(bird2);
 		relnil(bird4);
 		relnil(father);
+		relnil(birdcat);
 }
 
 void test_method_jumpping()

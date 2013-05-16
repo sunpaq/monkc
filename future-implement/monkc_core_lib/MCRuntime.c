@@ -188,9 +188,8 @@ unsigned _binding(MCClass* const aclass, const char* methodname, void* value)
 	method->addr = value;
 	method->hash = hash(methodname);
 	mc_copyMethodName(method, methodname);
-	//level will be setted in set_method
 	//insert	
-	return set_method(&(aclass->table), &method, NO);
+	return set_method(&(aclass->table), method, NO);
 }
 
 unsigned _override(MCClass* const aclass, const char* methodname, void* value)
@@ -198,10 +197,12 @@ unsigned _override(MCClass* const aclass, const char* methodname, void* value)
 	if(aclass==nil)return;
 	//prepare
 	MCMethod* method = (MCMethod*)malloc(sizeof(MCMethod));
+	method->next = nil;
 	method->addr = value;
+	method->hash = hash(methodname);
 	mc_copyMethodName(method, methodname);
 	//insert	
-	return set_method(&(aclass->table), &method, YES);
+	return set_method(&(aclass->table), method, YES);
 }
 
 MCMessage make_msg(id const obj, const void* entry)
@@ -212,52 +213,6 @@ MCMessage make_msg(id const obj, const void* entry)
 	tmpmsg.addr = entry;
 	return tmpmsg;
 }
-/*
-void ff_from_root(id const obj, const char* methodname)
-{	
-	runtime_log("<ff_from_root> start\n");
-	MCMessage address_stack[MAX_CLASS_NUM];
-
-	int count = 0;
-	unsigned hashkey = _hash(methodname);
-	MCMethod* amethod;
-	id iter;
-	for(iter = obj;
-		iter!= nil;
-		iter = iter->super){
-		runtime_log("<ff_from_root> checking [%s]\n", iter->isa->name);
-		if(iter->isa!=nil)amethod = iter->isa->method_list[hashkey];
-		if(amethod!=nil && amethod->addr!=nil){
-			runtime_log("<ff_from_root> push a method[%s/%s/%p] count[%d]\n", 
-				iter->isa->name, amethod->name, amethod->addr, count);
-			address_stack[count].object=iter;
-			address_stack[count].addr=amethod->addr;
-			count++;
-		}
-	}
-	runtime_log("<ff_from_root> ---\n");
-	for(count--; count>=0; count--){
-		runtime_log("<ff_from_root> pop a method[%p]\n", address_stack[count].addr);
-		_push_jump(address_stack[count], nil);
-	}
-	runtime_log("<ff_from_root> end\n");
-}
-
-void ff_to_root(id const obj, const char* methodname)
-{
-	unsigned hashkey = _hash(methodname);
-	MCMessage tmpmsg = {nil, nil};
-	MCMethod* amethod;
-	id iter;
-	for(iter = obj;
-		iter!= nil;
-		iter = iter->super){
-		amethod = iter->isa->method_list[hashkey];
-		if(amethod!=nil && amethod->addr!=nil)
-			_push_jump(make_msg(iter, amethod->addr), nil);
-	}
-}
-*/
 
 MCMessage _self_response_to(id const obj, const char* methodname)
 {
@@ -280,91 +235,54 @@ MCMessage _self_response_to(id const obj, const char* methodname)
 
 MCMessage _response_to(id const obj, const char* methodname)
 {
-	//we will return a struct
 	MCMessage tmpmsg = {nil, nil};
 	if(obj == nil || obj->isa == nil){
 		error_log("_response_to(obj) obj is nil or obj->isa is nil. return {nil, nil}\n");
 		return tmpmsg;
 	}
 
-	// unsigned level;
-	// unsigned index;
-	// if((index=get_index_by_name(&(obj->isa->table), methodname, &level)) == 65535)
-	// 	_response_to(obj->super, methodname);
-
 	MCObject* obj_iterator = obj;
-	MCObject* first_hit_obj = nil;
-	MCObject* last_hit_obj = nil;
+	MCObject* obj_first_hit = nil;
+	MCMethod* met_first_hit = nil;
 	MCMethod* amethod = nil;
 	int hit_count = 0;
-	unsigned index = 65535;
-	unsigned level = 0;
 	unsigned hashval = hash(methodname);
 
-	//for root object
-	if(obj_iterator->super==nil){
+	for(obj_iterator = obj; 
+		obj_iterator!= nil;
+		obj_iterator = obj_iterator->super){
 		if((amethod=get_method_by_hash(&(obj_iterator->isa->table), hashval, methodname)) != nil) {
-			hit_count = 1;
-			index = amethod->index;
-			first_hit_obj = obj_iterator;
-			last_hit_obj = obj_iterator;
-		}
-	}else{
-	//for non-root object
-		for(obj_iterator = obj; 
-			obj_iterator!= nil;
-			obj_iterator = obj_iterator->super){
-			if((amethod=get_method_by_hash(&(obj_iterator->isa->table), hashval, methodname)) != nil) {
-				hit_count++;
-				index = amethod->index;
-				if(first_hit_obj==nil)first_hit_obj = obj_iterator;
-				last_hit_obj = obj_iterator;
-			}
-
-			runtime_log("go super\n");
-		}
-	}
-
-	if(hit_count == 0)
-	{
-		if(obj->isa->name!=nil && methodname!=nil)
-			error_log("class[%s/level=%d] can not response to method[%s/%d/%d]\n", 
-				obj->isa->name, obj->isa->table->level, 
-				methodname, hashval, 
-				hashval % get_size_by_level(obj->isa->table->level));
-		return tmpmsg;
-	}
-
-	//for the no confilict method
-	else if(hit_count == 1)
-	{
-		tmpmsg.object = last_hit_obj;
-		tmpmsg.addr = last_hit_obj->isa->table->data[index]->addr;
-		return tmpmsg;
-	}
-
-	//for the method key have conflicted with some super class in inherit tree
-	else
-	{
-		for(obj_iterator = first_hit_obj;
-			obj_iterator!= last_hit_obj->super;
-			obj_iterator = obj_iterator->super){
-			//get the method obj
-			amethod = obj_iterator->isa->table->data[index];
-			//nil check
-			if(amethod!=nil && amethod->name!=nil)
-			{
-				runtime_log("hit a method [%s/%d] to match [%s/%d]\n", amethod->name, index, methodname, index);
-				if(mc_compareMethodName(amethod, methodname) == 0)
-				{
-					runtime_log("method name matched! we return the method address\n");
-					tmpmsg.object = obj_iterator;
-					tmpmsg.addr = obj_iterator->isa->table->data[index]->addr;
-					return tmpmsg;
+			runtime_log("hit a method [%s/%d] to match [%s]\n", 
+				amethod->name, amethod->index, methodname);
+			hit_count++;
+			tmpmsg.object = obj_iterator;
+			tmpmsg.addr = amethod->addr;
+			if(obj_first_hit==nil)obj_first_hit = obj_iterator;
+			if(met_first_hit==nil)met_first_hit = amethod;
+			//for the method key have conflicted with some super class in inherit tree
+			if(hit_count>1){
+				if(hit_count==2){
+					//to support the "overide" feature of oop
+					if(mc_compareMethodName(met_first_hit, methodname) == 0){
+						tmpmsg.object = obj_first_hit;
+						runtime_log("return a message[%s/%s]\n", tmpmsg.object->isa->name, methodname);
+						return tmpmsg;}
 				}
+				if(mc_compareMethodName(amethod, methodname) == 0){
+					tmpmsg.object = obj_iterator;
+					runtime_log("return a message[%s/%s]\n", tmpmsg.object->isa->name, methodname);
+					return tmpmsg;}
 			}
 		}
 	}
+	if(hit_count==1)
+		runtime_log("return a message[%s/%s]\n", tmpmsg.object->isa->name, methodname);
+	else if(hit_count==0)
+		error_log("class[%s] can not response to method[%s]\n", obj->isa->name, methodname);
+	else
+		error_log("hit_count[%s]>1 but class[%s] can not response to method[%s]\n", 
+			hit_count, obj->isa->name, methodname);
+	return tmpmsg;
 }
 
 void mc_copyMethodName(MCMethod* method, const char* name)

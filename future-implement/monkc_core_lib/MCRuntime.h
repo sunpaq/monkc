@@ -54,21 +54,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef MAX_CLASS_NAME_CHAR_NUM
 #define MAX_CLASS_NAME_CHAR_NUM 50
 #endif
-//56*4=224 @ 223(ng) 227(ok) 229(ng) 233(ng) 239(ng) 241(ng) 251(ng)
-//56*5=280 @ 281(ng) 283(ng) 293(ok) 307(ok) 311(ng) 313(ng) 317(ng)
-//56*6=336 @ 337(ng) 347(ng) 349(ng) 353(ok) 359(ng) 367(ng) 373(ng)
-//56*10=560@ 563(ok) 569(ok) 571(ok) 577(ok) 587(ng) 593(ng) 599(ok)  
-//		   @ 601(ok) 607(ok) 613(ok) 617(ok) 619(ng) 631(ok) 641(ng)
-//56*13=728@ 733(ng) 739 743 751 757 761 769
-//56*15=840@ 853(ng) 857 859 863 877 881 883
-//56*20=1120@ 1123 1129 1151 1153 1163 1171 1181
-
-#ifndef MAX_METHOD_NUM
-#define MAX_METHOD_NUM 101
-#endif
-#ifndef MAX_CLASS_NUM
-#define MAX_CLASS_NUM  1000
-#endif
 #ifndef ANONY_POOL_SIZE
 #define ANONY_POOL_SIZE 1000
 #endif
@@ -105,6 +90,7 @@ typedef struct MCHashTable_struct
 //meta class, the struct is a node for inherit hierarchy
 typedef struct MCClass_struct
 {
+	struct MCClass_struct* next;
 	int method_count;
 	unsigned level;
 	unsigned hash;
@@ -145,18 +131,25 @@ typedef struct cls##_struct{\
 	int ref_count;
 #define end(cls) }cls;\
 MCClass* cls##_load(MCClass* const class);\
-cls* cls##_init(cls* const this);\
-void cls##_clean(cls* const this);
+cls* cls##_init(cls* const this);
 
 //callback function pointer types
 typedef MCClass* (*loaderFP)(MCClass*);
 typedef MCObject* (*initerFP)(MCObject*);
-typedef void (*cleanerFP)(MCObject*);
 
 //callbacks
 #define loader(cls)					MCClass* cls##_load(MCClass* const class)
 #define initer(cls)						cls* cls##_init(cls* const this)
-#define cleaner(cls)					void cls##_clean(cls* const this)
+//category
+#define category(ori, cat) 			MCClass* ori##cat##_load(MCClass* const class);\
+										ori* ori##cat##_init(ori* const this)
+#define catloader(ori, cat)			MCClass* ori##cat##_load(MCClass* const class)
+#define catiniter(ori, cat)				ori* ori##cat##_init(ori* const this)
+//mode
+#define classmode(ori, cat) 		MCClass* ori##cat##_load(MCClass* const class);\
+										ori* ori##cat##_init(ori* const this)
+#define modloader(ori, cat)			MCClass* ori##cat##_load(MCClass* const class)
+#define modiniter(ori, cat)				ori* ori##cat##_init(ori* const this)			
 
 //callback caller
 #define load(cls)					_load(S(cls), cls##_load)
@@ -183,12 +176,13 @@ typedef void (*cleanerFP)(MCObject*);
 #define new_clear(cls, ...)         _new(_alloc_clear(cls), S(cls), cls##_load, cls##_init)
 #define new_onstack(cls, ...)       _new(_alloc_onstack(cls), S(cls), cls##_load, cls##_init)
 #define new_anony(cls, ...)         _new(_alloc_anony(cls), S(cls), cls##_load, cls##_init)
+#define new_category(ori, cat)		_new_category(_alloc(ori), S(ori), ori##_load, ori##_init, S(cat), ori##cat##_load, ori##cat##_init)
 
 //for call method
 #define call(this, cls, name, ...)      cls##_##name(this, cls##_##name, __VA_ARGS__)//call other class method
 #define response_to(obj, met) 			_response_to(obj, S(met))
 #define ff(obj, met, ...)				_push_jump(_response_to(obj, S(met)), __VA_ARGS__)
-#define shift(obj, mode)				_shift(obj, S(mode), mode##_load)
+#define shift(obj, ori, mode)			_shift(obj, S(mode), ori##mode##_load)
 #define shift_back(obj)					_shift_back(obj)
 
 //Reference Count
@@ -221,14 +215,14 @@ void mc_end();
 //hash table
 unsigned hash(const char *s);
 void init_table(MCHashTable** const table_p, unsigned initlevel);
-unsigned set_method(MCHashTable** const table_p, MCMethod** const method_p, BOOL isOverride);
+unsigned set_method(MCHashTable** const table_p, MCMethod* const method, BOOL isOverride);
 unsigned set_class(MCClass* const aclass);
 unsigned get_size_by_level(const unsigned level);
 MCMethod* get_method_by_name(const MCHashTable** table_p, const char* name);
 MCMethod* get_method_by_hash(const MCHashTable** table_p, const unsigned hashval, const char* refname);
 MCMethod* get_method_by_index(const MCHashTable** table_p, const unsigned index);
 MCClass* get_class_by_name(const char* name);
-MCClass* get_class_by_hash(const unsigned hashval);
+MCClass* get_class_by_hash(const unsigned hashval, const char* refname);
 MCClass* get_class_by_index(const unsigned index);
 
 //string operate
@@ -240,8 +234,13 @@ int mc_compareClassName(MCClass* aclass, const char* name);
 //class pool
 MCClass* _load(const char* name_in, loaderFP loader);
 id _new(id const this, const char* name_in, loaderFP loader, initerFP initer);
+id _new_category(id const this, 
+	const char* name_origin, loaderFP loader, initerFP initer,
+	const char* name_cat, loaderFP loader_cat, initerFP initer_cat);
 MCClass* _get_class(unsigned index);
 void _set_class(unsigned index, MCClass* aclass);
+void _shift(id const obj, const char* modename, loaderFP loader);
+void _shift_back(id const obj);
 
 //write by asm
 void* _push_jump(MCMessage msg, ...);

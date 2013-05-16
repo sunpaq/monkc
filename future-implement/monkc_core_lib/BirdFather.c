@@ -3,6 +3,7 @@
 initer(BirdFather)
 {
 	debug_logt("BirdFather", "[%p] init called\n", this);
+	this->super = new(BirdGrandFather);
 	this->age = 50;
 }
 
