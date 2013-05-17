@@ -134,3 +134,4 @@ _mc_atomic_set_pointer:
 	lock cmpxchgq %rsi, (%rdi)
 	jne	0b
 	ret
+

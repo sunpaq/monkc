@@ -16,6 +16,11 @@ MAKEFLIETMP="MODULES = \$(wildcard *.c)
 \nclean:\n\trm -f exec \$(OBJS) temp.* stream.txt core                            
 \ndump:\n\tulimit -c unlimited"
 
+if [ "$1" = "" ]
+then
+	echo "mcbuild -create			//create a project at current path"
+	echo "mcbuild -build 			//build a project"
+fi
 if [ "$1" = "-create" ]
 then
 	echo "create a project"
