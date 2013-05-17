@@ -5,7 +5,6 @@ BINPATH = /usr/local/bin/
 SRCS = $(wildcard *.c)
 LIBOBJS = $(patsubst %.c, %.o, $(SRCS))
 ARCH = $(strip $(shell uname -m))
-CPU = $(strip $(shell uname -p))
 OS = $(strip $(shell uname -s))
 
 CC = clang -O -g -w -Wall -Wno-unused-variable -Wno-return-type
@@ -50,11 +49,11 @@ ifeq ($(OS),Linux)
 	$(AS) -o MCRuntimeAsm.o MCRuntimeAsm/MCRuntimeAsm_IA32.s
 endif
 endif
-ifeq ($(CPU),armv6l)
+ifeq ($(ARCH),armv6l)
 	$(AS) -o MCRuntimeAsm.o MCRuntimeAsm/MCRuntimeAsm_ARM32.s
 endif
 #TODO
-ifeq ($(CPU),armv9)
+ifeq ($(ARCH),armv9)
 	$(AS) -o MCRuntimeAsm.o MCRuntimeAsm/MCRuntimeAsm_ARM64.s
 endif
 
