@@ -32,16 +32,12 @@ void test_object_life_cycle()
 		bird2 = (Bird*)_new(_alloc(Bird), "Bird", Bird_load, Bird_init);
 		debug_log("bird2 pointer %p\n", bird2);
 
-
 		Bird* bird4 = ff(new(Bird), initWithType, 4);
 		ff(bird4, fly, nil);
 
 		BirdFather* father = new(BirdFather);
 
 		_push_jump(make_msg(bird, Bird_fly), nil);
-
-
-
 		debug_log("after new\n");
 
 		//for(;;){
@@ -57,7 +53,7 @@ void test_object_life_cycle()
 		ff(birdcat, catmethodA, nil);
 		ff(birdcat, fly, nil);
 		ff(bird, catmethodA, nil);
-		
+
 		shift(bird, Bird, ModeA);
 			ff(bird, modemethodC, nil);
 		shift_back(bird);

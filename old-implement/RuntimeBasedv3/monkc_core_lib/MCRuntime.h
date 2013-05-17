@@ -164,16 +164,8 @@ void retain(id const this);
 void _relnil(MCObject** const this);
 
 //method handling
-// unsigned _binding(id const self, unsigned hashkey, _FunctionPointer(value));
-// unsigned _override(id const self, unsigned hashkey, _FunctionPointer(value));
 unsigned _binding(id const self, const char* methodname, _FunctionPointer(value));
 unsigned _override(id const self, const char* methodname, _FunctionPointer(value));
-
-// BOOL _response(id const obj, unsigned hashkey);
-// void* _ff(id const obj, const unsigned hashkey, ...);
-// void* _resolve_method(id const obj, const unsigned hashkey);
-//BOOL _response(id const obj, const char* methodname);
-void* _ff(id const obj, const char* methodname, ...);
 void* _response_to(id const obj, const char* methodname);
 
 //make a thread-safe allocator
