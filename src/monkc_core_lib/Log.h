@@ -55,10 +55,10 @@ int LOG_LEVEL;
 
 #define LOG_FMT "%s%s\033[0m"
 
-void error_log(char* fmt, ...);
-void debug_log(char* fmt, ...);
-void runtime_log(char* fmt, ...);
+void error_log(char* volatile fmt, ...);
+void debug_log(volatile char* fmt, ...);
+void runtime_log(volatile char* fmt, ...);
 //with tags
-void error_logt(char* tag, char* fmt, ...);
-void debug_logt(char* tag, char* fmt, ...);
-void runtime_logt(char* tag, char* fmt, ...);
+void error_logt(volatile char* tag, volatile char* fmt, ...);
+void debug_logt(volatile char* tag, volatile char* fmt, ...);
+void runtime_logt(volatile char* tag, volatile char* fmt, ...);

@@ -197,8 +197,8 @@ void _relnil(MCObject** const this);
 unsigned _binding(MCClass* const aclass, const char* methodname, void* value);
 unsigned _override(MCClass* const aclass, const char* methodname, void* value);
 
-MCMessage _response_to(id const obj, const char* methodname);
-MCMessage _self_response_to(id const obj, const char* methodname);
+MCMessage _response_to(id const volatile obj, const char* methodname);
+MCMessage _self_response_to(id volatile const obj, const char* methodname);
 MCMessage make_msg(id const obj, const void* entry);
 
 //make a thread-safe allocator
@@ -215,7 +215,7 @@ void mc_end();
 //hash table
 unsigned hash(const char *s);
 void init_table(MCHashTable** const table_p, unsigned initlevel);
-unsigned set_method(MCHashTable** const table_p, MCMethod* const method, BOOL isOverride);
+unsigned set_method(MCHashTable** const table_p, MCMethod* const volatile method, BOOL isOverride);
 unsigned set_class(MCClass* const aclass);
 unsigned get_size_by_level(const unsigned level);
 MCMethod* get_method_by_name(const MCHashTable** table_p, const char* name);
@@ -248,7 +248,7 @@ void* _clean_jump1(MCMessage msg, ...);
 void* _clean_jump2(MCMessage msg, ...);
 void* _clean_jump3(MCMessage msg, ...);
 void* _clean_jump4(MCMessage msg, ...);
-void mc_atomic_set_integer(int* target, int value);
-void mc_atomic_set_pointer(void** target, void* value);
+void mc_atomic_set_integer(volatile int* target, volatile int value);
+void mc_atomic_set_pointer(volatile void** target, volatile void* value);
 
 #endif

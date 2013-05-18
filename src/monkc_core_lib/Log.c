@@ -32,86 +32,95 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 	we use the same syntex with printf
 */
 
-static char log_buf[1024];
-void error_log(char* fmt, ...)
+//static char log_buf[1024];
+void error_log(char* volatile fmt, ...)
 {
 	if(LOG_LEVEL != SILENT){
+		char log_buf[1024];
 		printf(LOG_FMT, LOG_COLOR_RED, "[Error] - ");
 		va_list ap;
 		va_start(ap, fmt);
 			vsprintf(log_buf, fmt, ap);
+			log_buf[1023]='\0';
 			printf("%s", log_buf);
 		va_end(ap);
 	}
 }
 
-void debug_log(char* fmt, ...)
+void debug_log(volatile char* fmt, ...)
 {
 	if(LOG_LEVEL != SILENT
 	 &&LOG_LEVEL != ERROR_ONLY){
+	 	char log_buf[1024];
 		printf(LOG_FMT, LOG_COLOR_LIGHT_BLUE, "[Debug] - ");
 		va_list ap;
 		va_start(ap, fmt);
 			vsprintf(log_buf, fmt, ap);
+			log_buf[1023]='\0';
 			printf("%s", log_buf);
 		va_end(ap);
 	}
 }
 
-void runtime_log(char* fmt, ...)
+void runtime_log(volatile char* fmt, ...)
 {
 	if(LOG_LEVEL != SILENT
 	 &&LOG_LEVEL != ERROR_ONLY
 	 &&LOG_LEVEL != DEBUG){
+	 	char log_buf[1024];
 		printf(LOG_FMT, LOG_COLOR_DARK_GRAY, "[RTime] - ");
 		va_list ap;
 		va_start(ap, fmt);
 			vsprintf(log_buf, fmt, ap);
+			log_buf[1023]='\0';
 			printf("%s", log_buf);
 		va_end(ap);
 	}
 }
 
-void error_logt(char* tag, char* fmt, ...)
+void error_logt(volatile char* tag, volatile char* fmt, ...)
 {
 	if(LOG_LEVEL != SILENT){
+		char log_buf[1024];
 		printf(LOG_FMT, LOG_COLOR_RED, "[Error] - ");
 		printf(LOG_FMT, LOG_COLOR_DARK_GRAY, tag);
-
 		va_list ap;
 		va_start(ap, fmt);
 			vsprintf(log_buf, fmt, ap);
+			log_buf[1023]='\0';
 			printf("%s", log_buf);
 		va_end(ap);
 	}
 }
 
-void debug_logt(char* tag, char* fmt, ...)
+void debug_logt(volatile char* tag, volatile char* fmt, ...)
 {
 	if(LOG_LEVEL != SILENT
 	 &&LOG_LEVEL != ERROR_ONLY){
+	 	char log_buf[1024];
 		printf(LOG_FMT, LOG_COLOR_LIGHT_BLUE, "[Debug] - ");
 		printf(LOG_FMT, LOG_COLOR_DARK_GRAY, tag);
-
 		va_list ap;
 		va_start(ap, fmt);
 			vsprintf(log_buf, fmt, ap);
+			log_buf[1023]='\0';
 			printf("%s", log_buf);
 		va_end(ap);
 	}
 }
 
-void runtime_logt(char* tag, char* fmt, ...)
+void runtime_logt(volatile char* tag, volatile char* fmt, ...)
 {
 	if(LOG_LEVEL != SILENT
 	 &&LOG_LEVEL != ERROR_ONLY
 	 &&LOG_LEVEL != DEBUG){
+	 	char log_buf[1024];
 		printf(LOG_FMT, LOG_COLOR_DARK_GRAY, "[RTime] - ");
 		printf(LOG_FMT, LOG_COLOR_DARK_GRAY, tag);
-
 		va_list ap;
 		va_start(ap, fmt);
 			vsprintf(log_buf, fmt, ap);
+			log_buf[1023]='\0';
 			printf("%s", log_buf);
 		va_end(ap);
 	}

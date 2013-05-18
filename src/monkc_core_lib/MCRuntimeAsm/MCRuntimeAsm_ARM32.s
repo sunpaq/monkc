@@ -116,7 +116,7 @@ mc_atomic_set_integer:
 	mov v1, a2
 	strex v2, v1, [a1]
 	cmp v2, #0
-	beq 0b
+	bne 0b
 	bx lr
 
 
@@ -129,6 +129,6 @@ mc_atomic_set_pointer:
 	mov v1, a2
 	strex v2, v1, [a1]
 	cmp v2, #0
-	beq 0b
+	bne 0b
 	bx lr
 	

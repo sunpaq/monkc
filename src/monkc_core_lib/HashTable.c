@@ -33,7 +33,7 @@ unsigned hash(const char *s);
 void init_class_table();
 void init_table(MCHashTable** const table_p, unsigned initlevel);
 void expand_table(MCHashTable** const table_p, unsigned tolevel);
-unsigned set_method(MCHashTable** const table_p, MCMethod* const method, BOOL isOverride);
+unsigned set_method(MCHashTable** const table_p, MCMethod* const volatile method, BOOL isOverride);
 unsigned set_class(MCClass* const aclass);
 unsigned get_size_by_level(const unsigned level);
 MCMethod* get_method_by_name(const MCHashTable** table_p, const char* name);
@@ -98,17 +98,16 @@ unsigned get_size_by_level(const unsigned level)
 	return mc_table_sizes[level];
 }
 
-unsigned set_method(MCHashTable** const table_p, MCMethod* const method, BOOL isOverride)
+unsigned set_method(MCHashTable** const table_p, MCMethod* const volatile method, BOOL isOverride)
 {
 	unsigned hashval = method->hash;
 	unsigned index = hashval % mc_table_sizes[(*table_p)->level];
 	MCMethod* oldmethod;
 	if((oldmethod=(*table_p)->data[index]) == nil){
-		mc_atomic_set_integer(&(method->index), index);
-		mc_atomic_set_pointer(&((*table_p)->data[index]), method);
-		runtime_log("binding a method[%s/%d]\n", method->name, index);
 		method->level = (*table_p)->level;
 		method->index = index;
+		mc_atomic_set_pointer(&((*table_p)->data[index]), method);
+		runtime_log("binding a method[%s/%d]\n", (*table_p)->data[index]->name, index);
 		return index;
 	}else{
 		//if the method have already been setted. we free the old method
@@ -116,15 +115,16 @@ unsigned set_method(MCHashTable** const table_p, MCMethod* const method, BOOL is
 			if(isOverride==NO){
 				error_log("binding method [%s] already been setted, free temp method\n", method->name);
 				free(method);
+				return index;
 			}else{
 				error_log("override method [%s] already been setted, replace old method\n", method->name);
 				free(oldmethod);
-				mc_atomic_set_integer(&(method->index), index);
+				method->level = (*table_p)->level;
+				method->index = index;
 				mc_atomic_set_pointer(&((*table_p)->data[index]), method);
+				return index;
 			}
-			method->level = (*table_p)->level;
-			method->index = index;
-			return index;
+
 		//conflict with other method. we expand the table and try again. until success
 		}else{
 			if(oldmethod->hash == method->hash){
@@ -146,7 +146,7 @@ unsigned set_method(MCHashTable** const table_p, MCMethod* const method, BOOL is
 				error_log("method name conflict can not be soloved. link the new one behind the old\n");
 				method->level = 4;
 				method->index = index;
-				oldmethod->next = method;
+				mc_atomic_set_pointer(&(oldmethod->next), method);
 				return index;
 			}
 		}
@@ -159,16 +159,15 @@ unsigned set_class(MCClass* const aclass)
 	unsigned index = hashval % mc_table_sizes[mc_class_table->level];
 	MCClass* oldclass;
 	if((oldclass=mc_class_table->data[index]) == nil){
-		mc_atomic_set_pointer(&(mc_class_table->data[index]), aclass);
 		aclass->level = mc_class_table->level;
 		aclass->index = index;
+		mc_atomic_set_pointer(&(mc_class_table->data[index]), aclass);
 		return index;
 	}else{
 		//this class have already setted.
 		if(mc_compareClassName(oldclass, aclass->name) == 0){
-			error_log("class[%s] already been binded. do nothing\n", aclass->name);
-			aclass->level = mc_class_table->level;
-			aclass->index = index;
+			error_log("class[%s] already been binded. free temp class.\n", aclass->name);
+			free(aclass);
 			return index;
 		//conflict with other class. we expand class table until success.
 		}else{
@@ -191,7 +190,7 @@ unsigned set_class(MCClass* const aclass)
 				error_log("method name conflict can not be soloved. link the new one behind the old\n");
 				aclass->level = 4;
 				aclass->index = index;
-				oldclass->next = aclass;
+				mc_atomic_set_pointer(&(oldclass->next), aclass);
 				return index;
 			}
 		}

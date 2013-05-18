@@ -146,19 +146,19 @@ __clean_jump4:
 
 .text
 .globl	_mc_atomic_set_integer
-.p2align 4, 0x90
+.p2align 2, 0x90
 _mc_atomic_set_integer:
 	pushl %ebp				
 	movl %esp, %ebp
 	 						#; 8(%ebp)  addr
 							#; 12(%ebp) newval
 0:
+	xorl %eax, %eax
 	movl 8(%ebp), %edx		#; dest addr in edx
 	movl 0(%edx), %eax		#; old value in eax
 	movl 12(%ebp), %ecx		#; new value in ecx
 
 	lock cmpxchgl %ecx, (%edx) 	#; atomic compare and swap
-	xorl %eax, %eax
 	jne	0b
 
 	movl %ebp, %esp
@@ -168,21 +168,22 @@ _mc_atomic_set_integer:
 
 .text
 .globl	_mc_atomic_set_pointer
-.p2align 4, 0x90
+.p2align 2, 0x90
 _mc_atomic_set_pointer:
 	pushl %ebp				
 	movl %esp, %ebp
 	 						#; 8(%ebp)  addr
 							#; 12(%ebp) newval
 0:
+	xorl %eax, %eax
 	movl 8(%ebp), %edx		#; dest addr in edx
 	movl 0(%edx), %eax		#; old value in eax
 	movl 12(%ebp), %ecx		#; new value in ecx
 
 	lock cmpxchgl %ecx, (%edx) 	#; atomic compare and swap
-	xorl %eax, %eax
 	jne	0b
 
 	movl %ebp, %esp
 	popl %ebp
 	ret
+

@@ -112,16 +112,21 @@ __clean_jump4:
 
 #;define int_arg1 %rdi
 #;define int_arg2 %rsi
-#;define int_arg3 %rdx
 
 .text
 .globl	_mc_atomic_set_integer
 .p2align 4, 0x90
 _mc_atomic_set_integer:
+	pushq %rbp				
+	movq %rsp, %rbp
 0:
+	xorq %rax, %rax
 	movq (%rdi), %rax
 	lock cmpxchgq %rsi, (%rdi)
 	jne	0b
+
+	movq %rbp, %rsp
+	popq %rbp
 	ret
 
 
@@ -129,9 +134,15 @@ _mc_atomic_set_integer:
 .globl	_mc_atomic_set_pointer
 .p2align 4, 0x90
 _mc_atomic_set_pointer:
+	pushq %rbp				
+	movq %rsp, %rbp
 0:
+	xorq %rax, %rax
 	movq (%rdi), %rax
 	lock cmpxchgq %rsi, (%rdi)
 	jne	0b
+
+	movq %rbp, %rsp
+	popq %rbp
 	ret
 

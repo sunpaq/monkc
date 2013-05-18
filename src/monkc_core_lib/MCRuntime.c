@@ -188,8 +188,9 @@ unsigned _binding(MCClass* const aclass, const char* methodname, void* value)
 	method->addr = value;
 	method->hash = hash(methodname);
 	mc_copyMethodName(method, methodname);
+	unsigned res = set_method(&(aclass->table), method, NO);
 	//insert	
-	return set_method(&(aclass->table), method, NO);
+	return res;
 }
 
 unsigned _override(MCClass* const aclass, const char* methodname, void* value)
@@ -201,8 +202,9 @@ unsigned _override(MCClass* const aclass, const char* methodname, void* value)
 	method->addr = value;
 	method->hash = hash(methodname);
 	mc_copyMethodName(method, methodname);
-	//insert	
-	return set_method(&(aclass->table), method, YES);
+	unsigned res = set_method(&(aclass->table), method, YES);
+	//insert
+	return res;
 }
 
 MCMessage make_msg(id const obj, const void* entry)
@@ -214,7 +216,7 @@ MCMessage make_msg(id const obj, const void* entry)
 	return tmpmsg;
 }
 
-MCMessage _self_response_to(id const obj, const char* methodname)
+MCMessage _self_response_to(id const volatile obj, const char* methodname)
 {
 	//we will return a struct
 	MCMessage tmpmsg = {nil, nil};
@@ -233,7 +235,7 @@ MCMessage _self_response_to(id const obj, const char* methodname)
 	}
 }
 
-MCMessage _response_to(id const obj, const char* methodname)
+MCMessage _response_to(id const volatile obj, const char* methodname)
 {
 	MCMessage tmpmsg = {nil, nil};
 	if(obj == nil || obj->isa == nil){
@@ -280,35 +282,40 @@ MCMessage _response_to(id const obj, const char* methodname)
 	else if(hit_count==0)
 		error_log("class[%s] can not response to method[%s]\n", obj->isa->name, methodname);
 	else
-		error_log("hit_count[%s]>1 but class[%s] can not response to method[%s]\n", 
-			hit_count, obj->isa->name, methodname);
+		//error_log("hit_count[%s]>1 but class[%s] can not response to method[%s]\n", 
+		//	hit_count, obj->isa->name, methodname);
+		error_log("hit_count>1 but class still can not response to method\n");
 	return tmpmsg;
 }
 
 void mc_copyMethodName(MCMethod* method, const char* name)
 {
-	if(sizeof(*name) >= MAX_METHOD_NAME_CHAR_NUM)
+	strncpy(method->name, name, strlen(name)+1);
+	method->name[strlen(name)+1]='\0';
+	if(strlen(name)+1 >= MAX_METHOD_NAME_CHAR_NUM){
 		error_log("method name[%s] length is large than Max method name char number: %d\n", 
 			name, MAX_METHOD_NAME_CHAR_NUM);
-	strncpy(method->name, name, MAX_METHOD_NAME_CHAR_NUM-1);
-	method->name[MAX_METHOD_NAME_CHAR_NUM-1]='\0';
+		method->name[MAX_METHOD_NAME_CHAR_NUM-1]='\0';
+	}
 }
 
 int mc_compareMethodName(MCMethod* method, const char* name)
 {
-	return strncmp(method->name, name, MAX_METHOD_NAME_CHAR_NUM);
+	return strncmp(method->name, name, strlen(name));
 }
 
 void mc_copyClassName(MCClass* aclass, const char* name)
 {
-	if(sizeof(*name) >= MAX_CLASS_NAME_CHAR_NUM)
+	strncpy(aclass->name, name, strlen(name)+1);
+	aclass->name[strlen(name)+1]='\0';
+	if(strlen(name)+1 >= MAX_CLASS_NAME_CHAR_NUM){
 		error_log("class name[%s] length is large than Max class name char number: %d\n", 
 			name, MAX_CLASS_NAME_CHAR_NUM);
-	strncpy(aclass->name, name, MAX_CLASS_NAME_CHAR_NUM-1);
-	aclass->name[MAX_CLASS_NAME_CHAR_NUM-1]='\0';
+		aclass->name[MAX_CLASS_NAME_CHAR_NUM-1]='\0';
+	}
 }
 
 int mc_compareClassName(MCClass* aclass, const char* name)
 {
-	return strncmp(aclass->name, name, MAX_CLASS_NAME_CHAR_NUM);
+	return strncmp(aclass->name, name, strlen(name));
 }

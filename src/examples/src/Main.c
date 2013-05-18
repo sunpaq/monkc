@@ -72,11 +72,23 @@ void test_method_jumpping()
 
 }
 
+void monkc_runtime_check()
+{
+
+	char* str="this is a method name\n";
+	MCMethod* target;
+	MCMethod* met=malloc(sizeof(MCMethod));
+	mc_copyMethodName(met, str);
+	runtime_log("origin str %s\n", str);
+	runtime_log("copyed str %s\n", met->name);
+
+}
+
 int main(int argc, char const *argv[])
 {
 	mc_init();
 		LOG_LEVEL = VERBOSE;
-
+		monkc_runtime_check();
 //		test_method_jumpping();
 
 		test_object_life_cycle();

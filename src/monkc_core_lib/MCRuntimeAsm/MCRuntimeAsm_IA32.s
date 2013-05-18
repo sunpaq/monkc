@@ -153,12 +153,12 @@ mc_atomic_set_integer:
 	 						#; 8(%ebp)  addr
 							#; 12(%ebp) newval
 0:
+	xorl %eax, %eax
 	movl 8(%ebp), %edx		#; dest addr in edx
 	movl 0(%edx), %eax		#; old value in eax
 	movl 12(%ebp), %ecx		#; new value in ecx
 
 	lock cmpxchgl %ecx, (%edx) 	#; atomic compare and swap
-	xorl %eax, %eax
 	jne	0b
 
 	movl %ebp, %esp
@@ -175,12 +175,12 @@ mc_atomic_set_pointer:
 	 						#; 8(%ebp)  addr
 							#; 12(%ebp) newval
 0:
+	xorl %eax, %eax
 	movl 8(%ebp), %edx		#; dest addr in edx
 	movl 0(%edx), %eax		#; old value in eax
 	movl 12(%ebp), %ecx		#; new value in ecx
 
 	lock cmpxchgl %ecx, (%edx) 	#; atomic compare and swap
-	xorl %eax, %eax
 	jne	0b
 
 	movl %ebp, %esp
