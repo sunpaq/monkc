@@ -140,9 +140,40 @@ _clean_jump4:
 0:
 	ret
 
+#;int mc_atomic_get_integer(volatile int* target);
+#;void* mc_atomic_get_pointer(volatile void** target);
+#;int mc_atomic_set_integer(volatile int* target, volatile int old, volatile int value);
+#;int mc_atomic_set_pointer(volatile void** target, volatile void* old, volatile void* value);
 
-#;void mc_atomic_set_integer(int* target, int value);
-#;void mc_atomic_set_pointer(void** target, void* value);
+.text
+.globl	mc_atomic_get_integer
+.p2align 2, 0x90
+mc_atomic_get_integer:
+	pushl %ebp				
+	movl %esp, %ebp
+								#; 8(%ebp) addr
+	xorl %eax, %eax
+	movl 8(%ebp), %edx
+	movl (%edx), %eax
+	movl %ebp, %esp				
+	popl %ebp
+	ret
+
+
+.text
+.globl	mc_atomic_get_pointer
+.p2align 2, 0x90
+mc_atomic_get_pointer:
+	pushl %ebp				
+	movl %esp, %ebp
+								#; 8(%ebp) addr
+	xorl %eax, %eax
+	movl 8(%ebp), %edx
+	movl (%edx), %eax
+	movl %ebp, %esp				
+	popl %ebp
+	ret
+
 
 .text
 .globl	mc_atomic_set_integer
@@ -150,18 +181,23 @@ _clean_jump4:
 mc_atomic_set_integer:
 	pushl %ebp				
 	movl %esp, %ebp
-	 						#; 8(%ebp)  addr
-							#; 12(%ebp) newval
-0:
+	 							#; 8(%ebp)  addr
+								#; 12(%ebp) oldval
+								#; 16(%ebp) newval
 	xorl %eax, %eax
-	movl 8(%ebp), %edx		#; dest addr in edx
-	movl 0(%edx), %eax		#; old value in eax
-	movl 12(%ebp), %ecx		#; new value in ecx
+	movl 8(%ebp), %edx			#; dest addr in edx
+	movl 12(%ebp), %eax			#; old value in eax
+	movl 16(%ebp), %ecx			#; new value in ecx
 
 	lock cmpxchgl %ecx, (%edx) 	#; atomic compare and swap
+	xorl %eax, %eax				#; clear eax to 0
 	jne	0b
-
-	movl %ebp, %esp
+	movl %ebp, %esp				#; successed return 0
+	popl %ebp
+	ret
+0:
+	movl $1, %eax				#; failed return 1
+	movl %ebp, %esp				
 	popl %ebp
 	ret
 
@@ -172,18 +208,25 @@ mc_atomic_set_integer:
 mc_atomic_set_pointer:
 	pushl %ebp				
 	movl %esp, %ebp
-	 						#; 8(%ebp)  addr
-							#; 12(%ebp) newval
-0:
+	 							#; 8(%ebp)  addr
+								#; 12(%ebp) oldval
+								#; 16(%ebp) newval
 	xorl %eax, %eax
-	movl 8(%ebp), %edx		#; dest addr in edx
-	movl 0(%edx), %eax		#; old value in eax
-	movl 12(%ebp), %ecx		#; new value in ecx
+	movl 8(%ebp), %edx			#; dest addr in edx
+	movl 12(%ebp), %eax			#; old value in eax
+	movl 16(%ebp), %ecx			#; new value in ecx
 
 	lock cmpxchgl %ecx, (%edx) 	#; atomic compare and swap
+	xorl %eax, %eax				#; clear eax to 0
 	jne	0b
-
-	movl %ebp, %esp
+	movl %ebp, %esp				#; successed return 0
 	popl %ebp
 	ret
+0:
+	movl $1, %eax				#; failed return 1
+	movl %ebp, %esp				
+	popl %ebp
+	ret
+
+
 

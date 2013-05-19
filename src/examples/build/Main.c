@@ -58,11 +58,11 @@ void test_object_life_cycle()
 			ff(bird, modemethodC, nil);
 		shift_back(bird);
 
-		relnil(bird);
-		relnil(bird2);
-		relnil(bird4);
-		relnil(father);
-		relnil(birdcat);
+		release(&bird);
+		release(&bird2);
+		release(&bird4);
+		release(&father);
+		release(&birdcat);
 }
 
 void test_method_jumpping()
@@ -75,12 +75,20 @@ void test_method_jumpping()
 void monkc_runtime_check()
 {
 
-	char* str="this is a method name\n";
-	MCMethod* target;
-	MCMethod* met=malloc(sizeof(MCMethod));
-	mc_copyMethodName(met, str);
-	runtime_log("origin str %s\n", str);
-	runtime_log("copyed str %s\n", met->name);
+	// char* str="this is a method name\n";
+	// mc_method* target;
+	// mc_method* met=malloc(sizeof(mc_method));
+	// mc_copy_methodname(met, str);
+	// runtime_log("origin str %s\n", str);
+	// runtime_log("copyed str %s\n", met->name);
+
+	const char* met1 = "method1";
+	const char* met2 = "method2";
+	const char* met3 = "method3";
+
+	printf("method1 address: %ld\n", (unsigned long)met1);
+	printf("method2 address: %ld\n", (unsigned long)met2);
+	printf("method3 address: %ld\n", (unsigned long)met3);
 
 }
 

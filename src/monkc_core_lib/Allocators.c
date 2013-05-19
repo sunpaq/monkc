@@ -46,27 +46,27 @@ void* mc_malloc(size_t size)
 {
 	//pthread_mutex_lock(&_mc_alloc_mutex);
 		void* ret = malloc(size);
-		((MCObject*)ret)->ref_count = 1;
+		((mc_object*)ret)->ref_count = 1;
 	//pthread_mutex_unlock(&_mc_alloc_mutex);
 	return ret;
 }
 
-extern void _push_anony_obj(MCObject* anony);
-void* mc_malloc_anony(size_t size)
-{
-	//pthread_mutex_lock(&_mc_alloc_mutex);
-		void* ret = malloc(size);
-		((MCObject*)ret)->ref_count = REFCOUNT_ANONY_OBJ;
-		_push_anony_obj((MCObject*)ret);
-	//pthread_mutex_unlock(&_mc_alloc_mutex);
-	return ret;
-}
+// extern void _push_anony_obj(mc_object* anony);
+// void* mc_malloc_anony(size_t size)
+// {
+// 	//pthread_mutex_lock(&_mc_alloc_mutex);
+// 		void* ret = malloc(size);
+// 		((mc_object*)ret)->ref_count = REFCOUNT_ANONY_OBJ;
+// 		_push_anony_obj((mc_object*)ret);
+// 	//pthread_mutex_unlock(&_mc_alloc_mutex);
+// 	return ret;
+// }
 
 void* mc_calloc(size_t size)
 {
 	//pthread_mutex_lock(&_mc_alloc_mutex);
 		void* ret = calloc(1, size);
-		((MCObject*)ret)->ref_count = 1;
+		((mc_object*)ret)->ref_count = 1;
 	//pthread_mutex_unlock(&_mc_alloc_mutex);
 	return ret;
 }

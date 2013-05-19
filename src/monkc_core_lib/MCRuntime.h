@@ -33,7 +33,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <stdio.h>
 #include <stdlib.h>
-//#include <pthread.h>
 
 #include "Log.h"
 #include "Vectors.h"
@@ -71,53 +70,59 @@ typedef int RES;
 #define A_B(a, b) a##_##b
 
 //method info struct
-typedef struct MCMethod_struct
+typedef struct mc_method_struct
 {
-	struct MCMethod_struct* next;
+	struct mc_method_struct* next;
 	void* addr;
 	unsigned level;
 	unsigned hash;
 	unsigned index;
 	char name[MAX_METHOD_NAME_CHAR_NUM];
-}MCMethod;
+}mc_method;
 
-typedef struct MCHashTable_struct
+typedef struct mc_methodtable_struct
 {
 	unsigned level;
-	MCMethod* data[];
-}MCHashTable;
+	mc_method* data[];
+}mc_methodtable;
 
 //meta class, the struct is a node for inherit hierarchy
-typedef struct MCClass_struct
+typedef struct mc_class_struct
 {
-	struct MCClass_struct* next;
+	struct mc_class_struct* next;
 	int method_count;
 	unsigned level;
 	unsigned hash;
 	unsigned index;
 	char name[MAX_CLASS_NAME_CHAR_NUM];
-	MCHashTable* table;
-}MCClass;
+	mc_methodtable* table;
+}mc_class;
+
+typedef struct mc_classtable_struct
+{
+	unsigned level;
+	mc_class* data[];
+}mc_classtable;
 
 //for type cast, every object have the 3 var members
-typedef struct MCObject_struct
+typedef struct mc_object_struct
 {
-	struct MCObject_struct* super;
-	MCClass* isa;
-	MCClass* saved_isa;
-	MCClass* mode;
+	struct mc_object_struct* super;
+	mc_class* isa;
+	mc_class* saved_isa;
+	mc_class* mode;
 	int ref_count;
-}MCObject;
+}mc_object;
 
 //id is a object pointer for any class
-typedef MCObject* id;
+typedef mc_object* id;
 
 //use for message sending
-typedef struct MCMessage_struct
+typedef struct mc_message_struct
 {
 	id object;
 	void* addr;
-}MCMessage;
+}mc_message;
 
 //for class define
 #define implements(protocol)
@@ -125,44 +130,42 @@ typedef struct MCMessage_struct
 #define class(cls) _newline;\
 typedef struct cls##_struct{\
 	struct cls##_struct* super;\
-	MCClass* isa;\
-	MCClass* saved_isa;\
-	MCClass* mode;\
+	mc_class* isa;\
+	mc_class* saved_isa;\
+	mc_class* mode;\
 	int ref_count;
 #define end(cls) }cls;\
-MCClass* cls##_load(MCClass* const class);\
+mc_class* cls##_load(mc_class* const class);\
 cls* cls##_init(cls* const this);
 
 //callback function pointer types
-typedef MCClass* (*loaderFP)(MCClass*);
-typedef MCObject* (*initerFP)(MCObject*);
+typedef mc_class* (*loaderFP)(mc_class*);
+typedef mc_object* (*initerFP)(mc_object*);
 
 //callbacks
-#define loader(cls)					MCClass* cls##_load(MCClass* const class)
+#define loader(cls)					mc_class* cls##_load(mc_class* const class)
 #define initer(cls)						cls* cls##_init(cls* const this)
 //category
-#define category(ori, cat) 			MCClass* ori##cat##_load(MCClass* const class);\
+#define category(ori, cat) 			mc_class* ori##cat##_load(mc_class* const class);\
 										ori* ori##cat##_init(ori* const this)
-#define catloader(ori, cat)			MCClass* ori##cat##_load(MCClass* const class)
+#define catloader(ori, cat)			mc_class* ori##cat##_load(mc_class* const class)
 #define catiniter(ori, cat)				ori* ori##cat##_init(ori* const this)
 //mode
-#define classmode(ori, cat) 		MCClass* ori##cat##_load(MCClass* const class);\
+#define classmode(ori, cat) 		mc_class* ori##cat##_load(mc_class* const class);\
 										ori* ori##cat##_init(ori* const this)
-#define modloader(ori, cat)			MCClass* ori##cat##_load(MCClass* const class)
+#define modloader(ori, cat)			mc_class* ori##cat##_load(mc_class* const class)
 #define modiniter(ori, cat)				ori* ori##cat##_init(ori* const this)			
 
 //callback caller
 #define load(cls)					_load(S(cls), cls##_load)
 #define init(obj, cls)			    cls##_init(obj)
-#define clean(obj, cls)				cls##_clean(obj)
 
 //method binding
 #define binding(cls, met, ...)  	_binding(class, S(met), A_B(cls, met))
 #define override(cls, met, ...) 	_override(class, S(met), A_B(cls, met))
 #define method(cls, name, ...) 		void* cls##_##name(cls* const this, const void* entry, __VA_ARGS__)
 #define protocol(pro, name, ...)  	static void* pro##_##name(id const this, const void* entry, __VA_ARGS__)
-#define This(cls)      				((cls*)this)
-#define Cast(cls, obj) 				((cls*)obj)
+#define cast(cls, obj) 				((cls*)obj)
 #define returns(type)
 
 //allocators
@@ -175,7 +178,7 @@ typedef MCObject* (*initerFP)(MCObject*);
 #define new(cls)					_new(_alloc(cls), S(cls), cls##_load, cls##_init)
 #define new_clear(cls, ...)         _new(_alloc_clear(cls), S(cls), cls##_load, cls##_init)
 #define new_onstack(cls, ...)       _new(_alloc_onstack(cls), S(cls), cls##_load, cls##_init)
-#define new_anony(cls, ...)         _new(_alloc_anony(cls), S(cls), cls##_load, cls##_init)
+//#define new_anony(cls, ...)         _new(_alloc_anony(cls), S(cls), cls##_load, cls##_init)
 #define new_category(ori, cat)		_new_category(_alloc(ori), S(ori), ori##_load, ori##_init, S(cat), ori##cat##_load, ori##cat##_init)
 
 //for call method
@@ -188,18 +191,16 @@ typedef MCObject* (*initerFP)(MCObject*);
 //Reference Count
 #define REFCOUNT_NO_MM 		-1
 #define REFCOUNT_ANONY_OBJ 	-100
-#define relnil(obj) _relnil(&obj)
-void release(id const this);
-void retain(id const this);
-void _relnil(MCObject** const this);
+void release(mc_object** const this_p);
+void retain(mc_object* const this);
 
 //method handling
-unsigned _binding(MCClass* const aclass, const char* methodname, void* value);
-unsigned _override(MCClass* const aclass, const char* methodname, void* value);
+unsigned _binding(mc_class* const aclass, const char* methodname, void* value);
+unsigned _override(mc_class* const aclass, const char* methodname, void* value);
 
-MCMessage _response_to(id const volatile obj, const char* methodname);
-MCMessage _self_response_to(id volatile const obj, const char* methodname);
-MCMessage make_msg(id const obj, const void* entry);
+mc_message _response_to(id const volatile obj, const char* methodname);
+mc_message _self_response_to(id volatile const obj, const char* methodname);
+mc_message make_msg(id const obj, const void* entry);
 
 //make a thread-safe allocator
 void* mc_malloc(size_t size);
@@ -208,47 +209,47 @@ void* mc_calloc(size_t size);
 void* mc_realloc(void* ptr, size_t size);
 void  mc_free(void *ptr);
 
-//language context
+//hash table
 void mc_init();
 void mc_end();
-
-//hash table
 unsigned hash(const char *s);
-void init_table(MCHashTable** const table_p, unsigned initlevel);
-unsigned set_method(MCHashTable** const table_p, MCMethod* const volatile method, BOOL isOverride);
-unsigned set_class(MCClass* const aclass);
+mc_methodtable* init_methodtable(mc_methodtable** const table_p, unsigned initlevel);
+unsigned set_method(mc_methodtable** const table_p, mc_method* const volatile method, BOOL isOverride);
+unsigned set_class(mc_class* const aclass);
 unsigned get_size_by_level(const unsigned level);
-MCMethod* get_method_by_name(const MCHashTable** table_p, const char* name);
-MCMethod* get_method_by_hash(const MCHashTable** table_p, const unsigned hashval, const char* refname);
-MCMethod* get_method_by_index(const MCHashTable** table_p, const unsigned index);
-MCClass* get_class_by_name(const char* name);
-MCClass* get_class_by_hash(const unsigned hashval, const char* refname);
-MCClass* get_class_by_index(const unsigned index);
+mc_method* get_method_by_name(const mc_methodtable** table_p, const char* name);
+mc_method* get_method_by_hash(const mc_methodtable** table_p, const unsigned hashval, const char* refname);
+mc_method* get_method_by_index(const mc_methodtable** table_p, const unsigned index);
+mc_class* get_class_by_name(const char* name);
+mc_class* get_class_by_hash(const unsigned hashval, const char* refname);
+mc_class* get_class_by_index(const unsigned index);
 
 //string operate
-void mc_copyMethodName(MCMethod* method, const char* name);
-int mc_compareMethodName(MCMethod* method, const char* name);
-void mc_copyClassName(MCClass* aclass, const char* name);
-int mc_compareClassName(MCClass* aclass, const char* name);
+void mc_copy_methodname(mc_method* method, const char* name);
+int mc_compare_methodname(mc_method* method, const char* name);
+void mc_copy_classname(mc_class* aclass, const char* name);
+int mc_compare_classname(mc_class* aclass, const char* name);
 
 //class pool
-MCClass* _load(const char* name_in, loaderFP loader);
+mc_class* _load(const char* name_in, loaderFP loader);
 id _new(id const this, const char* name_in, loaderFP loader, initerFP initer);
 id _new_category(id const this, 
 	const char* name_origin, loaderFP loader, initerFP initer,
 	const char* name_cat, loaderFP loader_cat, initerFP initer_cat);
-MCClass* _get_class(unsigned index);
-void _set_class(unsigned index, MCClass* aclass);
+mc_class* _get_class(unsigned index);
+void _set_class(unsigned index, mc_class* aclass);
 void _shift(id const obj, const char* modename, loaderFP loader);
 void _shift_back(id const obj);
 
 //write by asm
-void* _push_jump(MCMessage msg, ...);
-void* _clean_jump1(MCMessage msg, ...);
-void* _clean_jump2(MCMessage msg, ...);
-void* _clean_jump3(MCMessage msg, ...);
-void* _clean_jump4(MCMessage msg, ...);
-void mc_atomic_set_integer(volatile int* target, volatile int value);
-void mc_atomic_set_pointer(volatile void** target, volatile void* value);
+void* _push_jump(mc_message msg, ...);
+void* _clean_jump1(mc_message msg, ...);
+void* _clean_jump2(mc_message msg, ...);
+void* _clean_jump3(mc_message msg, ...);
+void* _clean_jump4(mc_message msg, ...);
+int mc_atomic_get_integer(volatile int* target);
+void* mc_atomic_get_pointer(volatile void** target);
+int mc_atomic_set_integer(volatile int* target, volatile int old, volatile int value);
+int mc_atomic_set_pointer(volatile void** target, volatile void* old, volatile void* value);
 
 #endif

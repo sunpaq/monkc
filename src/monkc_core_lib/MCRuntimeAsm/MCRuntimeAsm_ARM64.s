@@ -107,16 +107,40 @@ _clean_jump4:
 	bx lr
 
 
+/*
+int mc_atomic_get_integer(volatile int* target);
+void* mc_atomic_get_pointer(volatile void** target);
+int mc_atomic_set_integer(volatile int* target, volatile int old, volatile int value);
+int mc_atomic_set_pointer(volatile void** target, volatile void* old, volatile void* value);
+
+a1 addr
+a2 oldval
+a3 newval
+return 0 success
+*/
+
+.text
+.globl	mc_atomic_get_integer
+.p2align 4, 0x90
+mc_atomic_get_integer:
+	ldrex v1, [a1]
+	mov r0, v1
+	bx lr
+
+.text
+.globl	mc_atomic_get_pointer
+.p2align 4, 0x90
+mc_atomic_get_pointer:
+	ldrex v1, [a1]
+	mov r0, v1
+	bx lr
+
 .text
 .globl	mc_atomic_set_integer
 .p2align 4, 0x90
 mc_atomic_set_integer:
-0:
-	ldrex v1, [a1]
-	mov v1, a2
-	strex v2, v1, [a1]
-	cmp v2, #0
-	beq 0b
+	strex v1, a3, [a1]
+	mov r0, v1
 	bx lr
 
 
@@ -124,10 +148,7 @@ mc_atomic_set_integer:
 .globl	mc_atomic_set_pointer
 .p2align 4, 0x90
 mc_atomic_set_pointer:
-0:
-	ldrex v1, [a1]
-	mov v1, a2
-	strex v2, v1, [a1]
-	cmp v2, #0
-	beq 0b
+	strex v1, a3, [a1]
+	mov r0, v1
 	bx lr
+

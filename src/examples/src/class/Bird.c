@@ -37,7 +37,7 @@ method(Bird, initWithType, int type)
 
 method(Bird, fatherAge, xxx)
 {
-	debug_logt(this->isa->name, "my father age is: %d\n", Cast(BirdFather, this->super)->age);
+	debug_logt(this->isa->name, "my father age is: %d\n", cast(BirdFather, this->super)->age);
 }
 
 method(Bird, fly, xxx)

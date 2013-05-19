@@ -112,6 +112,40 @@ _clean_jump4:
 
 #;define int_arg1 %rdi
 #;define int_arg2 %rsi
+#;define int_arg3 %rdx
+
+#;int mc_atomic_get_integer(volatile int* target);
+#;void* mc_atomic_get_pointer(volatile void** target);
+#;int mc_atomic_set_integer(volatile int* target, volatile int old, volatile int value);
+#;int mc_atomic_set_pointer(volatile void** target, volatile void* old, volatile void* value);
+
+.text
+.globl	mc_atomic_get_integer
+.p2align 4, 0x90
+mc_atomic_get_integer:
+	pushq %rbp				
+	movq %rsp, %rbp
+								#; %rdi addr
+	xorq %rax, %rax
+	movq (%rdi), %rax
+	movq %rbp, %rsp				
+	popq %rbp
+	ret
+
+
+.text
+.globl	mc_atomic_get_pointer
+.p2align 4, 0x90
+mc_atomic_get_pointer:
+	pushq %rbp				
+	movq %rsp, %rbp
+								#; %rdi addr
+	xorq %rax, %rax
+	movq (%rdi), %rax
+	movq %rbp, %rsp				
+	popq %rbp
+	ret
+
 
 .text
 .globl	mc_atomic_set_integer
@@ -119,13 +153,21 @@ _clean_jump4:
 mc_atomic_set_integer:
 	pushq %rbp				
 	movq %rsp, %rbp
-0:
+	 							#; %rdi addr
+								#; %rsi oldval
+								#; %rdx newval
 	xorq %rax, %rax
-	movq (%rdi), %rax
-	lock cmpxchgq %rsi, (%rdi)
-	jne	0b
+	movq %rsi, %rax
 
-	movq %rbp, %rsp
+	lock cmpxchgq %rdx, (%rdi) 	#; atomic compare and swap
+	xorq %rax, %rax				#; clear rax to 0
+	jne	0b
+	movq %rbp, %rsp				#; successed return 0
+	popq %rbp
+	ret
+0:
+	movq $1, %rax				#; failed return 1
+	movq %rbp, %rsp				
 	popq %rbp
 	ret
 
@@ -136,13 +178,22 @@ mc_atomic_set_integer:
 mc_atomic_set_pointer:
 	pushq %rbp				
 	movq %rsp, %rbp
-0:
+	 							#; %rdi addr
+								#; %rsi oldval
+								#; %rdx newval
 	xorq %rax, %rax
-	movq (%rdi), %rax
-	lock cmpxchgq %rsi, (%rdi)
-	jne	0b
+	movq %rsi, %rax
 
-	movq %rbp, %rsp
+	lock cmpxchgq %rdx, (%rdi) 	#; atomic compare and swap
+	xorq %rax, %rax				#; clear rax to 0
+	jne	0b
+	movq %rbp, %rsp				#; successed return 0
 	popq %rbp
 	ret
+0:
+	movq $1, %rax				#; failed return 1
+	movq %rbp, %rsp				
+	popq %rbp
+	ret
+
 

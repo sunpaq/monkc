@@ -36,14 +36,12 @@ extern void _init_wector_stack();
 extern void _init_class_list();
 extern void _clear_class_list();
 
-void ff_from_root(id const obj, const char* methodname);
-void ff_to_root(id const obj, const char* methodname);
-
 /*
 	Anonymous objects pool for automatic memory management
 */
 
-static MCObject* mc_anony_pool[ANONY_POOL_SIZE];
+/*
+static mc_object* mc_anony_pool[ANONY_POOL_SIZE];
 static unsigned mc_anony_count = 0;
 static void _init_anony_pool()
 {
@@ -52,7 +50,7 @@ static void _init_anony_pool()
 		mc_anony_pool[i]=nil;
 }
 
-void _push_anony_obj(MCObject* anony)
+void _push_anony_obj(mc_object* anony)
 {
 	if(anony==nil)return;
 	if(mc_anony_count >= ANONY_POOL_SIZE)
@@ -67,7 +65,7 @@ void _push_anony_obj(MCObject* anony)
 
 //pop do not release the obj, when a anony obj is poped from pool
 //you need manage it by retain/release manually
-static void _pop_anony_obj(MCObject* anony)
+static void _pop_anony_obj(mc_object* anony)
 {
 	if(anony==nil)return;
 
@@ -81,151 +79,122 @@ static void _pop_anony_obj(MCObject* anony)
 		}
 	}
 }
-
-/*
-	Runtime Start and End
 */
-
-void mc_check()
-{
-	MCObject* obj = (MCObject*)malloc(sizeof(MCObject));
-	runtime_log("sizeof obj pointer is: %p", obj);
-	//do some checks
-}
-
-void mc_init()
-{
-	//default we set log level to debug
-	LOG_LEVEL = DEBUG;
-	init_class_table();
-	//_init_class_list();
-	//_init_anony_pool();
-	//_init_vector_stack();
-	//_init_wector_stack();
-	mc_check();
-	runtime_log("mc_init finished\n");
-}
-
-void mc_end()
-{
-	runtime_log("mc_end finished\n");
-}
 
 /*
 	Memory Management Part
 */
 
-void release(id const this)
+void release(mc_object** const this_p)
 {
-	if(this==nil){
-		error_log("%s\n", "release(nil) do nothing.");
-		return;
+	for(;;){
+		if((*this_p) == nil){
+			error_log("release(nil) do nothing.\n");
+			return;
+		}
+		if((*this_p)->ref_count == REFCOUNT_NO_MM){
+			debug_log("ref_count is REFCOUNT_NO_MM manage by runtime. do nothing\n");
+			return;
+		}
+		if((*this_p)->isa == nil){
+			error_log("release(obj) obj have no class linked. do nothing.\n");
+			return;
+		}
+
+		int* addr = &((*this_p)->ref_count);
+		int oldcount = mc_atomic_get_integer(addr);
+		if(oldcount == 0)
+			break;
+		if(!mc_atomic_set_integer(addr, oldcount, oldcount-1))
+			break;
 	}
-	if(this->isa==nil){
-		error_log("release(%d) twice. do nothing.\n", this);
-		return;
-	}
-	if(this->ref_count == REFCOUNT_NO_MM){
-		debug_log("ref_count is -1 manage by runtime. do nothing\n");
-		return;
-	}
-	if(this->ref_count == REFCOUNT_ANONY_OBJ){
-		mc_atomic_set_integer(&this->ref_count, 0);
-		_pop_anony_obj(this);
-	}
-	if(this->ref_count > 0){
-		mc_atomic_set_integer(&this->ref_count, this->ref_count-1);
-	}
-	if(this->ref_count == 0)
+
+	if((*this_p)->ref_count == 0)
 	{
 		//call the "bye" method on object
-		_push_jump(_self_response_to(this, "bye"), nil);
+		_push_jump(_self_response_to(*this_p, "bye"), nil);
 		//destory the obj
-		runtime_log("----free[%p]: goodbye!\n", this);
-		mc_free(this);
+		runtime_log("----free[%p]: goodbye!\n", *this_p);
+		free(*this_p);
+		(*this_p) = nil;
 	}
 }
 
-void retain(id const this)
+void retain(mc_object* const this)
 {
-	if(this == nil){
-		error_log("%s\n", "retain(nil) do nothing.");
-		return;
-	}
-	if(this->isa == nil){
-		error_log("retain(obj) obj have no class linked. do nothing.\n");
-		return;
-	}
-	if(this->ref_count == REFCOUNT_NO_MM){
-		debug_log("ref_count is -1 manage by runtime. do nothing\n");
-		return;
-	}
-	if(this->ref_count == REFCOUNT_ANONY_OBJ){
-		mc_atomic_set_integer(&this->ref_count, 0);
-		_pop_anony_obj(this);
-	}
+	for(;;){
+		if(this == nil){
+			error_log("retain(nil) do nothing.\n");
+			return;
+		}
+		if(this->ref_count == REFCOUNT_NO_MM){
+			debug_log("ref_count is REFCOUNT_NO_MM manage by runtime. do nothing\n");
+			return;
+		}
+		if(this->isa == nil){
+			error_log("release(obj) obj have no class linked. do nothing.\n");
+			return;
+		}
 
-	mc_atomic_set_integer(&this->ref_count, this->ref_count+1);
+		int* addr = &(this->ref_count);
+		int oldcount = mc_atomic_get_integer(addr);
+		if(!mc_atomic_set_integer(addr, oldcount, oldcount+1))
+			break;
+	}
 	runtime_log("%s - ref_count:%d\n", this->isa->name, this->ref_count);
-}
-
-void _relnil(MCObject** const this)
-{
-	release(*this);
-	(*this) = nil;
 }
 
 /*
 	Method Binding and Reflection Part
 */
 
-unsigned _binding(MCClass* const aclass, const char* methodname, void* value)
+unsigned _binding(mc_class* const aclass, const char* methodname, void* value)
 {
 	if(aclass==nil)return;
 	//prepare
-	MCMethod* method = (MCMethod*)malloc(sizeof(MCMethod));
+	mc_method* method = (mc_method*)malloc(sizeof(mc_method));
 	method->next = nil;
 	method->addr = value;
 	method->hash = hash(methodname);
-	mc_copyMethodName(method, methodname);
+	mc_copy_methodname(method, methodname);
 	unsigned res = set_method(&(aclass->table), method, NO);
 	//insert	
 	return res;
 }
 
-unsigned _override(MCClass* const aclass, const char* methodname, void* value)
+unsigned _override(mc_class* const aclass, const char* methodname, void* value)
 {
 	if(aclass==nil)return;
 	//prepare
-	MCMethod* method = (MCMethod*)malloc(sizeof(MCMethod));
+	mc_method* method = (mc_method*)malloc(sizeof(mc_method));
 	method->next = nil;
 	method->addr = value;
 	method->hash = hash(methodname);
-	mc_copyMethodName(method, methodname);
+	mc_copy_methodname(method, methodname);
 	unsigned res = set_method(&(aclass->table), method, YES);
 	//insert
 	return res;
 }
 
-MCMessage make_msg(id const obj, const void* entry)
+mc_message make_msg(id const obj, const void* entry)
 {
 	//we will return a struct
-	MCMessage tmpmsg = {nil, nil};
+	mc_message tmpmsg = {nil, nil};
 	tmpmsg.object = obj;
 	tmpmsg.addr = entry;
 	return tmpmsg;
 }
 
-MCMessage _self_response_to(id const volatile obj, const char* methodname)
+mc_message _self_response_to(id const volatile obj, const char* methodname)
 {
 	//we will return a struct
-	MCMessage tmpmsg = {nil, nil};
+	mc_message tmpmsg = {nil, nil};
 	if(obj == nil || obj->isa == nil){
 		error_log("_self_response_to(obj) obj is nil or obj->isa is nil. return {nil, nil}\n");
 		return tmpmsg;
 	}
 
-	MCMethod* res;
+	mc_message* res;
 	if((res=get_method_by_name(&(obj->isa->table), methodname)) != nil){
 		tmpmsg.object = obj;
 		tmpmsg.addr = res->addr;
@@ -235,18 +204,18 @@ MCMessage _self_response_to(id const volatile obj, const char* methodname)
 	}
 }
 
-MCMessage _response_to(id const volatile obj, const char* methodname)
+mc_message _response_to(id const volatile obj, const char* methodname)
 {
-	MCMessage tmpmsg = {nil, nil};
+	mc_message tmpmsg = {nil, nil};
 	if(obj == nil || obj->isa == nil){
 		error_log("_response_to(obj) obj is nil or obj->isa is nil. return {nil, nil}\n");
 		return tmpmsg;
 	}
 
-	MCObject* obj_iterator = obj;
-	MCObject* obj_first_hit = nil;
-	MCMethod* met_first_hit = nil;
-	MCMethod* amethod = nil;
+	mc_object* obj_iterator = obj;
+	mc_object* obj_first_hit = nil;
+	mc_method* met_first_hit = nil;
+	mc_method* amethod = nil;
 	int hit_count = 0;
 	unsigned hashval = hash(methodname);
 
@@ -265,12 +234,12 @@ MCMessage _response_to(id const volatile obj, const char* methodname)
 			if(hit_count>1){
 				if(hit_count==2){
 					//to support the "overide" feature of oop
-					if(mc_compareMethodName(met_first_hit, methodname) == 0){
+					if(mc_compare_methodname(met_first_hit, methodname) == 0){
 						tmpmsg.object = obj_first_hit;
 						runtime_log("return a message[%s/%s]\n", tmpmsg.object->isa->name, methodname);
 						return tmpmsg;}
 				}
-				if(mc_compareMethodName(amethod, methodname) == 0){
+				if(mc_compare_methodname(amethod, methodname) == 0){
 					tmpmsg.object = obj_iterator;
 					runtime_log("return a message[%s/%s]\n", tmpmsg.object->isa->name, methodname);
 					return tmpmsg;}
@@ -288,7 +257,7 @@ MCMessage _response_to(id const volatile obj, const char* methodname)
 	return tmpmsg;
 }
 
-void mc_copyMethodName(MCMethod* method, const char* name)
+void mc_copy_methodname(mc_method* method, const char* name)
 {
 	strncpy(method->name, name, strlen(name)+1);
 	method->name[strlen(name)+1]='\0';
@@ -299,12 +268,12 @@ void mc_copyMethodName(MCMethod* method, const char* name)
 	}
 }
 
-int mc_compareMethodName(MCMethod* method, const char* name)
+int mc_compare_methodname(mc_method* method, const char* name)
 {
 	return strncmp(method->name, name, strlen(name));
 }
 
-void mc_copyClassName(MCClass* aclass, const char* name)
+void mc_copy_classname(mc_class* aclass, const char* name)
 {
 	strncpy(aclass->name, name, strlen(name)+1);
 	aclass->name[strlen(name)+1]='\0';
@@ -315,7 +284,8 @@ void mc_copyClassName(MCClass* aclass, const char* name)
 	}
 }
 
-int mc_compareClassName(MCClass* aclass, const char* name)
+int mc_compare_classname(mc_class* aclass, const char* name)
 {
 	return strncmp(aclass->name, name, strlen(name));
 }
+
