@@ -103,9 +103,10 @@ void release(mc_object** const this_p)
 
 		int* addr = &((*this_p)->ref_count);
 		int oldcount = mc_atomic_get_integer(addr);
-		if(oldcount == 0)
-			break;
-		if(!mc_atomic_set_integer(addr, oldcount, oldcount-1))
+		int newcount = oldcount;
+		if(newcount > 0)
+			newcount--;
+		if(!mc_atomic_set_integer(addr, oldcount, newcount))
 			break;
 	}
 
