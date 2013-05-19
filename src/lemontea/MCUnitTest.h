@@ -15,11 +15,12 @@ void fail(char* message);
 
 /* Test Result */
 
-#ifndef _MCUnitTestResult
-#define _MCUnitTestResult _MCObject;\
+#ifndef MCUnitTestResult_
+#define MCUnitTestResult_
 	
 class(MCUnitTestResult);
-constructor(MCUnitTestResult, xxx);
+end(MCUnitTestResult);
+
 method(MCUnitTestResult, bye, xxx);
 method(MCUnitTestResult, addSuccessInfo, char* succinfo);
 method(MCUnitTestResult, addFailInfo, char* failinfo);
@@ -27,13 +28,15 @@ method(MCUnitTestResult, addFailInfo, char* failinfo);
 
 /* Test Case */
 
-#ifndef _MCUnitTestCase
-#define _MCUnitTestCase _MCObject;\
-	MCUnitTestResult* unitTestResultRef;\
-	struct MCUnitTestCase_struct* next_case;\
-	
+#ifndef MCUnitTestCase_
+#define MCUnitTestCase_ 
+
 class(MCUnitTestCase);
-constructor(MCUnitTestCase, MCUnitTestResult* resultRef);
+	MCUnitTestResult* unitTestResultRef;
+	struct MCUnitTestCase_struct* next_case;
+end(MCUnitTestCase);
+
+method(MCUnitTestCase, initWithTestResult, MCUnitTestResult* resultRef);
 method(MCUnitTestCase, bye, xxx);
 method(MCUnitTestCase, setUp, xxx);
 method(MCUnitTestCase, tearDown, xxx);
@@ -43,14 +46,15 @@ method(MCUnitTestCase, runATestMethod, char* methodName);
 
 /* Test Suite */
 
-#ifndef _MCUnitTestSuite
-#define _MCUnitTestSuite _MCObject;\
-	MCUnitTestCase *first_case;\
-	int test_case_count;\
-	struct MCUnitTestSuite_struct* next_suite;\ 
+#ifndef MCUnitTestSuite_
+#define MCUnitTestSuite_
 
 class(MCUnitTestSuite);
-constructor(MCUnitTestSuite, xxx);
+	MCUnitTestCase *first_case;
+	int test_case_count;
+	struct MCUnitTestSuite_struct* next_suite;
+end(MCUnitTestSuite);
+
 method(MCUnitTestSuite, bye, xxx);
 method(MCUnitTestSuite, addTestCase, MCUnitTestCase* tcase);
 method(MCUnitTestSuite, runTestCases, xxx);
@@ -58,14 +62,15 @@ method(MCUnitTestSuite, runTestCases, xxx);
 
 /* Test Runner */
 
-#ifndef _MCUnitTestRunner
-#define _MCUnitTestRunner _MCObject;\
-	MCUnitTestResult* unitTestResult;\
-	MCUnitTestSuite* first_suite;\
-	int test_suite_count;\
+#ifndef MCUnitTestRunner_
+#define MCUnitTestRunner_
 
 class(MCUnitTestRunner);
-constructor(MCUnitTestRunner, xxx);
+	MCUnitTestResult* unitTestResult;
+	MCUnitTestSuite* first_suite;
+	int test_suite_count;
+end(MCUnitTestRunner);
+
 method(MCUnitTestRunner, bye, xxx);
 method(MCUnitTestRunner, addTestSuite, MCUnitTestSuite* testSuite);
 method(MCUnitTestRunner, runTestSuites, xxx);

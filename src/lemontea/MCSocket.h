@@ -142,25 +142,29 @@ typedef enum _MCSocketType{
 	MCSocket_Client_UDP,
 }MCSocketType;
 
-#ifndef _MCSocketClientInfo
-#define _MCSocketClientInfo _MCObject;\
-	int returnSfd;\
-	struct sockaddr address;\
-	socklen_t address_len;\
+#ifndef MCSocketClientInfo_
+#define MCSocketClientInfo_
 
 class(MCSocketClientInfo);
+	int returnSfd;
+	struct sockaddr address;
+	socklen_t address_len;
+end(MCSocketClientInfo);
+
 method(MCSocketClientInfo, dumpInfo, xxx);
 method(MCSocketClientInfo, bye, xxx);
-constructor(MCSocketClientInfo, xxx);
 #endif
 
-#ifndef _MCSocket 
-#define _MCSocket _MCObject;\
-	int sfd;\
-	BOOL isServer;\
-	struct addrinfo peeraddrinfo;\
+#ifndef MCSocket_ 
+#define MCSocket_
 
 class(MCSocket);
+	int sfd;
+	BOOL isServer;
+	struct addrinfo peeraddrinfo;
+end(MCSocket);
+
+method(MCSocket, initWithTypeIpPort, MCSocketType socket_type, char* ip, char* port);
 method(MCSocket, listeningStart, xxx);//listen
 method(MCSocket, acceptARequest, xxx); returns(MCSocketClientInfo)
 //method(MCSocket, connectServer, xxx);
@@ -173,6 +177,4 @@ method(MCSocket, sendto, xxx);
 method(MCSocket, sendmsg, xxx);
 
 method(MCSocket, bye, xxx);
-constructor(MCSocket, MCSocketType socket_type, char* ip, char* port);
-
 #endif

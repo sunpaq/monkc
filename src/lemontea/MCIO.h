@@ -25,6 +25,7 @@ class(MCFile);
 	struct stat attribute;
 end(MCFile);
 
+method(MCFile, newWithPathName, char* pathname, int oflag);
 method(MCFile, readFromBegin, off_t offset, size_t nbytes);
 method(MCFile, readAtLastPosition, off_t offset, size_t nbytes);
 method(MCFile, readFromEnd, off_t offset, size_t nbytes);
@@ -58,7 +59,6 @@ BOOL MCProcess_changeCurrentWorkingDir(char* pathname);
 BOOL MCProcess_changeCurrentWorkingDirByFd(int fd);
 char* MCProcess_getCurrentWorkingDir(MCCharBuffer* buff);
 
-method(MCFile, newWithPathName char* pathname, int oflag);
 MCFile* MCFile_newReadOnly(char* pathname);
 MCFile* MCFile_newWriteOnly(char* pathname, BOOL isClear);
 MCFile* MCFile_newReadWrite(char* pathname, BOOL isClear);
@@ -149,12 +149,13 @@ end(MCStdoutStream);
 method(MCStdoutStream, bye, xxx);
 #endif
 
-#ifndef MCStderrStream
-#define _MCStderrStream _MCStream;\
+#ifndef MCStderrStream_
+#define MCStderrStream_
 
-	class(MCStderrStream);
-	method(MCStderrStream, bye, xxx);
-	constructor(MCStderrStream, xxx);
+class(MCStderrStream) extends(MCStream);
+end(MCStderrStream);
+
+method(MCStderrStream, bye, xxx);
 #endif
 
 /* MCSelect */
@@ -165,23 +166,25 @@ typedef enum _MCSelect_fd_type{
 	MCSelect_Exceptionfd,
 }MCSelect_fd_type;
 
-#ifndef _MCSelect
-#define _MCSelect _MCObject;\
-	int maxfd;\
-	fd_set readfd_set;\
-	fd_set writefd_set;\
-	fd_set exceptionfd_set;\
-	fd_set readfd_result_set;\
-	fd_set writefd_result_set;\
-	fd_set exceptionfd_result_set;\
-	struct timeval timeout;\
+#ifndef MCSelect_
+#define MCSelect_ 
 
 class(MCSelect);
+	int maxfd;
+	fd_set readfd_set;
+	fd_set writefd_set;
+	fd_set exceptionfd_set;
+	fd_set readfd_result_set;
+	fd_set writefd_result_set;
+	fd_set exceptionfd_result_set;
+	struct timeval timeout;
+end(MCSelect);
+
+method(MCSelect, initWithSecondAndMicrosec, long second, long microsecond);
 method(MCSelect, waitForFdsetChange, xxx); returns(int: >0 success =0 timeout <0 error)
 method(MCSelect, addFd, MCSelect_fd_type type, int fd);
 method(MCSelect, removeFd, MCSelect_fd_type type, int fd);
 method(MCSelect, isFdReady, MCSelect_fd_type type, int fd); returns(BOOL)
-constructor(MCSelect, long second, long microsecond);
 
 #endif
 

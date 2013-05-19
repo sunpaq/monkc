@@ -2,13 +2,13 @@
 #include "MCUnitTest.h"
 #include "MCClock.h"
 
-#ifndef _TestMCClock 
-#define _TestMCClock _MCUnitTestCase;\
-	MCClock* toBeTest;\
+#ifndef TestMCClock_
+#define TestMCClock_
 
 class(TestMCClock);
+	MCClock* toBeTest;
+end(TestMCClock);
 
-constructor(TestMCClock, xxx);
 method(TestMCClock, setTimeToNow, xxx);
 method(TestMCClock, setTime, xxx);
 method(TestMCClock, adjustTime, xxx);

@@ -1,35 +1,36 @@
 #include "TestMCClock.h"
 static const char* LOG_TAG = "TestMCClock";
-constructor(TestMCClock, xxx)
+
+loader(TestMCClock)
 {
-	link_class(TestMCClock, MCUnitTestCase, nil)
-	{
-		binding(TestMCClock, setTimeToNow, xxx);
-		binding(TestMCClock, setTime, xxx);
-		binding(TestMCClock, adjustTime, xxx);
-		binding(TestMCClock, setRawtime, xxx);
-		binding(TestMCClock, setRawtimeFields, xxx);
+	binding(TestMCClock, setTimeToNow, xxx);
+	binding(TestMCClock, setTime, xxx);
+	binding(TestMCClock, adjustTime, xxx);
+	binding(TestMCClock, setRawtime, xxx);
+	binding(TestMCClock, setRawtimeFields, xxx);
 
-		binding(TestMCClock, getTime, xxx);
-		binding(TestMCClock, getRawtime, xxx);
-		binding(TestMCClock, getTimeByString, xxx);
-		binding(TestMCClock, getCPUClocksPerSecond, xxx);
-		binding(TestMCClock, getCPUClocksSinceStart, xxx);
-		binding(TestMCClock, getCurrentTimeString, xxx);
-		binding(TestMCClock, getCurrentGMTTimeString, xxx);
+	binding(TestMCClock, getTime, xxx);
+	binding(TestMCClock, getRawtime, xxx);
+	binding(TestMCClock, getTimeByString, xxx);
+	binding(TestMCClock, getCPUClocksPerSecond, xxx);
+	binding(TestMCClock, getCPUClocksSinceStart, xxx);
+	binding(TestMCClock, getCurrentTimeString, xxx);
+	binding(TestMCClock, getCurrentGMTTimeString, xxx);
 
-		binding(TestMCClock, printTime, xxx);
-		binding(TestMCClock, printCurrentTime, xxx);
-		binding(TestMCClock, printCurrentGMTTime, xxx);
+	binding(TestMCClock, printTime, xxx);
+	binding(TestMCClock, printCurrentTime, xxx);
+	binding(TestMCClock, printCurrentGMTTime, xxx);
 
-		//override
-		override(TestMCClock, setUp, xxx);
-		override(TestMCClock, tearDown, xxx);
-	}
+	//override
+	override(TestMCClock, setUp, xxx);
+	override(TestMCClock, tearDown, xxx);
+}
 
+
+initer(TestMCClock)
+{
+	this->super = new(MCUnitTestCase);
 	this->toBeTest = nil;
-
-	return this;
 }
 
 //override
@@ -37,14 +38,14 @@ method(TestMCClock, setUp, xxx)
 {
 	call(this, MCUnitTestCase, setUp, nil);
 	if(this->toBeTest==nil)
-		this->toBeTest = new(MCClock, nil);
+		this->toBeTest = new(MCClock);
 }
 
 method(TestMCClock, tearDown, xxx)
 {
 	call(this, MCUnitTestCase, tearDown, nil);
 	if(this->toBeTest!=nil)
-		relnil(this->toBeTest);
+		release(&(this->toBeTest));
 }
 
 method(TestMCClock, setTimeToNow, xxx)

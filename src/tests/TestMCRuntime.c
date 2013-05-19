@@ -1,20 +1,22 @@
 #include "TestMCRuntime.h"
 static const char* LOG_TAG = "TestMCRuntime";
 
-constructor(TestMCRuntimeMockObj, xxx)
-{
-	link_class(TestMCRuntimeMockObj, MCObject, nil)
-	{
-		binding(TestMCRuntimeMockObj, test_double, double a, double b, double c);
-		binding(TestMCRuntimeMockObj, test_float, float a, float b, float c);
-		binding(TestMCRuntimeMockObj, test_double_string, double a, char* b);
-		binding(TestMCRuntimeMockObj, test_float_string, float a, char* b);
-		binding(TestMCRuntimeMockObj, test_string_double, char* a, double b);
-		binding(TestMCRuntimeMockObj, test_string_float, char* a, float b);
-	}
 
-	return this;
+loader(TestMCRuntimeMockObj)
+{
+	binding(TestMCRuntimeMockObj, test_double, double a, double b, double c);
+	binding(TestMCRuntimeMockObj, test_float, float a, float b, float c);
+	binding(TestMCRuntimeMockObj, test_double_string, double a, char* b);
+	binding(TestMCRuntimeMockObj, test_float_string, float a, char* b);
+	binding(TestMCRuntimeMockObj, test_string_double, char* a, double b);
+	binding(TestMCRuntimeMockObj, test_string_float, char* a, float b);
 }
+
+initer(TestMCRuntimeMockObj)
+{
+	//nothing to init
+}
+
 
 method(TestMCRuntimeMockObj, test_double, double a, double b, double c)
 {
@@ -48,30 +50,30 @@ method(TestMCRuntimeMockObj, test_string_float, char* a, float b)
 
 /* the test case */
 
-constructor(TestMCRuntime, xxx)
+loader(TestMCRuntime)
 {
-	link_class(TestMCRuntime, MCUnitTestCase, nil)
-	{
-		binding(TestMCRuntime, testArgument_float_all, xxx);
-		binding(TestMCRuntime, testArgument_double_all, xxx);
-		binding(TestMCRuntime, testArgument_double_string, xxx);
-		//binding(TestMCRuntime, testArgument_float_string, xxx);
-		binding(TestMCRuntime, testArgument_string_double, xxx);
-		binding(TestMCRuntime, testArgument_string_float, xxx);
-		//override
-		override(TestMCRuntime, setUp, xxx);
-		override(TestMCRuntime, tearDown, xxx);
-	}
-	this->mockobj = nil;
+	binding(TestMCRuntime, testArgument_float_all, xxx);
+	binding(TestMCRuntime, testArgument_double_all, xxx);
+	binding(TestMCRuntime, testArgument_double_string, xxx);
+	//binding(TestMCRuntime, testArgument_float_string, xxx);
+	binding(TestMCRuntime, testArgument_string_double, xxx);
+	binding(TestMCRuntime, testArgument_string_float, xxx);
+	//override
+	override(TestMCRuntime, setUp, xxx);
+	override(TestMCRuntime, tearDown, xxx);
+}
 
-	return this;
+initer(TestMCRuntime)
+{
+	this->super = new(MCUnitTestCase);
+	this->mockobj = nil;
 }
 //override
 method(TestMCRuntime, setUp, xxx)
 {
 	call(this, MCUnitTestCase, setUp, nil);
 	runtime_log("----TestMCRuntime setUp");
-	this->mockobj = new(TestMCRuntimeMockObj, nil);
+	this->mockobj = new(TestMCRuntimeMockObj);
 	if (this->mockobj==nil){
 		error_log("TestMCRuntime setUp failed");
 		exit(-1);
@@ -82,7 +84,7 @@ method(TestMCRuntime, setUp, xxx)
 method(TestMCRuntime, tearDown, xxx)
 {
 	call(this, MCUnitTestCase, tearDown, nil);
-	relnil(this->mockobj);
+	release(&(this->mockobj));
 
 }
 

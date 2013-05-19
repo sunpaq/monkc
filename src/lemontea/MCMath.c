@@ -1,20 +1,18 @@
 #include "MCMath.h"
 
-constructor(MCMath, xxx)
+loader(MCMath)
 {
-	link_class(MCMath, MCObject, nil)
-	{
-		binding(MCMath, bye, xxx);
-		binding(MCMath, addInteger2, int a, int b) returns(int sum);
-	}
+	binding(MCMath, bye, xxx);
+	binding(MCMath, addInteger2, int a, int b) returns(int sum);
+}
 
-	return this;
+initer(MCMath)
+{
+	this->tid = 0;
 }
 
 method(MCMath, bye, xxx)
 {
-	call(this, MCObject, bye, nil);
-
 	debug_log("%s\n", "MCMath bye bye");
 }
 

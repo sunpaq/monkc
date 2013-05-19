@@ -51,34 +51,37 @@ void fail(char* message)
 
 /* Test Case */
 
-constructor(MCUnitTestCase, MCUnitTestResult* resultRef)
-{
-	link_class(MCUnitTestCase, MCObject, nil)
-	{
-		binding(MCUnitTestCase, bye, xxx);
-		binding(MCUnitTestCase, setUp, xxx);
-		binding(MCUnitTestCase, tearDown, xxx);
-		binding(MCUnitTestCase, runTests, xxx);
-		binding(MCUnitTestCase, runATestMethod, char* errmsg);
-	}
 
+loader(MCUnitTestCase)
+{
+	binding(MCUnitTestCase, initWithTestResult, MCUnitTestResult* resultRef);
+	binding(MCUnitTestCase, bye, xxx);
+	binding(MCUnitTestCase, setUp, xxx);
+	binding(MCUnitTestCase, tearDown, xxx);
+	binding(MCUnitTestCase, runTests, xxx);
+	binding(MCUnitTestCase, runATestMethod, char* errmsg);
+}
+
+initer(MCUnitTestCase)
+{
+	this->next_case = nil;
+}
+
+method(MCUnitTestCase, initWithTestResult, MCUnitTestResult* resultRef)
+{
 	if(resultRef!=nil){
 		retain(resultRef);
 		this->unitTestResultRef = resultRef;
 	}else{
 		this->unitTestResultRef = nil;
 	}
-
-	this->next_case = nil;
 	return this;
 }
 
 method(MCUnitTestCase, bye, xxx)
 {
-	call(this, MCObject, bye, nil);
-
 	if(this->unitTestResultRef!=nil)
-		relnil(this->unitTestResultRef);
+		release(&(this->unitTestResultRef));
 }
 
 method(MCUnitTestCase, setUp, xxx)
@@ -93,13 +96,13 @@ method(MCUnitTestCase, tearDown, xxx)
 	runtime_log("----MCUnitTestCase tearDown\n");
 }
 
-static void runMethodByPointer(MCUnitTestCase* this, MCMethod* amethod)
+static void runMethodByPointer(MCUnitTestCase* this, mc_method* amethod)
 {
 	ff(this, setUp, nil);
 	runtime_log("%s\n", "runMethodByPointer start");
 
 	try{
-		_ff(this, amethod->name, nil);
+		_push_jump(_response_to(this, amethod->name), nil);
 		//if exception generated, this line will never be reached
 	}
 	catch(MCAssertYESException){
@@ -134,19 +137,19 @@ method(MCUnitTestCase, runTests, xxx)
 {
 	runtime_log("%s\n", "MCUnitTestCase runTests");
 	unsigned i;
-	unsigned bye_key = _hash("bye");
-	unsigned setUp_key = _hash("setUp");
-	unsigned tearDown_key = _hash("tearDown");
+	unsigned bye_key = hash("bye");
+	unsigned setUp_key = hash("setUp");
+	unsigned tearDown_key = hash("tearDown");
 
-	MCMethod* amethod;
+	mc_method* amethod;
 	if(this==nil || this->isa==nil)
 		return;
 
 	runtime_log("%s\n", "MCUnitTestCase runTests before for loop");
-	for (i = 0; i < MAX_METHOD_NUM; i++)
+	for (i = 0; i < get_size_by_level(this->isa->table->level); i++)
 	{
 		//runtime_log("MCUnitTestCase runTests in for loop index:[%d]\n", i);
-		amethod = this->isa->method_list[i];
+		amethod = this->isa->table->data[i];
 		if(amethod!=nil 
 		&& amethod->addr!=nil 
 		&& amethod->name!=nil
@@ -165,31 +168,27 @@ method(MCUnitTestCase, runTests, xxx)
 
 method(MCUnitTestCase, runATestMethod, char* methodName)
 {
-	runMethodByPointer(this, this->isa->method_list[_hash(methodName)]);
+	runMethodByPointer(this, this->isa->table->data[hash(methodName)]);
 }
 
 /* Test Suite */
 
-constructor(MCUnitTestSuite, xxx)
+loader(MCUnitTestSuite)
 {
-	link_class(MCUnitTestSuite, MCObject, nil)
-	{
-		binding(MCUnitTestSuite, bye, xxx);
-		binding(MCUnitTestSuite, addTestCase, MCUnitTestCase* tcase);
-		binding(MCUnitTestSuite, runTestCases, xxx);
-	}
+	binding(MCUnitTestSuite, bye, xxx);
+	binding(MCUnitTestSuite, addTestCase, MCUnitTestCase* tcase);
+	binding(MCUnitTestSuite, runTestCases, xxx);
+}
 
+initer(MCUnitTestSuite)
+{
 	this->first_case = nil;
 	this->test_case_count = 0;
 	this->next_suite = nil;
-
-	return this;
 }
 
 method(MCUnitTestSuite, bye, xxx)
 {
-	call(this, MCObject, bye, nil);
-
 	MCUnitTestCase *iter, *save;
 	for(iter=this->first_case; (save=iter)!=nil; release(save))
 		iter = iter->next_case;
@@ -217,23 +216,22 @@ method(MCUnitTestSuite, runTestCases, xxx)
 // #ifndef _MCUnitTestResult
 // #define _MCUnitTestResult _MCObject;\
 
-constructor(MCUnitTestResult, xxx)
-{
-	link_class(MCUnitTestResult, MCObject, nil)
-	{
-		binding(MCUnitTestResult, bye, xxx);
-		binding(MCUnitTestResult, addSuccessInfo, char* succinfo);
-		binding(MCUnitTestResult, addFailInfo, char* failinfo);
-	}
 
-	return this;
+loader(MCUnitTestResult)
+{
+	binding(MCUnitTestResult, bye, xxx);
+	binding(MCUnitTestResult, addSuccessInfo, char* succinfo);
+	binding(MCUnitTestResult, addFailInfo, char* failinfo);
+}
+
+initer(MCUnitTestResult)
+{
+	//nothing to init
 }
 
 method(MCUnitTestResult, bye, xxx)
 {
-	//
-	call(this, MCObject, bye, nil);
-
+	//nothing to clean
 }
 
 method(MCUnitTestResult, addSuccessInfo, char* succinfo)
@@ -255,25 +253,22 @@ method(MCUnitTestResult, addFailInfo, char* failinfo)
 // 	int test_suite_count;\
 
 // class(MCUnitTestRunner);
-constructor(MCUnitTestRunner, xxx)
-{
-	link_class(MCUnitTestRunner, MCObject, nil)
-	{
-		binding(MCUnitTestRunner, bye, xxx);
-		binding(MCUnitTestRunner, addTestSuite, MCUnitTestSuite* testSuite);
-		binding(MCUnitTestRunner, runTestSuites, xxx);
-	}
 
+loader(MCUnitTestRunner)
+{
+	binding(MCUnitTestRunner, bye, xxx);
+	binding(MCUnitTestRunner, addTestSuite, MCUnitTestSuite* testSuite);
+	binding(MCUnitTestRunner, runTestSuites, xxx);
+}
+
+initer(MCUnitTestRunner)
+{
 	this->first_suite = nil;
 	this->test_suite_count = 0;
-
-	return this;
 }
 
 method(MCUnitTestRunner, bye, xxx)
 {
-	call(this, MCObject, bye, nil);
-
 	MCUnitTestSuite *iter, *save;
 	for(iter=this->first_suite; (save=iter)!=nil; release(save))
 		iter = iter->next_suite;

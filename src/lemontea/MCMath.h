@@ -1,11 +1,12 @@
 #include "MCContext.h"
 
-#ifndef _MCMath 
-#define _MCMath _MCObject;\
-	unsigned tid;\
+#ifndef MCMath_ 
+#define MCMath_
 
 class(MCMath);
-constructor(MCMath, xxx);
+	unsigned tid;
+end(MCMath);
+
 method(MCMath, bye, xxx);
 method(MCMath, addInteger2, int a, int b) returns(int sum);
 

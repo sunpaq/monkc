@@ -10,17 +10,17 @@ pid 0 is a swapper(scheduler)
 pid 1 is a init
 */
 
-#ifndef _MCProcess
-#define _MCProcess _MCObject;\
-	pid_t pid;\
-	pid_t ppid;\
-	uid_t uid;\
-	uid_t euid;\
-	gid_t gid;\
-	gid_t egid;\
+#ifndef MCProcess_
+#define MCProcess_ 
 
 class(MCProcess);
-constructor(MCProcess, xxx);
+	pid_t pid;
+	pid_t ppid;
+	uid_t uid;
+	uid_t euid;
+	gid_t gid;
+	gid_t egid;
+end(MCProcess);
 
 method(MCProcess, printIDs, xxx);
 
@@ -28,7 +28,7 @@ method(MCProcess, fork, xxx) returns(0 in child/child-pid in parent/-1 on error)
 method(MCProcess, vfork, xxx) returns(0 in child/child-pid in parent/-1 on error);
 
 //may be not supported by OS
-method(MCProcess, registerAtExitCallback, _FunctionPointer(func)) returns(RES);
+method(MCProcess, registerAtExitCallback, void (*func)(void)) returns(RES);
 method(MCProcess, exitWithStatus, int status);
 method(MCProcess, waitAnyChildExit, int* statusAddr) returns(pid_t);
 

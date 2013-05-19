@@ -2,14 +2,15 @@
 
 static void create_and_bind_socket(MCSocket* this, MCSocketType socket_type, char* ip, char* port);
 
-constructor(MCSocketClientInfo, xxx)
+loader(MCSocketClientInfo)
 {
-	link_class(MCSocketClientInfo, MCObject, nil)
-	{
-		binding(MCSocketClientInfo, dumpInfo, xxx);
-		binding(MCSocketClientInfo, bye, xxx);
-	}
-	return this;
+	binding(MCSocketClientInfo, dumpInfo, xxx);
+	binding(MCSocketClientInfo, bye, xxx);
+}
+
+initer(MCSocketClientInfo)
+{
+	//nothing to init
 }
 
 method(MCSocketClientInfo, dumpInfo, xxx)
@@ -20,33 +21,34 @@ method(MCSocketClientInfo, dumpInfo, xxx)
 method(MCSocketClientInfo, bye, xxx)
 {
 	//nothing to do
-
-	call(this, MCObject, bye, nil);
 }
 
-constructor(MCSocket, MCSocketType socket_type, char* ip, char* port)
+
+loader(MCSocket)
 {
-	link_class(MCSocket, MCObject, nil)
-	{
-		binding(MCSocket, listeningStart, xxx);//listen
-		binding(MCSocket, acceptARequest, xxx); returns(MCSocketClientInfo*)
-		//have_method(MCSocket, connectServer, xxx);
+	binding(MCSocket, initWithTypeIpPort, MCSocketType socket_type, char* ip, char* port);
+	binding(MCSocket, listeningStart, xxx);//listen
+	binding(MCSocket, acceptARequest, xxx); returns(MCSocketClientInfo*)
 
-		binding(MCSocket, recv, xxx);
-		binding(MCSocket, recvfrom, xxx);
-		binding(MCSocket, recvmsg, xxx);
-		binding(MCSocket, send, xxx);
-		binding(MCSocket, sendto, xxx);
-		binding(MCSocket, sendmsg, xxx);
+	binding(MCSocket, recv, xxx);
+	binding(MCSocket, recvfrom, xxx);
+	binding(MCSocket, recvmsg, xxx);
+	binding(MCSocket, send, xxx);
+	binding(MCSocket, sendto, xxx);
+	binding(MCSocket, sendmsg, xxx);
 
-		binding(MCSocket, bye, xxx);
-	}
-
-	create_and_bind_socket(this, socket_type, ip, port);
-	return this;
+	binding(MCSocket, bye, xxx);
 }
 
+initer(MCSocket)
+{
+	//nothing to init
+}
 
+method(MCSocket, initWithTypeIpPort, MCSocketType socket_type, char* ip, char* port)
+{
+	create_and_bind_socket(this, socket_type, ip, port);
+}
 
 static void create_and_bind_socket(MCSocket* this, MCSocketType socket_type, char* ip, char* port)
 {
@@ -131,7 +133,7 @@ method(MCSocket, listeningStart, xxx)
 method(MCSocket, acceptARequest, xxx) returns(MCSocketClientInfo)
 {
 	if (this->isServer!=YES)return -1;
-	MCSocketClientInfo* clientinfo = new(MCSocketClientInfo, nil);
+	MCSocketClientInfo* clientinfo = new(MCSocketClientInfo);
 	clientinfo->returnSfd = accept(this->sfd, &clientinfo->address, &clientinfo->address_len);
 	return clientinfo;
 }

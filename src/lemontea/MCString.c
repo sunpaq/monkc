@@ -1,6 +1,24 @@
 #include "MCString.h"
 
-constructor(MCString, char* str)
+
+loader(MCString)
+{
+	binding(MCString, initWithCString, char* str);
+	binding(MCString, add, char* str);
+	binding(MCString, print, xxx);
+	binding(MCString, toCString, char const resultString[]);
+	binding(MCString, equalTo, MCString* stringToComp) 							returns(BOOL);
+	binding(MCString, getOneChar, xxx);
+	binding(MCString, getCharsUntilEnter, char const resultString[]);
+	binding(MCString, bye, xxx);
+}
+
+initer()
+{
+	//nothing to init
+}
+
+method(MCString, initWithCString, char* str)
 {
 	if(str==nil)return nil;
 	size_t len = strlen(str);
@@ -19,18 +37,6 @@ constructor(MCString, char* str)
 		error_log("mem realloc failed, nothing is in buff\n");
 		exit(-1);
 	}
-
-	super_init(newthis, MCObject, nil);
-	if (set_class(newthis, "MCString", "MCObject"))
-	{
-		binding(MCString, add, char* str);
-		binding(MCString, print, xxx);
-		binding(MCString, toCString, char const resultString[]);
-		binding(MCString, equalTo, MCString* stringToComp) 							returns(BOOL);
-		binding(MCString, getOneChar, xxx);
-		binding(MCString, getCharsUntilEnter, char const resultString[]);
-		binding(MCString, bye, xxx);
-	}
 	
 	newthis->length = strlen(str);
 	newthis->size = strlen(str) + 1;
@@ -38,50 +44,51 @@ constructor(MCString, char* str)
 	return newthis;
 }
 
+
 MCString* MCString_newWithCString(char* cstr)
 {
-	return new(MCString, cstr);
+	return ff(new(MCString), initWithCString, cstr);
 }
 
 MCString* MCString_newWithMCString(MCString* mcstr)
 {
-	return new(MCString, mcstr->buff);
+	return ff(new(MCString), initWithCString, mcstr->buff);
 }
 
 MCString* MCString_newForHttp(char* cstr, BOOL isHttps)
 {
 	MCString* res;
 	if (isHttps)
-		res = new(MCString, "https://");
+		res = ff(new(MCString), initWithCString, "https://");
 	else
-		res = new(MCString, "http://");
+		res = ff(new(MCString), initWithCString, "http://");
 
 	ff(res, MK(add), cstr);
 	return res;
 }
 
-MCString* MCString_newWithCStringAnony(char* cstr)
-{
-	return new_anony(MCString, cstr);
-}
+// MCString* MCString_newWithCStringAnony(char* cstr)
+// {
+// 	return new_anony(MCString, cstr);
+// }
 
-MCString* MCString_newWithMCStringAnony(MCString* mcstr)
-{
-	return new_anony(MCString, mcstr->buff);
-}
+// MCString* MCString_newWithMCStringAnony(MCString* mcstr)
+// {
+// 	return new_anony(MCString, mcstr->buff);
+// }
 
-MCString* MCString_newForHttpAnony(char* cstr, BOOL isHttps)
-{
-	MCString* res;
-	if (isHttps)
-		res = new(MCString, "https://");
-	else
-		res = new(MCString, "http://");
+// MCString* MCString_newForHttpAnony(char* cstr, BOOL isHttps)
+// {
+// 	MCString* res;
+// 	if (isHttps)
+// 		res = new(MCString, "https://");
+// 	else
+// 		res = new(MCString, "http://");
 
-	ff(res, MK(add), cstr);
-	res->ref_count = 0;
-	return res;
-}
+// 	ff(res, MK(add), cstr);
+// 	res->ref_count = 0;
+// 	return res;
+// }
 
 static char get_one_char()
 {
@@ -106,7 +113,7 @@ method(MCString, add, char* str)
 	MCString* iterator = this;
 	while(iterator->next!=nil)
 		iterator = iterator->next;
-	(iterator->next) = new(MCString, str);
+	(iterator->next) = ff(new(MCString), initWithCString, str);
 	this->length += strlen(str);
 	this->size += strlen(str) + 1;
 }

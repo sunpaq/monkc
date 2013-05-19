@@ -2,25 +2,35 @@
 
 /* MCFile */
 
-constructor(MCFile, char* pathname, int oflag)
+loader(MCFile)
 {
-	link_class(MCFile, MCObject, nil)
-	{
-		binding(MCFile, readFromBegin, off_t offset, size_t nbytes);
-		binding(MCFile, readAtLastPosition, off_t offset, size_t nbytes);
-		binding(MCFile, readFromEnd, off_t offset, size_t nbytes);
+	binding(MCFile, newWithPathName, char* pathname, int oflag);
 
-		binding(MCFile, writeToBegin, off_t offset, void* buf, size_t nbytes);
-		binding(MCFile, writeToLastTime, off_t offset, void* buf, size_t nbytes);
-		binding(MCFile, writeToEnd, off_t offset, void* buf, size_t nbytes);
+	binding(MCFile, readFromBegin, off_t offset, size_t nbytes);
+	binding(MCFile, readAtLastPosition, off_t offset, size_t nbytes);
+	binding(MCFile, readFromEnd, off_t offset, size_t nbytes);
 
-		binding(MCFile, duplicateFd, xxx); returns(int fd);
-		binding(MCFile, duplicateFdTo, int fd); returns(int newfd);
-		binding(MCFile, printAttribute, xxx);
-		binding(MCFile, bye, xxx);
-		binding(MCFile, checkPermissionUseRealIDOfProcess, int mode); returns(BOOL)
-	}
+	binding(MCFile, writeToBegin, off_t offset, void* buf, size_t nbytes);
+	binding(MCFile, writeToLastTime, off_t offset, void* buf, size_t nbytes);
+	binding(MCFile, writeToEnd, off_t offset, void* buf, size_t nbytes);
 
+	binding(MCFile, duplicateFd, xxx); returns(int fd);
+	binding(MCFile, duplicateFdTo, int fd); returns(int newfd);
+	binding(MCFile, printAttribute, xxx);
+	binding(MCFile, bye, xxx);
+	binding(MCFile, checkPermissionUseRealIDOfProcess, int mode); returns(BOOL)
+}
+
+initer(MCFile)
+{
+	this->fd = 0;
+	this->pathname = "";
+	this->buffer = nil;
+	//this->attribute;
+}
+
+method(MCFile, newWithPathName, char* pathname, int oflag)
+{
 	if((this->fd = open(pathname, oflag, 0774))==-1)
 		return nil;
 	this->pathname = pathname;
@@ -36,30 +46,39 @@ constructor(MCFile, char* pathname, int oflag)
 // 	readonly_linebuffered,
 // 	readwrite_linebuffered
 // }MCStreamType;
-constructor(MCStream, MCStreamType type, char* path)
+loader(MCStream)
 {
-	link_class(MCStream, MCObject, nil)
-	{
-		binding(MCStream, bye, xxx);
-		binding(MCStream, getFileDescriptor, xxx); returns(int)
+	binding(MCStream, newWithPath, MCStreamType type, char* path);
 
-		binding(MCStream, getChar, xxx); returns(int)
-		binding(MCStream, putChar, int charCode);
-		binding(MCStream, pushbackChar, int charCodeToBePushBack); returns(int charCode/EOF)
+	binding(MCStream, bye, xxx);
+	binding(MCStream, getFileDescriptor, xxx); returns(int)
 
-		binding(MCStream, getCString, MCCharBuffer* recvBuffer); returns(CString/nil)
-		binding(MCStream, putCString, MCCharBuffer* sendBuffer); returns(CString/nil)
-		binding(MCStream, getMCString, xxx);                     returns(Handle(MCString))
-		binding(MCStream, putMCString, MCString* str);           returns(Handle(MCString)/nil)
+	binding(MCStream, getChar, xxx); returns(int)
+	binding(MCStream, putChar, int charCode);
+	binding(MCStream, pushbackChar, int charCodeToBePushBack); returns(int charCode/EOF)
 
-		binding(MCStream, getBianryObject, void* recvBuffer,  size_t objectSize, size_t numberOfObjs); returns(size_t)
-		binding(MCStream, putBianryObject, void* sendBuffer,  size_t objectSize, size_t numberOfObjs); returns(size_t)
+	binding(MCStream, getCString, MCCharBuffer* recvBuffer); returns(CString/nil)
+	binding(MCStream, putCString, MCCharBuffer* sendBuffer); returns(CString/nil)
+	binding(MCStream, getMCString, xxx);                     returns(Handle(MCString))
+	binding(MCStream, putMCString, MCString* str);           returns(Handle(MCString)/nil)
 
-		binding(MCStream, tellOffset, xxx); returns(off_t)
-		binding(MCStream, seekFromBegin, off_t offset); returns(BOOL)
-		binding(MCStream, seekFromCurrent, off_t offset); returns(BOOL)
-		binding(MCStream, seekFromEnd, off_t offset); returns(BOOL)
-	}
+	binding(MCStream, getBianryObject, void* recvBuffer,  size_t objectSize, size_t numberOfObjs); returns(size_t)
+	binding(MCStream, putBianryObject, void* sendBuffer,  size_t objectSize, size_t numberOfObjs); returns(size_t)
+
+	binding(MCStream, tellOffset, xxx); returns(off_t)
+	binding(MCStream, seekFromBegin, off_t offset); returns(BOOL)
+	binding(MCStream, seekFromCurrent, off_t offset); returns(BOOL)
+	binding(MCStream, seekFromEnd, off_t offset); returns(BOOL)
+	
+}
+
+initer(MCStream)
+{
+	//do nothing
+}
+
+method(MCStream, newWithPath, MCStreamType type, char* path)
+{
 	//FILE *fopen(const char *restrict pathname, const char *restrict type);
 	//type:
 	//r/w/a/ & b & +
@@ -90,21 +109,18 @@ constructor(MCStream, MCStreamType type, char* path)
 	return this;
 }
 
-constructor(MCSelect, long second, long microsecond)
+
+loader(MCSelect)
 {
-	link_class(MCSelect, MCObject, nil)
-	{
-		binding(MCSelect, waitForFdsetChange, xxx); returns(int: >0 success =0 timeout <0 error)
-		binding(MCSelect, addFd, MCSelect_fd_type type, int fd);
-		binding(MCSelect, removeFd, MCSelect_fd_type type, int fd);
-		binding(MCSelect, isFdReady, MCSelect_fd_type type, int fd); returns(BOOL)
-	}
+	binding(MCSelect, initWithSecondAndMicrosec, long second, long microsecond);
+	binding(MCSelect, waitForFdsetChange, xxx); returns(int: >0 success =0 timeout <0 error)
+	binding(MCSelect, addFd, MCSelect_fd_type type, int fd);
+	binding(MCSelect, removeFd, MCSelect_fd_type type, int fd);
+	binding(MCSelect, isFdReady, MCSelect_fd_type type, int fd); returns(BOOL)
+}
 
-	//timeout.tv_sec
-	//timeout.tv_usec
-	this->timeout.tv_sec = second;
-	this->timeout.tv_usec = microsecond;
-
+initer(MCSelect)
+{
 	FD_ZERO(&this->readfd_set);
 	FD_ZERO(&this->writefd_set);
 	FD_ZERO(&this->exceptionfd_set);
@@ -112,7 +128,14 @@ constructor(MCSelect, long second, long microsecond)
 	FD_ZERO(&this->readfd_result_set);
 	FD_ZERO(&this->writefd_result_set);
 	FD_ZERO(&this->exceptionfd_result_set);
+}
 
+method(MCSelect, initWithSecondAndMicrosec, long second, long microsecond)
+{
+	//timeout.tv_sec
+	//timeout.tv_usec
+	this->timeout.tv_sec = second;
+	this->timeout.tv_usec = microsecond;
 	return this;
 }
 
@@ -225,23 +248,23 @@ mode_t MCFile_setNewFilePermissionMask4Process(mode_t cmask)
 
 MCFile* MCFile_newReadOnly(char* pathname)
 {
-	return new(MCFile, pathname, O_RDONLY|O_CREAT);
+	return ff(new(MCFile), newWithPathName, pathname, O_RDONLY|O_CREAT);
 }
 
 MCFile* MCFile_newWriteOnly(char* pathname, BOOL isClear)
 {
 	if(isClear)
-		return new(MCFile, pathname, O_WRONLY|O_CREAT|O_TRUNC);
+		return ff(new(MCFile), newWithPathName, pathname, O_WRONLY|O_CREAT|O_TRUNC);
 	else
-		return new(MCFile, pathname, O_WRONLY|O_CREAT);
+		return ff(new(MCFile), newWithPathName, pathname, O_WRONLY|O_CREAT);
 }
 
 MCFile* MCFile_newReadWrite(char* pathname, BOOL isClear)
 {
 	if(isClear)
-		return new(MCFile, pathname, O_RDWR|O_CREAT|O_TRUNC);
+		return ff(new(MCFile), newWithPathName, pathname, O_RDWR|O_CREAT|O_TRUNC);
 	else
-		return new(MCFile, pathname, O_RDWR|O_CREAT);
+		return ff(new(MCFile), newWithPathName, pathname, O_RDWR|O_CREAT);
 }
 
 BOOL MCFile_createSymbolLink(char* pathname, char* linkname)
@@ -299,8 +322,6 @@ char* MCProcess_getCurrentWorkingDir(MCCharBuffer* buff)
 
 method(MCStream, bye, xxx)
 {
-	call(this, MCObject, bye, nil);
-
 	//0=OK/EOF=ERROR
 	if(fclose(this->fileObject))
 		error_log("close file error");
@@ -342,7 +363,7 @@ method(MCStream, getMCString, xxx)                     returns(Handle(MCString))
 {
 	char buff[1024];
 	fgets(buff, sizeof(buff), this->fileObject);
-	return new(MCString, &buff[0]);
+	return ff(new(MCString), initWithCString, &buff[0]);
 }
 
 method(MCStream, putMCString, MCString* str)           returns(Handle(MCString)/nil)

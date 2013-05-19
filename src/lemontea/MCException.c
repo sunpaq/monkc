@@ -71,7 +71,7 @@ void set_exception_data(char* key, id e)
 
 	id exp_obj = _exception_store[val];
 	if(exp_obj != nil){
-		relnil(exp_obj);
+		release(&exp_obj);
 
 	}//auto release the old one
 	_exception_store[val] = e;

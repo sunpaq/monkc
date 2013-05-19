@@ -1,5 +1,5 @@
 #include "MCContext.h"
-
+#include <pthread.h>
 /*
 The pthread API:
 
@@ -106,29 +106,33 @@ pthread_mutex_unlock     pthread_mutex_unlock
 /* MCRunnable */
 
 
-#ifndef _MCRunnable
-#define _MCRunnable _MCObject;\
-	_FunctionPointer(init_routine);\
+#ifndef MCRunnable_
+#define MCRunnable_
 
 class(MCRunnable);
+	void (*init_routine)(void);
+end(MCRunnable);
+
+method(MCRunnable, initWithFunctionPointer, void (*init_routine)(void));
 method(MCRunnable, run, xxx);
-constructor(MCRunnable, _FunctionPointer(init_routine));
 #endif
 
 
 /* MCThread */
 
 
-#ifndef _MCThread 
-#define _MCThread _MCObject;\
-	pthread_t self;\
-	pthread_attr_t attribute;\
-	pthread_once_t once_control;\
-	BOOL isRunOnce;\
-	MCRunnable* runnable;\
+#ifndef MCThread_ 
+#define MCThread_
 
 class(MCThread);
-constructor(MCThread, MCRunnable* runnable);
+	pthread_t self;
+	pthread_attr_t attribute;
+	pthread_once_t once_control;
+	BOOL isRunOnce;
+	MCRunnable* runnable;
+end(MCThread);
+
+method(MCThread, initWithRunnable, MCRunnable* runnable);
 
 //global class functions
 int MCThread_cancel(MCThread* thread);

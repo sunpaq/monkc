@@ -4,13 +4,19 @@
 /* MCRunnable */
 
 
-constructor(MCRunnable, _FunctionPointer(init_routine))
+loader(MCRunnable)
 {	
-	link_class(MCRunnable, MCObject, nil)
-	{
-		binding(MCRunnable, run, xxx);
-	}
+	binding(MCRunnable, run, xxx);
+	binding(MCRunnable, initWithFunctionPointer, void (*init_routine)(void));
+}
 
+initer(MCRunnable)
+{
+	this->init_routine = 0;
+}
+
+method(MCRunnable, initWithFunctionPointer, void (*init_routine)(void))
+{
 	this->init_routine = init_routine;
 	return this;
 }
@@ -20,33 +26,38 @@ method(MCRunnable, run, xxx)
 	//do nothing
 }
 
-constructor(MCThread, MCRunnable* runnable)
+/* MCThread */
+
+loader(MCThread)
+{
+	binding(MCThread, initWithRunnable, MCRunnable* runnable);
+	binding(MCThread, start, void* result) 			returns(int);
+	binding(MCThread, equal, MCThread* thread) 		returns(BOOL);
+	binding(MCThread, bye, xxx);
+}
+
+initer(MCThread)
+{
+	//init the vars
+	pthread_once_t ponce = PTHREAD_ONCE_INIT;
+	this->once_control = ponce;
+	this->isRunOnce = NO;//default is NO
+	//if you need, you can set the attribute use the raw pthread APIs
+	//example: pthread_attr_getstacksize(m_thread->attribute);
+	pthread_attr_init(&this->attribute);
+}
+
+method(MCThread, initWithRunnable, MCRunnable* runnable)
 {
 	if (runnable==nil)
 	{
 		error_log("%s\n","runnable can not be nil, do nothing");
 		return;
 	}
-
-	link_class(MCThread, MCObject, nil)
-	{
-		binding(MCThread, start, void* result) 			returns(int);
-		binding(MCThread, equal, MCThread* thread) 		returns(BOOL);
-		binding(MCThread, bye, xxx);
-	}
-	//init the vars
-	pthread_once_t ponce = PTHREAD_ONCE_INIT;
-	this->once_control = ponce;
-	this->isRunOnce = NO;//default is NO
 	retain(runnable);
 	this->runnable = runnable;
-	pthread_attr_init(&this->attribute);
-	//if you need, you can set the attribute use the raw pthread APIs
-	//example: pthread_attr_getstacksize(m_thread->attribute);
 	return this;
 }
-
-/* MCThread */
 
 int MCThread_join(MCThread* thread, void** result)
 {
