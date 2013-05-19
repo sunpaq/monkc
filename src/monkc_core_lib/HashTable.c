@@ -353,6 +353,8 @@ mc_class* _load(const char* name_in, loaderFP loader)
 	mc_class* aclass;
 	//try lock spin lock
 	for(;;){
+		if(mc_atomic_get_integer(&class_pool_lock) != 0)
+			continue;
 		if(!mc_atomic_set_integer(&class_pool_lock, 0, 1))
 			break;
 	}
