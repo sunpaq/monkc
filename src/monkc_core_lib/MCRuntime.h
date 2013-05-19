@@ -247,6 +247,8 @@ void* _clean_jump1(mc_message msg, ...);
 void* _clean_jump2(mc_message msg, ...);
 void* _clean_jump3(mc_message msg, ...);
 void* _clean_jump4(mc_message msg, ...);
+
+//getter and setter must be used in pairs
 int mc_atomic_get_integer(volatile int* target);
 void* mc_atomic_get_pointer(volatile void** target);
 int mc_atomic_set_integer(volatile int* target, volatile int old, volatile int value);
