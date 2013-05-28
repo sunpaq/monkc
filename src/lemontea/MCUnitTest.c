@@ -96,13 +96,13 @@ method(MCUnitTestCase, tearDown, xxx)
 	runtime_log("----MCUnitTestCase tearDown\n");
 }
 
-static void runMethodByPointer(MCUnitTestCase* this, mc_method* amethod)
+static void runMethodByPointer(MCUnitTestCase* this, mc_hashitem* amethod)
 {
 	ff(this, setUp, nil);
 	runtime_log("%s\n", "runMethodByPointer start");
 
 	try{
-		_push_jump(_response_to(this, amethod->name), nil);
+		_push_jump(_response_to(this, amethod->key), nil);
 		//if exception generated, this line will never be reached
 	}
 	catch(MCAssertYESException){
@@ -127,7 +127,7 @@ static void runMethodByPointer(MCUnitTestCase* this, mc_method* amethod)
 		error_log("MCAssertEqualsException\n");
 	}
 	finally{
-		error_log("testcase: %s at method: [%s]\n", this->isa->name, amethod->name);
+		error_log("testcase: %s at method: [%s]\n", this->isa->item->key, amethod->key);
 	}
 
 	ff(this, tearDown, nil);
@@ -141,7 +141,7 @@ method(MCUnitTestCase, runTests, xxx)
 	unsigned setUp_key = hash("setUp");
 	unsigned tearDown_key = hash("tearDown");
 
-	mc_method* amethod;
+	mc_hashitem* amethod;
 	if(this==nil || this->isa==nil)
 		return;
 
@@ -149,10 +149,10 @@ method(MCUnitTestCase, runTests, xxx)
 	for (i = 0; i < get_size_by_level(this->isa->table->level); i++)
 	{
 		//runtime_log("MCUnitTestCase runTests in for loop index:[%d]\n", i);
-		amethod = this->isa->table->data[i];
+		amethod = this->isa->table->items[i];
 		if(amethod!=nil 
-		&& amethod->addr!=nil 
-		&& amethod->name!=nil
+		&& amethod->value!=nil 
+		&& amethod->key!=nil
 		&& i!=bye_key
 		&& i!=setUp_key
 		&& i!=tearDown_key){
@@ -168,7 +168,7 @@ method(MCUnitTestCase, runTests, xxx)
 
 method(MCUnitTestCase, runATestMethod, char* methodName)
 {
-	runMethodByPointer(this, this->isa->table->data[hash(methodName)]);
+	runMethodByPointer(this, this->isa->table->items[hash(methodName)]);
 }
 
 /* Test Suite */

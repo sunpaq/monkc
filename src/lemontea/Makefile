@@ -6,7 +6,7 @@ LIBOBJS = MCString.o MCContext.o \
 LINK_HEAD = -I/usr/local/include/monkc -I/usr/local/include/lemontea
 #LINK_BIN = -lpthread -L/usr/local/lib -lmonkc -llemontea
 
-CC = clang -O -g -w -Wall -Wno-unused-variable -Wno-return-type
+CC = gcc -O -g -w -Wall -Wno-unused-variable -Wno-return-type
 AS = as
 
 all:$(LIBOBJS)

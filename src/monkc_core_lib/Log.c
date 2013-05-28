@@ -25,7 +25,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include "Log.h"
+#include "monkc.h"
 
 /*
 	Logs with color tags
@@ -47,7 +47,7 @@ void error_log(char* volatile fmt, ...)
 	}
 }
 
-void debug_log(volatile char* fmt, ...)
+void debug_log(char* volatile fmt, ...)
 {
 	if(LOG_LEVEL != SILENT
 	 &&LOG_LEVEL != ERROR_ONLY){
@@ -62,7 +62,7 @@ void debug_log(volatile char* fmt, ...)
 	}
 }
 
-void runtime_log(volatile char* fmt, ...)
+void runtime_log(char* volatile fmt, ...)
 {
 	if(LOG_LEVEL != SILENT
 	 &&LOG_LEVEL != ERROR_ONLY
@@ -78,7 +78,7 @@ void runtime_log(volatile char* fmt, ...)
 	}
 }
 
-void error_logt(volatile char* tag, volatile char* fmt, ...)
+void error_logt(char* volatile tag, char* volatile fmt, ...)
 {
 	if(LOG_LEVEL != SILENT){
 		char log_buf[1024];
@@ -93,7 +93,7 @@ void error_logt(volatile char* tag, volatile char* fmt, ...)
 	}
 }
 
-void debug_logt(volatile char* tag, volatile char* fmt, ...)
+void debug_logt(char* volatile tag, char* volatile fmt, ...)
 {
 	if(LOG_LEVEL != SILENT
 	 &&LOG_LEVEL != ERROR_ONLY){
@@ -109,7 +109,7 @@ void debug_logt(volatile char* tag, volatile char* fmt, ...)
 	}
 }
 
-void runtime_logt(volatile char* tag, volatile char* fmt, ...)
+void runtime_logt(char* volatile tag, char* volatile fmt, ...)
 {
 	if(LOG_LEVEL != SILENT
 	 &&LOG_LEVEL != ERROR_ONLY

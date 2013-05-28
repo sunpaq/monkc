@@ -7,7 +7,7 @@ LIBOBJS = $(patsubst %.c, %.o, $(SRCS))
 ARCH = $(strip $(shell uname -m))
 OS = $(strip $(shell uname -s))
 
-CC = clang -g -w -Wall -Wno-unused-variable -Wno-return-type
+CC = gcc -g -w -Wall -Wno-unused-variable -Wno-return-type
 AS = as
 
 #default is IA-32 cpus

@@ -54,8 +54,7 @@ method(MCThread, initWithRunnable, MCRunnable* runnable)
 		error_log("%s\n","runnable can not be nil, do nothing");
 		return;
 	}
-	retain(runnable);
-	this->runnable = runnable;
+	this->runnable = retain(runnable);
 	return this;
 }
 
@@ -126,6 +125,6 @@ method(MCThread, bye, xxx)
 {
 	call(this, MCObject, bye, nil);
 	pthread_attr_destroy(&this->attribute);
-	relnil(this->runnable);
+	release(&(this->runnable));
 }
 

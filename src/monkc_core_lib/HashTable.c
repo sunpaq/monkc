@@ -25,16 +25,17 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include "MCRuntime.h"
+#include "monkc.h"
 
-//private
-static mc_classtable* mc_global_class_pool = nil;
-static int class_pool_lock = 0;
-static unsigned mc_table_sizes[5] = {100, 200, 1000, 4000, 10000};
-
-/*
-	Tools Part: Hash and nil pointer check
-*/
+static const unsigned mc_hashtable_sizes[5] = {100, 200, 1000, 4000, 10000};
+inline unsigned get_tablesize(const unsigned level)
+{
+	if(level>5){
+		error_log("get_tablesize(level) level>5 return use level=5\n");
+		return mc_hashtable_sizes[5];
+	}
+	return mc_hashtable_sizes[level];
+}
 
 //copy form << The C Programming language >>
 //BKDR Hash Function
@@ -48,216 +49,182 @@ unsigned hash(const char *s)
 	return hashval;
 }
 
-mc_methodtable* init_methodtable(mc_methodtable** const table_p, unsigned initlevel)
-{
-	unsigned i;
-	for (i = 0; i < mc_table_sizes[(*table_p)->level]; i++)
-		((*table_p)->data)[i]=nil;
-	(*table_p)->level = initlevel;
-	return (*table_p);
-}
+// typedef struct mc_hashtable_struct
+// {
+// 	int lock;
+// 	unsigned level;
+// 	unsigned count;
+// 	mc_hashitem* data[];
+// }mc_hashtable;
 
-static void init_classtable(unsigned initlevel)
-{
-	if(mc_global_class_pool==nil){
-		mc_classtable* tb = (mc_classtable*)malloc(sizeof(mc_classtable)
-		 	+ mc_table_sizes[0]*sizeof(mc_method*));
-		unsigned i;
-		for (i = 0; i < mc_table_sizes[tb->level]; i++)
-			(tb->data)[i]=nil;
-		tb->level = initlevel;
-		//at the very beginning
-		//no need atomic write back
-		mc_global_class_pool = tb;
-	}
-}
-
-/*
-	Runtime Start and End
-*/
-void mc_check()
-{
-	mc_object* obj = (mc_object*)malloc(sizeof(mc_object));
-	runtime_log("sizeof obj pointer is: %p", obj);
-	//do some checks
-}
-
-void mc_init()
-{
-	//default we set log level to debug
-	LOG_LEVEL = DEBUG;
-	//create a class hashtable
-	init_classtable(0);
-	//_init_class_list();
-	//_init_anony_pool();
-	//_init_vector_stack();
-	//_init_wector_stack();
-	mc_check();
-	runtime_log("mc_init finished\n");
-}
-
-void mc_end()
-{
-	runtime_log("mc_end finished\n");
-}
-
-static mc_methodtable* expand_methodtable(mc_methodtable** const table_p, unsigned tolevel)
+static mc_hashtable* expand_table(mc_hashtable** const table_p, unsigned tolevel)
 {
 	unsigned oldlevel = (*table_p)->level;
-	size_t newsize = sizeof(mc_methodtable) + mc_table_sizes[tolevel]*sizeof(mc_method*);
-	size_t oldsize = sizeof(mc_methodtable) + mc_table_sizes[oldlevel]*sizeof(mc_method*);
-	//reallocation
-	mc_methodtable* newtable = (mc_methodtable*)realloc((*table_p), newsize);
+	size_t newsize = sizeof(mc_hashtable) + get_tablesize(tolevel)*sizeof(mc_hashitem*);
+	size_t oldsize = sizeof(mc_hashtable) + get_tablesize(oldlevel)*sizeof(mc_hashitem*);
+	//realloc
+	mc_hashtable* newtable = (mc_hashtable*)realloc((*table_p), newsize);
 	newtable->level = tolevel;
+	//fill new slots to nil
 	unsigned i;
-	for(i=mc_table_sizes[oldlevel]+1; i<mc_table_sizes[tolevel]; i++)
-		newtable->data[i]=nil;
+	for(i=get_tablesize(oldlevel)+1; i<get_tablesize(tolevel); i++)
+		newtable->items[i]=nil;
 	(*table_p) = newtable;
-	error_log("expand method table: %d->%d\n", oldlevel, (*table_p)->level);
+	error_log("expand table: %d->%d\n", oldlevel, (*table_p)->level);
 	return (*table_p);
 }
 
-static void expand_classtable(unsigned tolevel)
-{
-	//lock
+// typedef struct mc_hashitem_struct
+// {
+// 	struct mc_hashitem_struct* next;
+// 	unsigned hash;
+// 	unsigned index;
+// 	unsigned level;
+// 	void* value;
+// 	char key[MAX_KEY_CHARS];
+// }mc_hashitem;
 
-	unsigned oldlevel = mc_global_class_pool->level;
-	size_t newsize = sizeof(mc_classtable) + mc_table_sizes[tolevel]*sizeof(mc_method*);
-	size_t oldsize = sizeof(mc_classtable) + mc_table_sizes[oldlevel]*sizeof(mc_method*);
-	//reallocation
-	mc_classtable* newtable = (mc_classtable*)realloc(mc_global_class_pool, newsize);
-	newtable->level = tolevel;
+mc_hashitem* new_item_withclass(const char* key, mc_class* aclass)
+{
+	mc_hashitem* item = new_item(key, aclass);
+	aclass->item = item;
+	return item;
+}
+
+mc_hashitem* new_item_withclass_h(const char* key, mc_class* aclass, unsigned hashval)
+{
+	mc_hashitem* item = new_item_h(key, aclass, hashval);
+	aclass->item = item;
+	return item;
+}
+
+mc_hashitem* new_item(const char* key, void* value)
+{
+	return new_item_h(key, value, hash(key));
+}
+
+mc_hashitem* new_item_h(const char* key, void* value, const unsigned hashval)
+{
+	mc_hashitem* aitem = (mc_hashitem*)malloc(sizeof(mc_hashitem));
+	aitem->next = nil;
+	aitem->hash = hashval;
+	aitem->index = 0;
+	aitem->level = 0;
+	mc_copy_key(aitem->key, key);
+	aitem->value = value;
+	return aitem;
+}
+
+// typedef struct mc_hashtable_struct
+// {
+// 	int lock;
+// 	unsigned level;
+// 	unsigned count;
+// 	mc_hashitem* items[];
+// }mc_hashtable;
+
+mc_hashtable* new_table(const unsigned initlevel)
+{
+	//alloc
+	mc_hashtable* atable = (mc_hashtable*)malloc(sizeof(mc_hashtable)
+		+get_tablesize(initlevel)*sizeof(mc_hashitem*));
+	//init
+	atable->lock = 0;
+	atable->level = initlevel;
+	atable->count = 0;
+	//set all the slot to nil
 	unsigned i;
-	for(i=mc_table_sizes[oldlevel]+1; i<mc_table_sizes[tolevel]; i++)
-		newtable->data[i]=nil;
-	mc_global_class_pool = newtable;
-	error_log("expand global class table: %d->%d\n", oldlevel, mc_global_class_pool->level);
-	//unlock
+	for (i = 0; i < get_tablesize(initlevel); i++)
+		(atable->items)[i]=nil;
+	return atable;
 }
 
-unsigned get_size_by_level(const unsigned level)
+unsigned set_item(mc_hashtable** const table_p,
+	mc_hashitem* const item, 
+	BOOL isOverride, BOOL isFreeValue)
 {
-	return mc_table_sizes[level];
-}
+	if(table_p==nil || *table_p==nil){
+		error_log("set_item(mc_hashtable** table_p) table_p or *table_p is nill return 0\n");
+		return 0;
+	}
 
-unsigned set_method(mc_methodtable** const table_p, mc_method* const volatile method, BOOL isOverride)
-{
-	unsigned hashval = method->hash;
-	unsigned index = hashval % mc_table_sizes[(*table_p)->level];
-	mc_method* oldmethod;
-	if((oldmethod=(*table_p)->data[index]) == nil){
-		method->level = (*table_p)->level;
-		method->index = index;
-		(*table_p)->data[index] = method;
-		//mc_atomic_set_pointer(&((*table_p)->data[index]), method);
-		runtime_log("binding a method[%s/%d]\n", (*table_p)->data[index]->name, index);
+	unsigned hashval = item->hash;
+	unsigned index = hashval % get_tablesize((*table_p)->level);
+	mc_hashitem* olditem;
+	if((olditem=(*table_p)->items[index]) == nil){
+		item->level = (*table_p)->level;
+		item->index = index;
+		(*table_p)->items[index] = item;
+		runtime_log("set-item[%d/%s]\n", item->index, item->key);
 		return index;
 	}else{
-		//if the method have already been setted. we free the old method
-		if(mc_compare_methodname(oldmethod, method->name) == 0){
-			if(isOverride==NO){
-				error_log("binding method [%s] already been setted, free temp method\n", method->name);
-				free(method);
+		//if the item have already been setted. we free the old one
+		if(mc_compare_key(olditem->key, item->key) == 0){
+			if(isOverride == NO){
+				error_log("set-item key[%s] already been setted, free temp item\n", item->key);
+				if(isFreeValue == YES)free(item->value);
+				free(item);
 				return index;
 			}else{
-				error_log("override method [%s] already been setted, replace old method\n", method->name);
-				free(oldmethod);
-				method->level = (*table_p)->level;
-				method->index = index;
-				(*table_p)->data[index] = method;
-				//mc_atomic_set_pointer(&((*table_p)->data[index]), method);
+				error_log("reset-item key[%s] already been setted, replace old item\n", item->key);
+				if(isFreeValue == YES)free(olditem->value);
+				free(olditem);
+				item->level = (*table_p)->level;
+				item->index = index;
+				(*table_p)->items[index] = item;
 				return index;
 			}
 
-		//conflict with other method. we expand the table and try again. until success
+		//conflict with other item. we expand the table and try again. until success
 		}else{
-			if(oldmethod->hash == method->hash){
+			if(olditem->hash == item->hash){
 				error_log("hash conflict new[%s/%d]<->old[%s/%d]\n", 
-					method->name, method->hash,
-					oldmethod->name, oldmethod->hash);
+					item->key, item->hash,
+					olditem->key, olditem->hash);
 			}else{
 				error_log("index conflict new[%s/%d]<->old[%s/%d]\n",
-					method->name, index,
-					oldmethod->name, index);
+					item->key, index,
+					olditem->key, index);
 			}
 			unsigned tmplevel = (*table_p)->level+1;
 			if(tmplevel<5){
-				expand_methodtable(table_p, tmplevel);
-				set_method(table_p, method, isOverride);
+				expand_table(table_p, tmplevel);
+				set_item(table_p, item, isOverride, isFreeValue);
 			}else{
 				//tmplevel = 5, table_p must have been expanded to level 4
-				//there still a oldmethod, use link list.
-				error_log("method name conflict can not be soloved. link the new one behind the old\n");
-				method->level = 4;
-				method->index = index;
-				oldmethod->next = method;
-				//mc_atomic_set_pointer(&(oldmethod->next), method);
+				//there still a item, use link list.
+				error_log("item key conflict can not be soloved. link the new one behind the old\n");
+				item->level = 4;
+				item->index = index;
+				olditem->next = item;
 				return index;
 			}
 		}
 	}
 }
 
-unsigned set_class(mc_class* const aclass)
+mc_hashitem* get_item_bykey(const mc_hashtable** table_p, const char* key)
 {
-	unsigned hashval = aclass->hash;
-	unsigned index = hashval % mc_table_sizes[mc_global_class_pool->level];
-	mc_class* oldclass;
-	if((oldclass=mc_global_class_pool->data[index]) == nil){
-		aclass->level = mc_global_class_pool->level;
-		aclass->index = index;
-		mc_global_class_pool->data[index] = aclass;
-		//mc_atomic_set_pointer(&(mc_global_class_pool->data[index]), aclass);
-		return index;
-	}else{
-		//this class have already setted.
-		if(mc_compare_classname(oldclass, aclass->name) == 0){
-			error_log("class[%s] already been binded. free temp class.\n", aclass->name);
-			free(aclass);
-			return index;
-		//conflict with other class. we expand class table until success.
-		}else{
-			if(oldclass->hash == aclass->hash){
-				error_log("hash conflict new[%s/%d]<->old[%s/%d]\n", 
-					aclass->name, aclass->hash,
-					oldclass->name, oldclass->hash);
-			}else{
-				error_log("index conflict new[%s/%d]<->old[%s/%d]\n",
-					aclass->name, index,
-					oldclass->name, index);
-			}
-			unsigned tmplevel = aclass->level+1;
-			if(tmplevel<5){
-				expand_classtable(tmplevel);
-				set_class(aclass);
-			}else{
-				//tmplevel = 5, table_p must have been expanded to level 4
-				//there still a oldmethod, use link list.
-				error_log("method name conflict can not be soloved. link the new one behind the old\n");
-				aclass->level = 4;
-				aclass->index = index;
-				oldclass->next = aclass;
-				//mc_atomic_set_pointer(&(oldclass->next), aclass);
-				return index;
-			}
-		}
+	if((*table_p)==nil){
+		error_log("get_item_bykey(table_p) table_p is nil return nil\n");
+		return nil;
 	}
-}
-
-mc_method* get_method_by_name(const mc_methodtable** table_p, const char* name)
-{
-	unsigned hashval = hash(name);
+	unsigned hashval = hash(key);
 	//try get index
-	return get_method_by_hash(table_p, hashval, name);
+	return get_item_byhash(table_p, hashval, key);
 }
 
-mc_method* get_method_by_hash(const mc_methodtable** table_p, const unsigned hashval, const char* refname)
+mc_hashitem* get_item_byhash(const mc_hashtable** table_p, const unsigned hashval, const char* refkey)
 {
+	if((*table_p)==nil){
+		error_log("get_item_byhash(table_p) table_p is nil return nil\n");
+		return nil;
+	}
 	unsigned level;
-	mc_method* res;
+	mc_hashitem* res;
 	//level<4
 	for(level = 0; level<4; level++){
-		if((res=get_method_by_index(table_p, hashval % mc_table_sizes[level])) == nil)
+		if((res=get_item_byindex(table_p, hashval % get_tablesize(level))) == nil)
 			continue;
 		if(res->level != level)
 			continue;
@@ -267,7 +234,7 @@ mc_method* get_method_by_hash(const mc_methodtable** table_p, const unsigned has
 		return res;
 	}
 	//level=4
-	if((res=get_method_by_index(table_p, hashval % mc_table_sizes[4])) == nil)
+	if((res=get_item_byindex(table_p, hashval % get_tablesize(4))) == nil)
 		return nil;
 	if(res->level != 4)
 		return nil;
@@ -275,150 +242,30 @@ mc_method* get_method_by_hash(const mc_methodtable** table_p, const unsigned has
 		return nil;
 	if(res->next == nil)
 		return nil;
-	//pass all the check. search conflicted method
+	//pass all the check. search conflicted item
 	for(; res!=nil; res=res->next)
-		if(mc_compare_methodname(res, refname)==0){
-			runtime_log("name hit a method [%s/%d/%d]\n", 
-			res->name, res->index, 4);
+		if(mc_compare_key(res->key, refkey) == 0){
+			runtime_log("key hit a item [%s/%d/%d]\n", 
+			res->key, res->index, 4);
 			return res;
 		}
-	//no matched method
+	//no matched item
 	return nil;
 }
 
-mc_method* get_method_by_index(const mc_methodtable** table_p, const unsigned index)
+mc_hashitem* get_item_byindex(const mc_hashtable** table_p, const unsigned index)
 {
-	if(index > mc_table_sizes[(*table_p)->level])
+	if((*table_p)==nil){
+		error_log("get_item_byindex(table_p) table_p is nil return nil\n");
 		return nil;
-	if((*table_p)->data[index] != nil)
-		return (*table_p)->data[index];
+	}
+	if(index > get_tablesize((*table_p)->level))
+		return nil;
+	if((*table_p)->items[index] != nil)
+		return (*table_p)->items[index];
 	else
 		return nil;
 }
 
-mc_class* get_class_by_name(const char* name)
-{
-	unsigned hashval = hash(name);
-	//try get index
-	return get_class_by_hash(hashval, name);
-}
-
-mc_class* get_class_by_hash(const unsigned hashval, const char* refname)
-{
-	unsigned level;
-	mc_class* res;
-	//level<4
-	for(level = 0; level<4; level++){
-		if((res=get_class_by_index(hashval % mc_table_sizes[level])) == nil)
-			continue;
-		if(res->level != level)
-			continue;
-		if(res->hash != hashval)
-			continue;
-		//pass all the check
-		return res;
-	}
-	//level=4
-	if((res=get_class_by_index(hashval % mc_table_sizes[4])) == nil)
-		return nil;
-	if(res->level != 4)
-		return nil;
-	if(res->hash != hashval)
-		return nil;
-	if(res->next == nil)
-		return nil;
-	//pass all the check. search conflicted method
-	for(; res!=nil; res=res->next)
-		if(mc_compare_classname(res, refname)==0){
-			runtime_log("name hit a class [%s/%d/%d]\n", 
-			res->name, res->index, 4);
-			return res;
-		}
-	//no matched class
-	return nil;
-}
-
-mc_class* get_class_by_index(const unsigned index)
-{
-	if(index > mc_table_sizes[mc_global_class_pool->level])
-		return nil;
-	if(mc_global_class_pool->data[index] != nil)
-		return mc_global_class_pool->data[index];
-	else
-		return nil;
-}
-
-mc_class* _load(const char* name_in, loaderFP loader)
-{
-	mc_class* aclass;
-	//try lock spin lock
-	for(;;){
-		if(mc_atomic_get_integer(&class_pool_lock) != 0)
-			continue;
-		if(!mc_atomic_set_integer(&class_pool_lock, 0, 1))
-			break;
-	}
-	if((aclass=get_class_by_name(name_in)) == nil){
-		//new a class object
-		aclass = (mc_class*)malloc(sizeof(mc_class));
-		mc_methodtable* atable = (mc_methodtable*)malloc(sizeof(mc_methodtable)
-			+mc_table_sizes[0]*sizeof(mc_method*));
-		init_methodtable(&atable, 0);
-		aclass->table = atable;
-		aclass->hash = hash(name_in);
-		aclass->next = nil;
-		mc_copy_classname(aclass, name_in);
-		(*loader)(aclass);
-		set_class(aclass);
-		runtime_log("load a class[%s]\n", name_in);
-	}else{
-		//runtime_log("already load class[%s]\n", name_in);
-	}
-	//unlock
-	class_pool_lock = 0;
-	return aclass;
-}
-
-id _new(id const this, 
-	const char* name_in, loaderFP loader, initerFP initer)
-{
-	this->isa = _load(name_in, loader);
-	this->saved_isa = this->isa;
-	this->mode = nil;
-	this->super = nil;
-	(*initer)(this);
-	return this;
-}
-
-id _new_category(id const this, 
-	const char* name_origin, loaderFP loader, initerFP initer,
-	const char* name_cat, loaderFP loader_cat, initerFP initer_cat)
-{
-	this->isa = _load(name_origin, loader);
-	(*loader_cat)(this->isa);
-	this->saved_isa = this->isa;
-	this->mode = nil;
-	this->super = nil;
-	(*initer)(this);
-	(*initer_cat)(this);
-	return this;
-}
 
 
-void _shift(id const obj, const char* modename, loaderFP loader)
-{
-	mc_class* aclass = _load(modename, loader);
-	if(obj->mode != aclass)
-		obj->mode = aclass;
-	//switch to mode
-	obj->isa = obj->mode;
-	runtime_log("obj[%p/%s] shift to mode[%s]\n", 
-		obj, obj->saved_isa->name, obj->isa->name);
-}
-
-void _shift_back(id const obj)
-{
-	obj->isa = obj->saved_isa;
-	runtime_log("obj[%p/%s] shift to mode[%s]\n", 
-		obj, obj->saved_isa->name, obj->isa->name);
-}

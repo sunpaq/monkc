@@ -109,3 +109,7 @@ wector4 pushw4(long double x, long double y, long double z, long double t);
 #define popwz(vec) vec->z
 #define popwt(vec) vec->t
 
+extern void _init_vector_stack();
+extern void _init_wector_stack();
+extern void _init_class_list();
+extern void _clear_class_list();

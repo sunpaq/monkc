@@ -13,7 +13,7 @@ loader(MCString)
 	binding(MCString, bye, xxx);
 }
 
-initer()
+initer(MCString)
 {
 	//nothing to init
 }
