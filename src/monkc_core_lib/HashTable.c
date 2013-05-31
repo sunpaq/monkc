@@ -28,7 +28,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "monkc.h"
 
 static const unsigned mc_hashtable_sizes[5] = {100, 200, 1000, 4000, 10000};
-inline unsigned get_tablesize(const unsigned level)
+unsigned get_tablesize(const unsigned level)
 {
 	if(level>5){
 		error_log("get_tablesize(level) level>5 return use level=5\n");
@@ -74,28 +74,10 @@ static mc_hashtable* expand_table(mc_hashtable** const table_p, unsigned tolevel
 	return (*table_p);
 }
 
-// typedef struct mc_hashitem_struct
-// {
-// 	struct mc_hashitem_struct* next;
-// 	unsigned hash;
-// 	unsigned index;
-// 	unsigned level;
-// 	void* value;
-// 	char key[MAX_KEY_CHARS];
-// }mc_hashitem;
-
-mc_hashitem* new_item_withclass(const char* key, mc_class* aclass)
+void package_by_item(mc_hashitem** aitem_p, mc_class** aclass_p)
 {
-	mc_hashitem* item = new_item(key, aclass);
-	aclass->item = item;
-	return item;
-}
-
-mc_hashitem* new_item_withclass_h(const char* key, mc_class* aclass, unsigned hashval)
-{
-	mc_hashitem* item = new_item_h(key, aclass, hashval);
-	aclass->item = item;
-	return item;
+	(*aitem_p)->value = *aclass_p;
+	(*aclass_p)->item = (*aitem_p);
 }
 
 mc_hashitem* new_item(const char* key, void* value)

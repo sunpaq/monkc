@@ -87,8 +87,6 @@ typedef struct mc_block_struct
 typedef struct mc_blockpool_struct
 {
 	int lock;
-	mc_block* head;
-	mc_block* first;
 	mc_block* tail;
 }mc_blockpool;
 
@@ -97,30 +95,31 @@ typedef struct mc_class_struct
 {
 	size_t objsize;
 	mc_hashtable* table;
-	mc_blockpool* pool;
+	mc_blockpool* free_pool;
+	mc_blockpool* used_pool;
 	mc_hashitem* item;
 }mc_class;
 
 //for type cast, every object have the 3 var members
 typedef struct mc_object_struct
 {
-	int ref_count;
+	struct mc_object_struct* super;
 	mc_class* isa;
+	mc_block* block;
+	int ref_count;
 	mc_class* saved_isa;
 	mc_class* mode;
-	mc_block* block;
-	struct mc_object_struct* super;
 }mc_object;
 typedef mc_object* id;
 
 #define class(cls) \
 typedef struct cls##_struct{\
-	int ref_count;\
+	struct mc_object_struct* super;\
 	mc_class* isa;\
+	mc_block* block;\
+	int ref_count;\
 	mc_class* saved_isa;\
 	mc_class* mode;\
-	mc_block* block;\
-	struct mc_object_struct* super;
 
 #define end(cls) }cls;\
 mc_class* cls##_load(mc_class* const class);\
@@ -150,14 +149,16 @@ typedef mc_object* (*initerFP)(mc_object*);
 #define returns(type)
 
 //for create object
-#define new(cls)					_new((cls*)_alloc(S(cls), sizeof(cls), cls##_load), cls##_init)
-#define new_category(ori, cat)		_new_category((ori*)_alloc(S(ori), sizeof(ori), ori##_load), ori##_init, cat##_load, cat##_init)
+#define new(cls)					(cls*)_new(_alloc(S(cls), sizeof(cls), cls##_load), cls##_init)
+#define new_category(ori, cat)		(ori*)_new_category(_alloc(S(ori), sizeof(ori), ori##_load), ori##_init, cat##_load, cat##_init)
 #define clear(cls)  				_clear(S(cls), sizeof(cls), cls##_load)
+#define info(cls)                   _info(S(cls), sizeof(cls), cls##_load)
 
 //for call method
 #define call(this, cls, name, ...)      cls##_##name(this, cls##_##name, __VA_ARGS__)//call other class method
 #define response_to(obj, met) 			_response_to(obj, S(met))
 #define ff(obj, met, ...)				_push_jump(_response_to(obj, S(met)), __VA_ARGS__)
+#define fs(obj, met, ...)				_push_jump(_self_response_to(obj, S(met)), __VA_ARGS__)
 #define shift(obj, mode)				_shift(obj, S(mode), sizeof(mode), mode##_load)
 #define shift_back(obj)					_shift_back(obj)
 
@@ -187,18 +188,21 @@ void release(mc_object** const this_p);
 mc_object* retain(mc_object* const this);
 
 //functions
-inline mc_class* alloc_mc_class();
+mc_class* alloc_mc_class();
 mc_class* init_mc_class(mc_class* const aclass, const size_t objsize);
 mc_class* new_mc_class(const size_t objsize);
 char* nameof(mc_object* const aobject);
 char* nameofc(mc_class* const aclass);
+#define deref(x) (*(x))
+#define addrof(x) (&(x))
 
 #include "Log.h"
-#include "HashTable.h"
 #include "Lock.h"
-#include "Messaging.h"
-#include "ObjectManage.h"
 #include "String.h"
 #include "Vectors.h"
+#include "HashTable.h"
+#include "Messaging.h"
+#include "ObjectManage.h"
+
 
 #endif

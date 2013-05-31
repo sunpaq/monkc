@@ -117,21 +117,22 @@ unsigned _override_h(mc_class* const aclass, const char* methodname, void* value
 for class load
 */
 
-inline mc_class* alloc_mc_class()
+mc_class* alloc_mc_class()
 {
 	return (mc_class*)malloc(sizeof(mc_class));
 }
 
 mc_class* init_mc_class(mc_class* const aclass, const size_t objsize)
 {
-	aclass->objsize;
+	aclass->objsize = objsize;
 	aclass->table = new_table(0);
-	aclass->pool = new_mc_blockpool();
+	aclass->free_pool = new_mc_blockpool();
+	aclass->used_pool = new_mc_blockpool();
 	if(aclass->table==nil){
 		error_log("init_mc_class new_table() failed\n");
 		exit(-1);
 	}
-	if(aclass->pool==nil){
+	if(aclass->free_pool==nil || aclass->used_pool==nil){
 		error_log("init_mc_class new_mc_blockpool() failed\n");
 		exit(-1);
 	}
@@ -148,50 +149,33 @@ mc_class* _load(const char* name, size_t objsize, loaderFP loader)
 	return _load_h(name, objsize, loader, hash(name));
 }
 
-//mc_class* new_mc_class(const char* name, const size_t objsize, const unsigned hashval);
-//unsigned set_item(mc_hashtable** const table_p,
-//	mc_hashitem* const item, 
-//	BOOL isOverride, BOOL isFreeValue);
-//mc_hashitem* new_item_h(const char* key, void* value, const unsigned hashval);
-
 mc_class* _load_h(const char* name, size_t objsize, loaderFP loader, unsigned hashval)
 {
 	//try lock spin lock
 	trylock_global_classtable();
 
-	mc_class* aclass;
-	mc_hashitem* item;
+	mc_hashitem* item = nil;
 	if((item=get_item_byhash(&mc_global_classtable, hashval, name)) == nil){
 		//new a item
-		aclass = new_mc_class(objsize);
-		item = new_item_withclass_h(name, aclass, hashval);
+		mc_class* aclass = new_mc_class(objsize);
+		item = new_item(name, nil);//nil first
+		package_by_item(&item, &aclass);
 		(*loader)(aclass);
 		//set item
 		set_item(&mc_global_classtable, item, NO, YES);
 		runtime_log("load a class[%s]\n", nameofc(aclass));
 	}else{
-		aclass = (mc_class*)item->value;
+		runtime_log("find a class[%s]\n", nameofc((mc_class*)item->value));
 	}
 	//unlock
 	unlock_global_classtable();
-	return aclass;
+	return (mc_class*)(item->value);
 }
-
-// typedef struct mc_object_struct
-// {
-// 	int ref_count;
-// 	mc_class* isa;
-// 	mc_class* saved_isa;
-// 	mc_class* mode;
-// 	mc_block* block;
-// 	struct mc_object_struct* super;
-// }mc_object;
-// typedef mc_object* id;
 
 id _new(id const this, initerFP initer)
 {
-	//this->isa will be setted in _alloc() step
-	this->saved_isa = this->isa;
+	//block, isa, saved_isa is setted at _alloc()
+	this->ref_count = 1;
 	this->super = nil;
 	this->mode = nil;
 	(*initer)(this);
@@ -200,9 +184,9 @@ id _new(id const this, initerFP initer)
 
 id _new_category(id const this, initerFP initer, loaderFP loader_cat, initerFP initer_cat)
 {
-	//this->isa will be setted in _alloc() step
+	//block, isa, saved_isa is setted at _alloc()
+	this->ref_count = 1;
 	(*loader_cat)(this->isa);
-	this->saved_isa = this->isa;
 	this->super = nil;
 	this->mode = nil;
 	(*initer)(this);
@@ -230,9 +214,15 @@ void _shift_back(id const obj)
 
 void release(mc_object** const this_p)
 {
+
 	for(;;){
 		if((*this_p) == nil){
 			error_log("release(nil) do nothing.\n");
+			return;
+		}
+		if((*this_p)->ref_count == 0)
+		{
+			runtime_log("release(%s) count=0 return\n", nameof(*this_p));
 			return;
 		}
 		if((*this_p)->ref_count == REFCOUNT_NO_MM){
@@ -256,11 +246,8 @@ void release(mc_object** const this_p)
 	if((*this_p)->ref_count == 0)
 	{
 		//call the "bye" method on object
-		_push_jump(_self_response_to(*this_p, "bye"), nil);
-		//destory the obj
-		//free(*this_p);
+		fs((*this_p), bye, nil);
 		_dealloc(*this_p);
-		(*this_p) = nil;
 	}
 }
 

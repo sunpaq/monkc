@@ -30,72 +30,87 @@ void test_object_life_cycle()
 		// _push_jump(make_msg(bird, Bird_fly), nil);
 		// debug_log("after new\n");
 		//debug_log("%s is child of %s\n", bird->isa->item->key, bird->super->isa->item->key);
-		Bird* bird = new(Bird);
-		ff(bird, fly, nil);
-		ff(bird, flyhigh, nil);
-		ff(bird, singAsong, "a song from child");
-		ff(bird, fatherAge, nil);
-		ff(bird, cannotResponseThis, nil);
-		shift(bird, BirdModeA);
-			ff(bird, modemethodC, nil);
-		shift_back(bird);
-		release(&(bird));
+		// Bird* bird = new(Bird);
+		// ff(bird, fly, nil);
+		// ff(bird, flyhigh, nil);
+		// ff(bird, singAsong, "a song from child");
+		// ff(bird, fatherAge, nil);
+		// ff(bird, cannotResponseThis, nil);
+		// shift(bird, BirdModeA);
+		// 	ff(bird, modemethodC, nil);
+		// shift_back(bird);
+		// release(&(bird));
 
-
-		Bird* bird2;
-		bird2 = (Bird*)_new(_alloc("Bird", sizeof(Bird), Bird_load), Bird_init);
+		Bird* bird2 = new(Bird);
 		debug_log("bird2 pointer %p\n", bird2);
-
-		Bird* bird3;
-		bird3 = (Bird*)_new(_alloc("Bird", sizeof(Bird), Bird_load), Bird_init);
+		Bird* bird3 = new(Bird);
 		debug_log("bird2 pointer %p\n", bird3);
-
-		Bird* bird31;
-		bird31 = (Bird*)_new(_alloc("Bird", sizeof(Bird), Bird_load), Bird_init);
+		Bird* bird31 = new(Bird);
 		debug_log("bird2 pointer %p\n", bird31);
+		// Bird* bird32 = new(Bird);
+		// debug_log("bird2 pointer %p\n", bird32);
+		// Bird* bird33 = new(Bird);
+		// debug_log("bird2 pointer %p\n", bird33);
+		// Bird* bird34 = new(Bird);
+		// debug_log("bird2 pointer %p\n", bird34);
 
-		Bird* bird32;
-		bird32 = (Bird*)_new(_alloc("Bird", sizeof(Bird), Bird_load), Bird_init);
-		debug_log("bird2 pointer %p\n", bird32);
-
-		Bird* bird33;
-		bird33 = (Bird*)_new(_alloc("Bird", sizeof(Bird), Bird_load), Bird_init);
-		debug_log("bird2 pointer %p\n", bird33);
-
-		Bird* bird34;
-		bird34 = (Bird*)_new(_alloc("Bird", sizeof(Bird), Bird_load), Bird_init);
-		debug_log("bird2 pointer %p\n", bird34);
-
-
-		Bird* bird4 = ff(new(Bird), initWithType, 4);
-		ff(bird4, fly, nil);
-		release(&bird4);
-
-
-		BirdFather* father = new(BirdFather);
-		ff(father, fly, nil);
-		release(&father);
-
-
-		Bird* birdcat = new_category(Bird, BirdCatA);
-		ff(birdcat, catmethodA, nil);
-		ff(birdcat, fly, nil);
-		
-
-		//clear(Bird);
-		release(&birdcat);
-
-		release(&bird3);
-
-		release(&bird33);
-
-		release(&bird31);
+		info(Bird);
+		info(BirdFather);
+		info(BirdGrandFather);
 
 		release(&bird2);
+		release(&bird3);
+		//release(&bird31);
 
-		release(&bird32);
 
-		release(&bird34);
+		info(Bird);
+		info(BirdFather);
+		info(BirdGrandFather);
+
+		Bird* b1=new(Bird);
+		Bird* b2=new(Bird);
+		release(&b1);
+		release(&b2);
+		// Bird* b3=new(Bird);
+		// Bird* b4=new(Bird);
+		// release(&b3);
+		// release(&b4);
+
+
+
+
+		// Bird* bird4 = ff(new(Bird), initWithType, 4);
+		// ff(bird4, fly, nil);
+		// release(&bird4);
+
+
+
+
+
+		// BirdFather* father = new(BirdFather);
+		// ff(father, fly, nil);
+		// release(&father);
+
+
+
+
+
+		// Bird* birdcat = new_category(Bird, BirdCatA);
+		// ff(birdcat, catmethodA, nil);
+		// ff(birdcat, fly, nil);
+		// release(&birdcat);
+
+		info(Bird);
+		info(BirdFather);
+		info(BirdGrandFather);
+
+		clear(Bird);
+		clear(BirdFather);
+		clear(BirdGrandFather);
+
+		info(Bird);
+		info(BirdFather);
+		info(BirdGrandFather);
 
 
 }

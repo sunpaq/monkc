@@ -9,7 +9,7 @@ MAKEFLIETMP="MODULES = \$(wildcard *.c)
 \nOBJS = \$(patsubst %.c, %.o, \$(MODULES))                             
 \nLINK_HEAD = -I/usr/local/include/monkc -I/usr/local/include/lemontea    
 \nLINK_BIN = -lpthread -L/usr/local/lib -lmonkc -llemontea                                                                    
-\nCC = gcc -g -w -Wall -Wno-unused-variable -Wno-return-type             
+\nCC = clang -g -w -Wall -Wno-unused-variable -Wno-return-type             
 \nAS = as                                                                 
 \nexec:\$(OBJS)\n\t\$(CC) -o exec \$(OBJS) \$(LINK_BIN)                                  
 \n%.o:%.c\n\t\$(CC) -c \$< \$(LINK_HEAD)                                             

@@ -10,19 +10,23 @@ mc_message make_msg(id const this, const void* entry)
 	return tmpmsg;
 }
 
-mc_message _self_response_to(id const obj, const char* methodname)
+mc_message _self_response_to(const id obj, const char* methodname)
 {
 	return _self_response_to_h(obj, methodname, hash(methodname));
 }
 
 //mc_hashitem* get_item_byhash(const mc_hashtable** table_p, const unsigned hashval, const char* refkey);
 
-mc_message _self_response_to_h(id const obj, const char* methodname, unsigned hashval)
+mc_message _self_response_to_h(const id obj, const char* methodname, unsigned hashval)
 {
 	//we will return a struct
 	mc_message tmpmsg = {nil, nil};
-	if(obj == nil || obj->isa == nil){
-		error_log("_self_response_to(obj) obj is nil or obj->isa is nil. return {nil, nil}\n");
+	if(obj == nil){
+		error_log("_self_response_to(obj) obj is nil. return {nil, nil}\n");
+		return tmpmsg;
+	}
+	if(obj->isa == nil){
+		error_log("_self_response_to(obj) obj->isa is nil. return {nil, nil}\n");
 		return tmpmsg;
 	}
 
@@ -30,8 +34,10 @@ mc_message _self_response_to_h(id const obj, const char* methodname, unsigned ha
 	if((res=get_item_byhash(&(obj->isa->table), hashval, methodname)) != nil){
 		tmpmsg.object = obj;
 		tmpmsg.addr = res->value;
+		runtime_log("return a message[%s/%s]\n", nameof(tmpmsg.object), methodname);
 		return tmpmsg;
 	}else{
+		error_log("self_response_to class[%s] can not response to method[%s]\n", nameof(obj), methodname);
 		return tmpmsg;
 	}
 }
@@ -61,8 +67,10 @@ mc_message _response_to_h(const id obj, const char* methodname, unsigned hashval
 	for(obj_iterator = obj;
 		obj_iterator!= nil;
 		obj_iterator = obj_iterator->super){
-		if(iter_count++ > max_iter)
+		if(iter_count++ > max_iter){
+			error_log("iter_count>max but class still can not response to method\n");
 			break;
+		}
 		if((met_item=get_item_byhash(&(obj_iterator->isa->table), hashval, methodname)) != nil) {
 			runtime_log("hit a method [%s/%d] to match [%s]\n", 
 				met_item->key, met_item->index, methodname);

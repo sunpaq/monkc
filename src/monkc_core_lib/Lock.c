@@ -1,7 +1,7 @@
 #include "monkc.h"
 
 
-inline void mc_trylock(int* lock_p)
+void mc_trylock(volatile int* lock_p)
 {
 	if(lock_p==nil){
 		error_log("mc_trylock(int* lock_p) lock_p is nil\n");
@@ -16,7 +16,7 @@ inline void mc_trylock(int* lock_p)
 	}
 }
 
-inline void mc_unlock(int* lock_p)
+void mc_unlock(volatile int* lock_p)
 {
 	if(lock_p==nil){
 		error_log("mc_unlock(int* lock_p) lock_p is nil\n");

@@ -3,10 +3,9 @@
 
 
 //apis
-inline unsigned get_tablesize(const unsigned level);
+unsigned get_tablesize(const unsigned level);
 unsigned hash(const char *s);
-mc_hashitem* new_item_withclass(const char* key, mc_class* aclass);
-mc_hashitem* new_item_withclass_h(const char* key, mc_class* aclass, unsigned hashval);
+void package_by_item(mc_hashitem** aitem_p, mc_class** aclass_p);
 mc_hashitem* new_item(const char* key, void* value);
 mc_hashitem* new_item_h(const char* key, void* value, const unsigned hashval);
 mc_hashtable* new_table(const unsigned initlevel);

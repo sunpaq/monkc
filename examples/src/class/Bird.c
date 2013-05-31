@@ -9,9 +9,8 @@ initer(Bird)
 
 method(Bird, bye, xxx)
 {
-	debug_logt(nameof(this), "[%p] bye called\n", this);
-
 	release(&(this->super));
+	debug_logt(nameof(this), "[%p] bye called\n", this);
 }
 
 void funcA(Bird* this, int arg1)
@@ -161,6 +160,7 @@ loader(Bird)
 	binding(Bird, fly48, xxx);
 	binding(Bird, fly49, xxx);
 	binding(Bird, fly50, xxx);
+	debug_logt(nameofc(class), "load called\n");
 }
 
 

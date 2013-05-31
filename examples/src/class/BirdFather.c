@@ -2,15 +2,15 @@
 
 initer(BirdFather)
 {
-	debug_logt(nameof(this), "[%p] init called\n", this);
 	this->super = new(BirdGrandFather);
 	this->age = 50;
+	debug_logt(nameof(this), "[%p] init called\n", this);
 }
 
 method(BirdFather, bye, xxx)
 {
-	debug_logt(nameof(this), "[%p] bye called\n", this);
 	release(&(this->super));
+	debug_logt(nameof(this), "[%p] bye called\n", this);
 }
 
 method(BirdFather, flyhigh, xxx)
@@ -30,9 +30,9 @@ method(BirdFather, singAsong, char* asong)
 
 loader(BirdFather)
 {
-	debug_logt(nameofc(class), "load called\n");
 	binding(BirdFather, bye, xxx);
 	binding(BirdFather, flyhigh, xxx);
 	binding(BirdFather, fly, xxx);
 	binding(BirdFather, singAsong, char* asong);
+	debug_logt(nameofc(class), "load called\n");
 }
