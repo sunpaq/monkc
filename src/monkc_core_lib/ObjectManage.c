@@ -70,6 +70,7 @@ mc_blockpool* new_mc_blockpool()
 
 #define NO_NODE(bpool) (bpool->tail==nil)
 #define ONE_NODE(bpool) (bpool->tail->next==bpool->tail) 
+#define TWO_NODE(bpool) (bpool->tail->next->next==bpool->tail)
 
 static void pushToTail(mc_blockpool* bpool, mc_block* ablock)
 {
@@ -142,7 +143,18 @@ static int cut(mc_blockpool* bpool, mc_block* ablock, mc_block** result)
 		bpool->tail=nil;
 		*result=ablock;
 		res=0;//success
+	}else if(TWO_NODE(bpool)){
+		if(ablock==bpool->tail){//cut tail
+			*result=bpool->tail;
+			bpool->tail=ablock->next;
+			bpool->tail->next=bpool->tail;
+		}else{//cut head
+			*result=bpool->tail->next;
+			bpool->tail->next=bpool->tail;
+		}
 	}else{
+		if(ablock->next==bpool->tail)//don not delete the tail!
+			bpool->tail=ablock;
 		mc_block* B = ablock;
 		mc_block* N = B->next;
 		mc_block* NN = N->next;
@@ -153,8 +165,6 @@ static int cut(mc_blockpool* bpool, mc_block* ablock, mc_block** result)
 		//cut target
 		B->next = NN;
 		*result=N;
-		if(N==bpool->tail)//don not delete the tail!
-			bpool->tail=B;
 		res=0;//success
 	}
 	mc_unlock(&(bpool->lock));
@@ -251,6 +261,66 @@ void _dealloc(mc_object* aobject)
 		pushToTail(fp, nb);
 }
 
+void test_blockpool()
+{
+	mc_blockpool* pool = new_mc_blockpool();
+	mc_block *b1, *b2, *b3, *b4, *b5, *b6, *tb;
+	b1=new_mc_block(nil);
+	b2=new_mc_block(nil);
+	b3=new_mc_block(nil);
+	b4=new_mc_block(nil);
+	b5=new_mc_block(nil);
+	b6=new_mc_block(nil);
+
+//test getFromHead
+	pushToTail(pool, b1);
+	pushToTail(pool, b2);
+	pushToTail(pool, b3);
+	pushToTail(pool, b4);
+
+	error_log("pool count should be 4:%d\n", count(pool));
+	getFromHead(pool);
+	error_log("pool count should be 3:%d\n", count(pool));
+	getFromHead(pool);
+	error_log("pool count should be 2:%d\n", count(pool));	
+	getFromHead(pool);
+	error_log("pool count should be 1:%d\n", count(pool));
+	getFromHead(pool);
+	error_log("pool count should be 0:%d\n", count(pool));
+//test cut
+	empty(pool);
+	pushToTail(pool, b1);
+	pushToTail(pool, b2);
+	pushToTail(pool, b3);
+	pushToTail(pool, b4);
+
+	error_log("pool count should be 4:%d\n", count(pool));
+	cut(pool, b1, &tb);
+	error_log("pool count should be 3:%d\n", count(pool));
+	cut(pool, b2, &tb);
+	error_log("pool count should be 2:%d\n", count(pool));	
+	cut(pool, b3, &tb);
+	error_log("pool count should be 1:%d\n", count(pool));
+	cut(pool, b4, &tb);
+	error_log("pool count should be 0:%d\n", count(pool));
+//test cut
+	empty(pool);
+	pushToTail(pool, b1);
+	pushToTail(pool, b2);
+	pushToTail(pool, b3);
+	pushToTail(pool, b4);
+
+	error_log("pool count should be 4:%d\n", count(pool));
+	cut(pool, b4, &tb);
+	error_log("pool count should be 3:%d\n", count(pool));
+	cut(pool, b3, &tb);
+	error_log("pool count should be 2:%d\n", count(pool));	
+	cut(pool, b2, &tb);
+	error_log("pool count should be 1:%d\n", count(pool));
+	cut(pool, b1, &tb);
+	error_log("pool count should be 0:%d\n", count(pool));
+
+}
 
 
 
