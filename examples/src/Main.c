@@ -10,7 +10,6 @@ int jumpTarget(id const this, const void* entry, int arg1, int arg2)
 	printf("count %d\n", count);
 	printf("arg2 %d\n", arg2);
 
-	//
 	if(count==100)return;
 	_clean_jump2(make_msg(this, entry), 300, ++count);
 }
@@ -24,22 +23,17 @@ int TargetVoid()
 
 void test_object_life_cycle()
 {
-		// Bird* bird;
-		// bird = (Bird*)_new(_alloc("Bird", sizeof(Bird), Bird_load), Bird_init);
-		// debug_log("bird pointer %p\n", bird);
-		// _push_jump(make_msg(bird, Bird_fly), nil);
-		// debug_log("after new\n");
-		//debug_log("%s is child of %s\n", bird->isa->item->key, bird->super->isa->item->key);
-		// Bird* bird = new(Bird);
-		// ff(bird, fly, nil);
-		// ff(bird, flyhigh, nil);
-		// ff(bird, singAsong, "a song from child");
-		// ff(bird, fatherAge, nil);
-		// ff(bird, cannotResponseThis, nil);
-		// shift(bird, BirdModeA);
-		// 	ff(bird, modemethodC, nil);
-		// shift_back(bird);
-		// release(&(bird));
+		Bird* bird = new(Bird);
+		ff(bird, fly, nil);
+		ff(bird, flyhigh, nil);
+		ff(bird, singAsong, "a song from child");
+		ff(bird, fatherAge, nil);
+		ff(bird, cannotResponseThis, nil);
+		shift(bird, BirdModeA);
+			ff(bird, modemethodC, nil);
+		shift_back(bird);
+		recycle(bird);
+		//one create on delete
 
 		Bird* bird2 = new(Bird);
 		debug_log("bird2 pointer %p\n", bird2);
@@ -47,21 +41,14 @@ void test_object_life_cycle()
 		debug_log("bird2 pointer %p\n", bird3);
 		Bird* bird31 = new(Bird);
 		debug_log("bird2 pointer %p\n", bird31);
-		// Bird* bird32 = new(Bird);
-		// debug_log("bird2 pointer %p\n", bird32);
-		// Bird* bird33 = new(Bird);
-		// debug_log("bird2 pointer %p\n", bird33);
-		// Bird* bird34 = new(Bird);
-		// debug_log("bird2 pointer %p\n", bird34);
 
 		info(Bird);
 		info(BirdFather);
 		info(BirdGrandFather);
 
-		release(&bird2);
-		release(&bird3);
+		recycle(bird2);
+		recycle(bird3);
 		//release(&bird31);
-
 
 		info(Bird);
 		info(BirdFather);
@@ -69,40 +56,13 @@ void test_object_life_cycle()
 
 		Bird* b1=new(Bird);
 		Bird* b2=new(Bird);
-		release(&b1);
-		release(&b2);
-		// Bird* b3=new(Bird);
-		// Bird* b4=new(Bird);
-		// release(&b3);
-		// release(&b4);
-
-
-
-
-		// Bird* bird4 = ff(new(Bird), initWithType, 4);
-		// ff(bird4, fly, nil);
-		// release(&bird4);
-
-
-
-
-
-		// BirdFather* father = new(BirdFather);
-		// ff(father, fly, nil);
-		// release(&father);
-
-
-
-
-
-		// Bird* birdcat = new_category(Bird, BirdCatA);
-		// ff(birdcat, catmethodA, nil);
-		// ff(birdcat, fly, nil);
-		// release(&birdcat);
 
 		info(Bird);
 		info(BirdFather);
 		info(BirdGrandFather);
+
+		recycle(b1);
+		recycle(b2);
 
 		clear(Bird);
 		clear(BirdFather);
@@ -111,7 +71,6 @@ void test_object_life_cycle()
 		info(Bird);
 		info(BirdFather);
 		info(BirdGrandFather);
-
 
 }
 
@@ -124,8 +83,6 @@ void test_method_jumpping()
 
 void monkc_runtime_check()
 {
-
-
 	const char* met1 = "method1";
 	const char* met2 = "method2";
 	const char* met3 = "method3";
@@ -133,22 +90,16 @@ void monkc_runtime_check()
 	printf("method1 address: %ld\n", (unsigned long)met1);
 	printf("method2 address: %ld\n", (unsigned long)met2);
 	printf("method3 address: %ld\n", (unsigned long)met3);
-
-	test_blockpool();
-
 }
 
 int main(int argc, char const *argv[])
 {
 	mc_init();
-		LOG_LEVEL = VERBOSE;
+		LOG_LEVEL = DEBUG;
 		monkc_runtime_check();
 //		test_method_jumpping();
 
-		//test_object_life_cycle();
-
-
-
+		test_object_life_cycle();
 	mc_end();
 	return 0;
 }

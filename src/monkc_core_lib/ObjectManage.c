@@ -44,8 +44,8 @@ mc_block* alloc_mc_block()
 
 mc_block* init_mc_block(mc_block* ablock, void* data)
 {
-	ablock->data = data;
-	ablock->next = nil;
+	deref(ablock).data = data;
+	deref(ablock).next = nil;
 	return ablock;
 }
 
@@ -54,10 +54,10 @@ mc_block* new_mc_block(void* data)
 	return init_mc_block(alloc_mc_block(), data);
 }
 
-void package_by_block(mc_block** ablock_p, mc_object** aobject_p)
+void package_by_block(mc_block* ablock, mc_object* aobject)
 {
-	deref(ablock_p)->data = deref(aobject_p);
-	deref(aobject_p)->block = deref(ablock_p);
+	deref(ablock).data = aobject;
+	deref(aobject).block = ablock;
 }
 
 mc_blockpool* new_mc_blockpool()
@@ -68,27 +68,23 @@ mc_blockpool* new_mc_blockpool()
 	return bpool;
 }
 
-#define NO_NODE(bpool) (bpool->tail==nil)
-#define ONE_NODE(bpool) (bpool->tail->next==bpool->tail) 
-#define TWO_NODE(bpool) (bpool->tail->next->next==bpool->tail)
-
-static void pushToTail(mc_blockpool* bpool, mc_block* ablock)
+void pushToTail(mc_blockpool* bpool, mc_block* ablock)
 {
 	mc_trylock(&(bpool->lock));
-	ablock->next=nil;
+	deref(ablock).next = nil;
 	if(NO_NODE(bpool)){
-		bpool->tail=ablock;
-		ablock->next=ablock;
+		deref(bpool).tail = ablock;
+		deref(ablock).next = ablock;
 	}else{
 		mc_block* head = bpool->tail->next;
-		bpool->tail->next=ablock;
-		ablock->next=head;
-		bpool->tail=bpool->tail->next;
+		deref(deref(bpool).tail).next = ablock;
+		deref(ablock).next = head;
+		deref(bpool).tail = bpool->tail->next;
 	}
 	mc_unlock(&(bpool->lock));
 }
 
-static mc_block* getFromHead(mc_blockpool* bpool)
+mc_block* getFromHead(mc_blockpool* bpool)
 {
 	mc_trylock(&(bpool->lock));
 	mc_block* target = nil;
@@ -96,18 +92,18 @@ static mc_block* getFromHead(mc_blockpool* bpool)
 		target=nil;
 	}else if(ONE_NODE(bpool)){
 		target=bpool->tail;
-		bpool->tail=nil;
+		deref(bpool).tail = nil;
 	}else{
 		target=bpool->tail->next;
 		mc_block* H = bpool->tail->next;
 		mc_block* HN = H->next;
-		bpool->tail->next = HN;
+		deref(deref(bpool).tail).next = HN;
 	}
 	mc_unlock(&(bpool->lock));
 	return target;
 }
 
-static void empty(mc_blockpool* bpool)
+void empty(mc_blockpool* bpool)
 {
 	mc_block* target;
 	while((target=getFromHead(bpool)) != nil){
@@ -117,55 +113,65 @@ static void empty(mc_blockpool* bpool)
 	}
 }
 
-static int count(mc_blockpool* bpool)
+int count(mc_blockpool* bpool)
 {
-	mc_block* T = bpool->tail;
-	if(T==nil)
+	if(deref(bpool).tail==nil)
 		return 0;
-	mc_block* H = T->next;
+	mc_block* H = deref(bpool).tail->next;
 	int i = 1;
-	for(;H!=T ;H=H->next){
+	for(;H!=deref(bpool).tail ;H=H->next){
 		i++;
 	}
 	return i;
 }
 
 //will output a new block
-static int cut(mc_blockpool* bpool, mc_block* ablock, mc_block** result)
+int cut(mc_blockpool* bpool, mc_block* ablock, mc_block** result)
 {
+	//assume parameter is all checked outside
 	mc_trylock(&(bpool->lock));
-	int res;
-	if(NO_NODE(bpool)){
+	int res = 0;//success
+ 	if(NO_NODE(bpool)){
 		error_log("no node in used_pool but you request delete\n");
-		*result=nil;
+		deref(result)=nil;
 		res=-1;//fail
 	}else if(ONE_NODE(bpool)){
-		bpool->tail=nil;
-		*result=ablock;
-		res=0;//success
-	}else if(TWO_NODE(bpool)){
-		if(ablock==bpool->tail){//cut tail
-			*result=bpool->tail;
-			bpool->tail=ablock->next;
-			bpool->tail->next=bpool->tail;
-		}else{//cut head
-			*result=bpool->tail->next;
-			bpool->tail->next=bpool->tail;
+		deref(bpool).tail=nil;
+		deref(ablock).next=nil;
+		deref(result)=ablock;
+	}else if(TWO_NODE(bpool)){//do not swap data
+		if(deref(ablock).next==nil){
+			error_log("block not in the pool, refuse to cut\n");
+			res=-1;//fail
+		}else{
+			mc_block* H = deref(bpool).tail->next;
+			mc_block* T = deref(bpool).tail;
+			if(ablock==bpool->tail){//cut tail
+				deref(T).next=nil;
+				deref(result)=T;
+				deref(bpool).tail=H;
+				deref(H).next=H;
+			}else{//cut head
+				deref(H).next=nil;
+				deref(result)=H;
+				deref(T).next=T;
+			}
 		}
 	}else{
-		if(ablock->next==bpool->tail)//don not delete the tail!
-			bpool->tail=ablock;
-		mc_block* B = ablock;
-		mc_block* N = B->next;
-		mc_block* NN = N->next;
-		//swap data
-		void* tmpdata = B->data;
-		B->data = N->data;
-		N->data = tmpdata;
-		//cut target
-		B->next = NN;
-		*result=N;
-		res=0;//success
+		if(deref(ablock).next==nil){
+			error_log("block not in the pool, refuse to cut\n");
+			res=-1;//fail
+		}else{
+			if(deref(ablock).next==bpool->tail)//don not delete the tail!
+				deref(bpool).tail = ablock;
+			mc_block* NN = ablock->next->next;
+			//result
+			deref(deref(ablock).next).next = nil;
+			deref(result) = deref(ablock).next;
+			//swap
+			package_by_block(ablock, ablock->next->data);
+			deref(ablock).next = NN;
+		}
 	}
 	mc_unlock(&(bpool->lock));
 	return res;
@@ -182,22 +188,14 @@ void _clear(const char* classname, size_t size, loaderFP loader)
 {
 	runtime_log("empty [%s] ...\n", classname);
 	mc_class* aclass = _load(classname, size, loader);
-	if(aclass->used_pool==nil){
-		error_log("class[%s] used_pool is nil. do not clear\n", classname);
-		return;
-	}
-	if(aclass->used_pool->tail==nil){
-		error_log("class[%s] used_pool have no node. do not clear\n", classname);
-		return;
-	}else{
+	if(aclass->used_pool!=nil && aclass->used_pool->tail!=nil)
 		empty(aclass->used_pool);
-	}
-	if(aclass->free_pool->tail==nil){
-		runtime_log("class[%s] free_pool have no node. do not clear\n", classname);
-		return;
-	}else{
+	else
+		runtime_log("class[%s] used_pool have no node. check free_pool\n", classname);
+	if(aclass->free_pool->tail!=nil)
 		empty(aclass->free_pool);
-	}
+	else
+		runtime_log("class[%s] free_pool also have no node. do not clear\n", classname);
 	runtime_log("empty [%s] finish\n", classname);
 }
 
@@ -216,7 +214,7 @@ id _alloc(const char* classname, size_t size, loaderFP loader)
 		aobject->saved_isa = aclass;
 		//new a block
 		ablock = new_mc_block(nil);
-		package_by_block(&ablock, &aobject);
+		package_by_block(ablock, aobject);
 		runtime_log("----alloc[NEW:%s]: new alloc a block[%p obj[%p]]\n", 
 			classname, ablock, ablock->data);
 	}else{
@@ -228,7 +226,7 @@ id _alloc(const char* classname, size_t size, loaderFP loader)
 	return aobject;
 }
 
-void _dealloc(mc_object* aobject)
+void _dealloc(mc_object* aobject, is_recycle)
 {
 	mc_block* blk = aobject->block;
 	mc_class* cls = aobject->isa;
@@ -254,73 +252,23 @@ void _dealloc(mc_object* aobject)
 		error_log("----dealloc(%s) have no block used, but you request dealloc\n", nameof(aobject));
 		return;
 	}
-	runtime_log("----dealloc[BACK:%s]: push back a block[%p obj[%p]]\n", nameof(aobject), blk, aobject);
 	//dealloc start
 	mc_block* nb;
 	if(!cut(up, blk, &nb))//success
-		pushToTail(fp, nb);
+	{
+		if(is_recycle==YES){
+			package_by_block(nb, aobject);
+			pushToTail(fp, nb);
+			runtime_log("----dealloc[BACK:%s]: push back a block[%p obj[%p]]\n", nameof(aobject), blk, aobject);
+		}else{
+			free(nb->data);
+			free(nb);
+			runtime_log("----dealloc[DEL:%s]: delete a block[%p obj[%p]]\n", nameof(aobject), blk, aobject);
+		}
+	}
 }
 
-void test_blockpool()
-{
-	mc_blockpool* pool = new_mc_blockpool();
-	mc_block *b1, *b2, *b3, *b4, *b5, *b6, *tb;
-	b1=new_mc_block(nil);
-	b2=new_mc_block(nil);
-	b3=new_mc_block(nil);
-	b4=new_mc_block(nil);
-	b5=new_mc_block(nil);
-	b6=new_mc_block(nil);
 
-//test getFromHead
-	pushToTail(pool, b1);
-	pushToTail(pool, b2);
-	pushToTail(pool, b3);
-	pushToTail(pool, b4);
-
-	error_log("pool count should be 4:%d\n", count(pool));
-	getFromHead(pool);
-	error_log("pool count should be 3:%d\n", count(pool));
-	getFromHead(pool);
-	error_log("pool count should be 2:%d\n", count(pool));	
-	getFromHead(pool);
-	error_log("pool count should be 1:%d\n", count(pool));
-	getFromHead(pool);
-	error_log("pool count should be 0:%d\n", count(pool));
-//test cut
-	empty(pool);
-	pushToTail(pool, b1);
-	pushToTail(pool, b2);
-	pushToTail(pool, b3);
-	pushToTail(pool, b4);
-
-	error_log("pool count should be 4:%d\n", count(pool));
-	cut(pool, b1, &tb);
-	error_log("pool count should be 3:%d\n", count(pool));
-	cut(pool, b2, &tb);
-	error_log("pool count should be 2:%d\n", count(pool));	
-	cut(pool, b3, &tb);
-	error_log("pool count should be 1:%d\n", count(pool));
-	cut(pool, b4, &tb);
-	error_log("pool count should be 0:%d\n", count(pool));
-//test cut
-	empty(pool);
-	pushToTail(pool, b1);
-	pushToTail(pool, b2);
-	pushToTail(pool, b3);
-	pushToTail(pool, b4);
-
-	error_log("pool count should be 4:%d\n", count(pool));
-	cut(pool, b4, &tb);
-	error_log("pool count should be 3:%d\n", count(pool));
-	cut(pool, b3, &tb);
-	error_log("pool count should be 2:%d\n", count(pool));	
-	cut(pool, b2, &tb);
-	error_log("pool count should be 1:%d\n", count(pool));
-	cut(pool, b1, &tb);
-	error_log("pool count should be 0:%d\n", count(pool));
-
-}
 
 
 

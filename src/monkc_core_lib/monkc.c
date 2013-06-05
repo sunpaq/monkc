@@ -212,29 +212,28 @@ void _shift_back(id const obj)
 		obj, nameofc(obj->saved_isa), nameof(obj));
 }
 
-void release(mc_object** const this_p)
+static int ref_count_down(id const this)
 {
-
 	for(;;){
-		if((*this_p) == nil){
-			error_log("release(nil) do nothing.\n");
-			return;
+		if(this == nil){
+			error_log("recycle/release(nil) do nothing.\n");
+			return REFCOUNT_ERR;
 		}
-		if((*this_p)->ref_count == 0)
+		if(this->ref_count == 0)
 		{
-			runtime_log("release(%s) count=0 return\n", nameof(*this_p));
-			return;
+			runtime_log("recycle/release(%s) count=0 return\n", nameof(this));
+			return REFCOUNT_ERR;
 		}
-		if((*this_p)->ref_count == REFCOUNT_NO_MM){
+		if(this->ref_count == REFCOUNT_NO_MM){
 			debug_log("ref_count is REFCOUNT_NO_MM manage by runtime. do nothing\n");
-			return;
+			return REFCOUNT_NO_MM;
 		}
-		if((*this_p)->isa == nil){
-			error_log("release(obj) obj have no class linked. do nothing.\n");
-			return;
+		if(this->isa == nil){
+			error_log("recycle/release(obj) obj have no class linked. do nothing.\n");
+			return REFCOUNT_ERR;
 		}
 
-		int* addr = &((*this_p)->ref_count);
+		int* addr = &(this->ref_count);
 		int oldcount = mc_atomic_get_integer(addr);
 		int newcount = oldcount;
 		if(newcount > 0)
@@ -242,16 +241,28 @@ void release(mc_object** const this_p)
 		if(!mc_atomic_set_integer(addr, oldcount, newcount))
 			break;
 	}
+	return this->ref_count;
+}
 
-	if((*this_p)->ref_count == 0)
-	{
+void recycle(id const this)
+{
+	if(ref_count_down(this) == 0){
 		//call the "bye" method on object
-		fs((*this_p), bye, nil);
-		_dealloc(*this_p);
+		fs(this, bye, nil);
+		_dealloc(this, YES);
 	}
 }
 
-mc_object* retain(mc_object* const this)
+void release(id const this)
+{
+	if(ref_count_down(this) == 0){
+		//call the "bye" method on object
+		fs(this, bye, nil);
+		_dealloc(this, NO);
+	}
+}
+
+id retain(id const this)
 {
 	for(;;){
 		if(this == nil){

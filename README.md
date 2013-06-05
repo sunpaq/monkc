@@ -114,7 +114,7 @@ a toolkit for OOP programming in C language
 	{
 		debug_logt(this->isa->name, "[%p] bye called\n", this);
 
-		release(this->super);
+		recycle(this->super);
 	}
 
 	static void funcA(Bird* this, int arg1)	---> 2.private C function	
@@ -187,13 +187,18 @@ a toolkit for OOP programming in C language
 
 12.retain
 13.release
-14.relnil
+14.recycle
 
 15.shift
 16.shift_back
 
 17. This
 18. Cast
+
+19. nameof
+20. nameofc
+21. deref
+22. addrof
 
 ---
 
@@ -235,6 +240,8 @@ Total **33** words.[^1]
 	5. more detailed document.
 
 	6. move more logic to MCObject
+
+	7. data persistence mechanism
 
 [^1]: the syntex is improving, maybe more/less keywords in the feature.
 

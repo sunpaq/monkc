@@ -41,4 +41,12 @@ then
 	cp $(find ./src -name '*.p') ./build 
 	make
 fi
-
+if [ "$1" = "-clean" ]
+then
+	echo "CLEAN..."
+	rm exec core
+	rm -r build	
+	mkdir -p -v build
+	echo -e $ROOTMAKETMP > Makefile	
+	echo -e $MAKEFLIETMP > build/Makefile
+fi

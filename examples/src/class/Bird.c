@@ -9,7 +9,7 @@ initer(Bird)
 
 method(Bird, bye, xxx)
 {
-	release(&(this->super));
+	recycle(this->super);
 	debug_logt(nameof(this), "[%p] bye called\n", this);
 }
 

@@ -146,7 +146,7 @@ method(MCUnitTestCase, runTests, xxx)
 		return;
 
 	runtime_log("%s\n", "MCUnitTestCase runTests before for loop");
-	for (i = 0; i < get_size_by_level(this->isa->table->level); i++)
+	for (i = 0; i < get_tablesize(this->isa->table->level); i++)
 	{
 		//runtime_log("MCUnitTestCase runTests in for loop index:[%d]\n", i);
 		amethod = this->isa->table->items[i];
@@ -194,19 +194,19 @@ method(MCUnitTestSuite, bye, xxx)
 		iter = iter->next_case;
 }
 
-method(MCUnitTestSuite, addTestCase, MCUnitTestCase* tcase)
+method(MCUnitTestSuite, addTestCase, MCUnitTestCase* volatile tcase)
 {
 	retain(tcase);
-	MCUnitTestCase **iter;
-	for(iter=&this->first_case; *iter!=nil; iter=&((*iter)->next_case)){}
-	*iter=tcase;
+	MCUnitTestCase *iter = nil;
+	for(iter=this->first_case; iter!=nil; iter=iter->next_case);
+	iter=tcase;
 	this->test_case_count++;
 }
 
 method(MCUnitTestSuite, runTestCases, xxx)
 {
 	runtime_log("%s\n", "MCUnitTestSuite runTestCases");
-	MCUnitTestCase *iter;
+	MCUnitTestCase *iter = nil;
 	for(iter=this->first_case; iter!=nil; iter = iter->next_case)
 		call(iter, MCUnitTestCase, runTests, nil);
 }

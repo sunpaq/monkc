@@ -56,7 +56,7 @@ class(MCUnitTestSuite);
 end(MCUnitTestSuite);
 
 method(MCUnitTestSuite, bye, xxx);
-method(MCUnitTestSuite, addTestCase, MCUnitTestCase* tcase);
+method(MCUnitTestSuite, addTestCase, MCUnitTestCase* volatile tcase);
 method(MCUnitTestSuite, runTestCases, xxx);
 #endif
 

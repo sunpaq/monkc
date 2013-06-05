@@ -134,17 +134,17 @@ typedef mc_object* (*initerFP)(mc_object*);
 
 //callbacks
 #define loader(cls)					mc_class* cls##_load(mc_class* const class)
-#define initer(cls)						cls* cls##_init(cls* const this)
+#define initer(cls)						 cls* cls##_init(cls* const this)
 
 //callback caller
-#define load(cls)					_load(S(cls), sizeof(cls), cls##_load)
-#define init(obj, cls)			    cls##_init(obj)
+//#define load(cls)					_load(S(cls), sizeof(cls), cls##_load)
+//#define init(obj, cls)			cls##_init(obj)
 
 //method binding
 #define binding(cls, met, ...)  	_binding(class, S(met), A_B(cls, met))
 #define override(cls, met, ...) 	_override(class, S(met), A_B(cls, met))
-#define method(cls, name, ...) 		void* cls##_##name(cls* const this, const void* entry, __VA_ARGS__)
-#define protocol(pro, name, ...)  	static void* pro##_##name(id const this, const void* entry, __VA_ARGS__)
+#define method(cls, name, ...) 		void* cls##_##name(cls* volatile this, volatile void* entry, __VA_ARGS__)
+#define protocol(pro, name, ...)  	static void* pro##_##name(id volatile this, volatile void* entry, __VA_ARGS__)
 #define cast(cls, obj) 				((cls*)obj)
 #define returns(type)
 
@@ -182,10 +182,11 @@ id _new_category(id const this, initerFP initer, loaderFP loader_cat, initerFP i
 void _shift(id const obj, const char* modename, size_t objsize, loaderFP loader);
 void _shift_back(id const obj);
 //mm
-#define REFCOUNT_NO_MM 		-1
-#define REFCOUNT_ANONY_OBJ 	-100
-void release(mc_object** const this_p);
-mc_object* retain(mc_object* const this);
+#define REFCOUNT_NO_MM 	-1
+#define REFCOUNT_ERR 	-100
+void recycle(id const this);
+void release(id const this);
+id retain(id const this);
 
 //functions
 mc_class* alloc_mc_class();

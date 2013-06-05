@@ -2,12 +2,18 @@
 #include "MCUnitTest.h"
 #include "TestMCRuntime.h"
 #include "TestMCClock.h"
+#include "TestObjectManage.h"
 
 int main(int argc, char const *argv[])
 {
 	mc_init();
 	LOG_LEVEL = VERBOSE;
 	//while(1){
+
+	test_blockpool();
+
+
+
 		MCUnitTestRunner* runner = new(MCUnitTestRunner);
 		MCUnitTestSuite* suite = new(MCUnitTestSuite);
 		
@@ -17,8 +23,10 @@ int main(int argc, char const *argv[])
 		ff(runner, addTestSuite, suite);
 		ff(runner, runTestSuites, nil);
 
-		release(&runner);
-		release(&suite);
+		release(runner);
+		release(suite);
+
+
 
 		//sleep(5);
 	//}

@@ -19,5 +19,7 @@ clean:
 	cd ..
 	cd ./lemontea && sudo make clean
 	cd ..
+	cd ./tests && sudo make clean
+	cd ..
 
 	
