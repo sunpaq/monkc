@@ -23,5 +23,7 @@ clean:
 	cd ..
 	cd ./tests && sudo make clean
 	cd ..
+	cd ./monkc_preprocessor && sudo make clean
+	cd ..
 
 	
