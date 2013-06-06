@@ -1,4 +1,4 @@
-# Monk-C (Runtime based version)
+# Monk-C
 a toolkit for OOP programming in C language
 
 ## Overview
