@@ -158,6 +158,7 @@ typedef mc_object* (*initerFP)(mc_object*);
 #define call(this, cls, name, ...)      cls##_##name(this, cls##_##name, __VA_ARGS__)//call other class method
 #define response_to(obj, met) 			_response_to(obj, S(met))
 #define ff(obj, met, ...)				_push_jump(_response_to(obj, S(met)), __VA_ARGS__)
+#define fh(obj, met, hash, ...)			_push_jump(_response_to_h(obj, S(met), hash), __VA_ARGS__)
 #define fs(obj, met, ...)				_push_jump(_self_response_to(obj, S(met)), __VA_ARGS__)
 #define shift(obj, mode)				_shift(obj, S(mode), sizeof(mode), mode##_load)
 #define shift_back(obj)					_shift_back(obj)

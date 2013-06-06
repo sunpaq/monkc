@@ -1,4 +1,5 @@
 #!/bin/bash
+ROOT=$PWD
 
 ROOTMAKETMP="all:
 \n\tcd ./build && make && cp exec ../
@@ -10,9 +11,13 @@ MAKEFLIETMP="MODULES = \$(wildcard *.c)
 \nLINK_HEAD = -I/usr/local/include/monkc -I/usr/local/include/lemontea    
 \nLINK_BIN = -lpthread -L/usr/local/lib -lmonkc -llemontea                                                                    
 \nCC = clang -g -w -Wall -Wno-unused-variable -Wno-return-type             
-\nAS = as                                                                 
+\nAS = as
+\nLEX = mcpp                                                                 
 \nexec:\$(OBJS)\n\t\$(CC) -o exec \$(OBJS) \$(LINK_BIN)                                  
-\n%.o:%.c\n\t\$(CC) -c \$< \$(LINK_HEAD)                                             
+\n%.o:%.c
+\n\t\$(LEX) \$< hash.c
+\n\tmv -f hash.c \$<
+\n\t\$(CC) -c \$< \$(LINK_HEAD)                                             
 \nclean:\n\trm -f exec \$(OBJS) temp.* stream.txt core                            
 \ndump:\n\tulimit -c unlimited"
 
@@ -36,9 +41,9 @@ then
 	mkdir -p -v build
 	echo -e $ROOTMAKETMP > Makefile	
 	echo -e $MAKEFLIETMP > build/Makefile
-	cp $(find ./src -name '*.c') ./build 
-	cp $(find ./src -name '*.h') ./build 
-	cp $(find ./src -name '*.p') ./build 
+	cp $(find ./src -name '*.c') ./build
+	cp $(find ./src -name '*.h') ./build
+	cp $(find ./src -name '*.p') ./build
 	make
 fi
 if [ "$1" = "-clean" ]

@@ -9,6 +9,8 @@ install:
 	cd ..
 	cd ./lemontea && make && sudo make install
 	cd ..
+	cd ./monkc_preprocessor && make && sudo make install
+	cd ..
 
 test:
 	cd ./tests && make && ./exec
