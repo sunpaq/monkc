@@ -141,8 +141,10 @@ typedef mc_object* (*initerFP)(mc_object*);
 //#define init(obj, cls)			cls##_init(obj)
 
 //method binding
-#define binding(cls, met, ...)  	_binding(class, S(met), A_B(cls, met))
-#define override(cls, met, ...) 	_override(class, S(met), A_B(cls, met))
+#define binding(cls, met, ...)  		_binding(class, S(met), A_B(cls, met))
+#define override(cls, met, ...) 		_override(class, S(met), A_B(cls, met))
+#define hinding(cls, met, hash, ...) 	_binding_h(class, S(met), A_B(cls, met), hash)
+#define hverride(cls, met, hash, ...) 	_override_h(class, S(met), A_B(cls, met), hash)
 #define method(cls, name, ...) 		void* cls##_##name(cls* volatile this, volatile void* entry, __VA_ARGS__)
 #define protocol(pro, name, ...)  	static void* pro##_##name(id volatile this, volatile void* entry, __VA_ARGS__)
 #define cast(cls, obj) 				((cls*)obj)

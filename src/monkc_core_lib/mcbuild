@@ -15,8 +15,8 @@ MAKEFLIETMP="MODULES = \$(wildcard *.c)
 \nLEX = mcpp                                                                 
 \nexec:\$(OBJS)\n\t\$(CC) -o exec \$(OBJS) \$(LINK_BIN)                                  
 \n%.o:%.c
-\n\t\$(LEX) \$< hash.c
-\n\tmv -f hash.c \$<
+\n\t\$(LEX) \$< .hash
+\n\tmv -f .hash \$<
 \n\t\$(CC) -c \$< \$(LINK_HEAD)                                             
 \nclean:\n\trm -f exec \$(OBJS) temp.* stream.txt core                            
 \ndump:\n\tulimit -c unlimited"

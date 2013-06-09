@@ -8,8 +8,8 @@ LEX = mcpp
 exec:$(OBJS)
 	$(CC) -o exec $(OBJS) $(LINK_BIN) 
 %.o:%.c 
-	$(LEX) $< hash.c 
-	mv -f hash.c $< 
+	$(LEX) $< .hash 
+	mv -f .hash $< 
 	$(CC) -c $< $(LINK_HEAD) 
 clean:
 	rm -f exec $(OBJS) temp.* stream.txt core 

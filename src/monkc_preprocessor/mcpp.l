@@ -17,7 +17,7 @@ char* uint2str(unsigned i)
 	return convbuff;
 }
 
-char* hash_method_name(char* in, int i)
+char* hash_ff_method_name(char* in, int i)
 {
 	static char buff[100];
 	//int i = 0;
@@ -43,18 +43,46 @@ char* hash_method_name(char* in, int i)
 	else{
 		buff[i++]=',';
 		buff[i++]=' ';
-		hash_method_name(substr, i);//+1 skip the '\0' in convbuff
+		hash_ff_method_name(substr, i);//+1 skip the '\0' in convbuff
 	}
 	return buff;
 }
 
+char* hash_binding_method_name(char* in, int i)
+{
+	static char buff[100];
+	//int i = 0;
+	while(*in!=',')//copy head
+		buff[i++]=*(in++);
+	for(buff[i++]=','; *in!=' '; in++)//skip space
+		buff[i++]=' ';
+	in++;//next non-space
+	buff[0]='h';//binding->hinding
+	unsigned hashval;
+	for(hashval=0; (*in!=',' && *in!=' '); in++){
+		hashval = (*in) + 31*hashval;
+		buff[i++]=*in;
+	}
+	buff[i++]=',';
+	buff[i++]=' ';
+	char* hashstr = uint2str(hashval);
+	strncpy(&buff[i], hashstr, strlen(hashstr));//copy middle
+	i=i+strlen(hashstr);
+	//tail
+	strcpy(&buff[i], in);//copy tail
+	return buff;
+}
+
 #define MYP printf("%s - %s", yytext, hash_method_name(yytext))
-#define MYECHO do{char* writeback = hash_method_name(yytext, 0);\
+#define MYECHO do{char* writeback = hash_ff_method_name(yytext, 0);\
+				fprintf(yyout, "%s", writeback);}while(0);
+#define MYECHO2 do{char* writeback = hash_binding_method_name(yytext, 0);\
 				fprintf(yyout, "%s", writeback);}while(0);
 
 %}
 
 %%
+binding(.*) MYECHO2;
 ff(.*) MYECHO;
 . ECHO;
 %%

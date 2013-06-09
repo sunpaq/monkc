@@ -17,17 +17,17 @@ method(Bird, catmethodB, xxx)
 
 method(Bird, catmethodC, xxx)
 {
-	debug_logt(this->isa->item->key, "BirdCatA - catmethodC\n");
+	debug_logt(nameof(this), "BirdCatA - catmethodC\n");
 }
 
 method(Bird, catmethodD, xxx)
 {
-	debug_logt(this->isa->item->key, "BirdCatA - catmethodD\n");
+	debug_logt(nameof(this), "BirdCatA - catmethodD\n");
 }
 
 loader(BirdCatA)
 {
-	debug_logt(class->item->key, "BirdCatA - loader called\n");
+	debug_logt(nameofc(class), "BirdCatA - loader called\n");
 
 	binding(Bird, catmethodA, xxx);
 	binding(Bird, catmethodB, xxx);
