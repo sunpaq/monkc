@@ -20,12 +20,12 @@ void funcA(Bird* this, int arg1)
 
 protocol(Flyable, duckFly, xxx)
 {
-	debug_log("%s\n", "Bird:Duck GuaGuaGua fly");
+	debug_log("%s:Duck GuaGuaGua fly\n", nameof(cast(Bird, this)));
 }
 
 protocol(Flyable, chickenFly, xxx)
 {
-	debug_log("%s\n", "Bird:Chicken JiJiJi fly");
+	debug_log("%s:Chicken JiJiJi fly\n", nameof(cast(Bird, this)));
 }
 
 method(Bird, initWithType, int type)
@@ -103,7 +103,8 @@ loader(Bird)
 {
 	//debug_logt(class->item->key, "load called\n");
 	#include "Flyable.p"
-
+	//just copy the declears in .h file and change 'method'->'binding'
+	/*new() binding()*/
 	binding(Bird, initWithType, int type);
 	binding(Bird, bye, xxx);
 	binding(Bird, bye, xxx);

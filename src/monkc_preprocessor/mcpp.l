@@ -1,12 +1,9 @@
 %{
-FILE* outfile;
 unsigned hash(const char *s)
 {
-	//runtime_log("hash(%s) --- ", s);
 	unsigned hashval;
 	for(hashval = 0; *s != '\0'; s++)
 		hashval = *s + 31 * hashval;
-	//runtime_log("hashval is: %d\n", hashval);
 	return hashval;
 }
 
@@ -20,15 +17,14 @@ char* uint2str(unsigned i)
 char* hash_ff_method_name(char* in, int i)
 {
 	static char buff[100];
-	//int i = 0;
-	while(*in!=',')//copy head
+	int step = i;
+	while(*in!=',' && *in!='\0')//copy head
 		buff[i++]=*(in++);
-	for(buff[i++]=','; *in!=' '; in++)//skip space
-		buff[i++]=' ';
-	in++;//next non-space
-	buff[1]='h';//ff->fh
+	buff[i++]=',';
+	while(*(++in)==' ' && *in!='\0');//skip space
+	buff[step+1]='h';//ff->fh
 	unsigned hashval;
-	for(hashval=0; (*in!=',' && *in!=' '); in++){
+	for(hashval=0; (*in!=',' && *in!=' ' && *in!='\0'); in++){
 		hashval = (*in) + 31*hashval;
 		buff[i++]=*in;
 	}
@@ -51,15 +47,14 @@ char* hash_ff_method_name(char* in, int i)
 char* hash_binding_method_name(char* in, int i)
 {
 	static char buff[100];
-	//int i = 0;
-	while(*in!=',')//copy head
+	int step = i;
+	while(*in!=',' && *in!='\0')//copy head
 		buff[i++]=*(in++);
-	for(buff[i++]=','; *in!=' '; in++)//skip space
-		buff[i++]=' ';
-	in++;//next non-space
-	buff[0]='h';//binding->hinding
+	buff[i++]=',';
+	while(*(++in)==' ' && *in!='\0');//skip space
+	buff[step+0]='h';//ff->fh
 	unsigned hashval;
-	for(hashval=0; (*in!=',' && *in!=' '); in++){
+	for(hashval=0; (*in!=',' && *in!=' ' && *in!='\0'); in++){
 		hashval = (*in) + 31*hashval;
 		buff[i++]=*in;
 	}
@@ -68,29 +63,112 @@ char* hash_binding_method_name(char* in, int i)
 	char* hashstr = uint2str(hashval);
 	strncpy(&buff[i], hashstr, strlen(hashstr));//copy middle
 	i=i+strlen(hashstr);
-	//tail
+	char* substr;
 	strcpy(&buff[i], in);//copy tail
 	return buff;
 }
 
-#define MYP printf("%s - %s", yytext, hash_method_name(yytext))
-#define MYECHO do{char* writeback = hash_ff_method_name(yytext, 0);\
+char* hash_new_class_name(char* in, int i)
+{
+	static char buff[100];
+	int step = i;
+	while(*in!='(' && *in!='\0')//copy head
+		buff[i++]=*(in++);
+	buff[i++]='(';
+	while(*(++in)==' ' && *in!='\0');//skip space
+	buff[step+0]='h';//new->hew
+	unsigned hashval;
+	for(hashval=0; (*in!=')' && *in!=' ' && *in!='\0'); in++){
+		hashval = (*in) + 31*hashval;
+		buff[i++]=*in;
+	}
+	buff[i++]=',';
+	buff[i++]=' ';
+	char* hashstr = uint2str(hashval);
+	strncpy(&buff[i], hashstr, strlen(hashstr));//copy middle
+	i=i+strlen(hashstr);
+	char* substr;
+	strcpy(&buff[i], in);//copy tail
+	return buff;
+}
+
+char* hash_new_category_class_name(char* in, int i)
+{
+	static char buff[100];
+	int step = i;
+	while(*in!='(' && *in!='\0')//copy head
+		buff[i++]=*(in++);
+	buff[i++]='(';
+	while(*(++in)==' ' && *in!='\0');//skip space
+	buff[step+0]='h';//new->hew
+	unsigned hashval;
+	for(hashval=0; (*in!=',' && *in!=' ' && *in!='\0'); in++){
+		hashval = (*in) + 31*hashval;
+		buff[i++]=*in;
+	}
+	buff[i++]=',';
+	buff[i++]=' ';
+	char* hashstr = uint2str(hashval);
+	strncpy(&buff[i], hashstr, strlen(hashstr));//copy middle
+	i=i+strlen(hashstr);
+	char* substr;
+	strcpy(&buff[i], in);//copy tail
+	return buff;
+}
+
+#define MYP 	printf("%s - %s", yytext, hash_method_name(yytext))
+#define MYECHO 	do{char* writeback = hash_ff_method_name(yytext, 0);\
 				fprintf(yyout, "%s", writeback);}while(0);
 #define MYECHO2 do{char* writeback = hash_binding_method_name(yytext, 0);\
+				fprintf(yyout, "%s", writeback);}while(0);
+#define MYECHO3 do{char* writeback = hash_new_class_name(yytext, 0);\
+				fprintf(yyout, "%s", writeback);}while(0);
+#define MYECHO4 do{char* writeback = hash_new_category_class_name(yytext, 0);\
 				fprintf(yyout, "%s", writeback);}while(0);
 
 %}
 
+digit 			[0-9]
+number			("-"|"+")?{digit}+
+letter			[a-zA-Z]
+identifier		(_|{letter})(_|{letter}|{number})*
+identifier_w	(_|{letter}|" ")(_|{letter}|{number}|" ")*
+comment 		(\/\/|\/\*.*\*\/)
+default_rule	.
+
+new_category    new_category\({identifier_w}\)   
+new                      new\({identifier_w}\)
+info                    info\({identifier_w}\)
+clear                  clear\({identifier_w}\)
+
+binding 		binding\({identifier_w},{identifier_w},{identifier_w}+\)
+override	   override\({identifier_w},{identifier_w},{identifier_w}+\)
+response_to					response_to\({identifier_w},{identifier_w}\)
+_self_response_to 	  _self_response_to\({identifier_w},{identifier_w}\)
+ff    								 ff\({identifier_w},{identifier_w},{identifier_w}+\)
+
 %%
-binding(.*) MYECHO2;
-ff(.*) MYECHO;
-. ECHO;
+{new_category}												MYECHO4;
+
+{new}														MYECHO3;
+{info} 														MYECHO3;
+{clear}					 									MYECHO3;
+
+{binding} 													MYECHO2;
+{override} 													MYECHO2;
+{response_to}												MYECHO2;
+{_self_response_to}											MYECHO2;
+
+{ff}														MYECHO;
+{comment}													ECHO;
+{default_rule}												ECHO;
 %%
 
 int yywrap(void)
 {
 	return 1;
 }
+
 int main(int argc, char *argv[])
 {
 	if(argc!=3){
@@ -98,8 +176,6 @@ int main(int argc, char *argv[])
 		return -1;
 	}
 	yyin=fopen(argv[1], "rt");
-	//char* outfile = argv[2];
-	//outfile = strcat(outfile, argv[1]);
 	yyout=fopen(argv[2], "wt+");
 	yylex();
 	fclose(yyin);

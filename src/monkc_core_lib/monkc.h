@@ -136,29 +136,30 @@ typedef mc_object* (*initerFP)(mc_object*);
 #define loader(cls)					mc_class* cls##_load(mc_class* const class)
 #define initer(cls)						 cls* cls##_init(cls* const this)
 
-//callback caller
-//#define load(cls)					_load(S(cls), sizeof(cls), cls##_load)
-//#define init(obj, cls)			cls##_init(obj)
-
 //method binding
 #define binding(cls, met, ...)  		_binding(class, S(met), A_B(cls, met))
 #define override(cls, met, ...) 		_override(class, S(met), A_B(cls, met))
 #define hinding(cls, met, hash, ...) 	_binding_h(class, S(met), A_B(cls, met), hash)
 #define hverride(cls, met, hash, ...) 	_override_h(class, S(met), A_B(cls, met), hash)
-#define method(cls, name, ...) 		void* cls##_##name(cls* volatile this, volatile void* entry, __VA_ARGS__)
-#define protocol(pro, name, ...)  	static void* pro##_##name(id volatile this, volatile void* entry, __VA_ARGS__)
-#define cast(cls, obj) 				((cls*)obj)
+#define method(cls, name, ...) 			void* cls##_##name(cls* volatile this, volatile void* entry, __VA_ARGS__)
+#define protocol(pro, name, ...)  		static void* pro##_##name(id volatile this, volatile void* entry, __VA_ARGS__)
+#define cast(cls, obj) 					((cls*)obj)
 #define returns(type)
 
 //for create object
-#define new(cls)					(cls*)_new(_alloc(S(cls), sizeof(cls), cls##_load), cls##_init)
-#define new_category(ori, cat)		(ori*)_new_category(_alloc(S(ori), sizeof(ori), ori##_load), ori##_init, cat##_load, cat##_init)
-#define clear(cls)  				_clear(S(cls), sizeof(cls), cls##_load)
-#define info(cls)                   _info(S(cls), sizeof(cls), cls##_load)
+#define new(cls)						(cls*)_new(_alloc(S(cls), sizeof(cls), cls##_load), cls##_init)
+#define hew(cls, hash)					(cls*)_new(_alloc_h(S(cls), sizeof(cls), cls##_load, hash), cls##_init)
+#define new_category(ori, cat)			(ori*)_new_category(_alloc(S(ori), sizeof(ori), ori##_load), ori##_init, cat##_load, cat##_init)
+#define hew_category(ori, hash, cat)	(ori*)_new_category(_alloc_h(S(ori), sizeof(ori), ori##_load, hash), ori##_init, cat##_load, cat##_init)
+#define clear(cls)  					_clear(S(cls), sizeof(cls), cls##_load)
+#define hlear(cls, hash)  				_clear_h(S(cls), sizeof(cls), cls##_load, hash)
+#define info(cls)                  		_info(S(cls), sizeof(cls), cls##_load)
+#define hnfo(cls, hash)                 _info_h(S(cls), sizeof(cls), cls##_load, hash)
 
 //for call method
 #define call(this, cls, name, ...)      cls##_##name(this, cls##_##name, __VA_ARGS__)//call other class method
 #define response_to(obj, met) 			_response_to(obj, S(met))
+#define hesponse_to(obj, met, hash) 	_response_to_h(obj, S(met), hash)
 #define ff(obj, met, ...)				_push_jump(_response_to(obj, S(met)), __VA_ARGS__)
 #define fh(obj, met, hash, ...)			_push_jump(_response_to_h(obj, S(met), hash), __VA_ARGS__)
 #define fs(obj, met, ...)				_push_jump(_self_response_to(obj, S(met)), __VA_ARGS__)
