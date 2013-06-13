@@ -79,86 +79,87 @@ a toolkit for OOP programming in C language
 
 #### declear interface - write in .h file
 
-	#include "monkc.h"					---> must include
-	#include "BirdFather.h"					---> super class
+	#include "monkc.h" ---> must include
+	#include "BirdFather.h"	 ---> super class
 
-	#ifndef Bird_							---> avoid multi-defines
+	#ifndef Bird_ ---> avoid multi-defines
 	#define Bird_
 
-	implements(Flyable);					---> protocol mark
-	extends(BirdFather);					---> super class mark
+	implements(Flyable); ---> protocol mark
+	extends(BirdFather); ---> super class mark
 
-	class(Bird);							---> class data begin
+	class(Bird); ---> class data begin
 		char* name;
 		int type;
-	end(Bird);								---> class data end
+	end(Bird); ---> class data end
 
-	method(Bird, bye, xxx);					---> class public method list begin
-	method(Bird, initWithType, int type);
-	method(Bird, fly, xxx);
-	method(Bird, fatherAge, xxx);			---> class public method list end
+	method(Bird, void, bye, xxx); ---> class public method list begin
+	method(Bird, Bird*, initWithType, int type);
+	method(Bird, void, fly, xxx);
+	method(Bird, int, fatherAge, xxx); ---> class public method list end
 
-	#endif									---> avoid multi-defines
+	#endif ---> avoid multi-defines
 	
 #### implement methods - write in .c file
 		
 	#include "Bird.h"
 
-	initer(Bird)							---> must have. initialize the class data
+	initer(Bird) ---> must have. initialize the class data
 	{
-		this->super = new(BirdFather);		---> new your super by hand!
+		this->super = new(BirdFather); ---> new your super by hand!
 		this->type = 3;
 		debug_logt("Bird", "[%p] init called\n", this);
 	}
 
-	method(Bird, bye, xxx)					---> 1.public method implements
+	method(Bird, void, bye, xxx) ---> 1.public method implements
 	{
-		debug_logt(this->isa->name, "[%p] bye called\n", this);
-
+		debug_logt(nameof(this), "[%p] bye called\n", this);
 		recycle(this->super);
 	}
 
-	static void funcA(Bird* this, int arg1)	---> 2.private C function	
+	static void funcA(Bird* this, int arg1) ---> 2.private C function
 	{
 		debug_log("i am local function A\n");
 	}
 
-	protocol(Flyable, duckFly, xxx)			---> 3.protocol method you comply with
+	protocol(Flyable, void, duckFly, xxx) ---> 3.protocol method you comply with
 	{
 		debug_log("%s\n", "Bird:Duck GuaGuaGua fly");
 	}
 
-	protocol(Flyable, chickenFly, xxx)
+	protocol(Flyable, void, chickenFly, xxx)		
 	{
 		debug_log("%s\n", "Bird:Chicken JiJiJi fly");
 	}
 
-	method(Bird, initWithType, int type)
+	method(Bird, Bird*, initWithType, int type)
 	{
 		this->type = type;
 		return this;
 	}
 
-	method(Bird, fatherAge, xxx)
+	method(Bird, int, fatherAge, xxx)
 	{
-		debug_logt(this->isa->name, "my father age is: %d\n", Cast(BirdFather, this->super)->age);
+		int fage = cast(BirdFather, this->super)->age;
+		debug_logt(nameof(this), "my father age is: %d\n", fage);
+		return fage;
 	}
 
-	method(Bird, fly, xxx)
+	method(Bird, void, fly, xxx)
 	{
 		debug_log("Bird[%p->%p]: default fly type %d\n", this, this->super, this->type);
 		funcA(this, 100);
 	}
 
-	loader(Bird)							---> must have. binding methods at runtime.
+	loader(Bird) ---> must have. binding methods at runtime.
 	{
-		debug_logt(class->name, "load called\n");
+		debug_logt(nameofc(class), "load called\n");
 		#include "Flyable.p"
 
-		binding(Bird, initWithType, int type);
-		binding(Bird, bye, xxx);
-		binding(Bird, fly, xxx);
-		binding(Bird, fatherAge, xxx);
+		binding(Bird, Bird*, initWithType, int type);
+		binding(Bird, void, bye, xxx);
+		binding(Bird, void, fly, xxx);
+		binding(Bird, int, fatherAge, xxx);
 	}
 
 ####method calling
@@ -178,39 +179,31 @@ a toolkit for OOP programming in C language
 4. loader
 5. method
 6. protocol
-
 7. binding
 8. override
-
 9. new
-10.call
-11.ff
-
-12.retain
-13.release
-14.recycle
-
-15.shift
-16.shift_back
-
-17. This
-18. Cast
-
+10. call
+11. ff
+12. retain
+13. release
+14. recycle
+15. shift
+16. shift_back
+17. this
+18. cast
 19. nameof
 20. nameofc
-21. deref
-22. addrof
 
 ---
 
-Total **33** words.[^1]
+Total **20** words.[^1]
 
 ####protocol file
 
 	<Flyable.p>
 
-	binding(Flyable, duckFly, xxx);
-	binding(Flyable, chickenFly, xxx);
+	binding(Flyable, void, duckFly, xxx);
+	binding(Flyable, void, chickenFly, xxx);
 
 
 ######the BIND part (include in .c file):
@@ -220,29 +213,24 @@ Total **33** words.[^1]
 		debug_logt(class->name, "load called\n");
 		#include "Flyable.p"
 
-		binding(Bird, initWithType, int type);
-		binding(Bird, bye, xxx);
-		binding(Bird, fly, xxx);
-		binding(Bird, fatherAge, xxx);
+		binding(Bird, Bird*, initWithType, int type);
+		binding(Bird, void, bye, xxx);
+		binding(Bird, void, fly, xxx);
+		binding(Bird, int, fatherAge, xxx);
 	}
 
 
 ####TODO list:
 
-	1. more test use MCUnitTest framework.
+	1. add type convert to preprocessor mcpp
 
-	2. test runtime on arm/linux platform.
+	2. add auto binding to preprocessor mcpp
 
-	3. a parser and some lightly added syntex to make the class define macros looks better
+	3. add arg type check to preprocessor mcpp
 
-	4. method list in classobj should be read-only for instance
-	(allow add method only)
+	4. lemontea_WEB
 
-	5. more detailed document.
-
-	6. move more logic to MCObject
-
-	7. data persistence mechanism
+	5. lemontea_GUI
 
 [^1]: the syntex is improving, maybe more/less keywords in the feature.
 

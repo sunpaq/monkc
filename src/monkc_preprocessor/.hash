@@ -1,0 +1,19 @@
+Bird* b=hew(Bird, 2070745);
+Bird* b2 = hew(Bird, 2070745);
+
+/*have comment*/ff(b, methodname, fh(c,another, 3443787523, nil));
+Bird* b=hew(Bird, 2070745);
+ff(b, methodnameb, 
+		arg);
+Bird* b=hew(Bird, 2070745);
+ff(b, methodnamec, 
+	fh(x,hahaha, 3070208043, nil), fh(y,hahahaha, 4122367588, 1));
+Bird* b=hew(Bird, 2070745);
+fh(b,methodnamed, 3381291768, arg);
+
+hnfo(Bird, 2070745);
+hlear(Bird, 2070745);
+Bird* bc = new_category(Bird, BirdCatA);
+
+hinding(Bird, void, bye, 98030, void);
+//binding()
