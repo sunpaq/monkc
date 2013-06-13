@@ -33,7 +33,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <stdio.h>
 #include <stdlib.h>
-
 //max memory useage for class  table is: 4Byte x 4000 = 16KB
 //max memory useage for method table is: 4Byte x 4000 x 1000 = 16000KB = 16M
 
@@ -47,13 +46,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef MAX_KEY_CHARS
 #define MAX_KEY_CHARS 100
 #endif
-
-typedef int BOOL;
-#define YES 1
-#define NO 0
-typedef int RES;
-#define SUCCESS 0
-#define ERROR -1
 
 #define xxx void* xxx
 #define nil ((void*)0)
@@ -137,14 +129,13 @@ typedef mc_object* (*initerFP)(mc_object*);
 #define initer(cls)						 cls* cls##_init(cls* const this)
 
 //method binding
-#define binding(cls, met, ...)  		_binding(class, S(met), A_B(cls, met))
-#define override(cls, met, ...) 		_override(class, S(met), A_B(cls, met))
-#define hinding(cls, met, hash, ...) 	_binding_h(class, S(met), A_B(cls, met), hash)
-#define hverride(cls, met, hash, ...) 	_override_h(class, S(met), A_B(cls, met), hash)
-#define method(cls, name, ...) 			void* cls##_##name(cls* volatile this, volatile void* entry, __VA_ARGS__)
-#define protocol(pro, name, ...)  		static void* pro##_##name(id volatile this, volatile void* entry, __VA_ARGS__)
+#define binding(cls, type, met, ...)  		_binding(class, S(met), A_B(cls, met))
+#define override(cls, type, met, ...) 		_override(class, S(met), A_B(cls, met))
+#define hinding(cls, type, met, hash, ...)	_binding_h(class, S(met), A_B(cls, met), hash)
+#define hverride(cls, type, met, hash, ...) _override_h(class, S(met), A_B(cls, met), hash)
+#define method(cls, type, name, ...) 	type cls##_##name(cls* volatile this, volatile void* entry, __VA_ARGS__)
+#define protocol(pro, type, name, ...)  static type pro##_##name(id volatile this, volatile void* entry, __VA_ARGS__)
 #define cast(cls, obj) 					((cls*)obj)
-#define returns(type)
 
 //for create object
 #define new(cls)						(cls*)_new(_alloc(S(cls), sizeof(cls), cls##_load), cls##_init)

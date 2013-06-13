@@ -8,9 +8,9 @@ class(BirdCatA);
 end(BirdCatA);
 
 
-method(Bird, catmethodA, xxx);
-method(Bird, catmethodB, xxx);
-method(Bird, catmethodC, xxx);
-method(Bird, catmethodD, xxx);
+method(Bird, void, catmethodA, xxx);
+method(Bird, void, catmethodB, xxx);
+method(Bird, void, catmethodC, xxx);
+method(Bird, void, catmethodD, xxx);
 
 #endif

@@ -151,8 +151,8 @@ class(MCSocketClientInfo);
 	socklen_t address_len;
 end(MCSocketClientInfo);
 
-method(MCSocketClientInfo, dumpInfo, xxx);
-method(MCSocketClientInfo, bye, xxx);
+method(MCSocketClientInfo, void, dumpInfo, xxx);
+method(MCSocketClientInfo, void, bye, xxx);
 #endif
 
 #ifndef MCSocket_ 
@@ -160,21 +160,18 @@ method(MCSocketClientInfo, bye, xxx);
 
 class(MCSocket);
 	int sfd;
-	BOOL isServer;
+	int isServer;
 	struct addrinfo peeraddrinfo;
 end(MCSocket);
 
-method(MCSocket, initWithTypeIpPort, MCSocketType socket_type, char* ip, char* port);
-method(MCSocket, listeningStart, xxx);//listen
-method(MCSocket, acceptARequest, xxx); returns(MCSocketClientInfo)
-//method(MCSocket, connectServer, xxx);
-
-method(MCSocket, recv, xxx);
-method(MCSocket, recvfrom, xxx);
-method(MCSocket, recvmsg, xxx);
-method(MCSocket, send, xxx);
-method(MCSocket, sendto, xxx);
-method(MCSocket, sendmsg, xxx);
-
-method(MCSocket, bye, xxx);
+method(MCSocket, MCSocket*, initWithTypeIpPort, MCSocketType socket_type, char* ip, char* port);
+method(MCSocket, int, listeningStart, xxx);
+method(MCSocket, MCSocketClientInfo*, acceptARequest, xxx);
+method(MCSocket, void, recv, xxx);
+method(MCSocket, void, recvfrom, xxx);
+method(MCSocket, void, recvmsg, xxx);
+method(MCSocket, void, send, xxx);
+method(MCSocket, void, sendto, xxx);
+method(MCSocket, void, sendmsg, xxx);
+method(MCSocket, void, bye, xxx);
 #endif

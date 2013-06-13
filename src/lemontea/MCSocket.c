@@ -4,8 +4,8 @@ static void create_and_bind_socket(MCSocket* this, MCSocketType socket_type, cha
 
 loader(MCSocketClientInfo)
 {
-	binding(MCSocketClientInfo, dumpInfo, xxx);
-	binding(MCSocketClientInfo, bye, xxx);
+	binding(MCSocketClientInfo, void, dumpInfo, xxx);
+	binding(MCSocketClientInfo, void, bye, xxx);
 }
 
 initer(MCSocketClientInfo)
@@ -13,12 +13,12 @@ initer(MCSocketClientInfo)
 	//nothing to init
 }
 
-method(MCSocketClientInfo, dumpInfo, xxx)
+method(MCSocketClientInfo, void, dumpInfo, xxx)
 {
 	printf("accept a client: %s\n", this->address.sa_data);
 }
 
-method(MCSocketClientInfo, bye, xxx)
+method(MCSocketClientInfo, void, bye, xxx)
 {
 	//nothing to do
 }
@@ -26,18 +26,16 @@ method(MCSocketClientInfo, bye, xxx)
 
 loader(MCSocket)
 {
-	binding(MCSocket, initWithTypeIpPort, MCSocketType socket_type, char* ip, char* port);
-	binding(MCSocket, listeningStart, xxx);//listen
-	binding(MCSocket, acceptARequest, xxx); returns(MCSocketClientInfo*)
-
-	binding(MCSocket, recv, xxx);
-	binding(MCSocket, recvfrom, xxx);
-	binding(MCSocket, recvmsg, xxx);
-	binding(MCSocket, send, xxx);
-	binding(MCSocket, sendto, xxx);
-	binding(MCSocket, sendmsg, xxx);
-
-	binding(MCSocket, bye, xxx);
+binding(MCSocket, MCSocket*, initWithTypeIpPort, MCSocketType socket_type, char* ip, char* port);
+binding(MCSocket, int, listeningStart, xxx);
+binding(MCSocket, MCSocketClientInfo*, acceptARequest, xxx);
+binding(MCSocket, void, recv, xxx);
+binding(MCSocket, void, recvfrom, xxx);
+binding(MCSocket, void, recvmsg, xxx);
+binding(MCSocket, void, send, xxx);
+binding(MCSocket, void, sendto, xxx);
+binding(MCSocket, void, sendmsg, xxx);
+binding(MCSocket, void, bye, xxx);
 }
 
 initer(MCSocket)
@@ -45,9 +43,10 @@ initer(MCSocket)
 	//nothing to init
 }
 
-method(MCSocket, initWithTypeIpPort, MCSocketType socket_type, char* ip, char* port)
+method(MCSocket, MCSocket*, initWithTypeIpPort, MCSocketType socket_type, char* ip, char* port)
 {
 	create_and_bind_socket(this, socket_type, ip, port);
+	return this;
 }
 
 static void create_and_bind_socket(MCSocket* this, MCSocketType socket_type, char* ip, char* port)
@@ -65,20 +64,20 @@ static void create_and_bind_socket(MCSocket* this, MCSocketType socket_type, cha
 		case MCSocket_Server_TCP:
 			hint.ai_socktype = SOCK_STREAM;
 			hint.ai_flags = AI_PASSIVE;
-			this->isServer = YES;
+			this->isServer = 1;
 		break;
 		case MCSocket_Server_UDP:
 			hint.ai_socktype = SOCK_DGRAM;
 			hint.ai_flags = AI_PASSIVE;
-			this->isServer = YES;
+			this->isServer = 1;
 		break;
 		case MCSocket_Client_TCP:
 			hint.ai_socktype = SOCK_STREAM;
-			this->isServer = NO;
+			this->isServer = 0;
 		break;
 		case MCSocket_Client_UDP:
 			hint.ai_socktype = SOCK_DGRAM;
-			this->isServer = NO;
+			this->isServer = 0;
 		break;
 	}
 	//get addrinfo linklist
@@ -117,56 +116,50 @@ static void create_and_bind_socket(MCSocket* this, MCSocketType socket_type, cha
 	//return sfd;
 }
 
-method(MCSocket, bye, xxx)
+method(MCSocket, void, bye, xxx)
 {
-	call(this, MCObject, bye, nil);
-	//
 	close(this->sfd);
 }
 
-method(MCSocket, listeningStart, xxx)
+//EADDRINUSE
+//EBADF
+//ENOTSOCK
+//EOPNOTSUPP
+method(MCSocket, int, listeningStart, xxx)
 {
-	if(this->isServer!=YES)return -1;
+	if(this->isServer!=1)return -1;
 	return listen(this->sfd, MCSocket_Queue_Length);
 }
 
-method(MCSocket, acceptARequest, xxx) returns(MCSocketClientInfo)
+method(MCSocket, MCSocketClientInfo*, acceptARequest, xxx)
 {
-	if (this->isServer!=YES)return -1;
+	if (this->isServer!=1)return -1;
 	MCSocketClientInfo* clientinfo = new(MCSocketClientInfo);
 	clientinfo->returnSfd = accept(this->sfd, &clientinfo->address, &clientinfo->address_len);
 	return clientinfo;
 }
 
-// method(MCSocket, connectServer, xxx)
-// {
-// 	if (this->isServer==YES)return -1;
-// 	int ret = connect(this->sfd, this->peeraddrinfo.ai_addr, this->peeraddrinfo.ai_addrlen);
-// 	error_log("connectted: return-%d\n", ret);
-// 	return ret;
-// }
-
-method(MCSocket, recv, xxx)
+method(MCSocket, void, recv, xxx)
 {
 
 }
-method(MCSocket, recvfrom, xxx)
+method(MCSocket, void, recvfrom, xxx)
 {
 
 }
-method(MCSocket, recvmsg, xxx)
+method(MCSocket, void, recvmsg, xxx)
 {
 
 }
-method(MCSocket, send, xxx)
+method(MCSocket, void, send, xxx)
 {
 
 }
-method(MCSocket, sendto, xxx)
+method(MCSocket, void, sendto, xxx)
 {
 
 }
-method(MCSocket, sendmsg, xxx)
+method(MCSocket, void, sendmsg, xxx)
 {
 
 }

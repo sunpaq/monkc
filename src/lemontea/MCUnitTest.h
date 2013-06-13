@@ -21,9 +21,9 @@ void fail(char* message);
 class(MCUnitTestResult);
 end(MCUnitTestResult);
 
-method(MCUnitTestResult, bye, xxx);
-method(MCUnitTestResult, addSuccessInfo, char* succinfo);
-method(MCUnitTestResult, addFailInfo, char* failinfo);
+method(MCUnitTestResult, void, bye, xxx);
+method(MCUnitTestResult, void, addSuccessInfo, char* succinfo);
+method(MCUnitTestResult, void, addFailInfo, char* failinfo);
 #endif
 
 /* Test Case */
@@ -36,12 +36,12 @@ class(MCUnitTestCase);
 	struct MCUnitTestCase_struct* next_case;
 end(MCUnitTestCase);
 
-method(MCUnitTestCase, initWithTestResult, MCUnitTestResult* resultRef);
-method(MCUnitTestCase, bye, xxx);
-method(MCUnitTestCase, setUp, xxx);
-method(MCUnitTestCase, tearDown, xxx);
-method(MCUnitTestCase, runTests, xxx);
-method(MCUnitTestCase, runATestMethod, char* methodName);
+method(MCUnitTestCase, MCUnitTestCase*, initWithTestResult, MCUnitTestResult* resultRef);
+method(MCUnitTestCase, void, bye, xxx);
+method(MCUnitTestCase, void, setUp, xxx);
+method(MCUnitTestCase, void, tearDown, xxx);
+method(MCUnitTestCase, void, runTests, xxx);
+method(MCUnitTestCase, void, runATestMethod, char* methodName);
 #endif
 
 /* Test Suite */
@@ -55,9 +55,9 @@ class(MCUnitTestSuite);
 	struct MCUnitTestSuite_struct* next_suite;
 end(MCUnitTestSuite);
 
-method(MCUnitTestSuite, bye, xxx);
-method(MCUnitTestSuite, addTestCase, MCUnitTestCase* volatile tcase);
-method(MCUnitTestSuite, runTestCases, xxx);
+method(MCUnitTestSuite, void, bye, xxx);
+method(MCUnitTestSuite, void, addTestCase, MCUnitTestCase* volatile tcase);
+method(MCUnitTestSuite, void, runTestCases, xxx);
 #endif
 
 /* Test Runner */
@@ -71,8 +71,8 @@ class(MCUnitTestRunner);
 	int test_suite_count;
 end(MCUnitTestRunner);
 
-method(MCUnitTestRunner, bye, xxx);
-method(MCUnitTestRunner, addTestSuite, MCUnitTestSuite* testSuite);
-method(MCUnitTestRunner, runTestSuites, xxx);
+method(MCUnitTestRunner, void, bye, xxx);
+method(MCUnitTestRunner, void, addTestSuite, MCUnitTestSuite* testSuite);
+method(MCUnitTestRunner, void, runTestSuites, xxx);
 
 #endif

@@ -113,8 +113,8 @@ class(MCRunnable);
 	void (*init_routine)(void);
 end(MCRunnable);
 
-method(MCRunnable, initWithFunctionPointer, void (*init_routine)(void));
-method(MCRunnable, run, xxx);
+method(MCRunnable, MCRunnable*, initWithFunctionPointer, void (*init_routine)(void));
+method(MCRunnable, void, run, xxx);
 #endif
 
 
@@ -128,11 +128,11 @@ class(MCThread);
 	pthread_t self;
 	pthread_attr_t attribute;
 	pthread_once_t once_control;
-	BOOL isRunOnce;
+	int isRunOnce;
 	MCRunnable* runnable;
 end(MCThread);
 
-method(MCThread, initWithRunnable, MCRunnable* runnable);
+method(MCThread, MCThread*, initWithRunnable, MCRunnable* runnable);
 
 //global class functions
 int MCThread_cancel(MCThread* thread);
@@ -143,9 +143,9 @@ void MCThread_stop(void* result);
 pthread_t MCThread_self();
 
 
-method(MCThread, start, void* result) 							returns(int);
-method(MCThread, equal, MCThread* thread) 						returns(BOOL);
-method(MCThread, bye, xxx);
+method(MCThread, int, start, void* result);
+method(MCThread, int, equal, MCThread* thread);
+method(MCThread, void, bye, xxx);
 #endif
 
 //if you need, you can set the attribute use the raw pthread APIs

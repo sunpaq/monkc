@@ -10,19 +10,18 @@ class(MCContext);
 	char selectionChar;
 end(MCContext);
 
-method(MCContext, newWithArgs, int argc, char** argv)					returns(MCContext*);
-method(MCContext, bye, xxx);
-method(MCContext, dumpParas, xxx);
-method(MCContext, getPara, int index) 									returns(char*);
-method(MCContext, isIndexedParaEqualTo, int index, char* para) 			returns(BOOL);
-method(MCContext, isHavePara, char* para) returns(BOOL);
-method(MCContext, showMenuAndGetSelectionChar, int count, ...) 			returns(char);
-method(MCContext, showConfirmAndGetBOOL, const char* confirm) 			returns(BOOL);
-method(MCContext, getUserInputString, char resultString[]);
-
-method(MCContext, getEnvironmentVar, const char* key) returns(char*);
-method(MCContext, setEnvironmentVar, const char* key, const char* value, BOOL isOverwrite) returns(RES);
-method(MCContext, clearEnvironmentVar, const char* key) returns(RES);
+method(MCContext, MCContext*, newWithArgs, int argc, char** argv);
+method(MCContext, void, bye, xxx);
+method(MCContext, void, dumpParas, xxx);
+method(MCContext, char*, getPara, int index);
+method(MCContext, int, isIndexedParaEqualTo, int index, char* para);
+method(MCContext, int, isHavePara, char* para);
+method(MCContext, char, showMenuAndGetSelectionChar, int count, ...);
+method(MCContext, int, showConfirmAndGetBOOL, const char* confirm);
+method(MCContext, void, getUserInputString, char resultString[]);
+method(MCContext, char*, getEnvironmentVar, const char* key);
+method(MCContext, int, setEnvironmentVar, const char* key, const char* value, int isOverwrite);
+method(MCContext, int, clearEnvironmentVar, const char* key);
 
 extern char **environ;
 

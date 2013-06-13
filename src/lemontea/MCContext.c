@@ -7,22 +7,22 @@ initer(MCContext)
 
 loader(MCContext)
 {
-	binding(MCContext, newWithArgs, int argc, char** argv);
-	binding(MCContext, bye, xxx);
-	binding(MCContext, dumpParas, xxx);
-	binding(MCContext, getPara, int index) 									returns(char*);
-	binding(MCContext, isIndexedParaEqualTo, int index, char* para) 			returns(BOOL);
-	binding(MCContext, isHavePara, char* para) returns(BOOL);
-	binding(MCContext, showMenuAndGetSelectionChar, int count, ...) 			returns(char);
-	binding(MCContext, showConfirmAndGetBOOL, const char* confirm) 			returns(BOOL);
-	binding(MCContext, getUserInputString, char resultString[]);
-
-	binding(MCContext, getEnvironmentVar, const char* key) returns(char*);
-	binding(MCContext, setEnvironmentVar, const char* key, const char* value, BOOL isOverwrite) returns(RES);
-	binding(MCContext, clearEnvironmentVar, const char* key) returns(RES);
+binding(MCContext, MCContext*, newWithArgs, int argc, char** argv);
+binding(MCContext, void, bye, xxx);
+binding(MCContext, void, dumpParas, xxx);
+binding(MCContext, char*, getPara, int index);
+binding(MCContext, int, isIndexedParaEqualTo, int index, char* para);
+binding(MCContext, int, isHavePara, char* para);
+binding(MCContext, char, showMenuAndGetSelectionChar, int count, ...);
+binding(MCContext, int, showConfirmAndGetBOOL, const char* confirm);
+binding(MCContext, void, getUserInputString, char resultString[]);
+binding(MCContext, char*, getEnvironmentVar, const char* key);
+binding(MCContext, int, setEnvironmentVar, const char* key, const char* value, int isOverwrite);
+binding(MCContext, int, clearEnvironmentVar, const char* key);
 }
 
-method(MCContext, newWithArgs, int argc, char** argv)
+method(MCContext, 
+MCContext*, newWithArgs, int argc, char** argv)
 {
 	MCContext* res = new(MCContext);
 	res->argc = argc;
@@ -53,14 +53,14 @@ static void get_chars_until_enter(char resultString[])
 	resultString[i]='\0';
 }
 
-method(MCContext, bye, xxx)
+method(MCContext, void, bye, xxx)
 {
 	call(this, MCObject, bye, nil);
 	
 	runtime_log("%s\n", "MCContext goodbye");
 }
 
-method(MCContext, dumpParas, xxx)
+method(MCContext, void, dumpParas, xxx)
 {
 	int i;
 	for (i = 0; i < this->argc; ++i)
@@ -69,35 +69,35 @@ method(MCContext, dumpParas, xxx)
 	}
 }
 
-method(MCContext, getPara, int index)
+method(MCContext, char*, getPara, int index)
 {
 	return this->argv[index];
 }
 
-method(MCContext, isIndexedParaEqualTo, int index, char* para)
+method(MCContext, int, isIndexedParaEqualTo, int index, char* para)
 {
 	char* para1 = this->argv[index];
-	if (para1==nil)return NO;
-	if (strcmp(para1, para)==0)return YES;
-	else return NO;
+	if (para1==nil)return 0;
+	if (strcmp(para1, para)==0)return 1;
+	else return 0;
 }
 
-method(MCContext, isHavePara, char* para)
+method(MCContext, int, isHavePara, char* para)
 {
-	if(this==nil)return NO;
+	if(this==nil)return 0;
 	int i, res;
 	for (i = 0; i < this->argc; ++i)
 	{
 		char* tmp = this->argv[i];
 		if(tmp!=nil&&para!=nil)res = strcmp(tmp, para);
-		else return NO;
+		else return 0;
 
-		if(res==0)return YES;
+		if(res==0)return 1;
 	}
-	return NO;
+	return 1;
 }
 
-method(MCContext, showMenuAndGetSelectionChar, int count, ...)
+method(MCContext, char, showMenuAndGetSelectionChar, int count, ...)
 {
 	va_list ap;
 	va_start(ap, count);
@@ -113,17 +113,17 @@ method(MCContext, showMenuAndGetSelectionChar, int count, ...)
 	return this->selectionChar;
 }
 
-method(MCContext, showConfirmAndGetBOOL, const char* confirm)
+method(MCContext, int, showConfirmAndGetBOOL, const char* confirm)
 {
 	printf("%s (y/n)?\n", confirm);
 	char cf = get_one_char();
 	if (cf=='y'){
-		return YES;
+		return 1;
 	}
-	return NO;
+	return 0;
 }
 
-method(MCContext, getUserInputString, char resultString[])
+method(MCContext, void, getUserInputString, char resultString[])
 {
 	get_chars_until_enter(resultString);
 }
@@ -136,26 +136,28 @@ int setenv(const char *name, const char *value, int rewrite);
 int unsetenv(const char *name);
 */
 
-method(MCContext, getEnvironmentVar, const char* key) returns(char*)
+method(MCContext, char*, getEnvironmentVar, const char* key)
 {
 	//char *getenv(const char *name);
 	return getenv(key);
 }
 
-method(MCContext, setEnvironmentVar, const char* key, const char* value, BOOL isOverwrite) returns(RES)
+method(MCContext, 
+int, setEnvironmentVar, const char* key, const char* value, int isOverwrite)
 {
 	//int setenv(const char *name, const char *value, int rewrite);
 	if (setenv(key, value, isOverwrite)==0)
-		return SUCCESS;
+		return 0;
 	else
-		return ERROR;
+		return -1;
 }
 
-method(MCContext, clearEnvironmentVar, const char* key) returns(RES)
+method(MCContext, 
+int, clearEnvironmentVar, const char* key)
 {
 	//int unsetenv(const char *name);
 	if (unsetenv(key)==0)
-		return SUCCESS;
+		return 0;
 	else
-		return ERROR;
+		return -1;
 }

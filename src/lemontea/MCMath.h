@@ -7,7 +7,7 @@ class(MCMath);
 	unsigned tid;
 end(MCMath);
 
-method(MCMath, bye, xxx);
-method(MCMath, addInteger2, int a, int b) returns(int sum);
+method(MCMath, void, bye, xxx);
+method(MCMath, int, addInteger2, int a, int b);
 
 #endif

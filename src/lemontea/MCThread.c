@@ -6,8 +6,8 @@
 
 loader(MCRunnable)
 {	
-	binding(MCRunnable, run, xxx);
-	binding(MCRunnable, initWithFunctionPointer, void (*init_routine)(void));
+	binding(MCRunnable, void, run, xxx);
+	binding(MCRunnable, MCRunnable*, initWithFunctionPointer, void (*init_routine)(void));
 }
 
 initer(MCRunnable)
@@ -15,13 +15,13 @@ initer(MCRunnable)
 	this->init_routine = 0;
 }
 
-method(MCRunnable, initWithFunctionPointer, void (*init_routine)(void))
+method(MCRunnable, MCRunnable*, initWithFunctionPointer, void (*init_routine)(void))
 {
 	this->init_routine = init_routine;
 	return this;
 }
 
-method(MCRunnable, run, xxx)
+method(MCRunnable, void, run, xxx)
 {
 	//do nothing
 }
@@ -30,10 +30,10 @@ method(MCRunnable, run, xxx)
 
 loader(MCThread)
 {
-	binding(MCThread, initWithRunnable, MCRunnable* runnable);
-	binding(MCThread, start, void* result) 			returns(int);
-	binding(MCThread, equal, MCThread* thread) 		returns(BOOL);
-	binding(MCThread, bye, xxx);
+	binding(MCThread, MCThread*, initWithRunnable, MCRunnable* runnable);
+	binding(MCThread, int, start, void* result);
+	binding(MCThread, int, equal, MCThread* thread);
+	binding(MCThread, void, bye, xxx);
 }
 
 initer(MCThread)
@@ -41,13 +41,13 @@ initer(MCThread)
 	//init the vars
 	pthread_once_t ponce = PTHREAD_ONCE_INIT;
 	this->once_control = ponce;
-	this->isRunOnce = NO;//default is NO
+	this->isRunOnce = 0;//default is NO
 	//if you need, you can set the attribute use the raw pthread APIs
 	//example: pthread_attr_getstacksize(m_thread->attribute);
 	pthread_attr_init(&this->attribute);
 }
 
-method(MCThread, initWithRunnable, MCRunnable* runnable)
+method(MCThread, MCThread*, initWithRunnable, MCRunnable* runnable)
 {
 	if (runnable==nil)
 	{
@@ -91,10 +91,10 @@ static void *fireRun(MCThread* this)
 	ff(this->runnable, run, nil);//no result
 }
 
-method(MCThread, start, void* result)
+method(MCThread, int, start, void* result)
 {
 	int res;
-	if (this->isRunOnce==YES)
+	if (this->isRunOnce==1)
 	{
 		if (this->runnable->init_routine!=nil)
 			res = pthread_once(&(this->once_control), this->runnable->init_routine);
@@ -116,14 +116,13 @@ method(MCThread, start, void* result)
 	return res;
 }
 
-method(MCThread, equal, MCThread* thread)
+method(MCThread, int, equal, MCThread* thread)
 {
 	return pthread_equal(this->self, thread->self);
 }
 
-method(MCThread, bye, xxx)
+method(MCThread, void, bye, xxx)
 {
-	call(this, MCObject, bye, nil);
 	pthread_attr_destroy(&this->attribute);
 	release(&(this->runnable));
 }

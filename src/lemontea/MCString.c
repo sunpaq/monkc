@@ -1,24 +1,11 @@
 #include "MCString.h"
 
-
-loader(MCString)
-{
-	binding(MCString, initWithCString, char* str);
-	binding(MCString, add, char* str);
-	binding(MCString, print, xxx);
-	binding(MCString, toCString, char const resultString[]);
-	binding(MCString, equalTo, MCString* stringToComp) 							returns(BOOL);
-	binding(MCString, getOneChar, xxx);
-	binding(MCString, getCharsUntilEnter, char const resultString[]);
-	binding(MCString, bye, xxx);
-}
-
 initer(MCString)
 {
 	//nothing to init
 }
 
-method(MCString, initWithCString, char* str)
+method(MCString, MCString*, initWithCString, char* str)
 {
 	if(str==nil)return nil;
 	size_t len = strlen(str);
@@ -55,7 +42,7 @@ MCString* MCString_newWithMCString(MCString* mcstr)
 	return ff(new(MCString), initWithCString, mcstr->buff);
 }
 
-MCString* MCString_newForHttp(char* cstr, BOOL isHttps)
+MCString* MCString_newForHttp(char* cstr, int isHttps)
 {
 	MCString* res;
 	if (isHttps)
@@ -108,7 +95,7 @@ static void get_chars_until_enter(char resultString[])
 	resultString[i]='\0';
 }
 
-method(MCString, add, char* str)
+method(MCString, void, add, char* str)
 {
 	MCString* iterator = this;
 	while(iterator->next!=nil)
@@ -118,7 +105,7 @@ method(MCString, add, char* str)
 	this->size += strlen(str) + 1;
 }
 
-method(MCString, print, xxx)
+method(MCString, void, print, xxx)
 {
 	printf("%s", this->buff);
 	MCString* iterator = this;
@@ -130,28 +117,29 @@ method(MCString, print, xxx)
 	printf("\n");
 }
 
-method(MCString, toCString, char const resultString[])
+method(MCString, char*, toCString, char const buff[])
 {
 	MCString* iterator = this;
-	strcpy(resultString, this->buff);
+	strcpy(buff, this->buff);
 	while(iterator->next!=nil)
 	{
 		iterator = iterator->next;
-		strcat(resultString, iterator->buff);
+		strcat(buff, iterator->buff);
 	}
+	return buff;
 }
 
-method(MCString, equalTo, MCString* stringToComp)
+method(MCString, int, equalTo, MCString* stringToComp)
 {
 	int res;
 	res = strcmp(this->buff, stringToComp->buff);
 	if (res==0)
-		return YES;
+		return 1;
 	else
-		return NO;
+		return 0;
 }
 
-method(MCString, bye, xxx)
+method(MCString, void, bye, xxx)
 {
 	call(this, MCObject, bye, nil);
 	//only release the added sub strings.
@@ -163,13 +151,24 @@ method(MCString, bye, xxx)
 	}
 }
 
-method(MCString, getOneChar, xxx)
+method(MCString, char, getOneChar, xxx)
 {
-	get_one_char();
+	return get_one_char();
 }
 
-method(MCString, getCharsUntilEnter, char const resultString[])
+method(MCString, void, getCharsUntilEnter, char const resultString[])
 {
 	get_chars_until_enter(resultString);
 }
 
+loader(MCString)
+{
+binding(MCString, MCString*, initWithCString, char* str);
+binding(MCString, void, add, char* str);
+binding(MCString, void, print, xxx);
+binding(MCString, char*, toCString, char const buff[]);
+binding(MCString, int, equalTo, MCString* stringToComp);
+binding(MCString, char, getOneChar, xxx);
+binding(MCString, void, getCharsUntilEnter, char const resultString[]);
+binding(MCString, void, bye, xxx);
+}

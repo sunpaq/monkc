@@ -8,9 +8,9 @@ class(BirdFather);
 	int age;
 end(BirdFather);
 
-method(BirdFather, bye, xxx);
-method(BirdFather, flyhigh, xxx);
-method(BirdFather, fly, xxx);
-method(BirdFather, singAsong, char* asong);
+method(BirdFather, void, bye, xxx);
+method(BirdFather, void, flyhigh, xxx);
+method(BirdFather, void, fly, xxx);
+method(BirdFather, void, singAsong, char* asong);
 
 #endif

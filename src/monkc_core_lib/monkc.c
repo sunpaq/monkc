@@ -88,7 +88,7 @@ unsigned _binding_h(mc_class* const aclass, const char* methodname, void* value,
 	}
 	unsigned res = set_item(&(aclass->table), 
 		new_item_h(methodname, value, hashval),
-		NO, NO);
+		0, 0);
 	return res;
 }
 
@@ -109,7 +109,7 @@ unsigned _override_h(mc_class* const aclass, const char* methodname, void* value
 	}
 	unsigned res = set_item(&(aclass->table), 
 		new_item_h(methodname, value, hashval),
-		YES, NO);
+		1, 0);
 	return res;
 }
 
@@ -162,7 +162,7 @@ mc_class* _load_h(const char* name, size_t objsize, loaderFP loader, unsigned ha
 		package_by_item(&item, &aclass);
 		(*loader)(aclass);
 		//set item
-		set_item(&mc_global_classtable, item, NO, YES);
+		set_item(&mc_global_classtable, item, 0, 1);
 		runtime_log("load a class[%s]\n", nameofc(aclass));
 	}else{
 		runtime_log("find a class[%s]\n", nameofc((mc_class*)item->value));
@@ -249,7 +249,7 @@ void recycle(id const this)
 	if(ref_count_down(this) == 0){
 		//call the "bye" method on object
 		fs(this, bye, nil);
-		_dealloc(this, YES);
+		_dealloc(this, 1);
 	}
 }
 
@@ -258,7 +258,7 @@ void release(id const this)
 	if(ref_count_down(this) == 0){
 		//call the "bye" method on object
 		fs(this, bye, nil);
-		_dealloc(this, NO);
+		_dealloc(this, 0);
 	}
 }
 

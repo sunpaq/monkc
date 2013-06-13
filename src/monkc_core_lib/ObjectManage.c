@@ -241,7 +241,7 @@ id _alloc_h(const char* classname, size_t size, loaderFP loader, unsigned hashva
 	return aobject;
 }
 
-void _dealloc(mc_object* aobject, is_recycle)
+void _dealloc(mc_object* aobject, int is_recycle)
 {
 	mc_block* blk = aobject->block;
 	mc_class* cls = aobject->isa;
@@ -271,7 +271,7 @@ void _dealloc(mc_object* aobject, is_recycle)
 	mc_block* nb;
 	if(!cut(up, blk, &nb))//success
 	{
-		if(is_recycle==YES){
+		if(is_recycle==1){
 			package_by_block(nb, aobject);
 			pushToTail(fp, nb);
 			runtime_log("----dealloc[BACK:%s]: push back a block[%p obj[%p]]\n", nameof(aobject), blk, aobject);

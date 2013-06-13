@@ -25,43 +25,43 @@ class(MCFile);
 	struct stat attribute;
 end(MCFile);
 
-method(MCFile, newWithPathName, char* pathname, int oflag);
-method(MCFile, readFromBegin, off_t offset, size_t nbytes);
-method(MCFile, readAtLastPosition, off_t offset, size_t nbytes);
-method(MCFile, readFromEnd, off_t offset, size_t nbytes);
+method(MCFile, MCFile*, newWithPathName, char* pathname, int oflag);
 
-method(MCFile, writeToBegin, off_t offset, void* buf, size_t nbytes);
-method(MCFile, writeToLastTime, off_t offset, void* buf, size_t nbytes);
-method(MCFile, writeToEnd, off_t offset, void* buf, size_t nbytes);
+method(MCFile, int, readFromBegin, off_t offset, size_t nbytes);
+method(MCFile, int, readAtLastPosition, off_t offset, size_t nbytes);
+method(MCFile, int, readFromEnd, off_t offset, size_t nbytes);
+method(MCFile, int, writeToBegin, off_t offset, void* buf, size_t nbytes);
+method(MCFile, int, writeToLastTime, off_t offset, void* buf, size_t nbytes);
+method(MCFile, int, writeToEnd, off_t offset, void* buf, size_t nbytes);
 
-method(MCFile, duplicateFd, xxx); returns(int fd);
-method(MCFile, duplicateFdTo, int fd); returns(int newfd);
-method(MCFile, printAttribute, xxx);
-method(MCFile, bye, xxx);
-method(MCFile, checkPermissionUseRealIDOfProcess, int mode); returns(BOOL)
+method(MCFile, int, duplicateFd, xxx);
+method(MCFile, int, duplicateFdTo, int fd);
+method(MCFile, void, printAttribute, xxx);
+method(MCFile, void, bye, xxx);
+method(MCFile, int, checkPermissionUseRealIDOfProcess, int mode);
 /*
 R_OK
 W_OK
 X_OK
 F_OK ---> if file exist
 */
-BOOL MCFile_isFileExit(char* pathname);
-BOOL MCFile_chmod(char* pathname, mode_t mode);
-BOOL MFFile_truncateFileTo(char* pathname, off_t length);
+int MCFile_isFileExit(char* pathname);
+int MCFile_chmod(char* pathname, mode_t mode);
+int MFFile_truncateFileTo(char* pathname, off_t length);
 mode_t MCFile_setNewFilePermissionMask4Process(mode_t cmask);
 void MCFile_flushAllCacheToDisk();
 int MCFile_flushAFileCacheToDisk(int fd); returns(int result);
-BOOL MCFile_createSymbolLink(char* pathname, char* linkname);
-BOOL MCFile_createDirectory(char* pathname);
-BOOL MCFile_removeDirectory(char* pathname);
+int MCFile_createSymbolLink(char* pathname, char* linkname);
+int MCFile_createDirectory(char* pathname);
+int MCFile_removeDirectory(char* pathname);
 
-BOOL MCProcess_changeCurrentWorkingDir(char* pathname);
-BOOL MCProcess_changeCurrentWorkingDirByFd(int fd);
+int MCProcess_changeCurrentWorkingDir(char* pathname);
+int MCProcess_changeCurrentWorkingDirByFd(int fd);
 char* MCProcess_getCurrentWorkingDir(MCCharBuffer* buff);
 
 MCFile* MCFile_newReadOnly(char* pathname);
-MCFile* MCFile_newWriteOnly(char* pathname, BOOL isClear);
-MCFile* MCFile_newReadWrite(char* pathname, BOOL isClear);
+MCFile* MCFile_newWriteOnly(char* pathname, int isClear);
+MCFile* MCFile_newReadWrite(char* pathname, int isClear);
 
 #endif
 
@@ -81,26 +81,26 @@ class(MCStream);
 	FILE* fileObject;
 end(MCStream);
 
-method(MCStream, newWithPath, MCStreamType type, char* path);
-method(MCStream, bye, xxx);
-method(MCStream, getFileDescriptor, xxx); returns(int)
+method(MCStream, MCStream*, newWithPath, MCStreamType type, char* path);
+method(MCStream, void, bye, xxx);
+method(MCStream, int, getFileDescriptor, xxx);
 
-method(MCStream, getChar, xxx); returns(int)
-method(MCStream, putChar, int charCode);
-method(MCStream, pushbackChar, int charCodeToBePushBack); returns(int charCode/EOF)
+method(MCStream, int, getChar, xxx);
+method(MCStream, int, putChar, int charCode);
+method(MCStream, int, pushbackChar, int charCodeToBePushBack);
 
-method(MCStream, getCString, MCCharBuffer* recvBuffer); returns(CString/nil)
-method(MCStream, putCString, MCCharBuffer* sendBuffer); returns(CString/nil)
-method(MCStream, getMCString, xxx);                     returns(Handle(MCString))
-method(MCStream, putMCString, MCString* str);           returns(Handle(MCString)/nil)
+method(MCStream, char*, getCString, MCCharBuffer* recvBuffer);
+method(MCStream, char*, putCString, MCCharBuffer* sendBuffer);
+method(MCStream, MCString*, getMCString, xxx);
+method(MCStream, MCString*, putMCString, MCString* str);
 
-method(MCStream, getBianryObject, void* recvBuffer,  size_t objectSize, size_t numberOfObjs); returns(size_t)
-method(MCStream, putBianryObject, void* sendBuffer,  size_t objectSize, size_t numberOfObjs); returns(size_t)
+method(MCStream, size_t, getBianryObject, void* recvBuffer,  size_t objectSize, size_t numberOfObjs);
+method(MCStream, size_t, putBianryObject, void* sendBuffer,  size_t objectSize, size_t numberOfObjs);
 
-method(MCStream, tellOffset, xxx); returns(off_t)
-method(MCStream, seekFromBegin, off_t offset); returns(BOOL)
-method(MCStream, seekFromCurrent, off_t offset); returns(BOOL)
-method(MCStream, seekFromEnd, off_t offset); returns(BOOL)
+method(MCStream, off_t, tellOffset, xxx);
+method(MCStream, int, seekFromBegin, off_t offset);
+method(MCStream, int, seekFromCurrent, off_t offset);
+method(MCStream, int, seekFromEnd, off_t offset);
 
 #endif
 
@@ -112,8 +112,9 @@ method(MCStream, seekFromEnd, off_t offset); returns(BOOL)
 class(MCByteStream) extends(MCStream);
 end(MCByteStream);
 
-method(MCByteStream, bye, xxx);
-method(MCByteStream, newWithPath,MCStreamType type, char* path);
+method(MCByteStream, void, bye, xxx);
+method(MCByteStream, 
+MCByteStream*, newWithPath, MCStreamType type, char* path);
 #endif
 
 /* MCStdinStream */
@@ -124,7 +125,7 @@ method(MCByteStream, newWithPath,MCStreamType type, char* path);
 class(MCStdinStream) extends(MCStream);
 end(MCStdinStream);
 
-method(MCStdinStream, bye, xxx);
+method(MCStdinStream, void, bye, xxx);
 #endif
 
 /* MCStdoutStream */
@@ -135,7 +136,7 @@ method(MCStdinStream, bye, xxx);
 class(MCStdoutStream) extends(MCStream);
 end(MCStdoutStream);
 
-method(MCStdoutStream, bye, xxx);
+method(MCStdoutStream, void, bye, xxx);
 #endif
 
 /* MCStderrStream */
@@ -146,7 +147,7 @@ method(MCStdoutStream, bye, xxx);
 class(MCStdoutStream) extends(MCStream);
 end(MCStdoutStream);
 
-method(MCStdoutStream, bye, xxx);
+method(MCStdoutStream, void, bye, xxx);
 #endif
 
 #ifndef MCStderrStream_
@@ -155,7 +156,7 @@ method(MCStdoutStream, bye, xxx);
 class(MCStderrStream) extends(MCStream);
 end(MCStderrStream);
 
-method(MCStderrStream, bye, xxx);
+method(MCStderrStream, void, bye, xxx);
 #endif
 
 /* MCSelect */
@@ -180,11 +181,11 @@ class(MCSelect);
 	struct timeval timeout;
 end(MCSelect);
 
-method(MCSelect, initWithSecondAndMicrosec, long second, long microsecond);
-method(MCSelect, waitForFdsetChange, xxx); returns(int: >0 success =0 timeout <0 error)
-method(MCSelect, addFd, MCSelect_fd_type type, int fd);
-method(MCSelect, removeFd, MCSelect_fd_type type, int fd);
-method(MCSelect, isFdReady, MCSelect_fd_type type, int fd); returns(BOOL)
+method(MCSelect, MCSelect*, initWithSecondAndMicrosec, long second, long microsecond);
+method(MCSelect, int, waitForFdsetChange, xxx);
+method(MCSelect, void, addFd, MCSelect_fd_type type, int fd);
+method(MCSelect, void, removeFd, MCSelect_fd_type type, int fd);
+method(MCSelect, int, isFdReady, MCSelect_fd_type type, int fd);
 
 #endif
 

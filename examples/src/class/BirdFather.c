@@ -7,32 +7,32 @@ initer(BirdFather)
 	debug_logt(nameof(this), "[%p] init called\n", this);
 }
 
-method(BirdFather, bye, xxx)
+method(BirdFather, void, bye, xxx)
 {
 	recycle(this->super);
 	debug_logt(nameof(this), "[%p] bye called\n", this);
 }
 
-method(BirdFather, flyhigh, xxx)
+method(BirdFather, void, flyhigh, xxx)
 {
 	debug_logt(nameof(this), "i fly very high\n");
 }
 
-method(BirdFather, fly, xxx)
+method(BirdFather, void, fly, xxx)
 {
 	debug_logt(nameof(this), "i fly\n");
 }
 
-method(BirdFather, singAsong, char* asong)
+method(BirdFather, void, singAsong, char* asong)
 {
 	debug_logt(nameof(this), "lalala: %s\n", asong);
 }
 
 loader(BirdFather)
 {
-	binding(BirdFather, bye, xxx);
-	binding(BirdFather, flyhigh, xxx);
-	binding(BirdFather, fly, xxx);
-	binding(BirdFather, singAsong, char* asong);
+binding(BirdFather, void, bye, xxx);
+binding(BirdFather, void, flyhigh, xxx);
+binding(BirdFather, void, fly, xxx);
+binding(BirdFather, void, singAsong, char* asong);
 	debug_logt(nameofc(class), "load called\n");
 }

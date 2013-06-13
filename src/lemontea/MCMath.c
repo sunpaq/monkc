@@ -2,8 +2,8 @@
 
 loader(MCMath)
 {
-	binding(MCMath, bye, xxx);
-	binding(MCMath, addInteger2, int a, int b) returns(int sum);
+	binding(MCMath, void, bye, xxx);
+	binding(MCMath, int, addInteger2, int a, int b);
 }
 
 initer(MCMath)
@@ -11,12 +11,12 @@ initer(MCMath)
 	this->tid = 0;
 }
 
-method(MCMath, bye, xxx)
+method(MCMath, void, bye, xxx)
 {
 	debug_log("%s\n", "MCMath bye bye");
 }
 
-method(MCMath, addInteger2, int a, int b) returns(int sum)
+method(MCMath, int, addInteger2, int a, int b)
 {
 	return a + b;
 }

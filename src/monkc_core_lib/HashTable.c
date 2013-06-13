@@ -123,7 +123,7 @@ mc_hashtable* new_table(const unsigned initlevel)
 
 unsigned set_item(mc_hashtable** const table_p,
 	mc_hashitem* const item, 
-	BOOL isOverride, BOOL isFreeValue)
+	int isOverride, int isFreeValue)
 {
 	if(table_p==nil || *table_p==nil){
 		error_log("set_item(mc_hashtable** table_p) table_p or *table_p is nill return 0\n");
@@ -142,14 +142,14 @@ unsigned set_item(mc_hashtable** const table_p,
 	}else{
 		//if the item have already been setted. we free the old one
 		if(mc_compare_key(olditem->key, item->key) == 0){
-			if(isOverride == NO){
+			if(isOverride == 0){
 				error_log("set-item key[%s] already been setted, free temp item\n", item->key);
-				if(isFreeValue == YES)free(item->value);
+				if(isFreeValue == 1)free(item->value);
 				free(item);
 				return index;
 			}else{
 				error_log("reset-item key[%s] already been setted, replace old item\n", item->key);
-				if(isFreeValue == YES)free(olditem->value);
+				if(isFreeValue == 1)free(olditem->value);
 				free(olditem);
 				item->level = (*table_p)->level;
 				item->index = index;

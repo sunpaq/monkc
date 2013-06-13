@@ -11,11 +11,11 @@ class(Bird);
 	int type;
 end(Bird);
 
-method(Bird, bye, xxx);
-method(Bird, initWithType, int type);
-method(Bird, fly, xxx);
-method(Bird, fatherAge, xxx);
-
+method(Bird, void, bye, xxx);
+method(Bird, Bird*, initWithType, int type);
+method(Bird, void, fly, xxx);
+method(Bird, int, fatherAge, xxx);
+/*
 method(Bird, fly1, xxx);
 method(Bird, fly2, xxx);
 method(Bird, fly3, xxx);
@@ -66,6 +66,6 @@ method(Bird, fly47, xxx);
 method(Bird, fly48, xxx);
 method(Bird, fly49, xxx);
 method(Bird, fly50, xxx);
-
+*/
 
 #endif

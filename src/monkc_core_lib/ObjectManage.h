@@ -12,7 +12,7 @@ id _alloc(const char* classname, size_t size, loaderFP loader);
 void _info_h(const char* classname, size_t size, loaderFP loader, unsigned hashval);
 void _clear_h(const char* classname, size_t size, loaderFP loader, unsigned hashval);
 id _alloc_h(const char* classname, size_t size, loaderFP loader, unsigned hashval);
-void _dealloc(mc_object* aobject, BOOL is_recycle);
+void _dealloc(mc_object* aobject, int is_recycle);
 
 #define NO_NODE(bpool) (bpool->tail==nil)
 #define ONE_NODE(bpool) (bpool->tail->next==bpool->tail) 

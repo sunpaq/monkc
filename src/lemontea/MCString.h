@@ -17,19 +17,18 @@ end(MCString);
 //C99: char buff[]
 //the new "flexiable array" in C99 is actually useable in C89 code, just change your array size to 1
 
-method(MCString, initWithCString, char* str);
-
-method(MCString, add, char* str);
-method(MCString, print, xxx);
-method(MCString, toCString, char const resultString[]);
-method(MCString, equalTo, MCString* stringToComp) 							returns(BOOL);
-method(MCString, getOneChar, xxx);
-method(MCString, getCharsUntilEnter, char const resultString[]);
-method(MCString, bye, xxx);
+method(MCString, MCString*, initWithCString, char* str);
+method(MCString, void, add, char* str);
+method(MCString, void, print, xxx);
+method(MCString, char*, toCString, char const buff[]);
+method(MCString, int, equalTo, MCString* stringToComp);
+method(MCString, char, getOneChar, xxx);
+method(MCString, void, getCharsUntilEnter, char const resultString[]);
+method(MCString, void, bye, xxx);
 
 MCString* MCString_newWithCString(char* cstr);
 MCString* MCString_newWithMCString(MCString* mcstr);
-MCString* MCString_newForHttp(char* cstr, BOOL isHttps);
+MCString* MCString_newForHttp(char* cstr, int isHttps);
 
 // MCString* MCString_newWithCStringAnony(char* cstr);
 // MCString* MCString_newWithMCStringAnony(MCString* mcstr);

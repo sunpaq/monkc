@@ -22,15 +22,15 @@ class(MCProcess);
 	gid_t egid;
 end(MCProcess);
 
-method(MCProcess, printIDs, xxx);
-
-method(MCProcess, fork, xxx) returns(0 in child/child-pid in parent/-1 on error);
-method(MCProcess, vfork, xxx) returns(0 in child/child-pid in parent/-1 on error);
+method(MCProcess, void, printIDs, xxx);
+//returns(0 in child/child-pid in parent/-1 on error)
+method(MCProcess, int, fork, xxx);
+method(MCProcess, int, vfork, xxx);
 
 //may be not supported by OS
-method(MCProcess, registerAtExitCallback, void (*func)(void)) returns(RES);
-method(MCProcess, exitWithStatus, int status);
-method(MCProcess, waitAnyChildExit, int* statusAddr) returns(pid_t);
+method(MCProcess, int, registerAtExitCallback, void (*func)(void));
+method(MCProcess, void, exitWithStatus, int status);
+method(MCProcess, pid_t, waitAnyChildExit, int* statusAddr);
 
 typedef enum {
 	wait_no_option=0,
@@ -44,28 +44,29 @@ typedef enum {
 }MCProcessOptions;
 //wait_continued | wait_no_hang
 
-method(MCProcess, waitPIDChildExit, pid_t pid, int* statusAddr, int options) returns(pid_t);
+method(MCProcess, pid_t, waitPIDChildExit, pid_t pid, int* statusAddr, int options);
 
-method(MCProcess, isChildExitNormal, int status) returns(BOOL);
-method(MCProcess, getChildExitLowOrder8Bit, int status) returns(int);
+method(MCProcess, int, isChildExitNormal, int status);
+method(MCProcess, int, getChildExitLowOrder8Bit, int status);
 
-method(MCProcess, isChildExitBySignal, int status) returns(BOOL);
-method(MCProcess, getChildTerminateSignal, int status) returns(int signalNum);
-method(MCProcess, isCoreDumpFileGenerated, int status) returns(BOOL);
+method(MCProcess, int, isChildExitBySignal, int status);
+method(MCProcess, int, getChildTerminateSignal, int status);
+method(MCProcess, int, isCoreDumpFileGenerated, int status);
 
-method(MCProcess, isChildStopped, int status) returns(BOOL);
-method(MCProcess, getChildStopSignal, int status) returns(int signalNum);
-method(MCProcess, isChildContinued, int status) returns(BOOL);
+method(MCProcess, int, isChildStopped, int status);
+method(MCProcess, int, getChildStopSignal, int status);
+method(MCProcess, int, isChildContinued, int status);
 
 typedef struct ruseage MCProcessRUseage;
 //wait3
-method(MCProcess, waitAnyChildExitGetResourceUseage, 
-	int* statusAddr, int options, MCProcessRUseage* useage) returns(pid_t);
+method(MCProcess, 
+	pid_t, waitAnyChildExitGetResourceUseage, 
+	int* statusAddr, int options, MCProcessRUseage* useage);
 //wait4
-method(MCProcess, waitPIDChildExitGetResourceUseage, pid_t pid,
-	int* statusAddr, int options, MCProcessRUseage* useage) returns(pid_t);
+method(MCProcess, 
+	pid_t, waitPIDChildExitGetResourceUseage, 
+	pid_t pid, int* statusAddr, int options, MCProcessRUseage* useage);
 
-method(MCProcess, isChildContinued, int status) returns(BOOL);
 #endif
 /*
 The origin APIs:

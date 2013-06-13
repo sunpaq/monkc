@@ -3,13 +3,13 @@
 
 void assertYES(int expression) throws(MCAssertYESException)
 {
-	if ((expression)!=YES)
+	if ((expression)!=1)
 		throw(MCAssertYESException);
 }
 
 void assertNO(int expression) throws(MCAssertNOException)
 {
-	if ((expression)!=NO)
+	if ((expression)!=0)
 		throw(MCAssertNOException);
 }
 
@@ -54,12 +54,12 @@ void fail(char* message)
 
 loader(MCUnitTestCase)
 {
-	binding(MCUnitTestCase, initWithTestResult, MCUnitTestResult* resultRef);
-	binding(MCUnitTestCase, bye, xxx);
-	binding(MCUnitTestCase, setUp, xxx);
-	binding(MCUnitTestCase, tearDown, xxx);
-	binding(MCUnitTestCase, runTests, xxx);
-	binding(MCUnitTestCase, runATestMethod, char* errmsg);
+	binding(MCUnitTestCase, MCUnitTestCase*, initWithTestResult, MCUnitTestResult* resultRef);
+	binding(MCUnitTestCase, void, bye, xxx);
+	binding(MCUnitTestCase, void, setUp, xxx);
+	binding(MCUnitTestCase, void, tearDown, xxx);
+	binding(MCUnitTestCase, void, runTests, xxx);
+	binding(MCUnitTestCase, void, runATestMethod, char* errmsg);
 }
 
 initer(MCUnitTestCase)
@@ -67,7 +67,7 @@ initer(MCUnitTestCase)
 	this->next_case = nil;
 }
 
-method(MCUnitTestCase, initWithTestResult, MCUnitTestResult* resultRef)
+method(MCUnitTestCase, MCUnitTestCase*, initWithTestResult, MCUnitTestResult* resultRef)
 {
 	if(resultRef!=nil){
 		retain(resultRef);
@@ -78,19 +78,19 @@ method(MCUnitTestCase, initWithTestResult, MCUnitTestResult* resultRef)
 	return this;
 }
 
-method(MCUnitTestCase, bye, xxx)
+method(MCUnitTestCase, void, bye, xxx)
 {
 	if(this->unitTestResultRef!=nil)
 		release(&(this->unitTestResultRef));
 }
 
-method(MCUnitTestCase, setUp, xxx)
+method(MCUnitTestCase, void, setUp, xxx)
 {
 	//set up fixture
 	runtime_log("----MCUnitTestCase setUp\n");
 }
 
-method(MCUnitTestCase, tearDown, xxx)
+method(MCUnitTestCase, void, tearDown, xxx)
 {
 	//tear down fixture
 	runtime_log("----MCUnitTestCase tearDown\n");
@@ -133,7 +133,7 @@ static void runMethodByPointer(MCUnitTestCase* this, mc_hashitem* amethod)
 	ff(this, tearDown, nil);
 }
 
-method(MCUnitTestCase, runTests, xxx)
+method(MCUnitTestCase, void, runTests, xxx)
 {
 	runtime_log("%s\n", "MCUnitTestCase runTests");
 	unsigned i;
@@ -166,7 +166,7 @@ method(MCUnitTestCase, runTests, xxx)
 	}
 }
 
-method(MCUnitTestCase, runATestMethod, char* methodName)
+method(MCUnitTestCase, void, runATestMethod, char* methodName)
 {
 	runMethodByPointer(this, this->isa->table->items[hash(methodName)]);
 }
@@ -175,9 +175,9 @@ method(MCUnitTestCase, runATestMethod, char* methodName)
 
 loader(MCUnitTestSuite)
 {
-	binding(MCUnitTestSuite, bye, xxx);
-	binding(MCUnitTestSuite, addTestCase, MCUnitTestCase* tcase);
-	binding(MCUnitTestSuite, runTestCases, xxx);
+	binding(MCUnitTestSuite, void, bye, xxx);
+	binding(MCUnitTestSuite, void, addTestCase, MCUnitTestCase* tcase);
+	binding(MCUnitTestSuite, void, runTestCases, xxx);
 }
 
 initer(MCUnitTestSuite)
@@ -187,14 +187,14 @@ initer(MCUnitTestSuite)
 	this->next_suite = nil;
 }
 
-method(MCUnitTestSuite, bye, xxx)
+method(MCUnitTestSuite, void, bye, xxx)
 {
 	MCUnitTestCase *iter, *save;
 	for(iter=this->first_case; (save=iter)!=nil; release(save))
 		iter = iter->next_case;
 }
 
-method(MCUnitTestSuite, addTestCase, MCUnitTestCase* volatile tcase)
+method(MCUnitTestSuite, void, addTestCase, MCUnitTestCase* volatile tcase)
 {
 	retain(tcase);
 	MCUnitTestCase *iter = nil;
@@ -203,7 +203,7 @@ method(MCUnitTestSuite, addTestCase, MCUnitTestCase* volatile tcase)
 	this->test_case_count++;
 }
 
-method(MCUnitTestSuite, runTestCases, xxx)
+method(MCUnitTestSuite, void, runTestCases, xxx)
 {
 	runtime_log("%s\n", "MCUnitTestSuite runTestCases");
 	MCUnitTestCase *iter = nil;
@@ -219,9 +219,9 @@ method(MCUnitTestSuite, runTestCases, xxx)
 
 loader(MCUnitTestResult)
 {
-	binding(MCUnitTestResult, bye, xxx);
-	binding(MCUnitTestResult, addSuccessInfo, char* succinfo);
-	binding(MCUnitTestResult, addFailInfo, char* failinfo);
+	binding(MCUnitTestResult, void, bye, xxx);
+	binding(MCUnitTestResult, void, addSuccessInfo, char* succinfo);
+	binding(MCUnitTestResult, void, addFailInfo, char* failinfo);
 }
 
 initer(MCUnitTestResult)
@@ -229,17 +229,17 @@ initer(MCUnitTestResult)
 	//nothing to init
 }
 
-method(MCUnitTestResult, bye, xxx)
+method(MCUnitTestResult, void, bye, xxx)
 {
 	//nothing to clean
 }
 
-method(MCUnitTestResult, addSuccessInfo, char* succinfo)
+method(MCUnitTestResult, void, addSuccessInfo, char* succinfo)
 {
 	//
 }
 
-method(MCUnitTestResult, addFailInfo, char* failinfo)
+method(MCUnitTestResult, void, addFailInfo, char* failinfo)
 {
 	//
 }
@@ -256,9 +256,9 @@ method(MCUnitTestResult, addFailInfo, char* failinfo)
 
 loader(MCUnitTestRunner)
 {
-	binding(MCUnitTestRunner, bye, xxx);
-	binding(MCUnitTestRunner, addTestSuite, MCUnitTestSuite* testSuite);
-	binding(MCUnitTestRunner, runTestSuites, xxx);
+	binding(MCUnitTestRunner, void, bye, xxx);
+	binding(MCUnitTestRunner, void, addTestSuite, MCUnitTestSuite* testSuite);
+	binding(MCUnitTestRunner, void, runTestSuites, xxx);
 }
 
 initer(MCUnitTestRunner)
@@ -267,14 +267,14 @@ initer(MCUnitTestRunner)
 	this->test_suite_count = 0;
 }
 
-method(MCUnitTestRunner, bye, xxx)
+method(MCUnitTestRunner, void, bye, xxx)
 {
 	MCUnitTestSuite *iter, *save;
 	for(iter=this->first_suite; (save=iter)!=nil; release(save))
 		iter = iter->next_suite;
 }
 
-method(MCUnitTestRunner, addTestSuite, MCUnitTestSuite* testSuite)
+method(MCUnitTestRunner, void, addTestSuite, MCUnitTestSuite* testSuite)
 {
 	retain(testSuite);
 	MCUnitTestSuite **iter;
@@ -283,7 +283,7 @@ method(MCUnitTestRunner, addTestSuite, MCUnitTestSuite* testSuite)
 	this->test_suite_count++;
 }
 
-method(MCUnitTestRunner, runTestSuites, xxx)
+method(MCUnitTestRunner, void, runTestSuites, xxx)
 {
 	runtime_log("%s\n", "MCUnitTestRunner runTestSuites");
 	MCUnitTestSuite *iter;

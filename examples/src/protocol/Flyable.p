@@ -1,2 +1,2 @@
-binding(Flyable, duckFly, xxx);
-binding(Flyable, chickenFly, xxx);
+binding(Flyable, void, duckFly, xxx);
+binding(Flyable, void, chickenFly, xxx);

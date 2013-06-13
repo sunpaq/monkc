@@ -48,10 +48,14 @@ char* hash_binding_method_name(char* in, int i)
 {
 	static char buff[100];
 	int step = i;
-	while(*in!=',' && *in!='\0')//copy head
+	while(*in!=',' && *in!='\0')//copy class
 		buff[i++]=*(in++);
-	buff[i++]=',';
+	buff[i++]=*(in++);//add ','
+	while(*in!=',' && *in!='\0')//copy returnType
+		buff[i++]=*(in++);
+	buff[i++]=*(in++);//add ','
 	while(*(++in)==' ' && *in!='\0');//skip space
+	buff[i++]=' ';//add one space
 	buff[step+0]='h';//ff->fh
 	unsigned hashval;
 	for(hashval=0; (*in!=',' && *in!=' ' && *in!='\0'); in++){
@@ -141,8 +145,8 @@ new                      new\({identifier_w}\)
 info                    info\({identifier_w}\)
 clear                  clear\({identifier_w}\)
 
-binding 		binding\({identifier_w},{identifier_w},{identifier_w}+\)
-override	   override\({identifier_w},{identifier_w},{identifier_w}+\)
+binding 		binding\({identifier_w},.*,{identifier_w}+\)
+override	   	override\({identifier_w},.*,{identifier_w}+\)
 response_to					response_to\({identifier_w},{identifier_w}\)
 _self_response_to 	  _self_response_to\({identifier_w},{identifier_w}\)
 ff    								 ff\({identifier_w},{identifier_w},{identifier_w}+\)

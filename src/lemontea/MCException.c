@@ -4,7 +4,7 @@
 volatile jmp_buf exception_env = {};
 volatile int exception_type = __exception_try_not_called;
 
-static BOOL _exception_list[MAX_EXCEPTION_NUM];
+static int _exception_list[MAX_EXCEPTION_NUM];
 static id _exception_store[MAX_EXCEPTION_NUM];
 
 void clean_exception_context()
@@ -15,7 +15,7 @@ void clean_exception_context()
 	//clear list
 	int i;
 	for (i = 0; i < MAX_EXCEPTION_NUM; i++){
-		_exception_list[i] = NO;
+		_exception_list[i] = 0;
 		_exception_store[i] = nil;
 	}
 	//init the system builtin exceptions here
@@ -33,18 +33,18 @@ static inline unsigned _ehash(char *s)
 static unsigned _define_exception(char* s)
 {
 	unsigned val = _ehash(s);
-	if(_exception_list[val] == YES){
+	if(_exception_list[val] == 1){
 		error_log("your exception name:%s is conflicted please change another name\n", s);
 		exit(-1);
 	}
-	_exception_list[val] = YES;
+	_exception_list[val] = 1;
 	return val;
 }
 
 unsigned __get_exception_code(char* s)
 {
 	unsigned val = _ehash(s);
-	if (_exception_list[val] == YES){
+	if (_exception_list[val] == 1){
 		return (unsigned)val;
 	}
 	else{
@@ -55,7 +55,7 @@ unsigned __get_exception_code(char* s)
 id get_exception_data(char* key)
 {
 	unsigned val = _ehash(key);
-	if (_exception_list[val] == NO)
+	if (_exception_list[val] == 0)
 	{
 		error_log("there is no exception: %s. return nil\n", key);
 		return nil;

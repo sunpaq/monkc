@@ -14,4 +14,6 @@ ff(b, methodnamed, arg);
 info(Bird);
 clear(Bird);
 Bird* bc = new_category(Bird, BirdCatA);
+
+binding(Bird, void, bye, void);
 //binding()

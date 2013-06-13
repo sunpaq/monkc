@@ -5,30 +5,30 @@ initer(BirdModeA)
 	//
 }
 
-method(Bird, modemethodA, xxx)
+method(Bird, void, modemethodA, xxx)
 {
 
 }
 
-method(Bird, modemethodB, int type)
+method(Bird, void, modemethodB, int type)
 {
 
 }
 
-method(Bird, modemethodC, xxx)
+method(Bird, void, modemethodC, xxx)
 {
 	debug_log("Bird ModeA modemethodC\n");
 }
 
-method(Bird, modemethodD, xxx)
+method(Bird, void, modemethodD, xxx)
 {
 
 }
 
 loader(BirdModeA)
 {
-	binding(Bird, modemethodA, xxx);
-	binding(Bird, modemethodB, int type);
-	binding(Bird, modemethodC, xxx);
-	binding(Bird, modemethodD, xxx);
+binding(Bird, void, modemethodA, xxx);
+binding(Bird, void, modemethodB, int type);
+binding(Bird, void, modemethodC, xxx);
+binding(Bird, void, modemethodD, xxx);
 }

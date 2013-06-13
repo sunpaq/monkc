@@ -7,7 +7,7 @@ initer(Bird)
 	debug_logt("Bird", "[%p] init called\n", this);
 }
 
-method(Bird, bye, xxx)
+method(Bird, void, bye, xxx)
 {
 	recycle(this->super);
 	debug_logt(nameof(this), "[%p] bye called\n", this);
@@ -18,34 +18,37 @@ void funcA(Bird* this, int arg1)
 	debug_log("i am local function A\n");
 }
 
-protocol(Flyable, duckFly, xxx)
+protocol(Flyable, void, duckFly, xxx)
 {
 	debug_log("%s:Duck GuaGuaGua fly\n", nameof(cast(Bird, this)));
 }
 
-protocol(Flyable, chickenFly, xxx)
+protocol(Flyable, void, chickenFly, xxx)
 {
 	debug_log("%s:Chicken JiJiJi fly\n", nameof(cast(Bird, this)));
 }
 
-method(Bird, initWithType, int type)
+method(Bird, Bird*, initWithType, int type)
 {
 	this->type = type;
 	return this;
 }
 
-method(Bird, fatherAge, xxx)
+method(Bird, int, fatherAge, xxx)
 {
-	debug_logt(nameof(this), "my father age is: %d\n", cast(BirdFather, this->super)->age);
+	int fage = cast(BirdFather, this->super)->age;
+	debug_logt(nameof(this), "my father age is: %d\n", fage);
+	return fage;
 }
 
-method(Bird, fly, xxx)
+method(Bird, void, fly, xxx)
 {
 	debug_log("Bird[%p->%p]: default fly type %d\n", this, this->super, this->type);
 	funcA(this, 100);
 }
 
 //
+/*
 method(Bird, fly1, xxx){}
 method(Bird, fly2, xxx){}
 method(Bird, fly3, xxx){}
@@ -96,7 +99,7 @@ method(Bird, fly47, xxx){}
 method(Bird, fly48, xxx){}
 method(Bird, fly49, xxx){}
 method(Bird, fly50, xxx){}
-
+*/
 
 
 loader(Bird)
@@ -105,12 +108,12 @@ loader(Bird)
 	#include "Flyable.p"
 	//just copy the declears in .h file and change 'method'->'binding'
 	/*new() binding()*/
-	binding(Bird, initWithType, int type);
-	binding(Bird, bye, xxx);
-	binding(Bird, bye, xxx);
-	binding(Bird, fly, xxx);
-	binding(Bird, fatherAge, xxx);
+binding(Bird, void, bye, xxx);
+binding(Bird, Bird*, initWithType, int type);
+binding(Bird, void, fly, xxx);
+binding(Bird, int, fatherAge, xxx);
 
+	/*
 	binding(Bird, fly1, xxx);
 	binding(Bird, fly2, xxx);
 	binding(Bird, fly3, xxx);
@@ -161,6 +164,7 @@ loader(Bird)
 	binding(Bird, fly48, xxx);
 	binding(Bird, fly49, xxx);
 	binding(Bird, fly50, xxx);
+	*/
 	debug_logt(nameofc(class), "load called\n");
 }
 
