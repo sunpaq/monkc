@@ -19,7 +19,9 @@ a toolkit for OOP programming in C language
 
 #### how to compile and install:
 
-	0. default is compile by gcc. make sure you have one installed
+	0. default is compile by gcc. make sure you have one installed. it also need flex
+	   you can install flex by sudo apt-get install flex on Ubuntu
+	   or install flex use macport on Mac OS X
 	1. cd ./src
 	2. sudo make install
 
