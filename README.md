@@ -17,7 +17,14 @@ a toolkit for OOP programming in C language
 	ARM32/Linux/gcc&clang    OK (RaspberryPi/Linux)
 	ARM64/Linux/gcc&clang    No Test
 
-#### how to compile and install:
+#### easy way for Mac users (Xcode/intel x86_64):
+###### Build a simple command line tool use MonkC:
+	just use the Xcode project templete in /XcodeMonkC/MonkCAppXcodeTemplete/
+
+###### Hack the monkc runtime system for your unique requirement:
+	just check the Xcode project templete in /XcodeMonkC/MonkCStatic/
+
+#### how to compile and install (command line):
 
 	0. default is compile by gcc. make sure you have one installed. it also need flex
 	   you can install flex by sudo apt-get install flex on Ubuntu
@@ -60,7 +67,7 @@ a toolkit for OOP programming in C language
 	int main(int argc, char const *argv[])
 	{
 		mc_init();
-			LOG_LEVEL = VERBOSE;
+			LOG_LEVEL = MC_VERBOSE;
 			test_object_life_cycle();
 		mc_end();
 		return 0;
@@ -68,10 +75,10 @@ a toolkit for OOP programming in C language
 
 	global log level:
 	you can set the global variable LOG_LEVEL to:
-	SILENT		//no log outputed
-	ERROR_ONLY  //error log only
-	DEBUG 		//error log and debug log
-	VERBOSE     //error log and debug log and runtime log
+	MC_SILENT		//no log outputed
+	MC_ERROR_ONLY  //error log only
+	MC_DEBUG 		//error log and debug log
+	MC_VERBOSE     //error log and debug log and runtime log
 
 	you can use:
 	error_log()
@@ -90,7 +97,7 @@ a toolkit for OOP programming in C language
 	implements(Flyable); ---> protocol mark
 	extends(BirdFather); ---> super class mark
 
-	class(Bird); ---> class data begin
+	monkc(Bird); ---> class data begin
 		char* name;
 		int type;
 	end(Bird); ---> class data end
@@ -175,7 +182,7 @@ a toolkit for OOP programming in C language
 
 ---
 
-1. class
+1. monkc
 2. end
 3. initer
 4. loader
@@ -233,6 +240,8 @@ Total **20** words.[^1]
 	4. lemontea_WEB
 
 	5. lemontea_GUI
+
+	6. lemontea_3D
 
 [^1]: the syntex is improving, maybe more/less keywords in the feature.
 
