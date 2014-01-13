@@ -261,8 +261,7 @@
 			buildSettings = {
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					/Users/penpenlion/Dev/OOP_MACROS/XcodeMonkC/MonkCAppXcodeTemplete/Libs/libmonkc/lib,
-					/Users/penpenlion/Dev/OOP_MACROS/OOP_MACROS/XcodeMonkC/MonkCAppXcodeTemplete/Libs/libmonkc/lib,
+					"$(SRCROOT)/Libs/libmonkc/lib",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -273,8 +272,7 @@
 			buildSettings = {
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					/Users/penpenlion/Dev/OOP_MACROS/XcodeMonkC/MonkCAppXcodeTemplete/Libs/libmonkc/lib,
-					/Users/penpenlion/Dev/OOP_MACROS/OOP_MACROS/XcodeMonkC/MonkCAppXcodeTemplete/Libs/libmonkc/lib,
+					"$(SRCROOT)/Libs/libmonkc/lib",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
