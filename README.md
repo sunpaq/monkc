@@ -19,10 +19,10 @@ a toolkit for OOP programming in C language
 
 #### easy way for Mac users (Xcode/intel x86_64):
 ###### Build a simple command line tool use MonkC:
-	just use the Xcode project templete in /XcodeMonkC/MonkCAppXcodeTemplete/
+	just use the Xcode project templete in /XcodeMonkC/MonkCAppTemplete/
 
 ###### Hack the monkc runtime system for your unique requirement:
-	just check the Xcode project templete in /XcodeMonkC/MonkCStatic/
+	just check the Xcode project templete in /XcodeMonkC/MonkCRuntimeStaticLib/
 
 #### how to compile and install (command line):
 
