@@ -1,4 +1,0 @@
-int ref_count;
-method(void,retain,xxx);
-method(void,release,xxx);
-method(void,bye,xxx);
