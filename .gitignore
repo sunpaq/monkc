@@ -1,1 +1,12 @@
 .DS_Store
+*.o
+*.hmap
+*.dep
+*.d
+*.dia
+*.dat
+*.LinkFileList
+Info.plist
+XcodeMonkC/MonkCAppXcodeTemplete/build/Release/MonkCAppXcodeTemplete
+
+XcodeMonkC/MonkCAppXcodeTemplete/build/Release/MonkCAppXcodeTemplete.dSYM/Contents/Resources/DWARF/MonkCAppXcodeTemplete
