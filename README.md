@@ -1,6 +1,6 @@
 # Monk-C
 a toolkit for OOP programming in C language
-[download source at github](https://github.com/sunpaq/monkc/)
+[download source and get more detail at github](https://github.com/sunpaq/monkc/)
 
 ## Overview
 

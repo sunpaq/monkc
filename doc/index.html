@@ -151,7 +151,7 @@ pre code {
 <h1>Monk-C</h1>
 
 <p>a toolkit for OOP programming in C language
-<a href="https://github.com/sunpaq/OOP_MACROS/">download source at github</a></p>
+<a href="https://github.com/sunpaq/monkc/">download source and get more detail at github</a></p>
 
 <h2>Overview</h2>
 
@@ -169,24 +169,51 @@ ARM32/Linux/gcc&amp;clang    OK (RaspberryPi/Linux)
 ARM64/Linux/gcc&amp;clang    No Test
 </code></pre>
 
-<h4>how to compile and install:</h4>
+<h4>need these tools:</h4>
 
-<pre><code>0. default is compile by gcc. make sure you have one installed
+<pre><code>clang - I strongly recommand use this C compiler. because i found it can report more detailed error infomations
+flex - this is needed to build the 'mcpp' preprocessor for monkc
+</code></pre>
+
+<h4>recomand code editor:</h4>
+
+<pre><code>Sublime Text 
+(you can use any editor. but some one have auto-complete function will help a lot)
+</code></pre>
+
+<h4>easy way for Mac users (Xcode/intel x86_64):</h4>
+
+<h6>Build a simple command line tool use MonkC:</h6>
+
+<pre><code>just use the Xcode project templete in /XcodeMonkC/MonkCAppTemplete/
+</code></pre>
+
+<h6>Hack the monkc runtime system for your unique requirement:</h6>
+
+<pre><code>just check the Xcode project templete in /XcodeMonkC/MonkCRuntimeStaticLib/
+</code></pre>
+
+<h4>how to compile and install (command line):</h4>
+
+<pre><code>0. default is compile by 'clang'. make sure you have one installed. 
+   it also need 'flex'. you can install flex by 'sudo apt-get install flex' on Ubuntu
+   or install flex use macport on Mac OS X
 1. cd ./src
 2. sudo make install
 
 clang is recommand. cause it can output better error infomations
-change [ CC = gcc -&gt; CC = clang ] in:
-1. /src/monkc_core_lib/Makefile     -&gt; line10 
-2. /src/monkc_core_lib/mcbuild      -&gt; line12
+if you want change it to gcc
+change [ CC = clang -&gt; CC = gcc ] in:
+1. /src/monkc_runtime/Makefile      -&gt; line10 
+2. /src/monkc_buildtool/mcbuild     -&gt; line12
 3. /src/lemontea/Makefile           -&gt; line9
 4. /src/tests/Makefile              -&gt; line7
-to use clang as the compiler
+to use gcc as the compiler
 
 the command above will build the &lt;libmonkc.a&gt; &lt;liblemontea.a&gt;
-and copy them to                    /usr/local/lib/
-and copy the &lt;.h&gt; header files to   /usr/local/include/
-and copy the &lt;mcbuild&gt; tool to      /usr/local/bin/
+and automatically copy them to              /usr/local/lib/
+and copy the &lt;.h&gt; header files to           /usr/local/include/
+and copy the &lt;mcpp&gt; &lt;mcbuild&gt; tool to       /usr/local/bin/
 </code></pre>
 
 <h4>how to create and build a monkc project:</h4>
@@ -214,7 +241,7 @@ and to put the mc_end() at the end of main()
 int main(int argc, char const *argv[])
 {
     mc_init();
-        LOG_LEVEL = VERBOSE;
+        LOG_LEVEL = MC_VERBOSE;
         test_object_life_cycle();
     mc_end();
     return 0;
@@ -222,10 +249,10 @@ int main(int argc, char const *argv[])
 
 global log level:
 you can set the global variable LOG_LEVEL to:
-SILENT      //no log outputed
-ERROR_ONLY  //error log only
-DEBUG       //error log and debug log
-VERBOSE     //error log and debug log and runtime log
+MC_SILENT       //no log outputed
+MC_ERROR_ONLY  //error log only
+MC_DEBUG        //error log and debug log
+MC_VERBOSE     //error log and debug log and runtime log
 
 you can use:
 error_log()
@@ -245,7 +272,7 @@ to output logs. parameter is same as printf(char* fmt, ...)
 implements(Flyable); ---&gt; protocol mark
 extends(BirdFather); ---&gt; super class mark
 
-class(Bird); ---&gt; class data begin
+monkc(Bird); ---&gt; class data begin
     char* name;
     int type;
 end(Bird); ---&gt; class data end
@@ -334,7 +361,7 @@ ff(bird, fly, nil);
 <hr />
 
 <ol>
-<li>class</li>
+<li>monkc</li>
 <li>end</li>
 <li>initer</li>
 <li>loader</li>
@@ -394,6 +421,8 @@ binding(Flyable, void, chickenFly, xxx);
 4. lemontea_WEB
 
 5. lemontea_GUI
+
+6. lemontea_3D
 </code></pre>
 
 <p><img src="https://secure.gravatar.com/avatar/63f7c4c0a269ebaf049724a024bf01b4?s=420&amp;d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-user-420.png" alt="Mou icon" /></p>
