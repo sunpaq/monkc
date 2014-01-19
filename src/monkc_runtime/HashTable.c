@@ -32,7 +32,7 @@ unsigned get_tablesize(const unsigned level)
 {
 	if(level>5){
 		error_log("get_tablesize(level) level>5 return use level=5\n");
-		return mc_hashtable_sizes[5];
+		return mc_hashtable_sizes[4];
 	}
 	return mc_hashtable_sizes[level];
 }
@@ -61,7 +61,7 @@ static mc_hashtable* expand_table(mc_hashtable** const table_p, unsigned tolevel
 {
 	unsigned oldlevel = (*table_p)->level;
 	size_t newsize = sizeof(mc_hashtable) + get_tablesize(tolevel)*sizeof(mc_hashitem*);
-	size_t oldsize = sizeof(mc_hashtable) + get_tablesize(oldlevel)*sizeof(mc_hashitem*);
+	//size_t oldsize = sizeof(mc_hashtable) + get_tablesize(oldlevel)*sizeof(mc_hashitem*);
 	//realloc
 	mc_hashtable* newtable = (mc_hashtable*)realloc((*table_p), newsize);
 	newtable->level = tolevel;
@@ -163,15 +163,18 @@ unsigned set_item(mc_hashtable** const table_p,
 				error_log("hash conflict new[%s/%d]<->old[%s/%d]\n", 
 					item->key, item->hash,
 					olditem->key, olditem->hash);
+                return index;
 			}else{
 				error_log("index conflict new[%s/%d]<->old[%s/%d]\n",
 					item->key, index,
 					olditem->key, index);
+                return index;
 			}
 			unsigned tmplevel = (*table_p)->level+1;
 			if(tmplevel<5){
 				expand_table(table_p, tmplevel);
 				set_item(table_p, item, isOverride, isFreeValue);
+                return index;
 			}else{
 				//tmplevel = 5, table_p must have been expanded to level 4
 				//there still a item, use link list.
@@ -185,7 +188,7 @@ unsigned set_item(mc_hashtable** const table_p,
 	}
 }
 
-mc_hashitem* get_item_bykey(const mc_hashtable** table_p, const char* key)
+mc_hashitem* get_item_bykey(mc_hashtable** const table_p, const char* key)
 {
 	if((*table_p)==nil){
 		error_log("get_item_bykey(table_p) table_p is nil return nil\n");
@@ -196,7 +199,7 @@ mc_hashitem* get_item_bykey(const mc_hashtable** table_p, const char* key)
 	return get_item_byhash(table_p, hashval, key);
 }
 
-mc_hashitem* get_item_byhash(const mc_hashtable** table_p, const unsigned hashval, const char* refkey)
+mc_hashitem* get_item_byhash(mc_hashtable** const table_p, const unsigned hashval, const char* refkey)
 {
 	if((*table_p)==nil){
 		error_log("get_item_byhash(table_p) table_p is nil return nil\n");
@@ -235,7 +238,7 @@ mc_hashitem* get_item_byhash(const mc_hashtable** table_p, const unsigned hashva
 	return nil;
 }
 
-mc_hashitem* get_item_byindex(const mc_hashtable** table_p, const unsigned index)
+mc_hashitem* get_item_byindex(mc_hashtable** const table_p, const unsigned index)
 {
 	if((*table_p)==nil){
 		error_log("get_item_byindex(table_p) table_p is nil return nil\n");

@@ -25,8 +25,8 @@ unsigned __get_exception_code(char* key);
 
 #define MAX_EXCEPTION_NUM 500
 
-id      get_exception_data(char* key);
-void    set_exception_data(char* key, id e);
+mo      get_exception_data(char* key);
+void    set_exception_data(char* key, mo e);
 
 #endif
 

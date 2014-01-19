@@ -5,31 +5,31 @@
 #ifndef TestMCClock_
 #define TestMCClock_
 
-class(TestMCClock);
+monkc(TestMCClock);
 	MCClock* toBeTest;
 end(TestMCClock);
 
-method(TestMCClock, setTimeToNow, xxx);
-method(TestMCClock, setTime, xxx);
-method(TestMCClock, adjustTime, xxx);
-method(TestMCClock, setRawtime, xxx);
-method(TestMCClock, setRawtimeFields, xxx);
+method(TestMCClock, void, setTimeToNow, xxx);
+method(TestMCClock, void, setTime, xxx);
+method(TestMCClock, void, adjustTime, xxx);
+method(TestMCClock, void, setRawtime, xxx);
+method(TestMCClock, void, setRawtimeFields, xxx);
 
-method(TestMCClock, getTime, xxx);
-method(TestMCClock, getRawtime, xxx);
-method(TestMCClock, getTimeByString, xxx);
-method(TestMCClock, getCPUClocksPerSecond, xxx);
-method(TestMCClock, getCPUClocksSinceStart, xxx);
-method(TestMCClock, getCurrentTimeString, xxx);
-method(TestMCClock, getCurrentGMTTimeString, xxx);
+method(TestMCClock, void, getTime, xxx);
+method(TestMCClock, void, getRawtime, xxx);
+method(TestMCClock, void, getTimeByString, xxx);
+method(TestMCClock, void, getCPUClocksPerSecond, xxx);
+method(TestMCClock, void, getCPUClocksSinceStart, xxx);
+method(TestMCClock, void, getCurrentTimeString, xxx);
+method(TestMCClock, void, getCurrentGMTTimeString, xxx);
 
-method(TestMCClock, printTime, xxx);
-method(TestMCClock, printCurrentTime, xxx);
-method(TestMCClock, printCurrentGMTTime, xxx);
+method(TestMCClock, void, printTime, xxx);
+method(TestMCClock, void, printCurrentTime, xxx);
+method(TestMCClock, void, printCurrentGMTTime, xxx);
 
 //override
-method(TestMCClock, setUp, xxx);
-method(TestMCClock, tearDown, xxx);
+method(TestMCClock, void, setUp, xxx);
+method(TestMCClock, void, tearDown, xxx);
 #endif
 
 /*

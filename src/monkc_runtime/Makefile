@@ -1,6 +1,5 @@
 INCPATH = /usr/local/include/
 LIBPATH = /usr/local/lib/
-BINPATH = /usr/local/bin/
 
 SRCS = $(wildcard *.c)
 LIBOBJS = $(patsubst %.c, %.o, $(SRCS))
@@ -11,10 +10,9 @@ CC = clang -g -w -Wall -Wno-unused-variable -Wno-return-type
 AS = as
 
 #default is IA-32 cpus
-all:$(LIBOBJS) MCRuntimeAsm.o mcbuild
+all:$(LIBOBJS) MCRuntimeAsm.o
 	mkdir -p monkc
 	cp *.h ./monkc
-	cp mcbuild ./monkc
 	ar -r ./monkc/libmonkc.a $(LIBOBJS) MCRuntimeAsm.o
 	tar -czvf monkc.tar.gz ./monkc/*
 
@@ -64,11 +62,8 @@ endif
 install:
 	rm -f -r $(INCPATH)monkc
 	rm -f $(LIBPATH)libmonkc.a
-	rm -f $(BINPATH)mcbuild
 	tar -xzvf monkc.tar.gz -C $(INCPATH)
 	mv $(INCPATH)monkc/*.a $(LIBPATH)
-	mv $(INCPATH)monkc/mcbuild $(BINPATH)
-	chmod +x $(BINPATH)mcbuild
 
 clean:
 	rm -f $(LIBOBJS) MCRuntimeAsm.o monkc.tar.gz 

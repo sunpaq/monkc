@@ -14,12 +14,12 @@ void test_bp_init()
 	b6=new_mc_block(nil);
 	tb=nil;
 	
-	o1=(id)malloc(sizeof(mc_object));
-	o2=(id)malloc(sizeof(mc_object));
-	o3=(id)malloc(sizeof(mc_object));
-	o4=(id)malloc(sizeof(mc_object));
-	o5=(id)malloc(sizeof(mc_object));
-	o6=(id)malloc(sizeof(mc_object));
+	o1=(mo)malloc(sizeof(mc_object));
+	o2=(mo)malloc(sizeof(mc_object));
+	o3=(mo)malloc(sizeof(mc_object));
+	o4=(mo)malloc(sizeof(mc_object));
+	o5=(mo)malloc(sizeof(mc_object));
+	o6=(mo)malloc(sizeof(mc_object));
 	package_by_block(b1, o1);
 	package_by_block(b2, o2);
 	package_by_block(b3, o3);

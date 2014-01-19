@@ -25,13 +25,13 @@ void assertNotNil(void* ptr) throws(MCAssertNotNilException)
 		throw(MCAssertNotNilException);
 }
 
-void assertSame(id obj1, id obj2) throws(MCAssertSameException)
+void assertSame(mo obj1, mo obj2) throws(MCAssertSameException)
 {
 	if (obj1!=obj2)
 		throw(MCAssertSameException);
 }
 
-void assertNotSame(id obj1, id obj2) throws(MCAssertNotSameException)
+void assertNotSame(mo obj1, mo obj2) throws(MCAssertNotSameException)
 {
 	if (obj1==obj2)
 		throw(MCAssertNotSameException);

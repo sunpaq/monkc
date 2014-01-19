@@ -194,7 +194,7 @@ char* nameofc(mc_class* const aclass);
 
 #include "Log.h"
 #include "Lock.h"
-#include "MCString.h"
+#include "Key.h"
 #include "Vectors.h"
 #include "HashTable.h"
 #include "Messaging.h"

@@ -5,7 +5,7 @@ volatile jmp_buf exception_env = {};
 volatile int exception_type = __exception_try_not_called;
 
 static int _exception_list[MAX_EXCEPTION_NUM];
-static id _exception_store[MAX_EXCEPTION_NUM];
+static mo _exception_store[MAX_EXCEPTION_NUM];
 
 void clean_exception_context()
 {
@@ -52,7 +52,7 @@ unsigned __get_exception_code(char* s)
 	}
 }
 
-id get_exception_data(char* key)
+mo get_exception_data(char* key)
 {
 	unsigned val = _ehash(key);
 	if (_exception_list[val] == 0)
@@ -60,16 +60,16 @@ id get_exception_data(char* key)
 		error_log("there is no exception: %s. return nil\n", key);
 		return nil;
 	}
-	id res = _exception_store[val];
+	mo res = _exception_store[val];
 	return res;
 }
 
-void set_exception_data(char* key, id e)
+void set_exception_data(char* key, mo e)
 {
 	unsigned val = _ehash(key);
 	//e->ref_count = -1;//memery manage here
 
-	id exp_obj = _exception_store[val];
+	mo exp_obj = _exception_store[val];
 	if(exp_obj != nil){
 		release(&exp_obj);
 

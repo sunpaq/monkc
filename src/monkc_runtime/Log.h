@@ -30,10 +30,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //logs
 int LOG_LEVEL;
 
-#define SILENT     0
-#define ERROR_ONLY 1
-#define DEBUG      2
-#define VERBOSE    3
+#define MC_SILENT     0
+#define MC_ERROR_ONLY 1
+#define MC_DEBUG      2
+#define MC_VERBOSE    3
 //log colors
 #define LOG_COLOR_NONE "\033[0m"
 #define LOG_COLOR_BLACK "\033[0;30m"

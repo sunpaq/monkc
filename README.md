@@ -17,33 +17,43 @@ a toolkit for OOP programming in C language
 	ARM32/Linux/gcc&clang    OK (RaspberryPi/Linux)
 	ARM64/Linux/gcc&clang    No Test
 
+#### need these tools:
+	clang - I strongly recommand use this C compiler. because i found it can report more detailed error infomations
+	flex - this is needed to build the 'mcpp' preprocessor for monkc
+
+#### recomand code editor:
+	Sublime Text 
+	(you can use any editor. but some one have auto-complete function will help a lot)
+
 #### easy way for Mac users (Xcode/intel x86_64):
+
 ###### Build a simple command line tool use MonkC:
 	just use the Xcode project templete in /XcodeMonkC/MonkCAppTemplete/
-
+	
 ###### Hack the monkc runtime system for your unique requirement:
 	just check the Xcode project templete in /XcodeMonkC/MonkCRuntimeStaticLib/
 
 #### how to compile and install (command line):
 
-	0. default is compile by gcc. make sure you have one installed. it also need flex
-	   you can install flex by sudo apt-get install flex on Ubuntu
+	0. default is compile by 'clang'. make sure you have one installed. 
+	   it also need 'flex'. you can install flex by 'sudo apt-get install flex' on Ubuntu
 	   or install flex use macport on Mac OS X
 	1. cd ./src
 	2. sudo make install
 
 	clang is recommand. cause it can output better error infomations
-	change [ CC = gcc -> CC = clang ] in:
-	1. /src/monkc_core_lib/Makefile 	-> line10 
-	2. /src/monkc_core_lib/mcbuild 		-> line12
+	if you want change it to gcc
+	change [ CC = clang -> CC = gcc ] in:
+	1. /src/monkc_runtime/Makefile 	    -> line10 
+	2. /src/monkc_buildtool/mcbuild     -> line12
 	3. /src/lemontea/Makefile			-> line9
 	4. /src/tests/Makefile				-> line7
-	to use clang as the compiler
+	to use gcc as the compiler
 
 	the command above will build the <libmonkc.a> <liblemontea.a>
-	and copy them to 					/usr/local/lib/
-	and copy the <.h> header files to 	/usr/local/include/
-	and copy the <mcbuild> tool to 		/usr/local/bin/
+	and automatically copy them to 				/usr/local/lib/
+	and copy the <.h> header files to 			/usr/local/include/
+	and copy the <mcpp> <mcbuild> tool to 		/usr/local/bin/
 
 #### how to create and build a monkc project:
 

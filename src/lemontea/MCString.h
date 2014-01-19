@@ -4,10 +4,10 @@
 #ifndef MCString_
 #define MCString_
 
-class(MCString);
+monkc(MCString);
 	size_t length;
 	size_t size; 
-	id next;
+	mo next;
 	char buff[];
 end(MCString);
 

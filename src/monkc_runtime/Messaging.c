@@ -1,7 +1,7 @@
 #include "monkc.h"
 
 
-mc_message make_msg(id const this, const void* entry)
+mc_message make_msg(mo const this, const void* entry)
 {
 	//we will return a struct
 	mc_message tmpmsg = {nil, nil};
@@ -10,14 +10,14 @@ mc_message make_msg(id const this, const void* entry)
 	return tmpmsg;
 }
 
-mc_message _self_response_to(const id obj, const char* methodname)
+mc_message _self_response_to(const mo obj, const char* methodname)
 {
 	return _self_response_to_h(obj, methodname, hash(methodname));
 }
 
 //mc_hashitem* get_item_byhash(const mc_hashtable** table_p, const unsigned hashval, const char* refkey);
 
-mc_message _self_response_to_h(const id obj, const char* methodname, unsigned hashval)
+mc_message _self_response_to_h(const mo obj, const char* methodname, unsigned hashval)
 {
 	//we will return a struct
 	mc_message tmpmsg = {nil, nil};
@@ -42,12 +42,12 @@ mc_message _self_response_to_h(const id obj, const char* methodname, unsigned ha
 	}
 }
 
-mc_message _response_to(const id obj, const char* methodname)
+mc_message _response_to(const mo obj, const char* methodname)
 {
 	return _response_to_h(obj, methodname, hash(methodname));
 }
 
-mc_message _response_to_h(const id obj, const char* methodname, unsigned hashval)
+mc_message _response_to_h(const mo obj, const char* methodname, unsigned hashval)
 {
 	mc_message tmpmsg = {nil, nil};
 	if(obj == nil || obj->isa == nil){

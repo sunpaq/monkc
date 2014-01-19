@@ -107,7 +107,7 @@ void empty(mc_blockpool* bpool)
 {
 	mc_block* target;
 	while((target=getFromHead(bpool)) != nil){
-		fs((id)(target->data), bye, nil);
+		fs((mo)(target->data), bye, nil);
 		free(target->data);
 		free(target);
 	}
@@ -210,21 +210,21 @@ void _clear_h(const char* classname, size_t size, loaderFP loader, unsigned hash
 }
 
 //always return a object of size. packaged by a block.
-id _alloc(const char* classname, size_t size, loaderFP loader)
+mo _alloc(const char* classname, size_t size, loaderFP loader)
 {
-	_alloc_h(classname, size, loader, hash(classname));
+	return _alloc_h(classname, size, loader, hash(classname));
 }
 
-id _alloc_h(const char* classname, size_t size, loaderFP loader, unsigned hashval)
+mo _alloc_h(const char* classname, size_t size, loaderFP loader, unsigned hashval)
 {
 	mc_class* aclass = _load_h(classname, size, loader, hashval);
 	mc_blockpool* fp = aclass->free_pool;
 	mc_blockpool* up = aclass->used_pool;
 	mc_block* ablock = nil;
-	id aobject = nil;
+	mo aobject = nil;
 	if((ablock=getFromHead(fp)) == nil){
 		//new a object package by a block
-		aobject = (id)malloc(size);
+		aobject = (mo)malloc(size);
 		aobject->isa = aclass;
 		aobject->saved_isa = aclass;
 		//new a block
@@ -233,7 +233,7 @@ id _alloc_h(const char* classname, size_t size, loaderFP loader, unsigned hashva
 		runtime_log("----alloc[NEW:%s]: new alloc a block[%p obj[%p]]\n", 
 			classname, ablock, ablock->data);
 	}else{
-		aobject = (id)(ablock->data);
+		aobject = (mo)(ablock->data);
 		runtime_log("----alloc[REUSE:%s]: find a block[%p obj[%p]]\n",
 			classname, ablock, ablock->data);
 	}

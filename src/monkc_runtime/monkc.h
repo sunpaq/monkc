@@ -102,9 +102,9 @@ typedef struct mc_object_struct
 	mc_class* saved_isa;
 	mc_class* mode;
 }mc_object;
-typedef mc_object* id;
+typedef mc_object* mo;
 
-#define class(cls) \
+#define monkc(cls) \
 typedef struct cls##_struct{\
 	struct mc_object_struct* super;\
 	mc_class* isa;\
@@ -134,11 +134,11 @@ typedef mc_object* (*initerFP)(mc_object*);
 #define hinding(cls, type, met, hash, ...)	_binding_h(class, S(met), A_B(cls, met), hash)
 #define hverride(cls, type, met, hash, ...) _override_h(class, S(met), A_B(cls, met), hash)
 #define method(cls, type, name, ...) 	type cls##_##name(cls* volatile this, volatile void* entry, __VA_ARGS__)
-#define protocol(pro, type, name, ...)  static type pro##_##name(id volatile this, volatile void* entry, __VA_ARGS__)
+#define protocol(pro, type, name, ...)  static type pro##_##name(mo volatile this, volatile void* entry, __VA_ARGS__)
 #define cast(cls, obj) 					((cls*)obj)
 
 //for create object
-#define new(cls)						(cls*)_new(_alloc(S(cls), sizeof(cls), cls##_load), cls##_init)
+#define new(cls)						(cls*)_new(_alloc(S(cls), sizeof(cls), (loaderFP)cls##_load), (initerFP)cls##_init)
 #define hew(cls, hash)					(cls*)_new(_alloc_h(S(cls), sizeof(cls), cls##_load, hash), cls##_init)
 #define new_category(ori, cat)			(ori*)_new_category(_alloc(S(ori), sizeof(ori), ori##_load), ori##_init, cat##_load, cat##_init)
 #define hew_category(ori, hash, cat)	(ori*)_new_category(_alloc_h(S(ori), sizeof(ori), ori##_load, hash), ori##_init, cat##_load, cat##_init)
@@ -151,7 +151,7 @@ typedef mc_object* (*initerFP)(mc_object*);
 #define call(this, cls, name, ...)      cls##_##name(this, cls##_##name, __VA_ARGS__)//call other class method
 #define response_to(obj, met) 			_response_to(obj, S(met))
 #define hesponse_to(obj, met, hash) 	_response_to_h(obj, S(met), hash)
-#define ff(obj, met, ...)				_push_jump(_response_to(obj, S(met)), __VA_ARGS__)
+#define ff(obj, met, ...)				_push_jump(_response_to((mo)obj, S(met)), __VA_ARGS__)
 #define fh(obj, met, hash, ...)			_push_jump(_response_to_h(obj, S(met), hash), __VA_ARGS__)
 #define fs(obj, met, ...)				_push_jump(_self_response_to(obj, S(met)), __VA_ARGS__)
 #define shift(obj, mode)				_shift(obj, S(mode), sizeof(mode), mode##_load)
@@ -171,17 +171,17 @@ unsigned _override_h(mc_class* const aclass, const char* methodname, void* value
 mc_class* _load(const char* name, size_t objsize, loaderFP loader);
 mc_class* _load_h(const char* name, size_t objsize, loaderFP loader, unsigned hashval);
 //object create
-id _new(id const this, initerFP initer);
-id _new_category(id const this, initerFP initer, loaderFP loader_cat, initerFP initer_cat);
+mo _new(mo const this, initerFP initer);
+mo _new_category(mo const this, initerFP initer, loaderFP loader_cat, initerFP initer_cat);
 //object mode change
-void _shift(id const obj, const char* modename, size_t objsize, loaderFP loader);
-void _shift_back(id const obj);
+void _shift(mo const obj, const char* modename, size_t objsize, loaderFP loader);
+void _shift_back(mo const obj);
 //mm
 #define REFCOUNT_NO_MM 	-1
 #define REFCOUNT_ERR 	-100
-void recycle(id const this);
-void release(id const this);
-id retain(id const this);
+void recycle(mo const this);
+void release(mo const this);
+mo retain(mo const this);
 
 //functions
 mc_class* alloc_mc_class();
@@ -194,7 +194,7 @@ char* nameofc(mc_class* const aclass);
 
 #include "Log.h"
 #include "Lock.h"
-#include "String.h"
+#include "Key.h"
 #include "Vectors.h"
 #include "HashTable.h"
 #include "Messaging.h"

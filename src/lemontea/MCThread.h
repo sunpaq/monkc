@@ -109,7 +109,7 @@ pthread_mutex_unlock     pthread_mutex_unlock
 #ifndef MCRunnable_
 #define MCRunnable_
 
-class(MCRunnable);
+monkc(MCRunnable);
 	void (*init_routine)(void);
 end(MCRunnable);
 
@@ -124,7 +124,7 @@ method(MCRunnable, void, run, xxx);
 #ifndef MCThread_ 
 #define MCThread_
 
-class(MCThread);
+monkc(MCThread);
 	pthread_t self;
 	pthread_attr_t attribute;
 	pthread_once_t once_control;

@@ -50,7 +50,7 @@ static void mc_check()
 void mc_init()
 {
 	//default we set log level to debug
-	LOG_LEVEL = DEBUG;
+	LOG_LEVEL = MC_DEBUG;
 	//create a class hashtable
 	if(mc_global_classtable == nil)
 		mc_global_classtable = new_table(0);
@@ -172,7 +172,7 @@ mc_class* _load_h(const char* name, size_t objsize, loaderFP loader, unsigned ha
 	return (mc_class*)(item->value);
 }
 
-id _new(id const this, initerFP initer)
+mo _new(mo const this, initerFP initer)
 {
 	//block, isa, saved_isa is setted at _alloc()
 	this->ref_count = 1;
@@ -182,7 +182,7 @@ id _new(id const this, initerFP initer)
 	return this;
 }
 
-id _new_category(id const this, initerFP initer, loaderFP loader_cat, initerFP initer_cat)
+mo _new_category(mo const this, initerFP initer, loaderFP loader_cat, initerFP initer_cat)
 {
 	//block, isa, saved_isa is setted at _alloc()
 	this->ref_count = 1;
@@ -194,7 +194,7 @@ id _new_category(id const this, initerFP initer, loaderFP loader_cat, initerFP i
 	return this;
 }
 
-void _shift(id const obj, const char* modename, size_t objsize, loaderFP loader)
+void _shift(mo const obj, const char* modename, size_t objsize, loaderFP loader)
 {
 	mc_class* aclass = _load(modename, objsize, loader);
 	if(obj->mode != aclass)
@@ -205,14 +205,14 @@ void _shift(id const obj, const char* modename, size_t objsize, loaderFP loader)
 		obj, nameofc(obj->saved_isa), nameof(obj));
 }
 
-void _shift_back(id const obj)
+void _shift_back(mo const obj)
 {
 	obj->isa = obj->saved_isa;
 	runtime_log("obj[%p/%s] shift to mode[%s]\n", 
 		obj, nameofc(obj->saved_isa), nameof(obj));
 }
 
-static int ref_count_down(id const this)
+static int ref_count_down(mo const this)
 {
 	for(;;){
 		if(this == nil){
@@ -244,7 +244,7 @@ static int ref_count_down(id const this)
 	return this->ref_count;
 }
 
-void recycle(id const this)
+void recycle(mo const this)
 {
 	if(ref_count_down(this) == 0){
 		//call the "bye" method on object
@@ -253,7 +253,7 @@ void recycle(id const this)
 	}
 }
 
-void release(id const this)
+void release(mo const this)
 {
 	if(ref_count_down(this) == 0){
 		//call the "bye" method on object
@@ -262,20 +262,20 @@ void release(id const this)
 	}
 }
 
-id retain(id const this)
+mo retain(mo const this)
 {
 	for(;;){
 		if(this == nil){
 			error_log("retain(nil) do nothing.\n");
-			return;
+			return this;
 		}
 		if(this->ref_count == REFCOUNT_NO_MM){
 			debug_log("ref_count is REFCOUNT_NO_MM manage by runtime. do nothing\n");
-			return;
+			return this;
 		}
 		if(this->isa == nil){
 			error_log("release(obj) obj have no class linked. do nothing.\n");
-			return;
+			return this;
 		}
 
 		int* addr = &(this->ref_count);

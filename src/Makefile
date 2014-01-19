@@ -1,3 +1,9 @@
+BINPATH 		= /usr/local/bin
+RUNTIME_PATH 	= ./monkc_runtime
+LEMONTEA_PATH 	= ./lemontea
+MCPP_PATH 		= ./monkc_preprocessor
+MCBUILD_PATH 	= ./monkc_buildtool
+TESTPATH		= ./tests
 
 make:
 	#[sudo make install] to install monkc and lemontea
@@ -5,25 +11,32 @@ make:
 	#[make test] to make and run test
 
 install:
-	cd ./monkc_core_lib && make && sudo make install
+	cd $(RUNTIME_PATH) && make && sudo make install
 	cd ..
-	cd ./lemontea && make && sudo make install
+	cd $(LEMONTEA_PATH) && make && sudo make install
 	cd ..
-	cd ./monkc_preprocessor && make && sudo make install
+	cd $(MCPP_PATH) && make && sudo make install
 	cd ..
+	cd $(MCBUILD_PATH) && sudo make install
+	cd ..
+	#install success
+	#/usr/local/lib/libmonkc.a
+	#/usr/local/lib/liblemontea.a
+	#/usr/local/bin/mcpp
+	#/usr/local/bin/mcbuild
 
 test:
-	cd ./tests && make && ./exec
+	cd $(TESTPATH) && make && ./exec
 	cd ..
 
 clean:
-	cd ./monkc_core_lib && sudo make clean
+	cd $(RUNTIME_PATH) && sudo make clean
 	cd ..
-	cd ./lemontea && sudo make clean
+	cd $(LEMONTEA_PATH) && sudo make clean
 	cd ..
-	cd ./tests && sudo make clean
+	cd $(TESTPATH) && sudo make clean
 	cd ..
-	cd ./monkc_preprocessor && sudo make clean
+	cd $(MCPP_PATH) && sudo make clean
 	cd ..
 
 	

@@ -20,8 +20,8 @@
 		4B9F314B1883CD78009B94A9 /* monkc.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B9F31431883CD78009B94A9 /* monkc.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4B9F314C1883CD78009B94A9 /* ObjectManage.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B9F31441883CD78009B94A9 /* ObjectManage.c */; };
 		4B9F314D1883CD78009B94A9 /* ObjectManage.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B9F31451883CD78009B94A9 /* ObjectManage.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		4B9F314E1883CD78009B94A9 /* MCString.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B9F31461883CD78009B94A9 /* MCString.c */; };
-		4B9F314F1883CD78009B94A9 /* MCString.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B9F31471883CD78009B94A9 /* MCString.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4B9F314E1883CD78009B94A9 /* Key.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B9F31461883CD78009B94A9 /* Key.c */; };
+		4B9F314F1883CD78009B94A9 /* Key.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B9F31471883CD78009B94A9 /* Key.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4B9F31501883CD78009B94A9 /* Vectors.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B9F31481883CD78009B94A9 /* Vectors.c */; };
 		4B9F31511883CD78009B94A9 /* Vectors.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B9F31491883CD78009B94A9 /* Vectors.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
@@ -46,8 +46,8 @@
 		4B9F31431883CD78009B94A9 /* monkc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = monkc.h; sourceTree = "<group>"; };
 		4B9F31441883CD78009B94A9 /* ObjectManage.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ObjectManage.c; sourceTree = "<group>"; };
 		4B9F31451883CD78009B94A9 /* ObjectManage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjectManage.h; sourceTree = "<group>"; };
-		4B9F31461883CD78009B94A9 /* MCString.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = MCString.c; sourceTree = "<group>"; };
-		4B9F31471883CD78009B94A9 /* MCString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCString.h; sourceTree = "<group>"; };
+		4B9F31461883CD78009B94A9 /* Key.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Key.c; sourceTree = "<group>"; };
+		4B9F31471883CD78009B94A9 /* Key.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Key.h; sourceTree = "<group>"; };
 		4B9F31481883CD78009B94A9 /* Vectors.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Vectors.c; sourceTree = "<group>"; };
 		4B9F31491883CD78009B94A9 /* Vectors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Vectors.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -70,8 +70,8 @@
 				4B9F31431883CD78009B94A9 /* monkc.h */,
 				4B9F31441883CD78009B94A9 /* ObjectManage.c */,
 				4B9F31451883CD78009B94A9 /* ObjectManage.h */,
-				4B9F31461883CD78009B94A9 /* MCString.c */,
-				4B9F31471883CD78009B94A9 /* MCString.h */,
+				4B9F31461883CD78009B94A9 /* Key.c */,
+				4B9F31471883CD78009B94A9 /* Key.h */,
 				4B9F31481883CD78009B94A9 /* Vectors.c */,
 				4B9F31491883CD78009B94A9 /* Vectors.h */,
 				4B9F313E1883CD63009B94A9 /* Messaging.c */,
@@ -118,7 +118,7 @@
 				4B9F314B1883CD78009B94A9 /* monkc.h in Headers */,
 				4B9F313D1883CD59009B94A9 /* Log.h in Headers */,
 				4B9F313B1883CD59009B94A9 /* Lock.h in Headers */,
-				4B9F314F1883CD78009B94A9 /* MCString.h in Headers */,
+				4B9F314F1883CD78009B94A9 /* Key.h in Headers */,
 				4B9F31511883CD78009B94A9 /* Vectors.h in Headers */,
 				4B9F31391883CD59009B94A9 /* HashTable.h in Headers */,
 				4B9F31411883CD63009B94A9 /* Messaging.h in Headers */,
@@ -180,7 +180,7 @@
 				4B9F313A1883CD59009B94A9 /* Lock.c in Sources */,
 				4B9F31301883CD43009B94A9 /* MCRuntimeAsm_X8664_darwin.s in Sources */,
 				4B9F314A1883CD78009B94A9 /* monkc.c in Sources */,
-				4B9F314E1883CD78009B94A9 /* MCString.c in Sources */,
+				4B9F314E1883CD78009B94A9 /* Key.c in Sources */,
 				4B9F31401883CD63009B94A9 /* Messaging.c in Sources */,
 				4B9F31381883CD59009B94A9 /* HashTable.c in Sources */,
 				4B9F314C1883CD78009B94A9 /* ObjectManage.c in Sources */,

@@ -8,8 +8,8 @@ void assertYES(int expression) throws(MCAssertYESException);
 void assertNO(int expression) throws(MCAssertNOException);
 void assertNil(void* ptr) throws(MCAssertNilException);
 void assertNotNil(void* ptr) throws(MCAssertNotNilException);
-void assertSame(id obj1, id obj2) throws(MCAssertSameException);
-void assertNotSame(id obj1, id obj2) throws(MCAssertNotSameException);
+void assertSame(mo obj1, mo obj2) throws(MCAssertSameException);
+void assertNotSame(mo obj1, mo obj2) throws(MCAssertNotSameException);
 void assertEquals(int exp1, int exp2) throws(MCAssertEqualsException);
 void fail(char* message);
 
@@ -18,7 +18,7 @@ void fail(char* message);
 #ifndef MCUnitTestResult_
 #define MCUnitTestResult_
 	
-class(MCUnitTestResult);
+monkc(MCUnitTestResult);
 end(MCUnitTestResult);
 
 method(MCUnitTestResult, void, bye, xxx);
@@ -31,7 +31,7 @@ method(MCUnitTestResult, void, addFailInfo, char* failinfo);
 #ifndef MCUnitTestCase_
 #define MCUnitTestCase_ 
 
-class(MCUnitTestCase);
+monkc(MCUnitTestCase);
 	MCUnitTestResult* unitTestResultRef;
 	struct MCUnitTestCase_struct* next_case;
 end(MCUnitTestCase);
@@ -49,7 +49,7 @@ method(MCUnitTestCase, void, runATestMethod, char* methodName);
 #ifndef MCUnitTestSuite_
 #define MCUnitTestSuite_
 
-class(MCUnitTestSuite);
+monkc(MCUnitTestSuite);
 	MCUnitTestCase *first_case;
 	int test_case_count;
 	struct MCUnitTestSuite_struct* next_suite;
@@ -65,7 +65,7 @@ method(MCUnitTestSuite, void, runTestCases, xxx);
 #ifndef MCUnitTestRunner_
 #define MCUnitTestRunner_
 
-class(MCUnitTestRunner);
+monkc(MCUnitTestRunner);
 	MCUnitTestResult* unitTestResult;
 	MCUnitTestSuite* first_suite;
 	int test_suite_count;

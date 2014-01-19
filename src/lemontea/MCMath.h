@@ -3,7 +3,7 @@
 #ifndef MCMath_ 
 #define MCMath_
 
-class(MCMath);
+monkc(MCMath);
 	unsigned tid;
 end(MCMath);
 

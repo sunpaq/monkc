@@ -1,8 +1,9 @@
 BINPATH = /usr/local/bin/
+CC = clang
 
 all:
 	flex mcpp.l
-	clang lex.yy.c -o mcpp
+	$(CC) lex.yy.c -o mcpp
 
 clean:
 	rm lex.yy.c mcpp core

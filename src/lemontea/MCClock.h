@@ -4,7 +4,7 @@
 #ifndef MCClock_
 #define MCClock_
 
-class(MCClock);
+monkc(MCClock);
 	struct tm rawtime;
 end(MCClock);
 

@@ -35,7 +35,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //static char log_buf[1024];
 void error_log(char* volatile fmt, ...)
 {
-	if(LOG_LEVEL != SILENT){
+	if(LOG_LEVEL != MC_SILENT){
 		char log_buf[1024];
 		printf(LOG_FMT, LOG_COLOR_RED, "[Error] - ");
 		va_list ap;
@@ -49,8 +49,8 @@ void error_log(char* volatile fmt, ...)
 
 void debug_log(char* volatile fmt, ...)
 {
-	if(LOG_LEVEL != SILENT
-	 &&LOG_LEVEL != ERROR_ONLY){
+	if(LOG_LEVEL != MC_SILENT
+	 &&LOG_LEVEL != MC_ERROR_ONLY){
 	 	char log_buf[1024];
 		printf(LOG_FMT, LOG_COLOR_LIGHT_BLUE, "[Debug] - ");
 		va_list ap;
@@ -64,9 +64,9 @@ void debug_log(char* volatile fmt, ...)
 
 void runtime_log(char* volatile fmt, ...)
 {
-	if(LOG_LEVEL != SILENT
-	 &&LOG_LEVEL != ERROR_ONLY
-	 &&LOG_LEVEL != DEBUG){
+	if(LOG_LEVEL != MC_SILENT
+	 &&LOG_LEVEL != MC_ERROR_ONLY
+	 &&LOG_LEVEL != MC_DEBUG){
 	 	char log_buf[1024];
 		printf(LOG_FMT, LOG_COLOR_DARK_GRAY, "[RTime] - ");
 		va_list ap;
@@ -80,7 +80,7 @@ void runtime_log(char* volatile fmt, ...)
 
 void error_logt(char* volatile tag, char* volatile fmt, ...)
 {
-	if(LOG_LEVEL != SILENT){
+	if(LOG_LEVEL != MC_SILENT){
 		char log_buf[1024];
 		printf(LOG_FMT, LOG_COLOR_RED, "[Error] - ");
 		printf(LOG_FMT, LOG_COLOR_DARK_GRAY, tag);
@@ -95,8 +95,8 @@ void error_logt(char* volatile tag, char* volatile fmt, ...)
 
 void debug_logt(char* volatile tag, char* volatile fmt, ...)
 {
-	if(LOG_LEVEL != SILENT
-	 &&LOG_LEVEL != ERROR_ONLY){
+	if(LOG_LEVEL != MC_SILENT
+	 &&LOG_LEVEL != MC_ERROR_ONLY){
 	 	char log_buf[1024];
 		printf(LOG_FMT, LOG_COLOR_LIGHT_BLUE, "[Debug] - ");
 		printf(LOG_FMT, LOG_COLOR_DARK_GRAY, tag);
@@ -111,9 +111,9 @@ void debug_logt(char* volatile tag, char* volatile fmt, ...)
 
 void runtime_logt(char* volatile tag, char* volatile fmt, ...)
 {
-	if(LOG_LEVEL != SILENT
-	 &&LOG_LEVEL != ERROR_ONLY
-	 &&LOG_LEVEL != DEBUG){
+	if(LOG_LEVEL != MC_SILENT
+	 &&LOG_LEVEL != MC_ERROR_ONLY
+	 &&LOG_LEVEL != MC_DEBUG){
 	 	char log_buf[1024];
 		printf(LOG_FMT, LOG_COLOR_DARK_GRAY, "[RTime] - ");
 		printf(LOG_FMT, LOG_COLOR_DARK_GRAY, tag);
