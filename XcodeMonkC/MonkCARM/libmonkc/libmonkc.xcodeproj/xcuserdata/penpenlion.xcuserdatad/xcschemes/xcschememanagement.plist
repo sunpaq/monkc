@@ -4,30 +4,20 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>MonkCStatic.xcscheme</key>
+		<key>libmonkc.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>0</integer>
 		</dict>
-		<key>libmonkc_arm.xcscheme</key>
-		<dict>
-			<key>orderHint</key>
-			<integer>1</integer>
-		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>4B50395C189172520044985D</key>
+		<key>4B50398B189174F20044985D</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>4B50396B189172530044985D</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>4B9F30961883B560009B94A9</key>
+		<key>4B50399B189174F20044985D</key>
 		<dict>
 			<key>primary</key>
 			<true/>
