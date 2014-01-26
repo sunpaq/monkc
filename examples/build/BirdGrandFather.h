@@ -3,7 +3,7 @@
 #ifndef BirdGrandFather_ 
 #define BirdGrandFather_
 
-class(BirdGrandFather);
+monkc(BirdGrandFather);
 	int age;
 end(BirdGrandFather);
 

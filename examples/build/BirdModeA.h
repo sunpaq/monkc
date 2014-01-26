@@ -4,7 +4,7 @@
 #ifndef BirdModeA_
 #define BirdModeA_
 
-class(BirdModeA);
+monkc(BirdModeA);
 end(BirdModeA);
 
 method(Bird, void, modemethodA, xxx);

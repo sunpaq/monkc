@@ -4,7 +4,7 @@
 #include "BirdCatA.h"
 #include "BirdModeA.h"
 
-int jumpTarget(id const this, const void* entry, int arg1, int arg2)
+int jumpTarget(mo const this, const void* entry, int arg1, int arg2)
 {
 	static int count = 0;
 	printf("count %d\n", count);
@@ -95,7 +95,7 @@ void monkc_runtime_check()
 int main(int argc, char const *argv[])
 {
 	mc_init();
-		LOG_LEVEL = DEBUG;
+		LOG_LEVEL = MC_DEBUG;
 		monkc_runtime_check();
 //		test_method_jumpping();
 
