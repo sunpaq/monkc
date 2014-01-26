@@ -27,5 +27,7 @@ void menu_drive_test(MCContext* context)
 		break;
 	}
 
-	printf("%s %s %s\n", sex, name, "welcome to Mars");
+	printf("%s\n", "--------------------");
+	printf("%s %s welcome to Mars\n", sex, name);
+	printf("%s\n", "--------------------");
 }

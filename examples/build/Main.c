@@ -25,23 +25,24 @@ void test(MCContext* context)
 	int selection = call(context,
 		MCContext,
 		showMenuAndGetSelectionChar, 
-		9, 
-		"[x]syntex_test", 
-		"[v]menu_drive_test", 
-		"[x]lib_test", 
-		"[v]MCSocket(Server)", 
-		"[v]MCSocket(Client)", 
-		"[x]MCException", 
-		"[x]MCThread", 
-		"[x]MCProcess", 
-		"[x]ffi");
+		3, 
+		"menu_drive_test", 
+		"MCSocket(Server)", 
+		"MCSocket(Client)"
+		//"[x]syntex_test", 
+		//"[x]lib_test", 
+		//"[x]MCException", 
+		//"[x]MCThread", 
+		//"[x]MCProcess", 
+		//"[x]ffi"
+		);
 
 	switch(selection){
 		//case '1':mocha_syntex_test(context);break;
-		case '2':menu_drive_test(context);break;
+		case '1':menu_drive_test(context);break;
 		//case '3':mocha_lib_test();break;
-		case '4':mocha_serversocket_test();break;
-		case '5':mocha_clientsocket_test(context);break;
+		case '2':mocha_serversocket_test();break;
+		case '3':mocha_clientsocket_test(context);break;
 		//case '6':mocha_exception_test();break;
 		//case '7':test_MCThread();break;
 		//case '8':test_MCProcess();break;
