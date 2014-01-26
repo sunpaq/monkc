@@ -27,8 +27,8 @@ void test(MCContext* context)
 		showMenuAndGetSelectionChar, 
 		3, 
 		"menu_drive_test", 
-		"MCSocket(Server)", 
-		"MCSocket(Client)"
+		"MCSocket(Server) --- use one termial process run this", 
+		"MCSocket(Client) --- use another termial process run this"
 		//"[x]syntex_test", 
 		//"[x]lib_test", 
 		//"[x]MCException", 
