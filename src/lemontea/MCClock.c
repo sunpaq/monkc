@@ -3,6 +3,7 @@
 initer(MCClock)
 {
 	//nothing
+	return this;
 }
 
 loader(MCClock)
@@ -33,6 +34,7 @@ binding(MCClock, char*, getCurrentGMTTimeString, xxx);
 binding(MCClock, void, printTime, xxx);
 binding(MCClock, void, printCurrentTime, xxx);
 binding(MCClock, void, printCurrentGMTTime, xxx);
+return class;
 }
 
 method(MCClock, 

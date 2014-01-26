@@ -3,6 +3,7 @@
 initer(BirdCatA)
 {
 	//change something here
+	return this;
 }
 
 method(Bird, void, catmethodA, xxx)
@@ -32,4 +33,5 @@ loader(BirdCatA)
 	binding(Bird, void, catmethodB, xxx);
 	binding(Bird, void, catmethodC, xxx);
 	binding(Bird, void, catmethodD, xxx);
+	return class;
 }

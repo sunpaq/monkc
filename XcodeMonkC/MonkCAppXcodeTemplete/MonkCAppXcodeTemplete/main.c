@@ -28,7 +28,8 @@ void testMonkC()
     //dynamic call super class methods
     int fatherage = (int)ff(abird, getAge, nil);
     printf("my father age is : %d\n", fatherage);
-
+    
+    release(abird);
 }
 
 int main(int argc, const char * argv[])

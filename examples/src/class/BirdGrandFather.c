@@ -5,6 +5,7 @@ initer(BirdGrandFather)
 	this->super = nil;
 	this->age = 50;
 	debug_logt(nameof(this), "[%p] init called\n", this);
+	return this;
 }
 
 method(BirdGrandFather, void, bye, xxx)
@@ -29,9 +30,10 @@ method(BirdGrandFather, void, singAsong, char* asong)
 
 loader(BirdGrandFather)
 {
-binding(BirdGrandFather, void, bye, xxx);
-binding(BirdGrandFather, void, flyhigh, xxx);
-binding(BirdGrandFather, void, fly, xxx);
-binding(BirdGrandFather, void, singAsong, char* asong);
+	binding(BirdGrandFather, void, bye, xxx);
+	binding(BirdGrandFather, void, flyhigh, xxx);
+	binding(BirdGrandFather, void, fly, xxx);
+	binding(BirdGrandFather, void, singAsong, char* asong);
 	debug_logt(nameofc(class), "load called\n");
+	return class;
 }

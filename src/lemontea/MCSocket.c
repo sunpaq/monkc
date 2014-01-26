@@ -6,11 +6,13 @@ loader(MCSocketClientInfo)
 {
 	binding(MCSocketClientInfo, void, dumpInfo, xxx);
 	binding(MCSocketClientInfo, void, bye, xxx);
+	return class;
 }
 
 initer(MCSocketClientInfo)
 {
 	//nothing to init
+	return this;
 }
 
 method(MCSocketClientInfo, void, dumpInfo, xxx)
@@ -22,7 +24,6 @@ method(MCSocketClientInfo, void, bye, xxx)
 {
 	//nothing to do
 }
-
 
 loader(MCSocket)
 {
@@ -36,11 +37,13 @@ binding(MCSocket, void, send, xxx);
 binding(MCSocket, void, sendto, xxx);
 binding(MCSocket, void, sendmsg, xxx);
 binding(MCSocket, void, bye, xxx);
+return class;
 }
 
 initer(MCSocket)
 {
 	//nothing to init
+	return this;
 }
 
 method(MCSocket, MCSocket*, initWithTypeIpPort, MCSocketType socket_type, char* ip, char* port)

@@ -1,85 +1,9 @@
 #include "monkc.h"
-#include "Bird.h"
-#include "BirdFather.h"
-#include "BirdCatA.h"
-#include "BirdModeA.h"
 
-int jumpTarget(mo const this, const void* entry, int arg1, int arg2)
-{
-	static int count = 0;
-	printf("count %d\n", count);
-	printf("arg2 %d\n", arg2);
-
-	if(count==100)return;
-	_clean_jump2(make_msg(this, entry), 300, ++count);
-}
-
-int TargetVoid()
-{
-	printf("TargetVoid\n");
-	printf("TargetVoid haha\n");
-	printf("TargetVoid hahaha\n");
-}
-
-void test_object_life_cycle()
-{
-		Bird* bird = new(Bird);
-		ff(bird, fly, nil);
-		ff(bird, flyhigh, nil);
-		ff(bird, singAsong, "a song from child");
-		ff(bird, fatherAge, nil);
-		ff(bird, cannotResponseThis, nil);
-		shift(bird, BirdModeA);
-			ff(bird, modemethodC, nil);
-		shift_back(bird);
-		recycle(bird);
-		//one create on delete
-
-		Bird* bird2 = new(Bird);
-		debug_log("bird2 pointer %p\n", bird2);
-		Bird* bird3 = new(Bird);
-		debug_log("bird2 pointer %p\n", bird3);
-		Bird* bird31 = new(Bird);
-		debug_log("bird2 pointer %p\n", bird31);
-
-		info(Bird);
-		info(BirdFather);
-		info(BirdGrandFather);
-
-		recycle(bird2);
-		recycle(bird3);
-		//release(&bird31);
-
-		info(Bird);
-		info(BirdFather);
-		info(BirdGrandFather);
-
-		Bird* b1=new(Bird);
-		Bird* b2=new(Bird);
-
-		info(Bird);
-		info(BirdFather);
-		info(BirdGrandFather);
-
-		recycle(b1);
-		recycle(b2);
-
-		clear(Bird);
-		clear(BirdFather);
-		clear(BirdGrandFather);
-
-		info(Bird);
-		info(BirdFather);
-		info(BirdGrandFather);
-
-}
-
-void test_method_jumpping()
-{
-	debug_log("start\n");
-	_push_jump(make_msg(nil, jumpTarget), 100, 200);
-
-}
+#include "ClientServerExample.h"
+#include "MenuDrivenExample.h"
+#include "MethodJumpping.h"
+#include "ObjectLifeCycle.h"
 
 void monkc_runtime_check()
 {
@@ -92,14 +16,56 @@ void monkc_runtime_check()
 	printf("method3 address: %ld\n", (unsigned long)met3);
 }
 
+void test(MCContext* context)
+{
+	printf("%s\n", "----------");
+	printf("%s\n", "ctl+c to exit");
+	printf("%s\n", "----------");
+
+	int selection = call(context,
+		MCContext,
+		showMenuAndGetSelectionChar, 
+		9, 
+		"[x]syntex_test", 
+		"[v]menu_drive_test", 
+		"[x]lib_test", 
+		"[v]MCSocket(Server)", 
+		"[v]MCSocket(Client)", 
+		"[x]MCException", 
+		"[x]MCThread", 
+		"[x]MCProcess", 
+		"[x]ffi");
+
+	switch(selection){
+		//case '1':mocha_syntex_test(context);break;
+		case '2':menu_drive_test(context);break;
+		//case '3':mocha_lib_test();break;
+		case '4':mocha_serversocket_test();break;
+		case '5':mocha_clientsocket_test(context);break;
+		//case '6':mocha_exception_test();break;
+		//case '7':test_MCThread();break;
+		//case '8':test_MCProcess();break;
+		//case '9':test_ffi();break;
+	}
+}
+
 int main(int argc, char const *argv[])
 {
 	mc_init();
 		LOG_LEVEL = MC_DEBUG;
 		monkc_runtime_check();
 //		test_method_jumpping();
-
 		test_object_life_cycle();
+
+		MCContext* context = new(MCContext);
+		context->argc = argc;
+		context->argv = argv;
+		
+		for(;;)
+			test(context);
+
+		release(context);
+
 	mc_end();
 	return 0;
 }

@@ -8,11 +8,13 @@ loader(MCRunnable)
 {	
 	binding(MCRunnable, void, run, xxx);
 	binding(MCRunnable, MCRunnable*, initWithFunctionPointer, void (*init_routine)(void));
+	return class;
 }
 
 initer(MCRunnable)
 {
 	this->init_routine = 0;
+	return this;
 }
 
 method(MCRunnable, MCRunnable*, initWithFunctionPointer, void (*init_routine)(void))
@@ -34,6 +36,7 @@ loader(MCThread)
 	binding(MCThread, int, start, void* result);
 	binding(MCThread, int, equal, MCThread* thread);
 	binding(MCThread, void, bye, xxx);
+	return class;
 }
 
 initer(MCThread)
@@ -45,6 +48,7 @@ initer(MCThread)
 	//if you need, you can set the attribute use the raw pthread APIs
 	//example: pthread_attr_getstacksize(m_thread->attribute);
 	pthread_attr_init(&this->attribute);
+	return this;
 }
 
 method(MCThread, MCThread*, initWithRunnable, MCRunnable* runnable)

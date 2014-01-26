@@ -60,11 +60,13 @@ loader(MCUnitTestCase)
 	binding(MCUnitTestCase, void, tearDown, xxx);
 	binding(MCUnitTestCase, void, runTests, xxx);
 	binding(MCUnitTestCase, void, runATestMethod, char* errmsg);
+	return class;
 }
 
 initer(MCUnitTestCase)
 {
 	this->next_case = nil;
+	return this;
 }
 
 method(MCUnitTestCase, MCUnitTestCase*, initWithTestResult, MCUnitTestResult* resultRef)
@@ -178,6 +180,7 @@ loader(MCUnitTestSuite)
 	binding(MCUnitTestSuite, void, bye, xxx);
 	binding(MCUnitTestSuite, void, addTestCase, MCUnitTestCase* tcase);
 	binding(MCUnitTestSuite, void, runTestCases, xxx);
+	return class;
 }
 
 initer(MCUnitTestSuite)
@@ -185,6 +188,7 @@ initer(MCUnitTestSuite)
 	this->first_case = nil;
 	this->test_case_count = 0;
 	this->next_suite = nil;
+	return this;
 }
 
 method(MCUnitTestSuite, void, bye, xxx)
@@ -222,11 +226,13 @@ loader(MCUnitTestResult)
 	binding(MCUnitTestResult, void, bye, xxx);
 	binding(MCUnitTestResult, void, addSuccessInfo, char* succinfo);
 	binding(MCUnitTestResult, void, addFailInfo, char* failinfo);
+	return class;
 }
 
 initer(MCUnitTestResult)
 {
 	//nothing to init
+	return this;
 }
 
 method(MCUnitTestResult, void, bye, xxx)
@@ -259,12 +265,14 @@ loader(MCUnitTestRunner)
 	binding(MCUnitTestRunner, void, bye, xxx);
 	binding(MCUnitTestRunner, void, addTestSuite, MCUnitTestSuite* testSuite);
 	binding(MCUnitTestRunner, void, runTestSuites, xxx);
+	return class;
 }
 
 initer(MCUnitTestRunner)
 {
 	this->first_suite = nil;
 	this->test_suite_count = 0;
+	return this;
 }
 
 method(MCUnitTestRunner, void, bye, xxx)

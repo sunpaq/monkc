@@ -3,6 +3,7 @@
 initer(MCContext)
 {
 	this->selectionChar=0;
+	return this;
 }
 
 loader(MCContext)
@@ -19,6 +20,7 @@ binding(MCContext, void, getUserInputString, char resultString[]);
 binding(MCContext, char*, getEnvironmentVar, const char* key);
 binding(MCContext, int, setEnvironmentVar, const char* key, const char* value, int isOverwrite);
 binding(MCContext, int, clearEnvironmentVar, const char* key);
+return class;
 }
 
 method(MCContext, 
@@ -54,9 +56,7 @@ static void get_chars_until_enter(char resultString[])
 }
 
 method(MCContext, void, bye, xxx)
-{
-	call(this, MCObject, bye, nil);
-	
+{	
 	runtime_log("%s\n", "MCContext goodbye");
 }
 

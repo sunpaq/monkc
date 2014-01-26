@@ -276,9 +276,9 @@ void _dealloc(mc_object* aobject, int is_recycle)
 			pushToTail(fp, nb);
 			runtime_log("----dealloc[BACK:%s]: push back a block[%p obj[%p]]\n", nameof(aobject), blk, aobject);
 		}else{
+            runtime_log("----dealloc[DEL:%s]: delete a block[%p obj[%p]]\n", nameof(aobject), blk, aobject);
 			free(nb->data);
 			free(nb);
-			runtime_log("----dealloc[DEL:%s]: delete a block[%p obj[%p]]\n", nameof(aobject), blk, aobject);
 		}
 	}
 }

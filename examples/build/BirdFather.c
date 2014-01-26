@@ -5,6 +5,7 @@ initer(BirdFather)
 	this->super = hew(BirdGrandFather, 302479087);
 	this->age = 50;
 	debug_logt(nameof(this), "[%p] init called\n", this);
+	return this;
 }
 
 method(BirdFather, void, bye, xxx)
@@ -30,9 +31,10 @@ method(BirdFather, void, singAsong, char* asong)
 
 loader(BirdFather)
 {
-hinding(BirdFather, void, bye, 98030, xxx);
-hinding(BirdFather, void, flyhigh, 3537959061, xxx);
-hinding(BirdFather, void, fly, 101491, xxx);
-binding(BirdFather, void, singAsong, char* asong);
+	hinding(BirdFather, void, bye, 98030, xxx);
+	hinding(BirdFather, void, flyhigh, 3537959061, xxx);
+	hinding(BirdFather, void, fly, 101491, xxx);
+	binding(BirdFather, void, singAsong, char* asong);
 	debug_logt(nameofc(class), "load called\n");
+	return class;
 }

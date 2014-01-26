@@ -7,7 +7,6 @@
 monkc(BirdCatA);
 end(BirdCatA);
 
-
 method(Bird, void, catmethodA, xxx);
 method(Bird, void, catmethodB, xxx);
 method(Bird, void, catmethodC, xxx);

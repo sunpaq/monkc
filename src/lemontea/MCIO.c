@@ -4,7 +4,21 @@
 
 loader(MCFile)
 {
+binding(MCFile, void, initWithPathName, char* pathname, int oflag);
 
+binding(MCFile, int, readFromBegin, off_t offset, size_t nbytes);
+binding(MCFile, int, readAtLastPosition, off_t offset, size_t nbytes);
+binding(MCFile, int, readFromEnd, off_t offset, size_t nbytes);
+binding(MCFile, int, writeToBegin, off_t offset, void* buf, size_t nbytes);
+binding(MCFile, int, writeToLastTime, off_t offset, void* buf, size_t nbytes);
+binding(MCFile, int, writeToEnd, off_t offset, void* buf, size_t nbytes);
+
+binding(MCFile, int, duplicateFd, xxx);
+binding(MCFile, int, duplicateFdTo, int fd);
+binding(MCFile, void, printAttribute, xxx);
+binding(MCFile, void, bye, xxx);
+binding(MCFile, int, checkPermissionUseRealIDOfProcess, int mode);
+return class;
 }
 
 initer(MCFile)
@@ -13,18 +27,19 @@ initer(MCFile)
 	this->pathname = "";
 	this->buffer = nil;
 	//this->attribute;
+	return this;
 }
 
 method(MCFile, 
-MCFile*, newWithPathName, char* pathname, int oflag)
+void, initWithPathName, char* pathname, int oflag)
 {
 	if((this->fd = open(pathname, oflag, 0774))==-1)
-		return nil;
+		return;
 	this->pathname = pathname;
 	if(fstat(this->fd, &this->attribute)<0)
-		return nil;
+		return;
 	this->buffer = malloc(this->attribute.st_blksize*10);
-	return this;
+	return;
 }
 
 // typedef enum _MCStreamType{
@@ -35,12 +50,33 @@ MCFile*, newWithPathName, char* pathname, int oflag)
 // }MCStreamType;
 loader(MCStream)
 {
-	
+binding(MCStream, MCStream*, newWithPath, MCStreamType type, char* path);
+binding(MCStream, void, bye, xxx);
+binding(MCStream, int, getFileDescriptor, xxx);
+
+binding(MCStream, int, getChar, xxx);
+binding(MCStream, int, putChar, int charCode);
+binding(MCStream, int, pushbackChar, int charCodeToBePushBack);
+
+binding(MCStream, char*, getCString, MCCharBuffer* recvBuffer);
+binding(MCStream, char*, putCString, MCCharBuffer* sendBuffer);
+binding(MCStream, MCString*, getMCString, xxx);
+binding(MCStream, MCString*, putMCString, MCString* str);
+
+binding(MCStream, size_t, getBianryObject, void* recvBuffer,  size_t objectSize, size_t numberOfObjs);
+binding(MCStream, size_t, putBianryObject, void* sendBuffer,  size_t objectSize, size_t numberOfObjs);
+
+binding(MCStream, off_t, tellOffset, xxx);
+binding(MCStream, int, seekFromBegin, off_t offset);
+binding(MCStream, int, seekFromCurrent, off_t offset);
+binding(MCStream, int, seekFromEnd, off_t offset);
+return class;
 }
 
 initer(MCStream)
 {
 	//do nothing
+	return this;
 }
 
 method(MCStream, 
@@ -79,7 +115,12 @@ MCStream*, newWithPath, MCStreamType type, char* path)
 
 loader(MCSelect)
 {
-
+	binding(MCSelect, void, initWithSecondAndMicrosec, long second, long microsecond);
+	binding(MCSelect, int, waitForFdsetChange, xxx);
+	binding(MCSelect, void, addFd, MCSelect_fd_type type, int fd);
+	binding(MCSelect, void, removeFd, MCSelect_fd_type type, int fd);
+	binding(MCSelect, int, isFdReady, MCSelect_fd_type type, int fd);
+	return class;
 }
 
 initer(MCSelect)
@@ -91,16 +132,17 @@ initer(MCSelect)
 	FD_ZERO(&this->readfd_result_set);
 	FD_ZERO(&this->writefd_result_set);
 	FD_ZERO(&this->exceptionfd_result_set);
+	return this;
 }
 
 method(MCSelect, 
-MCSelect*, initWithSecondAndMicrosec, long second, long microsecond)
+void, initWithSecondAndMicrosec, long second, long microsecond)
 {
 	//timeout.tv_sec
 	//timeout.tv_usec
 	this->timeout.tv_sec = second;
 	this->timeout.tv_usec = microsecond;
-	return this;
+	return;
 }
 
 method(MCFile, int, readFromBegin, off_t offset, size_t nbytes)
@@ -161,9 +203,8 @@ int MCFile_flushAFileCacheToDisk(int fd)
 
 method(MCFile, void, bye, xxx)
 {
-	call(this, MCObject, bye, nil);
 	//release this->buffer
-	mc_free(this->buffer);
+	free(this->buffer);
 	close(this->fd);
 }
 

@@ -179,9 +179,12 @@ void _shift_back(mo const obj);
 //mm
 #define REFCOUNT_NO_MM 	-1
 #define REFCOUNT_ERR 	-100
-void recycle(mo const this);
-void release(mo const this);
-mo retain(mo const this);
+void _recycle(mo const this);
+void _release(mo const this);
+mo _retain(mo const this);
+#define recycle(obj) _recycle((mo)obj)
+#define release(obj) _release((mo)obj)
+#define retain(obj)  _retain((mo)obj)
 
 //functions
 mc_class* alloc_mc_class();

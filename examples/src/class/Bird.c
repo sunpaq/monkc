@@ -5,6 +5,7 @@ initer(Bird)
 	this->super = new(BirdFather);
 	this->type = 3;
 	debug_logt("Bird", "[%p] init called\n", this);
+	return this;
 }
 
 method(Bird, void, bye, xxx)
@@ -166,6 +167,7 @@ binding(Bird, int, fatherAge, xxx);
 	binding(Bird, fly50, xxx);
 	*/
 	debug_logt(nameofc(class), "load called\n");
+	return class;
 }
 
 

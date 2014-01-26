@@ -3,6 +3,7 @@
 initer(BirdCatA)
 {
 	//change something here
+	return this;
 }
 
 method(Bird, void, catmethodA, xxx)
@@ -32,4 +33,5 @@ loader(BirdCatA)
 	hinding(Bird, void, catmethodB, 4048645867, xxx);
 	hinding(Bird, void, catmethodC, 4048645868, xxx);
 	hinding(Bird, void, catmethodD, 4048645869, xxx);
+	return class;
 }

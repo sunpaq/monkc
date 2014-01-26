@@ -5,6 +5,7 @@ initer(Bird)
 	this->super = hew(BirdFather, 875971477);
 	this->type = 3;
 	debug_logt("Bird", "[%p] init called\n", this);
+	return this;
 }
 
 method(Bird, void, bye, xxx)
@@ -166,6 +167,7 @@ hinding(Bird, int, fatherAge, 522530307, xxx);
 	hinding(Bird, fly50, xxx), 3694001;
 	*/
 	debug_logt(nameofc(class), "load called\n");
+	return class;
 }
 
 

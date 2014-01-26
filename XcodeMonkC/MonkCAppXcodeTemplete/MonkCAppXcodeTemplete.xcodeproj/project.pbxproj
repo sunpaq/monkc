@@ -11,7 +11,7 @@
 		4B9F30FB1883B847009B94A9 /* MonkCAppXcodeTemplete.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B9F30FA1883B847009B94A9 /* MonkCAppXcodeTemplete.1 */; };
 		4B9F31141883BB4C009B94A9 /* Bird.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B9F31131883BB4C009B94A9 /* Bird.c */; };
 		4B9F31541883D060009B94A9 /* BirdFather.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B9F31531883D060009B94A9 /* BirdFather.c */; };
-		4BACDBEC188C2F3100C33C45 /* libmonkc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BACDBEB188C2F3100C33C45 /* libmonkc.a */; };
+		4BC196C4189546850071E9BC /* libmonkc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BC196C3189546850071E9BC /* libmonkc.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -43,7 +43,7 @@
 		4B9F31131883BB4C009B94A9 /* Bird.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Bird.c; sourceTree = "<group>"; };
 		4B9F31521883D04D009B94A9 /* BirdFather.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BirdFather.h; sourceTree = "<group>"; };
 		4B9F31531883D060009B94A9 /* BirdFather.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BirdFather.c; sourceTree = "<group>"; };
-		4BACDBEB188C2F3100C33C45 /* libmonkc.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libmonkc.a; sourceTree = "<group>"; };
+		4BC196C3189546850071E9BC /* libmonkc.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libmonkc.a; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,7 +51,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4BACDBEC188C2F3100C33C45 /* libmonkc.a in Frameworks */,
+				4BC196C4189546850071E9BC /* libmonkc.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -93,7 +93,7 @@
 		4B43AD401883EDF700587EDD /* lib */ = {
 			isa = PBXGroup;
 			children = (
-				4BACDBEB188C2F3100C33C45 /* libmonkc.a */,
+				4BC196C3189546850071E9BC /* libmonkc.a */,
 			);
 			path = lib;
 			sourceTree = "<group>";
@@ -263,6 +263,7 @@
 					"$(inherited)",
 					"$(SRCROOT)/Libs/libmonkc/lib",
 					/Users/penpenlion/Dev/monkc/OOP_MACROS/XcodeMonkC/MonkCAppXcodeTemplete/Libs/libmonkc/lib,
+					/Users/penpenlion/Dev/monkc/monkc/XcodeMonkC/MonkCAppXcodeTemplete/Libs/libmonkc/lib,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -275,6 +276,7 @@
 					"$(inherited)",
 					"$(SRCROOT)/Libs/libmonkc/lib",
 					/Users/penpenlion/Dev/monkc/OOP_MACROS/XcodeMonkC/MonkCAppXcodeTemplete/Libs/libmonkc/lib,
+					/Users/penpenlion/Dev/monkc/monkc/XcodeMonkC/MonkCAppXcodeTemplete/Libs/libmonkc/lib,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};

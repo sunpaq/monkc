@@ -8,6 +8,7 @@ initer(MCProcess)
 	this->euid=geteuid();
 	this->gid=getgid();
 	this->egid=getegid();
+	return this;
 }
 
 method(MCProcess, void, printIDs, xxx)
@@ -146,4 +147,5 @@ loader(MCProcess)
 	binding(MCProcess, 
 	pid_t, waitPIDChildExitGetResourceUseage, 
 	pid_t pid, int* statusAddr, int options, MCProcessRUseage* useage);
+	return class;
 }

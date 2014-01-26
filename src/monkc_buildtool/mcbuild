@@ -25,6 +25,7 @@ if [ "$1" = "" ]
 then
 	echo "mcbuild -create			//create a project at current path"
 	echo "mcbuild -build 			//build a project"
+	echo "mcbuild -clean            //clean a project"
 fi
 if [ "$1" = "-create" ]
 then

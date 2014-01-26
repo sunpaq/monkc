@@ -3,6 +3,7 @@
 initer(MCString)
 {
 	//nothing to init
+	return this;
 }
 
 method(MCString, MCString*, initWithCString, char* str)
@@ -12,9 +13,9 @@ method(MCString, MCString*, initWithCString, char* str)
 	MCString* newthis = nil;
 	//realloc will return a new mem if can now expand the old one!
 	if(len > 0){
-		newthis = (MCString*)mc_realloc(this, sizeof(MCString) + len + 1);
+		newthis = (MCString*)realloc(this, sizeof(MCString) + len + 1);
 	}else{
-		newthis = (MCString*)mc_realloc(this, sizeof(MCString) + 1);
+		newthis = (MCString*)realloc(this, sizeof(MCString) + 1);
 		error_log("MCString input string length <= 0\n");
 	}
 
@@ -141,11 +142,10 @@ method(MCString, int, equalTo, MCString* stringToComp)
 
 method(MCString, void, bye, xxx)
 {
-	call(this, MCObject, bye, nil);
 	//only release the added sub strings.
 	debug_log("MCString - bye\n");
 	MCString *iterator, *save;
-	for(iterator=this->next; (save=iterator)!=nil; mc_free(save)){
+	for(iterator=this->next; (save=iterator)!=nil; free(save)){
 		iterator = iterator->next;
 		debug_log("MCString - free a sub string\n");
 	}
@@ -171,4 +171,5 @@ binding(MCString, int, equalTo, MCString* stringToComp);
 binding(MCString, char, getOneChar, xxx);
 binding(MCString, void, getCharsUntilEnter, char const resultString[]);
 binding(MCString, void, bye, xxx);
+return class;
 }

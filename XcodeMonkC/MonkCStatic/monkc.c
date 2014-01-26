@@ -244,7 +244,7 @@ static int ref_count_down(mo const this)
 	return this->ref_count;
 }
 
-void recycle(mo const this)
+void _recycle(mo const this)
 {
 	if(ref_count_down(this) == 0){
 		//call the "bye" method on object
@@ -253,7 +253,7 @@ void recycle(mo const this)
 	}
 }
 
-void release(mo const this)
+void _release(mo const this)
 {
 	if(ref_count_down(this) == 0){
 		//call the "bye" method on object
@@ -262,7 +262,7 @@ void release(mo const this)
 	}
 }
 
-mo retain(mo const this)
+mo _retain(mo const this)
 {
 	for(;;){
 		if(this == nil){
