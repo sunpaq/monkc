@@ -6,7 +6,7 @@
 
 implements(Flyable);
 extends(BirdFather);
-class(Bird);
+monkc(Bird);
 	char* name;
 	int type;
 end(Bird);

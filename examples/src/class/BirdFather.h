@@ -4,7 +4,7 @@
 #ifndef BirdFather_
 #define BirdFather_
 
-class(BirdFather);
+monkc(BirdFather);
 	int age;
 end(BirdFather);
 

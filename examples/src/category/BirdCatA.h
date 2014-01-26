@@ -4,7 +4,7 @@
 #ifndef BirdCatA_
 #define BirdCatA_
 
-class(BirdCatA);
+monkc(BirdCatA);
 end(BirdCatA);
 
 

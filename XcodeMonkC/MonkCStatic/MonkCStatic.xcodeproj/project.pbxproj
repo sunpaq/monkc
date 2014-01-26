@@ -7,15 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		4B503960189172530044985D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B50395F189172520044985D /* Foundation.framework */; };
-		4B503965189172530044985D /* libmonkc_arm.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B503964189172530044985D /* libmonkc_arm.h */; };
-		4B503967189172530044985D /* libmonkc_arm.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B503966189172530044985D /* libmonkc_arm.m */; };
+		4B29DD6F1895106A00B60AA1 /* MCRuntimeAsm_ARM32.s in Sources */ = {isa = PBXBuildFile; fileRef = 4B9F31251883CD43009B94A9 /* MCRuntimeAsm_ARM32.s */; };
 		4B50396E189172530044985D /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B50396D189172530044985D /* XCTest.framework */; };
 		4B50396F189172530044985D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B50395F189172520044985D /* Foundation.framework */; };
 		4B503971189172530044985D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B503970189172530044985D /* UIKit.framework */; };
 		4B503974189172530044985D /* liblibmonkc_arm.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B50395D189172520044985D /* liblibmonkc_arm.a */; };
-		4B50397A189172530044985D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4B503978189172530044985D /* InfoPlist.strings */; };
-		4B50397C189172530044985D /* libmonkc_armTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B50397B189172530044985D /* libmonkc_armTests.m */; };
 		4B9F31301883CD43009B94A9 /* MCRuntimeAsm_X8664_darwin.s in Sources */ = {isa = PBXBuildFile; fileRef = 4B9F312A1883CD43009B94A9 /* MCRuntimeAsm_X8664_darwin.s */; };
 		4B9F31381883CD59009B94A9 /* HashTable.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B9F31321883CD59009B94A9 /* HashTable.c */; };
 		4B9F31391883CD59009B94A9 /* HashTable.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B9F31331883CD59009B94A9 /* HashTable.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -46,14 +42,14 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		4B50395B189172520044985D /* CopyFiles */ = {
+		4B50395B189172520044985D /* Copy Files */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "include/$(PRODUCT_NAME)";
 			dstSubfolderSpec = 16;
 			files = (
-				4B503965189172530044985D /* libmonkc_arm.h in CopyFiles */,
 			);
+			name = "Copy Files";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -61,15 +57,9 @@
 /* Begin PBXFileReference section */
 		4B50395D189172520044985D /* liblibmonkc_arm.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = liblibmonkc_arm.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B50395F189172520044985D /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		4B503963189172530044985D /* libmonkc_arm-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "libmonkc_arm-Prefix.pch"; sourceTree = "<group>"; };
-		4B503964189172530044985D /* libmonkc_arm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = libmonkc_arm.h; sourceTree = "<group>"; };
-		4B503966189172530044985D /* libmonkc_arm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = libmonkc_arm.m; sourceTree = "<group>"; };
 		4B50396C189172530044985D /* libmonkc_armTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = libmonkc_armTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B50396D189172530044985D /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		4B503970189172530044985D /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
-		4B503977189172530044985D /* libmonkc_armTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "libmonkc_armTests-Info.plist"; sourceTree = "<group>"; };
-		4B503979189172530044985D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		4B50397B189172530044985D /* libmonkc_armTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = libmonkc_armTests.m; sourceTree = "<group>"; };
 		4B9F30971883B560009B94A9 /* libmonkc.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libmonkc.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B9F31251883CD43009B94A9 /* MCRuntimeAsm_ARM32.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = MCRuntimeAsm_ARM32.s; sourceTree = "<group>"; };
 		4B9F31261883CD43009B94A9 /* MCRuntimeAsm_ARM64.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = MCRuntimeAsm_ARM64.s; sourceTree = "<group>"; };
@@ -100,7 +90,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4B503960189172530044985D /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -135,42 +124,6 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		4B503961189172530044985D /* libmonkc_arm */ = {
-			isa = PBXGroup;
-			children = (
-				4B503964189172530044985D /* libmonkc_arm.h */,
-				4B503966189172530044985D /* libmonkc_arm.m */,
-				4B503962189172530044985D /* Supporting Files */,
-			);
-			path = libmonkc_arm;
-			sourceTree = "<group>";
-		};
-		4B503962189172530044985D /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				4B503963189172530044985D /* libmonkc_arm-Prefix.pch */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		4B503975189172530044985D /* libmonkc_armTests */ = {
-			isa = PBXGroup;
-			children = (
-				4B50397B189172530044985D /* libmonkc_armTests.m */,
-				4B503976189172530044985D /* Supporting Files */,
-			);
-			path = libmonkc_armTests;
-			sourceTree = "<group>";
-		};
-		4B503976189172530044985D /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				4B503977189172530044985D /* libmonkc_armTests-Info.plist */,
-				4B503978189172530044985D /* InfoPlist.strings */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
 		4B9F308E1883B560009B94A9 = {
 			isa = PBXGroup;
 			children = (
@@ -191,8 +144,6 @@
 				4B9F31361883CD59009B94A9 /* Log.c */,
 				4B9F31371883CD59009B94A9 /* Log.h */,
 				4B9F31241883CD43009B94A9 /* MCRuntimeAsm */,
-				4B503961189172530044985D /* libmonkc_arm */,
-				4B503975189172530044985D /* libmonkc_armTests */,
 				4B50395E189172520044985D /* Frameworks */,
 				4B9F30981883B560009B94A9 /* Products */,
 			);
@@ -248,7 +199,7 @@
 			buildPhases = (
 				4B503959189172520044985D /* Sources */,
 				4B50395A189172520044985D /* Frameworks */,
-				4B50395B189172520044985D /* CopyFiles */,
+				4B50395B189172520044985D /* Copy Files */,
 			);
 			buildRules = (
 			);
@@ -327,7 +278,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4B50397A189172530044985D /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -338,7 +288,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4B503967189172530044985D /* libmonkc_arm.m in Sources */,
+				4B29DD6F1895106A00B60AA1 /* MCRuntimeAsm_ARM32.s in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -346,7 +296,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4B50397C189172530044985D /* libmonkc_armTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -375,17 +324,6 @@
 			targetProxy = 4B503972189172530044985D /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
-
-/* Begin PBXVariantGroup section */
-		4B503978189172530044985D /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				4B503979189172530044985D /* en */,
-			);
-			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		4B50397D189172530044985D /* Debug */ = {
@@ -564,6 +502,7 @@
 				4B50397E189172530044985D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		4B503982189172530044985D /* Build configuration list for PBXNativeTarget "libmonkc_armTests" */ = {
 			isa = XCConfigurationList;
@@ -572,6 +511,7 @@
 				4B503980189172530044985D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		4B9F30921883B560009B94A9 /* Build configuration list for PBXProject "MonkCStatic" */ = {
 			isa = XCConfigurationList;
