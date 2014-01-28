@@ -60,6 +60,8 @@ endif
 	$(CC) -c $<
 
 install:
+	mkdir -p $(INCPATH)
+	mkdir -p $(LIBPATH)
 	rm -f -r $(INCPATH)monkc
 	rm -f $(LIBPATH)libmonkc.a
 	tar -xzvf monkc.tar.gz -C $(INCPATH)
