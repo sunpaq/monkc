@@ -66,7 +66,7 @@ void runtime_log(char* volatile fmt, ...)
 {
 	if(LOG_LEVEL != MC_SILENT
 	 &&LOG_LEVEL != MC_ERROR_ONLY
-	 &&LOG_LEVEL != DEBUG){
+	 &&LOG_LEVEL != MC_DEBUG){
 	 	char log_buf[1024];
 		printf(LOG_FMT, LOG_COLOR_DARK_GRAY, "[RTime] - ");
 		va_list ap;
@@ -113,7 +113,7 @@ void runtime_logt(char* volatile tag, char* volatile fmt, ...)
 {
 	if(LOG_LEVEL != MC_SILENT
 	 &&LOG_LEVEL != MC_ERROR_ONLY
-	 &&LOG_LEVEL != DEBUG){
+	 &&LOG_LEVEL != MC_DEBUG){
 	 	char log_buf[1024];
 		printf(LOG_FMT, LOG_COLOR_DARK_GRAY, "[RTime] - ");
 		printf(LOG_FMT, LOG_COLOR_DARK_GRAY, tag);

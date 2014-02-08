@@ -50,7 +50,7 @@ static void mc_check()
 void mc_init()
 {
 	//default we set log level to debug
-	LOG_LEVEL = DEBUG;
+	LOG_LEVEL = MC_DEBUG;
 	//create a class hashtable
 	if(mc_global_classtable == nil)
 		mc_global_classtable = new_table(0);
