@@ -11,7 +11,7 @@
 
 initer(BirdFather)
 {
-    return this;
+    return obj;
 }
 
 method(BirdFather, int, getAge, xxx)
@@ -22,5 +22,5 @@ method(BirdFather, int, getAge, xxx)
 loader(BirdFather)
 {
     binding(BirdFather, int, getAge, xxx);
-    return class;
+    return claz;
 }

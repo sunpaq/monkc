@@ -13,8 +13,8 @@
 
 initer(Bird)
 {
-    this->super = (mo)new(BirdFather);
-    return this;
+    obj->super = newc(mo, BirdFather);
+    return obj;
 }
 
 method(Bird, void, fly, xxx)
@@ -37,5 +37,5 @@ loader(Bird)
     binding(Bird, void, fly, xxx);
     binding(Bird, void, swim, xxx);
     binding(Bird, void, eat, xxx);
-    return class;
+    return claz;
 }

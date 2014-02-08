@@ -11,6 +11,7 @@
 		4B9F30FB1883B847009B94A9 /* MonkCAppXcodeTemplete.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B9F30FA1883B847009B94A9 /* MonkCAppXcodeTemplete.1 */; };
 		4B9F31141883BB4C009B94A9 /* Bird.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B9F31131883BB4C009B94A9 /* Bird.c */; };
 		4B9F31541883D060009B94A9 /* BirdFather.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B9F31531883D060009B94A9 /* BirdFather.c */; };
+		4BD49B8518A6443200442351 /* libmonkc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BD49B8418A6443200442351 /* libmonkc.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -34,6 +35,15 @@
 		4B9F31131883BB4C009B94A9 /* Bird.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Bird.c; sourceTree = "<group>"; };
 		4B9F31521883D04D009B94A9 /* BirdFather.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BirdFather.h; sourceTree = "<group>"; };
 		4B9F31531883D060009B94A9 /* BirdFather.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BirdFather.c; sourceTree = "<group>"; };
+		4BD49B8418A6443200442351 /* libmonkc.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libmonkc.a; sourceTree = "<group>"; };
+		4BD49B8618A6446900442351 /* HashTable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HashTable.h; sourceTree = "<group>"; };
+		4BD49B8718A6446900442351 /* Key.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Key.h; sourceTree = "<group>"; };
+		4BD49B8818A6446900442351 /* Lock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Lock.h; sourceTree = "<group>"; };
+		4BD49B8918A6446900442351 /* Log.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Log.h; sourceTree = "<group>"; };
+		4BD49B8A18A6446900442351 /* Messaging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Messaging.h; sourceTree = "<group>"; };
+		4BD49B8B18A6446900442351 /* monkc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = monkc.h; sourceTree = "<group>"; };
+		4BD49B8C18A6446900442351 /* ObjectManage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjectManage.h; sourceTree = "<group>"; };
+		4BD49B8D18A6446900442351 /* Vectors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Vectors.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -41,6 +51,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4BD49B8518A6443200442351 /* libmonkc.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -52,6 +63,7 @@
 			children = (
 				4B9F30F71883B847009B94A9 /* MonkCAppXcodeTemplete */,
 				4B9F30F61883B847009B94A9 /* Products */,
+				4BD49B7818A6443200442351 /* Libs */,
 			);
 			sourceTree = "<group>";
 		};
@@ -74,6 +86,46 @@
 				4B9F31531883D060009B94A9 /* BirdFather.c */,
 			);
 			path = MonkCAppXcodeTemplete;
+			sourceTree = "<group>";
+		};
+		4BD49B7818A6443200442351 /* Libs */ = {
+			isa = PBXGroup;
+			children = (
+				4BD49B7918A6443200442351 /* libmonkc */,
+			);
+			path = Libs;
+			sourceTree = "<group>";
+		};
+		4BD49B7918A6443200442351 /* libmonkc */ = {
+			isa = PBXGroup;
+			children = (
+				4BD49B7A18A6443200442351 /* include */,
+				4BD49B8318A6443200442351 /* lib */,
+			);
+			path = libmonkc;
+			sourceTree = "<group>";
+		};
+		4BD49B7A18A6443200442351 /* include */ = {
+			isa = PBXGroup;
+			children = (
+				4BD49B8618A6446900442351 /* HashTable.h */,
+				4BD49B8718A6446900442351 /* Key.h */,
+				4BD49B8818A6446900442351 /* Lock.h */,
+				4BD49B8918A6446900442351 /* Log.h */,
+				4BD49B8A18A6446900442351 /* Messaging.h */,
+				4BD49B8B18A6446900442351 /* monkc.h */,
+				4BD49B8C18A6446900442351 /* ObjectManage.h */,
+				4BD49B8D18A6446900442351 /* Vectors.h */,
+			);
+			path = include;
+			sourceTree = "<group>";
+		};
+		4BD49B8318A6443200442351 /* lib */ = {
+			isa = PBXGroup;
+			children = (
+				4BD49B8418A6443200442351 /* libmonkc.a */,
+			);
+			path = lib;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -207,11 +259,10 @@
 		4B9F30FF1883B847009B94A9 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				INSTALL_PATH = "$(SRCROOT)";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/Libs/libmonkc/lib",
-					/Users/penpenlion/Dev/monkc/OOP_MACROS/XcodeMonkC/MonkCAppXcodeTemplete/Libs/libmonkc/lib,
-					/Users/penpenlion/Dev/monkc/monkc/XcodeMonkC/MonkCAppXcodeTemplete/Libs/libmonkc/lib,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -220,11 +271,10 @@
 		4B9F31001883B847009B94A9 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				INSTALL_PATH = "$(SRCROOT)";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/Libs/libmonkc/lib",
-					/Users/penpenlion/Dev/monkc/OOP_MACROS/XcodeMonkC/MonkCAppXcodeTemplete/Libs/libmonkc/lib,
-					/Users/penpenlion/Dev/monkc/monkc/XcodeMonkC/MonkCAppXcodeTemplete/Libs/libmonkc/lib,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
