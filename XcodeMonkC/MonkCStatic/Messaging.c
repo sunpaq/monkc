@@ -42,12 +42,12 @@ mc_message _self_response_to_h(const mo obj, const char* methodname, unsigned ha
 	}
 }
 
-mc_message _response_to(const mo obj, const char* methodname)
+mc_message _response_to(const mo obj, const char* methodname, int strict)
 {
-	return _response_to_h(obj, methodname, hash(methodname));
+	return _response_to_h(obj, methodname, hash(methodname), strict);
 }
 
-mc_message _response_to_h(const mo obj, const char* methodname, unsigned hashval)
+mc_message _response_to_h(const mo obj, const char* methodname, unsigned hashval, int strict)
 {
 	mc_message tmpmsg = {nil, nil};
 	if(obj == nil || obj->isa == nil){
@@ -98,9 +98,15 @@ mc_message _response_to_h(const mo obj, const char* methodname, unsigned hashval
 	if(hit_count==1)
 		runtime_log("return a message[%s/%s]\n", nameof(tmpmsg.object), methodname);
 	else if(hit_count==0)
-		error_log("class[%s] can not response to method[%s]\n", nameof(obj), methodname);
+    {
+        if (strict!=2) error_log("class[%s] can not response to method[%s]\n", nameof(obj), methodname);
+        if (strict==1) exit(1);
+    }
 	else
-		error_log("hit_count>1 but class still can not response to method\n");
+    {
+        if (strict!=2) error_log("hit_count>1 but class still can not response to method\n");
+        if (strict==1) exit(1);
+    }
 	return tmpmsg;
 }
 
