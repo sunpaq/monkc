@@ -12,6 +12,7 @@
 		4B9F31541883D060009B94A9 /* BirdFather.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B9F31531883D060009B94A9 /* BirdFather.c */; };
 		4BFC699718A77CDD0026C776 /* libmonkc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BFC699618A77CDD0026C776 /* libmonkc.a */; };
 		4BFC699A18A77EB90026C776 /* ObjCClass.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BFC699918A77EB90026C776 /* ObjCClass.m */; };
+		4BFC69DB18A7A1690026C776 /* liblemontea.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BFC69DA18A7A1690026C776 /* liblemontea.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -36,6 +37,7 @@
 		4BFC699618A77CDD0026C776 /* libmonkc.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libmonkc.a; path = "../../../../../Library/Developer/Xcode/DerivedData/MonkCWorkSpace-fmovabzixpzcxnguawdjmitbkzgl/Build/Products/Debug/libmonkc.a"; sourceTree = "<group>"; };
 		4BFC699818A77EB90026C776 /* ObjCClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjCClass.h; sourceTree = "<group>"; };
 		4BFC699918A77EB90026C776 /* ObjCClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ObjCClass.m; sourceTree = "<group>"; };
+		4BFC69DA18A7A1690026C776 /* liblemontea.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = liblemontea.a; path = "../../../../../Library/Developer/Xcode/DerivedData/MonkCWorkSpace-fmovabzixpzcxnguawdjmitbkzgl/Build/Products/Debug/liblemontea.a"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -43,6 +45,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4BFC69DB18A7A1690026C776 /* liblemontea.a in Frameworks */,
 				4BFC699718A77CDD0026C776 /* libmonkc.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -53,6 +56,7 @@
 		4B9F30EC1883B847009B94A9 = {
 			isa = PBXGroup;
 			children = (
+				4BFC69DA18A7A1690026C776 /* liblemontea.a */,
 				4BFC699618A77CDD0026C776 /* libmonkc.a */,
 				4B9F30F71883B847009B94A9 /* MonkCAppXcodeTemplete */,
 				4B9F30F61883B847009B94A9 /* Products */,
@@ -213,6 +217,7 @@
 		4B9F30FF1883B847009B94A9 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				INSTALL_PATH = "$(SRCROOT)";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -226,6 +231,7 @@
 		4B9F31001883B847009B94A9 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				INSTALL_PATH = "$(SRCROOT)";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",

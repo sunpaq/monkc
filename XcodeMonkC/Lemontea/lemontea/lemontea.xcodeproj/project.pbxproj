@@ -1,0 +1,328 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		4BFC69C118A787C60026C776 /* MCBuffer.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BFC69AB18A787C50026C776 /* MCBuffer.c */; };
+		4BFC69C218A787C60026C776 /* MCBuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BFC69AC18A787C50026C776 /* MCBuffer.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4BFC69C318A787C60026C776 /* MCClock.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BFC69AD18A787C50026C776 /* MCClock.c */; };
+		4BFC69C418A787C60026C776 /* MCClock.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BFC69AE18A787C50026C776 /* MCClock.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4BFC69C518A787C60026C776 /* MCContext.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BFC69AF18A787C50026C776 /* MCContext.c */; };
+		4BFC69C618A787C60026C776 /* MCContext.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BFC69B018A787C50026C776 /* MCContext.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4BFC69C718A787C60026C776 /* MCException.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BFC69B118A787C50026C776 /* MCException.c */; };
+		4BFC69C818A787C60026C776 /* MCException.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BFC69B218A787C50026C776 /* MCException.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4BFC69C918A787C60026C776 /* MCIO.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BFC69B318A787C50026C776 /* MCIO.c */; };
+		4BFC69CA18A787C60026C776 /* MCIO.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BFC69B418A787C50026C776 /* MCIO.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4BFC69CB18A787C60026C776 /* MCMath.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BFC69B518A787C60026C776 /* MCMath.c */; };
+		4BFC69CC18A787C60026C776 /* MCMath.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BFC69B618A787C60026C776 /* MCMath.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4BFC69CD18A787C60026C776 /* MCProcess.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BFC69B718A787C60026C776 /* MCProcess.c */; };
+		4BFC69CE18A787C60026C776 /* MCProcess.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BFC69B818A787C60026C776 /* MCProcess.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4BFC69CF18A787C60026C776 /* MCSocket.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BFC69B918A787C60026C776 /* MCSocket.c */; };
+		4BFC69D018A787C60026C776 /* MCSocket.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BFC69BA18A787C60026C776 /* MCSocket.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4BFC69D118A787C60026C776 /* MCString.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BFC69BB18A787C60026C776 /* MCString.c */; };
+		4BFC69D218A787C60026C776 /* MCString.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BFC69BC18A787C60026C776 /* MCString.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4BFC69D318A787C60026C776 /* MCThread.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BFC69BD18A787C60026C776 /* MCThread.c */; };
+		4BFC69D418A787C60026C776 /* MCThread.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BFC69BE18A787C60026C776 /* MCThread.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4BFC69D518A787C60026C776 /* MCUnitTest.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BFC69BF18A787C60026C776 /* MCUnitTest.c */; };
+		4BFC69D618A787C60026C776 /* MCUnitTest.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BFC69C018A787C60026C776 /* MCUnitTest.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4BFC69D918A7881D0026C776 /* libmonkc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BFC69D818A7881D0026C776 /* libmonkc.a */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		4BFC69A418A787910026C776 /* liblemontea.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = liblemontea.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		4BFC69AB18A787C50026C776 /* MCBuffer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = MCBuffer.c; sourceTree = "<group>"; };
+		4BFC69AC18A787C50026C776 /* MCBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCBuffer.h; sourceTree = "<group>"; };
+		4BFC69AD18A787C50026C776 /* MCClock.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = MCClock.c; sourceTree = "<group>"; };
+		4BFC69AE18A787C50026C776 /* MCClock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCClock.h; sourceTree = "<group>"; };
+		4BFC69AF18A787C50026C776 /* MCContext.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = MCContext.c; sourceTree = "<group>"; };
+		4BFC69B018A787C50026C776 /* MCContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCContext.h; sourceTree = "<group>"; };
+		4BFC69B118A787C50026C776 /* MCException.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = MCException.c; sourceTree = "<group>"; };
+		4BFC69B218A787C50026C776 /* MCException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCException.h; sourceTree = "<group>"; };
+		4BFC69B318A787C50026C776 /* MCIO.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = MCIO.c; sourceTree = "<group>"; };
+		4BFC69B418A787C50026C776 /* MCIO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCIO.h; sourceTree = "<group>"; };
+		4BFC69B518A787C60026C776 /* MCMath.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = MCMath.c; sourceTree = "<group>"; };
+		4BFC69B618A787C60026C776 /* MCMath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCMath.h; sourceTree = "<group>"; };
+		4BFC69B718A787C60026C776 /* MCProcess.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = MCProcess.c; sourceTree = "<group>"; };
+		4BFC69B818A787C60026C776 /* MCProcess.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCProcess.h; sourceTree = "<group>"; };
+		4BFC69B918A787C60026C776 /* MCSocket.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = MCSocket.c; sourceTree = "<group>"; };
+		4BFC69BA18A787C60026C776 /* MCSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCSocket.h; sourceTree = "<group>"; };
+		4BFC69BB18A787C60026C776 /* MCString.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = MCString.c; sourceTree = "<group>"; };
+		4BFC69BC18A787C60026C776 /* MCString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCString.h; sourceTree = "<group>"; };
+		4BFC69BD18A787C60026C776 /* MCThread.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = MCThread.c; sourceTree = "<group>"; };
+		4BFC69BE18A787C60026C776 /* MCThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCThread.h; sourceTree = "<group>"; };
+		4BFC69BF18A787C60026C776 /* MCUnitTest.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = MCUnitTest.c; sourceTree = "<group>"; };
+		4BFC69C018A787C60026C776 /* MCUnitTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCUnitTest.h; sourceTree = "<group>"; };
+		4BFC69D818A7881D0026C776 /* libmonkc.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libmonkc.a; path = "../../../../../../Library/Developer/Xcode/DerivedData/MonkCWorkSpace-fmovabzixpzcxnguawdjmitbkzgl/Build/Products/Debug/libmonkc.a"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		4BFC69A118A787910026C776 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4BFC69D918A7881D0026C776 /* libmonkc.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		4BFC699B18A787910026C776 = {
+			isa = PBXGroup;
+			children = (
+				4BFC69D818A7881D0026C776 /* libmonkc.a */,
+				4BFC69D718A787D20026C776 /* src */,
+				4BFC69A518A787910026C776 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		4BFC69A518A787910026C776 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				4BFC69A418A787910026C776 /* liblemontea.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		4BFC69D718A787D20026C776 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				4BFC69AB18A787C50026C776 /* MCBuffer.c */,
+				4BFC69AC18A787C50026C776 /* MCBuffer.h */,
+				4BFC69AD18A787C50026C776 /* MCClock.c */,
+				4BFC69AE18A787C50026C776 /* MCClock.h */,
+				4BFC69AF18A787C50026C776 /* MCContext.c */,
+				4BFC69B018A787C50026C776 /* MCContext.h */,
+				4BFC69B118A787C50026C776 /* MCException.c */,
+				4BFC69B218A787C50026C776 /* MCException.h */,
+				4BFC69B318A787C50026C776 /* MCIO.c */,
+				4BFC69B418A787C50026C776 /* MCIO.h */,
+				4BFC69B518A787C60026C776 /* MCMath.c */,
+				4BFC69B618A787C60026C776 /* MCMath.h */,
+				4BFC69B718A787C60026C776 /* MCProcess.c */,
+				4BFC69B818A787C60026C776 /* MCProcess.h */,
+				4BFC69B918A787C60026C776 /* MCSocket.c */,
+				4BFC69BA18A787C60026C776 /* MCSocket.h */,
+				4BFC69BB18A787C60026C776 /* MCString.c */,
+				4BFC69BC18A787C60026C776 /* MCString.h */,
+				4BFC69BD18A787C60026C776 /* MCThread.c */,
+				4BFC69BE18A787C60026C776 /* MCThread.h */,
+				4BFC69BF18A787C60026C776 /* MCUnitTest.c */,
+				4BFC69C018A787C60026C776 /* MCUnitTest.h */,
+			);
+			name = src;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		4BFC69A218A787910026C776 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4BFC69D218A787C60026C776 /* MCString.h in Headers */,
+				4BFC69CA18A787C60026C776 /* MCIO.h in Headers */,
+				4BFC69D418A787C60026C776 /* MCThread.h in Headers */,
+				4BFC69D018A787C60026C776 /* MCSocket.h in Headers */,
+				4BFC69C218A787C60026C776 /* MCBuffer.h in Headers */,
+				4BFC69CE18A787C60026C776 /* MCProcess.h in Headers */,
+				4BFC69C418A787C60026C776 /* MCClock.h in Headers */,
+				4BFC69C818A787C60026C776 /* MCException.h in Headers */,
+				4BFC69D618A787C60026C776 /* MCUnitTest.h in Headers */,
+				4BFC69CC18A787C60026C776 /* MCMath.h in Headers */,
+				4BFC69C618A787C60026C776 /* MCContext.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		4BFC69A318A787910026C776 /* lemontea */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4BFC69A818A787910026C776 /* Build configuration list for PBXNativeTarget "lemontea" */;
+			buildPhases = (
+				4BFC69A018A787910026C776 /* Sources */,
+				4BFC69A118A787910026C776 /* Frameworks */,
+				4BFC69A218A787910026C776 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = lemontea;
+			productName = lemontea;
+			productReference = 4BFC69A418A787910026C776 /* liblemontea.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		4BFC699C18A787910026C776 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0500;
+				ORGANIZATIONNAME = "sun yuli";
+			};
+			buildConfigurationList = 4BFC699F18A787910026C776 /* Build configuration list for PBXProject "lemontea" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 4BFC699B18A787910026C776;
+			productRefGroup = 4BFC69A518A787910026C776 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				4BFC69A318A787910026C776 /* lemontea */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		4BFC69A018A787910026C776 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4BFC69C918A787C60026C776 /* MCIO.c in Sources */,
+				4BFC69C318A787C60026C776 /* MCClock.c in Sources */,
+				4BFC69C718A787C60026C776 /* MCException.c in Sources */,
+				4BFC69CB18A787C60026C776 /* MCMath.c in Sources */,
+				4BFC69CF18A787C60026C776 /* MCSocket.c in Sources */,
+				4BFC69D518A787C60026C776 /* MCUnitTest.c in Sources */,
+				4BFC69D118A787C60026C776 /* MCString.c in Sources */,
+				4BFC69C118A787C60026C776 /* MCBuffer.c in Sources */,
+				4BFC69D318A787C60026C776 /* MCThread.c in Sources */,
+				4BFC69CD18A787C60026C776 /* MCProcess.c in Sources */,
+				4BFC69C518A787C60026C776 /* MCContext.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		4BFC69A618A787910026C776 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				USER_HEADER_SEARCH_PATHS = "$(BUILT_PRODUCTS_DIR)/**";
+			};
+			name = Debug;
+		};
+		4BFC69A718A787910026C776 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				SDKROOT = macosx;
+				USER_HEADER_SEARCH_PATHS = "$(BUILT_PRODUCTS_DIR)/**";
+			};
+			name = Release;
+		};
+		4BFC69A918A787910026C776 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				EXECUTABLE_PREFIX = lib;
+				HEADER_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/MonkCWorkSpace-fmovabzixpzcxnguawdjmitbkzgl/Build/Products/Debug",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		4BFC69AA18A787910026C776 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				EXECUTABLE_PREFIX = lib;
+				HEADER_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/MonkCWorkSpace-fmovabzixpzcxnguawdjmitbkzgl/Build/Products/Debug",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		4BFC699F18A787910026C776 /* Build configuration list for PBXProject "lemontea" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4BFC69A618A787910026C776 /* Debug */,
+				4BFC69A718A787910026C776 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4BFC69A818A787910026C776 /* Build configuration list for PBXNativeTarget "lemontea" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4BFC69A918A787910026C776 /* Debug */,
+				4BFC69AA18A787910026C776 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 4BFC699C18A787910026C776 /* Project object */;
+}

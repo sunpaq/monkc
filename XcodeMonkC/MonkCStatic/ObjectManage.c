@@ -268,7 +268,7 @@ void _dealloc(mc_object* aobject, int is_recycle)
 		return;
 	}
 	//dealloc start
-	mc_block* nb;
+	mc_block* nb = nil;
 	if(!cut(up, blk, &nb))//success
 	{
 		if(is_recycle==1){

@@ -33,6 +33,24 @@ void testMonkC()
     release(abird);
 }
 
+#include "MCString.h"
+#include "MCClock.h"
+
+void testLemontea()
+{
+    MCString* mcstr = ff(new(MCString), initWithCString, "a MCString");
+    ff(mcstr, add, " the second");
+    ff(mcstr, add, " the third");
+    ff(mcstr, add, " the forth\n");
+    ff(mcstr, print, nil);
+    release(mcstr);
+    
+    MCClock* mcclock = ff(new(MCClock), setTimeToNow, nil);
+    ff(mcclock, printTime, nil);
+    ff(mcclock, printCurrentGMTTime, nil);
+    release(mcclock);
+}
+
 void callFromObjC()
 {
     printf("\n<call from objc class>\n\n");
@@ -46,6 +64,7 @@ int main(int argc, const char * argv[])
     LOG_LEVEL = MC_ERROR_ONLY;//the monkc color log system have some problem display on xcode console
         testMonkC();
         callFromObjC();
+        testLemontea();
     mc_end();//must called in the end
     return 0;
 }

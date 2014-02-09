@@ -5,6 +5,9 @@
       location = "group:MonkCAppXcodeTemplete/MonkCAppXcodeTemplete.xcodeproj">
    </FileRef>
    <FileRef
+      location = "group:Lemontea/lemontea/lemontea.xcodeproj">
+   </FileRef>
+   <FileRef
       location = "group:MonkCStatic/MonkCStatic.xcodeproj">
    </FileRef>
 </Workspace>
