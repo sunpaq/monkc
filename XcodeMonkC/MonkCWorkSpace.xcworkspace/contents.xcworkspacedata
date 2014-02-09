@@ -2,12 +2,12 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:MonkCAppXcodeTemplete/MonkCAppXcodeTemplete.xcodeproj">
+      location = "group:MonkCAppXcodeTemplete/example.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:Lemontea/lemontea/lemontea.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:MonkCStatic/MonkCStatic.xcodeproj">
+      location = "group:MonkCStatic/monkc.xcodeproj">
    </FileRef>
 </Workspace>

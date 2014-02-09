@@ -6,41 +6,34 @@
 	objectVersion = 46;
 	objects = {
 
-/* Begin PBXBuildFile section */
-		4BFC69D918A7881D0026C776 /* libmonkc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BFC69D818A7881D0026C776 /* libmonkc.a */; };
-/* End PBXBuildFile section */
-
 /* Begin PBXFileReference section */
-		4B52D8B718A7D16000084D53 /* src */ = {isa = PBXFileReference; lastKnownFileType = folder; path = src; sourceTree = "<group>"; };
-		4BFC69A418A787910026C776 /* liblemontea.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = liblemontea.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		4BFC69D818A7881D0026C776 /* libmonkc.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libmonkc.a; path = "../../../../../../Library/Developer/Xcode/DerivedData/MonkCWorkSpace-fmovabzixpzcxnguawdjmitbkzgl/Build/Products/Debug/libmonkc.a"; sourceTree = "<group>"; };
+		4B52D8B818A7D1D900084D53 /* src */ = {isa = PBXFileReference; lastKnownFileType = folder; path = src; sourceTree = "<group>"; };
+		4B9F30971883B560009B94A9 /* libmonkc.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libmonkc.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		4BFC69A118A787910026C776 /* Frameworks */ = {
+		4B9F30941883B560009B94A9 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4BFC69D918A7881D0026C776 /* libmonkc.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		4BFC699B18A787910026C776 = {
+		4B9F308E1883B560009B94A9 = {
 			isa = PBXGroup;
 			children = (
-				4BFC69D818A7881D0026C776 /* libmonkc.a */,
-				4B52D8B718A7D16000084D53 /* src */,
-				4BFC69A518A787910026C776 /* Products */,
+				4B52D8B818A7D1D900084D53 /* src */,
+				4B9F30981883B560009B94A9 /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		4BFC69A518A787910026C776 /* Products */ = {
+		4B9F30981883B560009B94A9 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				4BFC69A418A787910026C776 /* liblemontea.a */,
+				4B9F30971883B560009B94A9 /* libmonkc.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -48,7 +41,7 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
-		4BFC69A218A787910026C776 /* Headers */ = {
+		4B9F30951883B560009B94A9 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -58,51 +51,51 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		4BFC69A318A787910026C776 /* lemontea */ = {
+		4B9F30961883B560009B94A9 /* monkc */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 4BFC69A818A787910026C776 /* Build configuration list for PBXNativeTarget "lemontea" */;
+			buildConfigurationList = 4B9F309B1883B560009B94A9 /* Build configuration list for PBXNativeTarget "monkc" */;
 			buildPhases = (
-				4BFC69A018A787910026C776 /* Sources */,
-				4BFC69A118A787910026C776 /* Frameworks */,
-				4BFC69A218A787910026C776 /* Headers */,
+				4B9F30931883B560009B94A9 /* Sources */,
+				4B9F30941883B560009B94A9 /* Frameworks */,
+				4B9F30951883B560009B94A9 /* Headers */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
-			name = lemontea;
-			productName = lemontea;
-			productReference = 4BFC69A418A787910026C776 /* liblemontea.a */;
+			name = monkc;
+			productName = MonkCStatic;
+			productReference = 4B9F30971883B560009B94A9 /* libmonkc.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		4BFC699C18A787910026C776 /* Project object */ = {
+		4B9F308F1883B560009B94A9 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0500;
 				ORGANIZATIONNAME = "sun yuli";
 			};
-			buildConfigurationList = 4BFC699F18A787910026C776 /* Build configuration list for PBXProject "lemontea" */;
+			buildConfigurationList = 4B9F30921883B560009B94A9 /* Build configuration list for PBXProject "monkc" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 			);
-			mainGroup = 4BFC699B18A787910026C776;
-			productRefGroup = 4BFC69A518A787910026C776 /* Products */;
+			mainGroup = 4B9F308E1883B560009B94A9;
+			productRefGroup = 4B9F30981883B560009B94A9 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				4BFC69A318A787910026C776 /* lemontea */,
+				4B9F30961883B560009B94A9 /* monkc */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXSourcesBuildPhase section */
-		4BFC69A018A787910026C776 /* Sources */ = {
+		4B9F30931883B560009B94A9 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -112,10 +105,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		4BFC69A618A787910026C776 /* Debug */ = {
+		4B9F30991883B560009B94A9 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = YES;
+				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -146,14 +139,13 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
-				USER_HEADER_SEARCH_PATHS = "$(BUILT_PRODUCTS_DIR)/**";
 			};
 			name = Debug;
 		};
-		4BFC69A718A787910026C776 /* Release */ = {
+		4B9F309A1883B560009B94A9 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = YES;
+				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -178,58 +170,51 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				SDKROOT = macosx;
-				USER_HEADER_SEARCH_PATHS = "$(BUILT_PRODUCTS_DIR)/**";
 			};
 			name = Release;
 		};
-		4BFC69A918A787910026C776 /* Debug */ = {
+		4B9F309C1883B560009B94A9 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				EXECUTABLE_PREFIX = lib;
-				HEADER_SEARCH_PATHS = "$(inherited)";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/MonkCWorkSpace-fmovabzixpzcxnguawdjmitbkzgl/Build/Products/Debug",
-				);
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = monkc;
+				SDKROOT = macosx;
+				SUPPORTED_PLATFORMS = macosx;
 			};
 			name = Debug;
 		};
-		4BFC69AA18A787910026C776 /* Release */ = {
+		4B9F309D1883B560009B94A9 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				EXECUTABLE_PREFIX = lib;
-				HEADER_SEARCH_PATHS = "$(inherited)";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/MonkCWorkSpace-fmovabzixpzcxnguawdjmitbkzgl/Build/Products/Debug",
-				);
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = monkc;
+				SDKROOT = macosx;
+				SUPPORTED_PLATFORMS = macosx;
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		4BFC699F18A787910026C776 /* Build configuration list for PBXProject "lemontea" */ = {
+		4B9F30921883B560009B94A9 /* Build configuration list for PBXProject "monkc" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				4BFC69A618A787910026C776 /* Debug */,
-				4BFC69A718A787910026C776 /* Release */,
+				4B9F30991883B560009B94A9 /* Debug */,
+				4B9F309A1883B560009B94A9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		4BFC69A818A787910026C776 /* Build configuration list for PBXNativeTarget "lemontea" */ = {
+		4B9F309B1883B560009B94A9 /* Build configuration list for PBXNativeTarget "monkc" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				4BFC69A918A787910026C776 /* Debug */,
-				4BFC69AA18A787910026C776 /* Release */,
+				4B9F309C1883B560009B94A9 /* Debug */,
+				4B9F309D1883B560009B94A9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = 4BFC699C18A787910026C776 /* Project object */;
+	rootObject = 4B9F308F1883B560009B94A9 /* Project object */;
 }

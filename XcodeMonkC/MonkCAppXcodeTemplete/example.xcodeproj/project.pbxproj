@@ -7,11 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		4B9F30F91883B847009B94A9 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B9F30F81883B847009B94A9 /* main.m */; };
-		4B9F31141883BB4C009B94A9 /* Bird.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B9F31131883BB4C009B94A9 /* Bird.c */; };
-		4B9F31541883D060009B94A9 /* BirdFather.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B9F31531883D060009B94A9 /* BirdFather.c */; };
 		4BFC699718A77CDD0026C776 /* libmonkc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BFC699618A77CDD0026C776 /* libmonkc.a */; };
-		4BFC699A18A77EB90026C776 /* ObjCClass.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BFC699918A77EB90026C776 /* ObjCClass.m */; };
 		4BFC69DB18A7A1690026C776 /* liblemontea.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BFC69DA18A7A1690026C776 /* liblemontea.a */; };
 /* End PBXBuildFile section */
 
@@ -28,15 +24,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		4B9F30F51883B847009B94A9 /* MonkCAppXcodeTemplete */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = MonkCAppXcodeTemplete; sourceTree = BUILT_PRODUCTS_DIR; };
-		4B9F30F81883B847009B94A9 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		4B9F31121883BB37009B94A9 /* Bird.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Bird.h; sourceTree = "<group>"; };
-		4B9F31131883BB4C009B94A9 /* Bird.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Bird.c; sourceTree = "<group>"; };
-		4B9F31521883D04D009B94A9 /* BirdFather.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BirdFather.h; sourceTree = "<group>"; };
-		4B9F31531883D060009B94A9 /* BirdFather.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BirdFather.c; sourceTree = "<group>"; };
+		4B52D8B618A7D0FE00084D53 /* src */ = {isa = PBXFileReference; lastKnownFileType = folder; path = src; sourceTree = "<group>"; };
+		4B9F30F51883B847009B94A9 /* example */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = example; sourceTree = BUILT_PRODUCTS_DIR; };
 		4BFC699618A77CDD0026C776 /* libmonkc.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libmonkc.a; path = "../../../../../Library/Developer/Xcode/DerivedData/MonkCWorkSpace-fmovabzixpzcxnguawdjmitbkzgl/Build/Products/Debug/libmonkc.a"; sourceTree = "<group>"; };
-		4BFC699818A77EB90026C776 /* ObjCClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjCClass.h; sourceTree = "<group>"; };
-		4BFC699918A77EB90026C776 /* ObjCClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ObjCClass.m; sourceTree = "<group>"; };
 		4BFC69DA18A7A1690026C776 /* liblemontea.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = liblemontea.a; path = "../../../../../Library/Developer/Xcode/DerivedData/MonkCWorkSpace-fmovabzixpzcxnguawdjmitbkzgl/Build/Products/Debug/liblemontea.a"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -58,7 +48,7 @@
 			children = (
 				4BFC69DA18A7A1690026C776 /* liblemontea.a */,
 				4BFC699618A77CDD0026C776 /* libmonkc.a */,
-				4B9F30F71883B847009B94A9 /* MonkCAppXcodeTemplete */,
+				4B52D8B618A7D0FE00084D53 /* src */,
 				4B9F30F61883B847009B94A9 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -66,31 +56,17 @@
 		4B9F30F61883B847009B94A9 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				4B9F30F51883B847009B94A9 /* MonkCAppXcodeTemplete */,
+				4B9F30F51883B847009B94A9 /* example */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		4B9F30F71883B847009B94A9 /* MonkCAppXcodeTemplete */ = {
-			isa = PBXGroup;
-			children = (
-				4B9F30F81883B847009B94A9 /* main.m */,
-				4B9F31121883BB37009B94A9 /* Bird.h */,
-				4B9F31131883BB4C009B94A9 /* Bird.c */,
-				4B9F31521883D04D009B94A9 /* BirdFather.h */,
-				4B9F31531883D060009B94A9 /* BirdFather.c */,
-				4BFC699818A77EB90026C776 /* ObjCClass.h */,
-				4BFC699918A77EB90026C776 /* ObjCClass.m */,
-			);
-			path = MonkCAppXcodeTemplete;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		4B9F30F41883B847009B94A9 /* MonkCAppXcodeTemplete */ = {
+		4B9F30F41883B847009B94A9 /* example */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 4B9F30FE1883B847009B94A9 /* Build configuration list for PBXNativeTarget "MonkCAppXcodeTemplete" */;
+			buildConfigurationList = 4B9F30FE1883B847009B94A9 /* Build configuration list for PBXNativeTarget "example" */;
 			buildPhases = (
 				4B9F30F11883B847009B94A9 /* Sources */,
 				4B9F30F21883B847009B94A9 /* Frameworks */,
@@ -100,9 +76,9 @@
 			);
 			dependencies = (
 			);
-			name = MonkCAppXcodeTemplete;
+			name = example;
 			productName = MonkCAppXcodeTemplete;
-			productReference = 4B9F30F51883B847009B94A9 /* MonkCAppXcodeTemplete */;
+			productReference = 4B9F30F51883B847009B94A9 /* example */;
 			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
@@ -114,7 +90,7 @@
 				LastUpgradeCheck = 0500;
 				ORGANIZATIONNAME = "sun yuli";
 			};
-			buildConfigurationList = 4B9F30F01883B847009B94A9 /* Build configuration list for PBXProject "MonkCAppXcodeTemplete" */;
+			buildConfigurationList = 4B9F30F01883B847009B94A9 /* Build configuration list for PBXProject "example" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -126,7 +102,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				4B9F30F41883B847009B94A9 /* MonkCAppXcodeTemplete */,
+				4B9F30F41883B847009B94A9 /* example */,
 			);
 		};
 /* End PBXProject section */
@@ -136,10 +112,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4B9F31141883BB4C009B94A9 /* Bird.c in Sources */,
-				4B9F31541883D060009B94A9 /* BirdFather.c in Sources */,
-				4BFC699A18A77EB90026C776 /* ObjCClass.m in Sources */,
-				4B9F30F91883B847009B94A9 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -223,7 +195,7 @@
 					"$(inherited)",
 					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/MonkCWorkSpace-fmovabzixpzcxnguawdjmitbkzgl/Build/Products/Debug",
 				);
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = example;
 				USER_HEADER_SEARCH_PATHS = "$(BUILT_PRODUCTS_DIR)/**";
 			};
 			name = Debug;
@@ -237,7 +209,7 @@
 					"$(inherited)",
 					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/MonkCWorkSpace-fmovabzixpzcxnguawdjmitbkzgl/Build/Products/Debug",
 				);
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = example;
 				USER_HEADER_SEARCH_PATHS = "$(BUILT_PRODUCTS_DIR)/**";
 			};
 			name = Release;
@@ -245,7 +217,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		4B9F30F01883B847009B94A9 /* Build configuration list for PBXProject "MonkCAppXcodeTemplete" */ = {
+		4B9F30F01883B847009B94A9 /* Build configuration list for PBXProject "example" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				4B9F30FC1883B847009B94A9 /* Debug */,
@@ -254,7 +226,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		4B9F30FE1883B847009B94A9 /* Build configuration list for PBXNativeTarget "MonkCAppXcodeTemplete" */ = {
+		4B9F30FE1883B847009B94A9 /* Build configuration list for PBXNativeTarget "example" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				4B9F30FF1883B847009B94A9 /* Debug */,
