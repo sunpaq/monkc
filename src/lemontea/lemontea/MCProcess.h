@@ -57,7 +57,10 @@ method(MCProcess, int, isChildStopped, int status);
 method(MCProcess, int, getChildStopSignal, int status);
 method(MCProcess, int, isChildContinued, int status);
 
-typedef struct ruseage MCProcessRUseage;
+typedef struct MCProcessRUseage_struct {
+    struct rusage* rusage_p;
+    char* description;
+} MCProcessRUseage;
 //wait3
 method(MCProcess, 
 	pid_t, waitAnyChildExitGetResourceUseage, 

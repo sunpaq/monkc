@@ -6,7 +6,7 @@
 #define _MCException
 
 #define __exception_try_not_called -1
-extern volatile jmp_buf exception_env;
+extern jmp_buf exception_env;
 extern volatile int exception_type;
 void clean_exception_context();
 

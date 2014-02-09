@@ -29,7 +29,7 @@
 		4B0D9B2D18A7D52700E4ED89 /* MCThread.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B0D9B1718A7D52700E4ED89 /* MCThread.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4B0D9B2E18A7D52700E4ED89 /* MCUnitTest.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B0D9B1818A7D52700E4ED89 /* MCUnitTest.c */; };
 		4B0D9B2F18A7D52700E4ED89 /* MCUnitTest.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B0D9B1918A7D52700E4ED89 /* MCUnitTest.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		4B0D9B3D18A7D67C00E4ED89 /* libmonkc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B0D9B3C18A7D67C00E4ED89 /* libmonkc.a */; };
+		4B0D9B4618A7EB7900E4ED89 /* libmonkc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B0D9B4518A7EB7900E4ED89 /* libmonkc.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -55,7 +55,7 @@
 		4B0D9B1718A7D52700E4ED89 /* MCThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCThread.h; sourceTree = "<group>"; };
 		4B0D9B1818A7D52700E4ED89 /* MCUnitTest.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = MCUnitTest.c; sourceTree = "<group>"; };
 		4B0D9B1918A7D52700E4ED89 /* MCUnitTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCUnitTest.h; sourceTree = "<group>"; };
-		4B0D9B3C18A7D67C00E4ED89 /* libmonkc.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libmonkc.a; path = "../../../../../Library/Developer/Xcode/DerivedData/MonkCWorkSpace-fmovabzixpzcxnguawdjmitbkzgl/Build/Products/Debug/libmonkc.a"; sourceTree = "<group>"; };
+		4B0D9B4518A7EB7900E4ED89 /* libmonkc.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libmonkc.a; path = "../../../../../Library/Developer/Xcode/DerivedData/MonkCWorkSpace-fmovabzixpzcxnguawdjmitbkzgl/Build/Products/Release/libmonkc.a"; sourceTree = "<group>"; };
 		4BFC69A418A787910026C776 /* liblemontea.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = liblemontea.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -64,7 +64,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4B0D9B3D18A7D67C00E4ED89 /* libmonkc.a in Frameworks */,
+				4B0D9B4618A7EB7900E4ED89 /* libmonkc.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -103,7 +103,7 @@
 		4BFC699B18A787910026C776 = {
 			isa = PBXGroup;
 			children = (
-				4B0D9B3C18A7D67C00E4ED89 /* libmonkc.a */,
+				4B0D9B4518A7EB7900E4ED89 /* libmonkc.a */,
 				4B0D9B0318A7D52700E4ED89 /* src */,
 				4BFC69A518A787910026C776 /* Products */,
 			);
@@ -280,10 +280,15 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				EXECUTABLE_PREFIX = lib;
-				HEADER_SEARCH_PATHS = "$(inherited)";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(BUILT_PRODUCTS_DIR)/**",
+				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/MonkCWorkSpace-fmovabzixpzcxnguawdjmitbkzgl/Build/Products/Debug",
+					"$(BUILT_PRODUCTS_DIR)/**",
+					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/MonkCWorkSpace-fmovabzixpzcxnguawdjmitbkzgl/Build/Products/Release",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -293,10 +298,15 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				EXECUTABLE_PREFIX = lib;
-				HEADER_SEARCH_PATHS = "$(inherited)";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(BUILT_PRODUCTS_DIR)/**",
+				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/MonkCWorkSpace-fmovabzixpzcxnguawdjmitbkzgl/Build/Products/Debug",
+					"$(BUILT_PRODUCTS_DIR)/**",
+					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/MonkCWorkSpace-fmovabzixpzcxnguawdjmitbkzgl/Build/Products/Release",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};

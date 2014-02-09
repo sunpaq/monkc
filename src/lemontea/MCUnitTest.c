@@ -60,30 +60,30 @@ loader(MCUnitTestCase)
 	binding(MCUnitTestCase, void, tearDown, xxx);
 	binding(MCUnitTestCase, void, runTests, xxx);
 	binding(MCUnitTestCase, void, runATestMethod, char* errmsg);
-	return class;
+	return claz;
 }
 
 initer(MCUnitTestCase)
 {
-	this->next_case = nil;
-	return this;
+	obj->next_case = nil;
+	return obj;
 }
 
 method(MCUnitTestCase, MCUnitTestCase*, initWithTestResult, MCUnitTestResult* resultRef)
 {
 	if(resultRef!=nil){
 		retain(resultRef);
-		this->unitTestResultRef = resultRef;
+		obj->unitTestResultRef = resultRef;
 	}else{
-		this->unitTestResultRef = nil;
+		obj->unitTestResultRef = nil;
 	}
-	return this;
+	return obj;
 }
 
 method(MCUnitTestCase, void, bye, xxx)
 {
-	if(this->unitTestResultRef!=nil)
-		release(&(this->unitTestResultRef));
+	if(obj->unitTestResultRef!=nil)
+		release(&(obj->unitTestResultRef));
 }
 
 method(MCUnitTestCase, void, setUp, xxx)
@@ -98,13 +98,13 @@ method(MCUnitTestCase, void, tearDown, xxx)
 	runtime_log("----MCUnitTestCase tearDown\n");
 }
 
-static void runMethodByPointer(MCUnitTestCase* this, mc_hashitem* amethod)
+static void runMethodByPointer(MCUnitTestCase* obj, mc_hashitem* amethod)
 {
-	ff(this, setUp, nil);
+	ff(obj, setUp, nil);
 	runtime_log("%s\n", "runMethodByPointer start");
 
 	try{
-		_push_jump(_response_to(this, amethod->key), nil);
+		_push_jump(_response_to(cast(mo, obj), amethod->key, 0), nil);
 		//if exception generated, this line will never be reached
 	}
 	catch(MCAssertYESException){
@@ -129,10 +129,10 @@ static void runMethodByPointer(MCUnitTestCase* this, mc_hashitem* amethod)
 		error_log("MCAssertEqualsException\n");
 	}
 	finally{
-		error_log("testcase: %s at method: [%s]\n", this->isa->item->key, amethod->key);
+		error_log("testcase: %s at method: [%s]\n", obj->isa->item->key, amethod->key);
 	}
 
-	ff(this, tearDown, nil);
+	ff(obj, tearDown, nil);
 }
 
 method(MCUnitTestCase, void, runTests, xxx)
@@ -144,14 +144,14 @@ method(MCUnitTestCase, void, runTests, xxx)
 	unsigned tearDown_key = hash("tearDown");
 
 	mc_hashitem* amethod;
-	if(this==nil || this->isa==nil)
+	if(obj==nil || obj->isa==nil)
 		return;
 
 	runtime_log("%s\n", "MCUnitTestCase runTests before for loop");
-	for (i = 0; i < get_tablesize(this->isa->table->level); i++)
+	for (i = 0; i < get_tablesize(obj->isa->table->level); i++)
 	{
 		//runtime_log("MCUnitTestCase runTests in for loop index:[%d]\n", i);
-		amethod = this->isa->table->items[i];
+		amethod = obj->isa->table->items[i];
 		if(amethod!=nil 
 		&& amethod->value!=nil 
 		&& amethod->key!=nil
@@ -159,18 +159,18 @@ method(MCUnitTestCase, void, runTests, xxx)
 		&& i!=setUp_key
 		&& i!=tearDown_key){
 			runtime_log("%s\n", "MCUnitTestCase runTests hit a matched method");
-			if(this==nil || amethod==nil){
+			if(obj==nil || amethod==nil){
 				error_log("MCUnitTestCase runTests this pointer is nil\n");
 			}
 
-			runMethodByPointer(this, amethod);
+			runMethodByPointer(obj, amethod);
 		}
 	}
 }
 
 method(MCUnitTestCase, void, runATestMethod, char* methodName)
 {
-	runMethodByPointer(this, this->isa->table->items[hash(methodName)]);
+	runMethodByPointer(obj, obj->isa->table->items[hash(methodName)]);
 }
 
 /* Test Suite */
@@ -180,21 +180,21 @@ loader(MCUnitTestSuite)
 	binding(MCUnitTestSuite, void, bye, xxx);
 	binding(MCUnitTestSuite, void, addTestCase, MCUnitTestCase* tcase);
 	binding(MCUnitTestSuite, void, runTestCases, xxx);
-	return class;
+	return claz;
 }
 
 initer(MCUnitTestSuite)
 {
-	this->first_case = nil;
-	this->test_case_count = 0;
-	this->next_suite = nil;
-	return this;
+	obj->first_case = nil;
+	obj->test_case_count = 0;
+	obj->next_suite = nil;
+	return obj;
 }
 
 method(MCUnitTestSuite, void, bye, xxx)
 {
 	MCUnitTestCase *iter, *save;
-	for(iter=this->first_case; (save=iter)!=nil; release(save))
+	for(iter=obj->first_case; (save=iter)!=nil; release(save))
 		iter = iter->next_case;
 }
 
@@ -202,16 +202,16 @@ method(MCUnitTestSuite, void, addTestCase, MCUnitTestCase* volatile tcase)
 {
 	retain(tcase);
 	MCUnitTestCase *iter = nil;
-	for(iter=this->first_case; iter!=nil; iter=iter->next_case);
+	for(iter=obj->first_case; iter!=nil; iter=iter->next_case);
 	iter=tcase;
-	this->test_case_count++;
+	obj->test_case_count++;
 }
 
 method(MCUnitTestSuite, void, runTestCases, xxx)
 {
 	runtime_log("%s\n", "MCUnitTestSuite runTestCases");
 	MCUnitTestCase *iter = nil;
-	for(iter=this->first_case; iter!=nil; iter = iter->next_case)
+	for(iter=obj->first_case; iter!=nil; iter = iter->next_case)
 		call(iter, MCUnitTestCase, runTests, nil);
 }
 
@@ -226,13 +226,13 @@ loader(MCUnitTestResult)
 	binding(MCUnitTestResult, void, bye, xxx);
 	binding(MCUnitTestResult, void, addSuccessInfo, char* succinfo);
 	binding(MCUnitTestResult, void, addFailInfo, char* failinfo);
-	return class;
+	return claz;
 }
 
 initer(MCUnitTestResult)
 {
 	//nothing to init
-	return this;
+	return obj;
 }
 
 method(MCUnitTestResult, void, bye, xxx)
@@ -265,20 +265,20 @@ loader(MCUnitTestRunner)
 	binding(MCUnitTestRunner, void, bye, xxx);
 	binding(MCUnitTestRunner, void, addTestSuite, MCUnitTestSuite* testSuite);
 	binding(MCUnitTestRunner, void, runTestSuites, xxx);
-	return class;
+	return claz;
 }
 
 initer(MCUnitTestRunner)
 {
-	this->first_suite = nil;
-	this->test_suite_count = 0;
-	return this;
+	obj->first_suite = nil;
+	obj->test_suite_count = 0;
+	return obj;
 }
 
 method(MCUnitTestRunner, void, bye, xxx)
 {
 	MCUnitTestSuite *iter, *save;
-	for(iter=this->first_suite; (save=iter)!=nil; release(save))
+	for(iter=obj->first_suite; (save=iter)!=nil; release(save))
 		iter = iter->next_suite;
 }
 
@@ -286,16 +286,16 @@ method(MCUnitTestRunner, void, addTestSuite, MCUnitTestSuite* testSuite)
 {
 	retain(testSuite);
 	MCUnitTestSuite **iter;
-	for(iter=&(this->first_suite); (*iter)!=nil; iter=&((*iter)->next_suite)){}
+	for(iter=&(obj->first_suite); (*iter)!=nil; iter=&((*iter)->next_suite)){}
 	(*iter)=testSuite;
-	this->test_suite_count++;
+	obj->test_suite_count++;
 }
 
 method(MCUnitTestRunner, void, runTestSuites, xxx)
 {
 	runtime_log("%s\n", "MCUnitTestRunner runTestSuites");
 	MCUnitTestSuite *iter;
-	for(iter=this->first_suite; iter!=nil; iter = iter->next_suite)
+	for(iter=obj->first_suite; iter!=nil; iter = iter->next_suite)
 		call(iter, MCUnitTestSuite, runTestCases, nil);
 }
 

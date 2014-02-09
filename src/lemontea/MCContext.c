@@ -2,8 +2,8 @@
 
 initer(MCContext)
 {
-	this->selectionChar=0;
-	return this;
+	obj->selectionChar=0;
+	return obj;
 }
 
 loader(MCContext)
@@ -20,7 +20,7 @@ binding(MCContext, void, getUserInputString, char resultString[]);
 binding(MCContext, char*, getEnvironmentVar, const char* key);
 binding(MCContext, int, setEnvironmentVar, const char* key, const char* value, int isOverwrite);
 binding(MCContext, int, clearEnvironmentVar, const char* key);
-return class;
+return claz;
 }
 
 method(MCContext, 
@@ -32,7 +32,7 @@ MCContext*, newWithArgs, int argc, char** argv)
 	return res;
 }
 
-static struct privateData
+struct privateData
 {
 	/* data */
 };
@@ -63,20 +63,20 @@ method(MCContext, void, bye, xxx)
 method(MCContext, void, dumpParas, xxx)
 {
 	int i;
-	for (i = 0; i < this->argc; ++i)
+	for (i = 0; i < obj->argc; ++i)
 	{
-		runtime_log("%s\n", this->argv[i]);
+		runtime_log("%s\n", obj->argv[i]);
 	}
 }
 
 method(MCContext, char*, getPara, int index)
 {
-	return this->argv[index];
+	return obj->argv[index];
 }
 
 method(MCContext, int, isIndexedParaEqualTo, int index, char* para)
 {
-	char* para1 = this->argv[index];
+	char* para1 = obj->argv[index];
 	if (para1==nil)return 0;
 	if (strcmp(para1, para)==0)return 1;
 	else return 0;
@@ -84,11 +84,11 @@ method(MCContext, int, isIndexedParaEqualTo, int index, char* para)
 
 method(MCContext, int, isHavePara, char* para)
 {
-	if(this==nil)return 0;
+	if(obj==nil)return 0;
 	int i, res;
-	for (i = 0; i < this->argc; ++i)
+	for (i = 0; i < obj->argc; ++i)
 	{
-		char* tmp = this->argv[i];
+		char* tmp = obj->argv[i];
 		if(tmp!=nil&&para!=nil)res = strcmp(tmp, para);
 		else return 0;
 
@@ -104,13 +104,13 @@ method(MCContext, char, showMenuAndGetSelectionChar, int count, ...)
 	int i;
 	for (i = 0; i < count; ++i)
 	{
-		char* arg = va_arg(ap, const char*);
+		char* arg = va_arg(ap, char*);
 		printf("%d.%s\n", i+1, arg);
 	}
 	printf("%s\n", "your selection is?");
 	va_end(ap);
-	this->selectionChar = get_one_char();
-	return this->selectionChar;
+	obj->selectionChar = get_one_char();
+	return obj->selectionChar;
 }
 
 method(MCContext, int, showConfirmAndGetBOOL, const char* confirm)

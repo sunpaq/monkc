@@ -3,7 +3,7 @@
 initer(MCClock)
 {
 	//nothing
-	return this;
+	return obj;
 }
 
 loader(MCClock)
@@ -34,14 +34,14 @@ binding(MCClock, char*, getCurrentGMTTimeString, xxx);
 binding(MCClock, void, printTime, xxx);
 binding(MCClock, void, printCurrentTime, xxx);
 binding(MCClock, void, printCurrentGMTTime, xxx);
-return class;
+return claz;
 }
 
-method(MCClock, 
-void, setTimeToNow, xxx)
+method(MCClock, MCClock*, setTimeToNow, xxx)
 {
 	time_t timer = time(NULL);
-	this->rawtime = *localtime(&timer);
+	obj->rawtime = *localtime(&timer);
+    return obj;
 }
 
 method(MCClock, 
@@ -49,14 +49,14 @@ void, setTime, int tm_sec, int tm_min, int tm_hour,
 			   int tm_mday, int tm_mon, int tm_year,
 			   int tm_wday)
 {
-	if(tm_sec!=no_change) this->rawtime.tm_sec = tm_sec;
-	if(tm_min!=no_change) this->rawtime.tm_min = tm_min;
-	if(tm_hour!=no_change) this->rawtime.tm_hour = tm_hour;
-	if(tm_mday!=no_change) this->rawtime.tm_mday = tm_mday;
-	if(tm_mon!=no_change) this->rawtime.tm_mon = tm_mon;
+	if(tm_sec!=no_change) obj->rawtime.tm_sec = tm_sec;
+	if(tm_min!=no_change) obj->rawtime.tm_min = tm_min;
+	if(tm_hour!=no_change) obj->rawtime.tm_hour = tm_hour;
+	if(tm_mday!=no_change) obj->rawtime.tm_mday = tm_mday;
+	if(tm_mon!=no_change) obj->rawtime.tm_mon = tm_mon;
 	int year = tm_year-1900;
-	if(tm_year!=no_change) this->rawtime.tm_year = year;
-	if(tm_wday!=no_change) this->rawtime.tm_wday = tm_wday;
+	if(tm_year!=no_change) obj->rawtime.tm_year = year;
+	if(tm_wday!=no_change) obj->rawtime.tm_wday = tm_wday;
 }
 
 method(MCClock, 
@@ -64,18 +64,18 @@ void, adjustTime, int tm_sec, int tm_min, int tm_hour,
                   int tm_mday, int tm_mon, int tm_year,
                   int tm_wday)
 {
-	if(tm_sec!=no_change) this->rawtime.tm_sec += tm_sec;
-	if(tm_min!=no_change) this->rawtime.tm_min += tm_min;
-	if(tm_hour!=no_change) this->rawtime.tm_hour += tm_hour;
-	if(tm_mday!=no_change) this->rawtime.tm_mday += tm_mday;
-	if(tm_mon!=no_change) this->rawtime.tm_mon += tm_mon;
-	if(tm_year!=no_change) this->rawtime.tm_year += tm_year;
-	if(tm_wday!=no_change) this->rawtime.tm_wday += tm_wday;
+	if(tm_sec!=no_change) obj->rawtime.tm_sec += tm_sec;
+	if(tm_min!=no_change) obj->rawtime.tm_min += tm_min;
+	if(tm_hour!=no_change) obj->rawtime.tm_hour += tm_hour;
+	if(tm_mday!=no_change) obj->rawtime.tm_mday += tm_mday;
+	if(tm_mon!=no_change) obj->rawtime.tm_mon += tm_mon;
+	if(tm_year!=no_change) obj->rawtime.tm_year += tm_year;
+	if(tm_wday!=no_change) obj->rawtime.tm_wday += tm_wday;
 }
 
 method(MCClock, void, setRawtime, struct tm rawtime_in)
 {
-	this->rawtime = rawtime_in;
+	obj->rawtime = rawtime_in;
 }
 
 method(MCClock, 
@@ -83,35 +83,35 @@ void, setRawtimeFields, int tm_sec, int tm_min, int tm_hour,
 						int tm_mday, int tm_mon, int tm_year,
 						int tm_wday, int tm_yday, int tm_isdst)
 {
-	if(tm_sec!=no_change)this->rawtime.tm_sec = tm_sec;
-	if(tm_sec!=no_change)this->rawtime.tm_min = tm_min;
-	if(tm_sec!=no_change)this->rawtime.tm_hour = tm_hour;
+	if(tm_sec!=no_change)obj->rawtime.tm_sec = tm_sec;
+	if(tm_sec!=no_change)obj->rawtime.tm_min = tm_min;
+	if(tm_sec!=no_change)obj->rawtime.tm_hour = tm_hour;
 	//
-	if(tm_sec!=no_change)this->rawtime.tm_mday = tm_mday;
-	if(tm_sec!=no_change)this->rawtime.tm_mon = tm_mon;
-	if(tm_sec!=no_change)this->rawtime.tm_year = tm_year-1900;
+	if(tm_sec!=no_change)obj->rawtime.tm_mday = tm_mday;
+	if(tm_sec!=no_change)obj->rawtime.tm_mon = tm_mon;
+	if(tm_sec!=no_change)obj->rawtime.tm_year = tm_year-1900;
 	//
-	if(tm_sec!=no_change)this->rawtime.tm_wday = tm_wday;
-	if(tm_sec!=no_change)this->rawtime.tm_yday = tm_yday;
-	if(tm_sec!=no_change)this->rawtime.tm_isdst = tm_isdst;
+	if(tm_sec!=no_change)obj->rawtime.tm_wday = tm_wday;
+	if(tm_sec!=no_change)obj->rawtime.tm_yday = tm_yday;
+	if(tm_sec!=no_change)obj->rawtime.tm_isdst = tm_isdst;
 }
 
 method(MCClock, 
 void, getTime, time_t* const result)
 {
-	*result = mktime(&(this->rawtime));
+	*result = mktime(&(obj->rawtime));
 }
 
 method(MCClock, void, getRawtime, struct tm* const result)
 {
-	*result = this->rawtime;
+	*result = obj->rawtime;
 }
 
 static char* strbuff[50];
 method(MCClock, char*, getTimeByString, xxx)
 {
-	strcpy(strbuff, asctime(&(this->rawtime)));
-	return strbuff;
+	strcpy(strbuff[0], asctime(&(obj->rawtime)));
+	return strbuff[0];
 }
 
 method(MCClock, void, getCPUClocksPerSecond, clock_t* const result)
@@ -128,23 +128,23 @@ static char* buff[50];
 method(MCClock, char*, getCurrentTimeString, xxx)
 {
 	time_t timer = time(NULL);
-	strcpy(buff, asctime(localtime(&timer)));
+	strcpy(buff[0], asctime(localtime(&timer)));
 	//return asctime(localtime(&timer)));
-	return buff;
+	return buff[0];
 }
 
 static char* gmbuff[50];
 method(MCClock, char*, getCurrentGMTTimeString, xxx)
 {
 	time_t timer = time(NULL);
-	strcpy(gmbuff, asctime(gmtime(&timer)));
+	strcpy(gmbuff[0], asctime(gmtime(&timer)));
 	//return asctime(gmtime(&timer)));
-	return gmbuff;
+	return gmbuff[0];
 }
 
 method(MCClock, void, printTime, xxx)
 {
-	printf("\n%s", asctime(&this->rawtime));
+	printf("\n%s", asctime(&obj->rawtime));
 }
 
 method(MCClock, void, printCurrentTime, xxx)

@@ -1,29 +1,29 @@
 /*
-Copyright (c) <2013>, <Sun Yuli>
-All rights reserved.
-
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are met:
-    * Redistributions of source code must retain the above copyright
-      notice, this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of the <Monk-C> nor the
-      names of its contributors may be used to endorse or promote products
-      derived from this software without specific prior written permission.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE FOR ANY
-DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
+ Copyright (c) <2013>, <Sun Yuli>
+ All rights reserved.
+ 
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions are met:
+ * Redistributions of source code must retain the above copyright
+ notice, this list of conditions and the following disclaimer.
+ * Redistributions in binary form must reproduce the above copyright
+ notice, this list of conditions and the following disclaimer in the
+ documentation and/or other materials provided with the distribution.
+ * Neither the name of the <Monk-C> nor the
+ names of its contributors may be used to endorse or promote products
+ derived from this software without specific prior written permission.
+ 
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE FOR ANY
+ DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
 
 #ifndef __MCRuntime__
 #define __MCRuntime__
@@ -36,19 +36,27 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //max memory useage for class  table is: 4Byte x 4000 = 16KB
 //max memory useage for method table is: 4Byte x 4000 x 1000 = 16000KB = 16M
 
-//1000 classes 16M    
+//1000 classes 16M
 //100  classes 1.6M
 //10   classes 160KB
 
 //MAX_METHOD_NUM set to 4 time of the space needed
 //10level x 100 x 4 = 4000
 
+//MC_STRICT_MODE=1/0
+//when ff an invalid method. exit the process.
+//and dump the error message.
+#define MC_STRICT_MODE 1
+
 #ifndef MAX_KEY_CHARS
 #define MAX_KEY_CHARS 100
 #endif
 
-#define xxx void* xxx
+#ifndef nil
 #define nil ((void*)0)
+#endif
+
+#define xxx void* xxx
 #define S(value) #value
 #define A_B(a, b) a##_##b
 
@@ -106,39 +114,40 @@ typedef mc_object* mo;
 
 #define monkc(cls) \
 typedef struct cls##_struct{\
-	struct mc_object_struct* super;\
-	mc_class* isa;\
-	mc_block* block;\
-	int ref_count;\
-	mc_class* saved_isa;\
-	mc_class* mode;\
+struct mc_object_struct* super;\
+mc_class* isa;\
+mc_block* block;\
+int ref_count;\
+mc_class* saved_isa;\
+mc_class* mode;\
 
 #define end(cls) }cls;\
-mc_class* cls##_load(mc_class* const class);\
-cls* cls##_init(cls* const this);
+mc_class* cls##_load(mc_class* const claz);\
+cls* cls##_init(cls* const obj);
 
-#define implements(protocol) 
-#define extends(super) 
+#define implements(protocol)
+#define extends(super)
 
 //callback function pointer types
 typedef mc_class* (*loaderFP)(mc_class*);
 typedef mc_object* (*initerFP)(mc_object*);
 
 //callbacks
-#define loader(cls)					mc_class* cls##_load(mc_class* const class)
-#define initer(cls)						 cls* cls##_init(cls* const this)
+#define loader(cls)					mc_class* cls##_load(mc_class* const claz)
+#define initer(cls)						 cls* cls##_init(cls* const obj)
 
 //method binding
-#define binding(cls, type, met, ...)  		_binding(class, S(met), A_B(cls, met))
-#define override(cls, type, met, ...) 		_override(class, S(met), A_B(cls, met))
-#define hinding(cls, type, met, hash, ...)	_binding_h(class, S(met), A_B(cls, met), hash)
-#define hverride(cls, type, met, hash, ...) _override_h(class, S(met), A_B(cls, met), hash)
-#define method(cls, type, name, ...) 	type cls##_##name(cls* volatile this, volatile void* entry, __VA_ARGS__)
-#define protocol(pro, type, name, ...)  static type pro##_##name(mo volatile this, volatile void* entry, __VA_ARGS__)
-#define cast(cls, obj) 					((cls*)obj)
+#define binding(cls, type, met, ...)  		_binding(claz, S(met), A_B(cls, met))
+#define override(cls, type, met, ...) 		_override(claz, S(met), A_B(cls, met))
+#define hinding(cls, type, met, hash, ...)	_binding_h(claz, S(met), A_B(cls, met), hash)
+#define hverride(cls, type, met, hash, ...) _override_h(claz, S(met), A_B(cls, met), hash)
+#define method(cls, type, name, ...) 	type cls##_##name(cls* volatile obj, volatile void* entry, __VA_ARGS__)
+#define protocol(pro, type, name, ...)  static type pro##_##name(mo volatile obj, volatile void* entry, __VA_ARGS__)
+#define cast(type, obj) 				((type)obj)
 
 //for create object
-#define new(cls)						(cls*)_new(_alloc(S(cls), sizeof(cls), (loaderFP)cls##_load), (initerFP)cls##_init)
+#define newc(type, cls)                 (type)_new(_alloc(S(cls), sizeof(cls), (loaderFP)cls##_load), (initerFP)cls##_init)//with cast
+#define new(cls)						(cls*)_new(_alloc(S(cls), sizeof(cls), (loaderFP)cls##_load), (initerFP)cls##_init)//create instance
 #define hew(cls, hash)					(cls*)_new(_alloc_h(S(cls), sizeof(cls), cls##_load, hash), cls##_init)
 #define new_category(ori, cat)			(ori*)_new_category(_alloc(S(ori), sizeof(ori), ori##_load), ori##_init, cat##_load, cat##_init)
 #define hew_category(ori, hash, cat)	(ori*)_new_category(_alloc_h(S(ori), sizeof(ori), ori##_load, hash), ori##_init, cat##_load, cat##_init)
@@ -148,12 +157,14 @@ typedef mc_object* (*initerFP)(mc_object*);
 #define hnfo(cls, hash)                 _info_h(S(cls), sizeof(cls), cls##_load, hash)
 
 //for call method
-#define call(this, cls, name, ...)      cls##_##name(this, cls##_##name, __VA_ARGS__)//call other class method
-#define response_to(obj, met) 			_response_to(obj, S(met))
-#define hesponse_to(obj, met, hash) 	_response_to_h(obj, S(met), hash)
-#define ff(obj, met, ...)				_push_jump(_response_to((mo)obj, S(met)), __VA_ARGS__)
-#define fh(obj, met, hash, ...)			_push_jump(_response_to_h(obj, S(met), hash), __VA_ARGS__)
-#define fs(obj, met, ...)				_push_jump(_self_response_to(obj, S(met)), __VA_ARGS__)
+#define callc(obj, cls, rtype, name, ...)   (rtype)cls##_##name(obj, cls##_##name, __VA_ARGS__)//with cast
+#define call(obj, cls, name, ...)       cls##_##name(obj, cls##_##name, __VA_ARGS__)//static call
+#define response_to(obj, met) 			_response_to((mo)obj, S(met), 2)
+#define hesponse_to(obj, met, hash) 	_response_to_h((mo)obj, S(met), hash, 2)
+#define ffc(obj, type, met, ...)		(type)_push_jump(_response_to((mo)obj, S(met), MC_STRICT_MODE), __VA_ARGS__)//with cast
+#define ff(obj, met, ...)				_push_jump(_response_to((mo)obj, S(met), MC_STRICT_MODE), __VA_ARGS__)//send message
+#define fh(obj, met, hash, ...)			_push_jump(_response_to_h((mo)obj, S(met), hash, MC_STRICT_MODE), __VA_ARGS__)
+#define fs(obj, met, ...)				_push_jump(_self_response_to((mo)obj, S(met)), __VA_ARGS__)
 #define shift(obj, mode)				_shift(obj, S(mode), sizeof(mode), mode##_load)
 #define shift_back(obj)					_shift_back(obj)
 
@@ -171,17 +182,17 @@ unsigned _override_h(mc_class* const aclass, const char* methodname, void* value
 mc_class* _load(const char* name, size_t objsize, loaderFP loader);
 mc_class* _load_h(const char* name, size_t objsize, loaderFP loader, unsigned hashval);
 //object create
-mo _new(mo const this, initerFP initer);
-mo _new_category(mo const this, initerFP initer, loaderFP loader_cat, initerFP initer_cat);
+mo _new(mo const obj, initerFP initer);
+mo _new_category(mo const obj, initerFP initer, loaderFP loader_cat, initerFP initer_cat);
 //object mode change
 void _shift(mo const obj, const char* modename, size_t objsize, loaderFP loader);
 void _shift_back(mo const obj);
 //mm
 #define REFCOUNT_NO_MM 	-1
 #define REFCOUNT_ERR 	-100
-void _recycle(mo const this);
-void _release(mo const this);
-mo _retain(mo const this);
+void _recycle(mo const obj);
+void _release(mo const obj);
+mo _retain(mo const obj);
 #define recycle(obj) _recycle((mo)obj)
 #define release(obj) _release((mo)obj)
 #define retain(obj)  _retain((mo)obj)
@@ -202,6 +213,7 @@ char* nameofc(mc_class* const aclass);
 #include "HashTable.h"
 #include "Messaging.h"
 #include "ObjectManage.h"
+
 
 
 #endif

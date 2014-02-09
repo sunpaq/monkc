@@ -2,7 +2,7 @@
 
 initer(BirdModeA)
 {
-	return this;
+	return obj;
 }
 
 method(Bird, void, modemethodA, xxx)
@@ -31,5 +31,5 @@ loader(BirdModeA)
 	binding(Bird, void, modemethodB, int type);
 	binding(Bird, void, modemethodC, xxx);
 	binding(Bird, void, modemethodD, xxx);
-	return class;
+	return claz;
 }

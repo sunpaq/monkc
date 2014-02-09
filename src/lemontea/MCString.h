@@ -7,7 +7,7 @@
 monkc(MCString);
 	size_t length;
 	size_t size; 
-	mo next;
+	//struct MCString_struct* next;
 	char buff[];
 end(MCString);
 
@@ -20,10 +20,10 @@ end(MCString);
 method(MCString, MCString*, initWithCString, char* str);
 method(MCString, void, add, char* str);
 method(MCString, void, print, xxx);
-method(MCString, char*, toCString, char const buff[]);
+method(MCString, const char*, toCString, char const buff[]);
 method(MCString, int, equalTo, MCString* stringToComp);
 method(MCString, char, getOneChar, xxx);
-method(MCString, void, getCharsUntilEnter, char const resultString[]);
+method(MCString, void, getCharsUntilEnter, char resultString[]);
 method(MCString, void, bye, xxx);
 
 MCString* MCString_newWithCString(char* cstr);

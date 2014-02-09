@@ -3,19 +3,20 @@
 initer(MCString)
 {
 	//nothing to init
-	return this;
+	return obj;
 }
 
 method(MCString, MCString*, initWithCString, char* str)
 {
-	if(str==nil)return nil;
+	/*
+    if(str==nil)return nil;
 	size_t len = strlen(str);
 	MCString* newthis = nil;
 	//realloc will return a new mem if can now expand the old one!
 	if(len > 0){
-		newthis = (MCString*)realloc(this, sizeof(MCString) + len + 1);
+		newthis = (MCString*)realloc(obj, sizeof(MCString) + len + 1);
 	}else{
-		newthis = (MCString*)realloc(this, sizeof(MCString) + 1);
+		newthis = (MCString*)realloc(obj, sizeof(MCString) + 1);
 		error_log("MCString input string length <= 0\n");
 	}
 
@@ -25,11 +26,13 @@ method(MCString, MCString*, initWithCString, char* str)
 		error_log("mem realloc failed, nothing is in buff\n");
 		exit(-1);
 	}
+    */
 	
-	newthis->length = strlen(str);
-	newthis->size = strlen(str) + 1;
-	newthis->next = nil;
-	return newthis;
+	obj->length = strlen(str);
+	obj->size = strlen(str) + 1;
+	//obj->next = nil;
+    strcpy(obj->buff, str);
+	return obj;
 }
 
 
@@ -98,42 +101,50 @@ static void get_chars_until_enter(char resultString[])
 
 method(MCString, void, add, char* str)
 {
-	MCString* iterator = this;
+	/*
+    MCString* iterator = obj;
 	while(iterator->next!=nil)
-		iterator = iterator->next;
+		iterator = (MCString*)iterator->next;
 	(iterator->next) = ff(new(MCString), initWithCString, str);
-	this->length += strlen(str);
-	this->size += strlen(str) + 1;
+	obj->length += strlen(str);
+	obj->size += strlen(str) + 1;
+    */
+    
+    strcat(obj->buff, str);
 }
 
 method(MCString, void, print, xxx)
 {
-	printf("%s", this->buff);
-	MCString* iterator = this;
+	printf("%s", obj->buff);
+    /*
+	MCString* iterator = obj;
 	while(iterator->next!=nil)
 	{
-		iterator = iterator->next;
+		iterator = (MCString*)iterator->next;
 		printf("%s", iterator->buff);
 	}
 	printf("\n");
+    */
 }
 
-method(MCString, char*, toCString, char const buff[])
+method(MCString, const char*, toCString, char const buff[])
 {
-	MCString* iterator = this;
-	strcpy(buff, this->buff);
+	//MCString* iterator = obj;
+	strcpy(cast(char*, buff), obj->buff);
+    /*
 	while(iterator->next!=nil)
 	{
-		iterator = iterator->next;
-		strcat(buff, iterator->buff);
+		iterator = cast(MCString*, iterator->next);
+		strcat(cast(char*, buff), iterator->buff);
 	}
+    */ 
 	return buff;
 }
 
 method(MCString, int, equalTo, MCString* stringToComp)
 {
 	int res;
-	res = strcmp(this->buff, stringToComp->buff);
+	res = strcmp(obj->buff, stringToComp->buff);
 	if (res==0)
 		return 1;
 	else
@@ -142,13 +153,15 @@ method(MCString, int, equalTo, MCString* stringToComp)
 
 method(MCString, void, bye, xxx)
 {
-	//only release the added sub strings.
+	/*
+    //only release the added sub strings.
 	debug_log("MCString - bye\n");
 	MCString *iterator, *save;
-	for(iterator=this->next; (save=iterator)!=nil; free(save)){
+	for(iterator=obj->next; (save=iterator)!=nil; free(save)){
 		iterator = iterator->next;
 		debug_log("MCString - free a sub string\n");
 	}
+    */
 }
 
 method(MCString, char, getOneChar, xxx)
@@ -156,7 +169,7 @@ method(MCString, char, getOneChar, xxx)
 	return get_one_char();
 }
 
-method(MCString, void, getCharsUntilEnter, char const resultString[])
+method(MCString, void, getCharsUntilEnter, char resultString[])
 {
 	get_chars_until_enter(resultString);
 }
@@ -171,5 +184,5 @@ binding(MCString, int, equalTo, MCString* stringToComp);
 binding(MCString, char, getOneChar, xxx);
 binding(MCString, void, getCharsUntilEnter, char const resultString[]);
 binding(MCString, void, bye, xxx);
-return class;
+return claz;
 }

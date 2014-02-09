@@ -2,50 +2,50 @@
 
 initer(Bird)
 {
-	this->super = new(BirdFather);
-	this->type = 3;
-	debug_logt("Bird", "[%p] init called\n", this);
-	return this;
+	obj->super = new(BirdFather);
+	obj->type = 3;
+	debug_logt("Bird", "[%p] init called\n", obj);
+	return obj;
 }
 
 method(Bird, void, bye, xxx)
 {
-	recycle(this->super);
-	debug_logt(nameof(this), "[%p] bye called\n", this);
+	recycle(obj->super);
+	debug_logt(nameof(obj), "[%p] bye called\n", obj);
 }
 
-void funcA(Bird* this, int arg1)
+void funcA(Bird* obj, int arg1)
 {
 	debug_log("i am local function A\n");
 }
 
 protocol(Flyable, void, duckFly, xxx)
 {
-	debug_log("%s:Duck GuaGuaGua fly\n", nameof(cast(Bird, this)));
+	debug_log("%s:Duck GuaGuaGua fly\n", nameof(cast(Bird*, obj)));
 }
 
 protocol(Flyable, void, chickenFly, xxx)
 {
-	debug_log("%s:Chicken JiJiJi fly\n", nameof(cast(Bird, this)));
+	debug_log("%s:Chicken JiJiJi fly\n", nameof(cast(Bird*, obj)));
 }
 
 method(Bird, Bird*, initWithType, int type)
 {
-	this->type = type;
-	return this;
+	obj->type = type;
+	return obj;
 }
 
 method(Bird, int, fatherAge, xxx)
 {
-	int fage = cast(BirdFather, this->super)->age;
-	debug_logt(nameof(this), "my father age is: %d\n", fage);
+	int fage = cast(BirdFather*, obj->super)->age;
+	debug_logt(nameof(obj), "my father age is: %d\n", fage);
 	return fage;
 }
 
 method(Bird, void, fly, xxx)
 {
-	debug_log("Bird[%p->%p]: default fly type %d\n", this, this->super, this->type);
-	funcA(this, 100);
+	debug_log("Bird[%p->%p]: default fly type %d\n", obj, obj->super, obj->type);
+	funcA(obj, 100);
 }
 
 //
@@ -166,8 +166,8 @@ binding(Bird, int, fatherAge, xxx);
 	binding(Bird, fly49, xxx);
 	binding(Bird, fly50, xxx);
 	*/
-	debug_logt(nameofc(class), "load called\n");
-	return class;
+	debug_logt(nameofc(claz), "load called\n");
+	return claz;
 }
 
 

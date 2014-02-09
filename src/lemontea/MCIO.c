@@ -18,27 +18,27 @@ binding(MCFile, int, duplicateFdTo, int fd);
 binding(MCFile, void, printAttribute, xxx);
 binding(MCFile, void, bye, xxx);
 binding(MCFile, int, checkPermissionUseRealIDOfProcess, int mode);
-return class;
+return claz;
 }
 
 initer(MCFile)
 {
-	this->fd = 0;
-	this->pathname = "";
-	this->buffer = nil;
-	//this->attribute;
-	return this;
+	obj->fd = 0;
+	obj->pathname = "";
+	obj->buffer = nil;
+	//obj->attribute;
+	return obj;
 }
 
 method(MCFile, 
 void, initWithPathName, char* pathname, int oflag)
 {
-	if((this->fd = open(pathname, oflag, 0774))==-1)
+	if((obj->fd = open(pathname, oflag, 0774))==-1)
 		return;
-	this->pathname = pathname;
-	if(fstat(this->fd, &this->attribute)<0)
+	obj->pathname = pathname;
+	if(fstat(obj->fd, &obj->attribute)<0)
 		return;
-	this->buffer = malloc(this->attribute.st_blksize*10);
+	obj->buffer = malloc(obj->attribute.st_blksize*10);
 	return;
 }
 
@@ -70,13 +70,13 @@ binding(MCStream, off_t, tellOffset, xxx);
 binding(MCStream, int, seekFromBegin, off_t offset);
 binding(MCStream, int, seekFromCurrent, off_t offset);
 binding(MCStream, int, seekFromEnd, off_t offset);
-return class;
+return claz;
 }
 
 initer(MCStream)
 {
 	//do nothing
-	return this;
+	return obj;
 }
 
 method(MCStream, 
@@ -105,11 +105,11 @@ MCStream*, newWithPath, MCStreamType type, char* path)
 		break;
 	}
 
-	if((this->fileObject = fopen(path, rw_type))!=nil)
-		setvbuf(this->fileObject, NULL, buff_mode, BUFSIZ);
+	if((obj->fileObject = fopen(path, rw_type))!=nil)
+		setvbuf(obj->fileObject, NULL, buff_mode, BUFSIZ);
 	else
 		return nil;
-	return this;
+	return obj;
 }
 
 
@@ -120,19 +120,19 @@ loader(MCSelect)
 	binding(MCSelect, void, addFd, MCSelect_fd_type type, int fd);
 	binding(MCSelect, void, removeFd, MCSelect_fd_type type, int fd);
 	binding(MCSelect, int, isFdReady, MCSelect_fd_type type, int fd);
-	return class;
+	return claz;
 }
 
 initer(MCSelect)
 {
-	FD_ZERO(&this->readfd_set);
-	FD_ZERO(&this->writefd_set);
-	FD_ZERO(&this->exceptionfd_set);
+	FD_ZERO(&obj->readfd_set);
+	FD_ZERO(&obj->writefd_set);
+	FD_ZERO(&obj->exceptionfd_set);
 
-	FD_ZERO(&this->readfd_result_set);
-	FD_ZERO(&this->writefd_result_set);
-	FD_ZERO(&this->exceptionfd_result_set);
-	return this;
+	FD_ZERO(&obj->readfd_result_set);
+	FD_ZERO(&obj->writefd_result_set);
+	FD_ZERO(&obj->exceptionfd_result_set);
+	return obj;
 }
 
 method(MCSelect, 
@@ -140,55 +140,50 @@ void, initWithSecondAndMicrosec, long second, long microsecond)
 {
 	//timeout.tv_sec
 	//timeout.tv_usec
-	this->timeout.tv_sec = second;
-	this->timeout.tv_usec = microsecond;
+	obj->timeout.tv_sec = second;
+	obj->timeout.tv_usec = cast(int, microsecond);
 	return;
 }
 
-method(MCFile, int, readFromBegin, off_t offset, size_t nbytes)
+method(MCFile, size_t, readFromBegin, off_t offset, size_t nbytes)
 {
 	//use pread/pwrite for atomic operation
-	return pread(this->fd, this->buffer, nbytes, offset);
+	return pread(obj->fd, obj->buffer, nbytes, offset);
 }
 
-method(MCFile, int, readAtLastPosition, 
-	off_t offset, size_t nbytes)
+method(MCFile, size_t, readAtLastPosition, off_t offset, size_t nbytes)
 {
-	return pread(this->fd, this->buffer, nbytes, offset);
+	return pread(obj->fd, obj->buffer, nbytes, offset);
 }
 
-method(MCFile, int, readFromEnd, 
-	off_t offset, size_t nbytes)
+method(MCFile, size_t, readFromEnd, off_t offset, size_t nbytes)
 {
-	return pread(this->fd, this->buffer, nbytes, offset);
+	return pread(obj->fd, obj->buffer, nbytes, offset);
 }
 
-method(MCFile, int, writeToBegin, 
-	off_t offset, void* buf, size_t nbytes)
+method(MCFile, size_t, writeToBegin, off_t offset, void* buf, size_t nbytes)
 {
-	return pwrite(this->fd, buf, nbytes, offset);
+	return pwrite(obj->fd, buf, nbytes, offset);
 }
 
-method(MCFile, int, writeToLastTime, 
-	off_t offset, void* buf, size_t nbytes)
+method(MCFile, size_t, writeToLastTime, off_t offset, void* buf, size_t nbytes)
 {
-	return pwrite(this->fd, buf, nbytes, offset);
+	return pwrite(obj->fd, buf, nbytes, offset);
 }
 
-method(MCFile, int, writeToEnd, 
-	off_t offset, void* buf, size_t nbytes)
+method(MCFile, size_t, writeToEnd, off_t offset, void* buf, size_t nbytes)
 {
-	return pwrite(this->fd, buf, nbytes, offset);
+	return pwrite(obj->fd, buf, nbytes, offset);
 }
 
 method(MCFile, int, duplicateFd, xxx)
 {
-	return dup(this->fd);
+	return dup(obj->fd);
 }
 
 method(MCFile, int, duplicateFdTo, int fd)
 {
-	return dup2(this->fd, fd);
+	return dup2(obj->fd, fd);
 }
 
 void MCFile_flushAllCacheToDisk()
@@ -203,25 +198,25 @@ int MCFile_flushAFileCacheToDisk(int fd)
 
 method(MCFile, void, bye, xxx)
 {
-	//release this->buffer
-	free(this->buffer);
-	close(this->fd);
+	//release obj->buffer
+	free(obj->buffer);
+	close(obj->fd);
 }
 
 method(MCFile, void, printAttribute, xxx)
 {
-	printf("uid:%d gid:%d size:%d st_mode:%o lmtime:%s", 
-		this->attribute.st_uid, 
-		this->attribute.st_gid,
-		this->attribute.st_size,
-		this->attribute.st_mode,
-		ctime(&this->attribute.st_mtime));
+	printf("uid:%d gid:%d size:%lld st_mode:%o lmtime:%s",
+		obj->attribute.st_uid, 
+		obj->attribute.st_gid,
+		obj->attribute.st_size,
+		obj->attribute.st_mode,
+		ctime(&obj->attribute.st_mtime));
 }
 
 method(MCFile, int, checkPermissionUseRealIDOfProcess, int mode)
 {
 	int res;
-	if ((res = access(this->pathname, mode)) != -1)
+	if ((res = access(obj->pathname, mode)) != -1)
 		return 1;
 	return 0;
 }
@@ -333,7 +328,7 @@ char* MCProcess_getCurrentWorkingDir(MCCharBuffer* buff)
 method(MCStream, void, bye, xxx)
 {
 	//0=OK/EOF=ERROR
-	if(fclose(this->fileObject))
+	if(fclose(obj->fileObject))
 		error_log("close file error");
 	//other clean up works
 
@@ -341,89 +336,80 @@ method(MCStream, void, bye, xxx)
 
 method(MCStream, int, getFileDescriptor, xxx)
 {
-	return fileno(this->fileObject);
+	return fileno(obj->fileObject);
 }
 
 method(MCStream, int, getChar, xxx)
 {
-	return fgetc(this->fileObject);
+	return fgetc(obj->fileObject);
 }
 
 method(MCStream, int, putChar, int charCode)
 {
-	return fputc(charCode, this->fileObject);
+	return fputc(charCode, obj->fileObject);
 }
 
-method(MCStream, 
-int, pushbackChar, int charCodeToBePushBack)
+method(MCStream, int, pushbackChar, int charCodeToBePushBack)
 {
-	return ungetc(charCodeToBePushBack, this->fileObject);
+	return ungetc(charCodeToBePushBack, obj->fileObject);
 }
 
-method(MCStream, 
-char*, getCString, MCCharBuffer* recvBuffer)
+method(MCStream, char*, getCString, MCCharBuffer* recvBuffer)
 {
-	return fgets(recvBuffer->data, recvBuffer->size, this->fileObject);
+    fgets(recvBuffer->data, cast(int, recvBuffer->size), obj->fileObject);
+    return recvBuffer->data;
 }
 
-method(MCStream, 
-char*, putCString, MCCharBuffer* sendBuffer)
+method(MCStream, char*, putCString, MCCharBuffer* sendBuffer)
 {
-	return fputs(sendBuffer->data, this->fileObject);
+    fputs(sendBuffer->data, obj->fileObject);
+    return sendBuffer->data;
 }
 
-method(MCStream, 
-MCString*, getMCString, xxx)
+method(MCStream, MCString*, getMCString, xxx)
 {
 	char buff[1024];
-	fgets(buff, sizeof(buff), this->fileObject);
+	fgets(buff, sizeof(buff), obj->fileObject);
 	return ff(new(MCString), initWithCString, &buff[0]);
 }
 
-method(MCStream,
-MCString*, putMCString, MCString* str)
+method(MCStream, int, putMCString, MCString* str)
 {
-	return fputs(str->buff, this->fileObject);
+	return fputs(str->buff, obj->fileObject);
 }
 
-method(MCStream, 
-size_t, getBianryObject, void* recvBuffer,  size_t objectSize, size_t numberOfObjs)
+method(MCStream, size_t, getBianryObject, void* recvBuffer,  size_t objectSize, size_t numberOfObjs)
 {
 	//size_t fread(void *restrict ptr, size_t size, size_t nobj, FILE *restrict fp);
-	return fread(recvBuffer, objectSize, numberOfObjs, this->fileObject);
+	return fread(recvBuffer, objectSize, numberOfObjs, obj->fileObject);
 }
 
-method(MCStream, 
-size_t, putBianryObject, void* sendBuffer,  size_t objectSize, size_t numberOfObjs)
+method(MCStream, size_t, putBianryObject, void* sendBuffer,  size_t objectSize, size_t numberOfObjs)
 {
 	//size_t fwrite(const void *restrict ptr, size_t size, size_t nobj, FILE *restrict fp);
-	return fwrite(sendBuffer, objectSize, numberOfObjs, this->fileObject);
+	return fwrite(sendBuffer, objectSize, numberOfObjs, obj->fileObject);
 }
 
-method(MCStream, 
-off_t, tellOffset, xxx)
+method(MCStream, off_t, tellOffset, xxx)
 {
 	//off_t ftello(FILE *fp);
-	return ftello(this->fileObject);
+	return ftello(obj->fileObject);
 }
 
-method(MCStream, 
-int, seekFromBegin, off_t offset)
+method(MCStream, int, seekFromBegin, off_t offset)
 {
 	//int fseeko(FILE *fp, off_t offset, int whence);//SEEK_SET/SEEK_CUR/SEEK_END
-	return fseeko(this->fileObject, offset, SEEK_SET);
+	return fseeko(obj->fileObject, offset, SEEK_SET);
 }
 
-method(MCStream, 
-int, seekFromCurrent, off_t offset)
+method(MCStream, int, seekFromCurrent, off_t offset)
 {
-	return fseeko(this->fileObject, offset, SEEK_CUR);
+	return fseeko(obj->fileObject, offset, SEEK_CUR);
 }
 
-method(MCStream, 
-int, seekFromEnd, off_t offset)
+method(MCStream, int, seekFromEnd, off_t offset)
 {
-	return fseeko(this->fileObject, offset, SEEK_END);
+	return fseeko(obj->fileObject, offset, SEEK_END);
 }
 
 
@@ -434,62 +420,59 @@ int, seekFromEnd, off_t offset)
 
 method(MCSelect, int, waitForFdsetChange, xxx)
 {
-	this->readfd_result_set = this->readfd_set;
-	this->writefd_result_set = this->writefd_set;
-	this->exceptionfd_result_set = this->exceptionfd_set;
+	obj->readfd_result_set = obj->readfd_set;
+	obj->writefd_result_set = obj->writefd_set;
+	obj->exceptionfd_result_set = obj->exceptionfd_set;
 
-	return select(this->maxfd + 1, 
-		&this->readfd_result_set, 
-		&this->writefd_result_set, 
-		&this->exceptionfd_result_set, 
-		(this->timeout.tv_usec==0 && this->timeout.tv_sec==0)? NULL : &this->timeout);
+	return select(obj->maxfd + 1, 
+		&obj->readfd_result_set, 
+		&obj->writefd_result_set, 
+		&obj->exceptionfd_result_set, 
+		(obj->timeout.tv_usec==0 && obj->timeout.tv_sec==0)? NULL : &obj->timeout);
 }
 
-method(MCSelect, 
-void, addFd, MCSelect_fd_type type, int fd)
+method(MCSelect, void, addFd, MCSelect_fd_type type, int fd)
 {
-	if(fd > this->maxfd) this->maxfd = fd;
+	if(fd > obj->maxfd) obj->maxfd = fd;
 	switch(type){
 		case MCSelect_Readfd:
-			FD_SET(fd, &this->readfd_set);
+			FD_SET(fd, &obj->readfd_set);
 		break;
 		case MCSelect_Writefd:
-			FD_SET(fd, &this->writefd_set);
+			FD_SET(fd, &obj->writefd_set);
 		break;
 		case MCSelect_Exceptionfd:
-			FD_SET(fd, &this->exceptionfd_set);
+			FD_SET(fd, &obj->exceptionfd_set);
 		break;
 	}
 }
 
-method(MCSelect, 
-void, removeFd, MCSelect_fd_type type, int fd)
+method(MCSelect, void, removeFd, MCSelect_fd_type type, int fd)
 {
 	switch(type){
 		case MCSelect_Readfd:
-			FD_CLR(fd, &this->readfd_set);
+			FD_CLR(fd, &obj->readfd_set);
 		break;
 		case MCSelect_Writefd:
-			FD_CLR(fd, &this->writefd_set);
+			FD_CLR(fd, &obj->writefd_set);
 		break;
 		case MCSelect_Exceptionfd:
-			FD_CLR(fd, &this->exceptionfd_set);
+			FD_CLR(fd, &obj->exceptionfd_set);
 		break;
 	}
 }
 
-method(MCSelect, 
-int, isFdReady, MCSelect_fd_type type, int fd)
+method(MCSelect, int, isFdReady, MCSelect_fd_type type, int fd)
 {
 	switch(type){
 		case MCSelect_Readfd:
-			return FD_ISSET(fd, &this->readfd_result_set);
+			return FD_ISSET(fd, &obj->readfd_result_set);
 		break;
 		case MCSelect_Writefd:
-			return FD_ISSET(fd, &this->writefd_result_set);
+			return FD_ISSET(fd, &obj->writefd_result_set);
 		break;
 		case MCSelect_Exceptionfd:
-			return FD_ISSET(fd, &this->exceptionfd_result_set);
+			return FD_ISSET(fd, &obj->exceptionfd_result_set);
 		break;
 	}
 }

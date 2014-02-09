@@ -8,7 +8,7 @@ monkc(MCClock);
 	struct tm rawtime;
 end(MCClock);
 
-method(MCClock, void, setTimeToNow, xxx);
+method(MCClock, MCClock*, setTimeToNow, xxx);
 method(MCClock, void, setTime, int tm_sec, int tm_min, int tm_hour, 
 						 int tm_mday, int tm_mon, int tm_year,
 						 int tm_wday);

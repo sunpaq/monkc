@@ -37,9 +37,9 @@ keep-fp:		-mapcs-frame will keep the fp not to be optimized out
 .globl _push_jump
 .p2align 3 			
 _push_jump:
-	cmp a2, #0		
+	cmp r1, #0
 	beq 0f
-	bx a2
+	bx r1
 0:
 	bx lr
 
@@ -51,9 +51,9 @@ _push_jump:
 _clean_jump1:
 	mov sp, r11	
 	ldr r11, [sp]		
-	cmp a2, #0		
+	cmp r1, #0
 	beq 0f
-	bx a2
+	bx r1
 0:
 	bx lr
 
@@ -64,9 +64,9 @@ _clean_jump1:
 _clean_jump2:
 	mov sp, r11		
 	ldr r11, [sp]		
-	cmp a2, #0		
+	cmp r1, #0
 	beq 0f
-	bx a2
+	bx r1
 0:
 	bx lr
 
@@ -81,9 +81,9 @@ _clean_jump3:
 	mov r12, v2 	
 	mov sp, r11
 	ldr r11, [sp]		
-	cmp a2, #0		
+	cmp r1, #0
 	beq 0f
-	bx a2
+	bx r1
 0:
 	bx lr
 
@@ -100,9 +100,9 @@ _clean_jump4:
 	mov r12, v3 
 	mov sp, r11		
 	ldr r11, [sp] 		
-	cmp a2, #0		
+	cmp r1, #0
 	beq 0f
-	bx a2
+	bx r1
 0:
 	bx lr
 
@@ -123,7 +123,7 @@ return 0 success
 .globl	mc_atomic_get_integer
 .p2align 3, 0x90
 mc_atomic_get_integer:
-	ldrex v1, [a1]
+	ldrex v1, [r0]
 	mov r0, v1
 	bx lr
 
@@ -131,7 +131,7 @@ mc_atomic_get_integer:
 .globl	mc_atomic_get_pointer
 .p2align 3, 0x90
 mc_atomic_get_pointer:
-	ldrex v1, [a1]
+	ldrex v1, [r0]
 	mov r0, v1
 	bx lr
 
@@ -139,7 +139,7 @@ mc_atomic_get_pointer:
 .globl	mc_atomic_set_integer
 .p2align 3, 0x90
 mc_atomic_set_integer:
-	strex v1, a3, [a1]
+	strex v1, r2, [r0]
 	mov r0, v1
 	bx lr
 
@@ -148,7 +148,7 @@ mc_atomic_set_integer:
 .globl	mc_atomic_set_pointer
 .p2align 3, 0x90
 mc_atomic_set_pointer:
-	strex v1, a3, [a1]
+	strex v1, r2, [r0]
 	mov r0, v1
 	bx lr
 	

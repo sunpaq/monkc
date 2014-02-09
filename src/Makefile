@@ -4,10 +4,13 @@ LEMONTEA_PATH 	= ./lemontea
 MCPP_PATH 		= ./monkc_preprocessor
 MCBUILD_PATH 	= ./monkc_buildtool
 TESTPATH		= ./tests
+XCODEPATH       = ../XcodeMonkC
+EXAMPLEPATH	    = ../examples
 
 make:
 	#[sudo make install] to install monkc and lemontea
 	#[sudo make clean] to clean the monkc and lemontea
+	#[sudo make sync] to copy xcode project files to src
 	#[make test] to make and run test
 
 install:
@@ -25,10 +28,6 @@ install:
 	#/usr/local/bin/mcpp
 	#/usr/local/bin/mcbuild
 
-test:
-	cd $(TESTPATH) && make && ./exec
-	cd ..
-
 clean:
 	cd $(RUNTIME_PATH) && sudo make clean
 	cd ..
@@ -38,5 +37,16 @@ clean:
 	cd ..
 	cd $(MCPP_PATH) && sudo make clean
 	cd ..
+
+sync:
+	cp -r $(XCODEPATH)/MonkC/src/* $(RUNTIME_PATH)
+	cp $(XCODEPATH)/Lemontea/src/* $(LEMONTEA_PATH)
+	#cp $(XCODEPATH)/Example/src/* $(EXAMPLEPATH)
+
+test:
+	cd $(TESTPATH) && make && ./exec
+	cd ..
+
+
 
 	

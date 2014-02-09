@@ -268,7 +268,7 @@ void _dealloc(mc_object* aobject, int is_recycle)
 		return;
 	}
 	//dealloc start
-	mc_block* nb;
+	mc_block* nb = nil;
 	if(!cut(up, blk, &nb))//success
 	{
 		if(is_recycle==1){
@@ -276,7 +276,7 @@ void _dealloc(mc_object* aobject, int is_recycle)
 			pushToTail(fp, nb);
 			runtime_log("----dealloc[BACK:%s]: push back a block[%p obj[%p]]\n", nameof(aobject), blk, aobject);
 		}else{
-			runtime_log("----dealloc[DEL:%s]: delete a block[%p obj[%p]]\n", nameof(aobject), blk, aobject);
+            runtime_log("----dealloc[DEL:%s]: delete a block[%p obj[%p]]\n", nameof(aobject), blk, aobject);
 			free(nb->data);
 			free(nb);
 		}

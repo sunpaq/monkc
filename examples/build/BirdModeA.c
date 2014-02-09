@@ -2,7 +2,7 @@
 
 initer(BirdModeA)
 {
-	return this;
+	return obj;
 }
 
 method(Bird, void, modemethodA, xxx)
@@ -31,5 +31,5 @@ loader(BirdModeA)
 	hinding(Bird, void, modemethodB, 1891533950, int type);
 	hinding(Bird, void, modemethodC, 1891533951, xxx);
 	hinding(Bird, void, modemethodD, 1891533952, xxx);
-	return class;
+	return claz;
 }

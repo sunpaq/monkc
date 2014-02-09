@@ -1,7 +1,7 @@
 #include "MCException.h"
 
 //init define
-volatile jmp_buf exception_env = {};
+jmp_buf exception_env = {};
 volatile int exception_type = __exception_try_not_called;
 
 static int _exception_list[MAX_EXCEPTION_NUM];
@@ -10,7 +10,7 @@ static mo _exception_store[MAX_EXCEPTION_NUM];
 void clean_exception_context()
 {
 	//void *memset(void *s, int c, size_t n);
-	memset(&exception_env, 0, sizeof(jmp_buf));
+	memset(cast(void*, &exception_env), 0, sizeof(jmp_buf));
 	exception_type = __exception_try_not_called;
 	//clear list
 	int i;

@@ -4,13 +4,13 @@ loader(MCMath)
 {
 	binding(MCMath, void, bye, xxx);
 	binding(MCMath, int, addInteger2, int a, int b);
-	return class;
+	return claz;
 }
 
 initer(MCMath)
 {
-	this->tid = 0;
-	return this;
+	obj->tid = 0;
+	return obj;
 }
 
 method(MCMath, void, bye, xxx)

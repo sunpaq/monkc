@@ -287,24 +287,23 @@ mo _retain(mo const this)
 	return this;
 }
 
-static char* STR_UNKNOW = "unknow";
 char* nameof(mc_object* const aobject)
 {
 	if(aobject==nil)
-		return STR_UNKNOW;
+		return "";
 	if(aobject->isa==nil)
-		return STR_UNKNOW;
+		return "";
 	return nameofc(aobject->isa);
 }
 
 char* nameofc(mc_class* const aclass)
 {
 	if(aclass==nil)
-		return STR_UNKNOW;
+		return "";
 	if(aclass->item==nil)
-		return STR_UNKNOW;
+		return "";
 	if(aclass->item->key==nil)
-		return STR_UNKNOW;
+		return "";
 	return aclass->item->key;
 }
 

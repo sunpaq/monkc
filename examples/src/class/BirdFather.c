@@ -2,31 +2,31 @@
 
 initer(BirdFather)
 {
-	this->super = new(BirdGrandFather);
-	this->age = 50;
-	debug_logt(nameof(this), "[%p] init called\n", this);
-	return this;
+	obj->super = new(BirdGrandFather);
+	obj->age = 50;
+	debug_logt(nameof(obj), "[%p] init called\n", obj);
+	return obj;
 }
 
 method(BirdFather, void, bye, xxx)
 {
-	recycle(this->super);
-	debug_logt(nameof(this), "[%p] bye called\n", this);
+	recycle(obj->super);
+	debug_logt(nameof(obj), "[%p] bye called\n", obj);
 }
 
 method(BirdFather, void, flyhigh, xxx)
 {
-	debug_logt(nameof(this), "i fly very high\n");
+	debug_logt(nameof(obj), "i fly very high\n");
 }
 
 method(BirdFather, void, fly, xxx)
 {
-	debug_logt(nameof(this), "i fly\n");
+	debug_logt(nameof(obj), "i fly\n");
 }
 
 method(BirdFather, void, singAsong, char* asong)
 {
-	debug_logt(nameof(this), "lalala: %s\n", asong);
+	debug_logt(nameof(obj), "lalala: %s\n", asong);
 }
 
 loader(BirdFather)
@@ -35,6 +35,6 @@ loader(BirdFather)
 	binding(BirdFather, void, flyhigh, xxx);
 	binding(BirdFather, void, fly, xxx);
 	binding(BirdFather, void, singAsong, char* asong);
-	debug_logt(nameofc(class), "load called\n");
-	return class;
+	debug_logt(nameofc(claz), "load called\n");
+	return claz;
 }

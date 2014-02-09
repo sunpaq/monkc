@@ -10,6 +10,7 @@
 #include <sys/select.h>
 #include <sys/stat.h>
 #include <utime.h>
+#include <time.h>
 #include <dirent.h>
 #include <ftw.h>
 
@@ -27,12 +28,12 @@ end(MCFile);
 
 method(MCFile, void, initWithPathName, char* pathname, int oflag);
 
-method(MCFile, int, readFromBegin, off_t offset, size_t nbytes);
-method(MCFile, int, readAtLastPosition, off_t offset, size_t nbytes);
-method(MCFile, int, readFromEnd, off_t offset, size_t nbytes);
-method(MCFile, int, writeToBegin, off_t offset, void* buf, size_t nbytes);
-method(MCFile, int, writeToLastTime, off_t offset, void* buf, size_t nbytes);
-method(MCFile, int, writeToEnd, off_t offset, void* buf, size_t nbytes);
+method(MCFile, size_t, readFromBegin, off_t offset, size_t nbytes);
+method(MCFile, size_t, readAtLastPosition, off_t offset, size_t nbytes);
+method(MCFile, size_t, readFromEnd, off_t offset, size_t nbytes);
+method(MCFile, size_t, writeToBegin, off_t offset, void* buf, size_t nbytes);
+method(MCFile, size_t, writeToLastTime, off_t offset, void* buf, size_t nbytes);
+method(MCFile, size_t, writeToEnd, off_t offset, void* buf, size_t nbytes);
 
 method(MCFile, int, duplicateFd, xxx);
 method(MCFile, int, duplicateFdTo, int fd);
@@ -50,7 +51,7 @@ int MCFile_chmod(char* pathname, mode_t mode);
 int MFFile_truncateFileTo(char* pathname, off_t length);
 mode_t MCFile_setNewFilePermissionMask4Process(mode_t cmask);
 void MCFile_flushAllCacheToDisk();
-int MCFile_flushAFileCacheToDisk(int fd); returns(int result);
+int MCFile_flushAFileCacheToDisk(int fd);
 int MCFile_createSymbolLink(char* pathname, char* linkname);
 int MCFile_createDirectory(char* pathname);
 int MCFile_removeDirectory(char* pathname);
@@ -92,7 +93,7 @@ method(MCStream, int, pushbackChar, int charCodeToBePushBack);
 method(MCStream, char*, getCString, MCCharBuffer* recvBuffer);
 method(MCStream, char*, putCString, MCCharBuffer* sendBuffer);
 method(MCStream, MCString*, getMCString, xxx);
-method(MCStream, MCString*, putMCString, MCString* str);
+method(MCStream, int, putMCString, MCString* str);
 
 method(MCStream, size_t, getBianryObject, void* recvBuffer,  size_t objectSize, size_t numberOfObjs);
 method(MCStream, size_t, putBianryObject, void* sendBuffer,  size_t objectSize, size_t numberOfObjs);

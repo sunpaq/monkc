@@ -2,19 +2,19 @@
 
 initer(MCProcess)
 {
-	this->pid=getpid();
-	this->ppid=getppid();
-	this->uid=getuid();
-	this->euid=geteuid();
-	this->gid=getgid();
-	this->egid=getegid();
-	return this;
+	obj->pid=getpid();
+	obj->ppid=getppid();
+	obj->uid=getuid();
+	obj->euid=geteuid();
+	obj->gid=getgid();
+	obj->egid=getegid();
+	return obj;
 }
 
 method(MCProcess, void, printIDs, xxx)
 {
 	printf("pid[%d]ppid[%d]uid[%d]euid[%d]gid[%d]egid[%d]\n", 
-		this->pid, this->ppid, this->uid, this->euid, this->gid, this->egid);
+		obj->pid, obj->ppid, obj->uid, obj->euid, obj->gid, obj->egid);
 }
 
 method(MCProcess, int, fork, xxx)
@@ -112,14 +112,14 @@ method(MCProcess,
 	pid_t, waitAnyChildExitGetResourceUseage, 
 	int* statusAddr, int options, MCProcessRUseage* useage)
 {
-	return wait3(statusAddr, options, useage);
+	return wait3(statusAddr, options, useage->rusage_p);
 }
 
 method(MCProcess, 
 	pid_t, waitPIDChildExitGetResourceUseage, 
 	pid_t pid, int* statusAddr, int options, MCProcessRUseage* useage)
 {
-	return wait4(pid, statusAddr, options, useage);
+	return wait4(pid, statusAddr, options, useage->rusage_p);
 }
 
 loader(MCProcess)
@@ -147,5 +147,5 @@ loader(MCProcess)
 	binding(MCProcess, 
 	pid_t, waitPIDChildExitGetResourceUseage, 
 	pid_t pid, int* statusAddr, int options, MCProcessRUseage* useage);
-	return class;
+	return claz;
 }

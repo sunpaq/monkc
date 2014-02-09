@@ -6,18 +6,18 @@ loader(MCSocketClientInfo)
 {
 	binding(MCSocketClientInfo, void, dumpInfo, xxx);
 	binding(MCSocketClientInfo, void, bye, xxx);
-	return class;
+	return claz;
 }
 
 initer(MCSocketClientInfo)
 {
 	//nothing to init
-	return this;
+	return obj;
 }
 
 method(MCSocketClientInfo, void, dumpInfo, xxx)
 {
-	printf("accept a client: %s\n", this->address.sa_data);
+	printf("accept a client: %s\n", obj->address.sa_data);
 }
 
 method(MCSocketClientInfo, void, bye, xxx)
@@ -37,19 +37,19 @@ binding(MCSocket, void, send, xxx);
 binding(MCSocket, void, sendto, xxx);
 binding(MCSocket, void, sendmsg, xxx);
 binding(MCSocket, void, bye, xxx);
-return class;
+return claz;
 }
 
 initer(MCSocket)
 {
 	//nothing to init
-	return this;
+	return obj;
 }
 
 method(MCSocket, MCSocket*, initWithTypeIpPort, MCSocketType socket_type, char* ip, char* port)
 {
-	create_and_bind_socket(this, socket_type, ip, port);
-	return this;
+	create_and_bind_socket(obj, socket_type, ip, port);
+	return obj;
 }
 
 static void create_and_bind_socket(MCSocket* this, MCSocketType socket_type, char* ip, char* port)
@@ -86,7 +86,7 @@ static void create_and_bind_socket(MCSocket* this, MCSocketType socket_type, cha
 	//get addrinfo linklist
 	if(getaddrinfo(ip, port, &hint, &result)){
 		error_log("can not getaddrinfo, return nil\n");
-		return -1;
+		return;
 	}
 	runtime_log("get the addrinfo linklist.\n");
 
@@ -121,7 +121,7 @@ static void create_and_bind_socket(MCSocket* this, MCSocketType socket_type, cha
 
 method(MCSocket, void, bye, xxx)
 {
-	close(this->sfd);
+	close(obj->sfd);
 }
 
 //EADDRINUSE
@@ -130,15 +130,15 @@ method(MCSocket, void, bye, xxx)
 //EOPNOTSUPP
 method(MCSocket, int, listeningStart, xxx)
 {
-	if(this->isServer!=1)return -1;
-	return listen(this->sfd, MCSocket_Queue_Length);
+	if(obj->isServer!=1)return -1;
+	return listen(obj->sfd, MCSocket_Queue_Length);
 }
 
 method(MCSocket, MCSocketClientInfo*, acceptARequest, xxx)
 {
-	if (this->isServer!=1)return -1;
+	if (obj->isServer!=1)return nil;
 	MCSocketClientInfo* clientinfo = new(MCSocketClientInfo);
-	clientinfo->returnSfd = accept(this->sfd, &clientinfo->address, &clientinfo->address_len);
+	clientinfo->returnSfd = accept(obj->sfd, &clientinfo->address, &clientinfo->address_len);
 	return clientinfo;
 }
 

@@ -8,7 +8,7 @@ void test_object_life_cycle()
 		ff(bird, flyhigh, nil);
 		ff(bird, singAsong, "a song from child");
 		ff(bird, fatherAge, nil);
-		ff(bird, cannotResponseThis, nil);
+		//ff(bird, cannotResponseThis, nil);
 		shift(bird, BirdModeA);
 			ff(bird, modemethodC, nil);
 		shift_back(bird);
