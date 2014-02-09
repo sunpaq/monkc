@@ -56,11 +56,11 @@
 		4B0D9B3018A7D56700E4ED89 /* src */ = {
 			isa = PBXGroup;
 			children = (
+				4B0D9B3518A7D56700E4ED89 /* main.m */,
 				4B0D9B3118A7D56700E4ED89 /* Bird.c */,
 				4B0D9B3218A7D56700E4ED89 /* Bird.h */,
 				4B0D9B3318A7D56700E4ED89 /* BirdFather.c */,
 				4B0D9B3418A7D56700E4ED89 /* BirdFather.h */,
-				4B0D9B3518A7D56700E4ED89 /* main.m */,
 				4B0D9B3618A7D56700E4ED89 /* ObjCClass.h */,
 				4B0D9B3718A7D56700E4ED89 /* ObjCClass.m */,
 			);
