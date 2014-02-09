@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4B0D9B3818A7D56700E4ED89 /* Bird.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B0D9B3118A7D56700E4ED89 /* Bird.c */; };
+		4B0D9B3918A7D56700E4ED89 /* BirdFather.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B0D9B3318A7D56700E4ED89 /* BirdFather.c */; };
+		4B0D9B3A18A7D56700E4ED89 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B0D9B3518A7D56700E4ED89 /* main.m */; };
+		4B0D9B3B18A7D56700E4ED89 /* ObjCClass.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B0D9B3718A7D56700E4ED89 /* ObjCClass.m */; };
 		4BFC699718A77CDD0026C776 /* libmonkc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BFC699618A77CDD0026C776 /* libmonkc.a */; };
 		4BFC69DB18A7A1690026C776 /* liblemontea.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BFC69DA18A7A1690026C776 /* liblemontea.a */; };
 /* End PBXBuildFile section */
@@ -24,7 +28,13 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		4B52D8B618A7D0FE00084D53 /* src */ = {isa = PBXFileReference; lastKnownFileType = folder; path = src; sourceTree = "<group>"; };
+		4B0D9B3118A7D56700E4ED89 /* Bird.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Bird.c; sourceTree = "<group>"; };
+		4B0D9B3218A7D56700E4ED89 /* Bird.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Bird.h; sourceTree = "<group>"; };
+		4B0D9B3318A7D56700E4ED89 /* BirdFather.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BirdFather.c; sourceTree = "<group>"; };
+		4B0D9B3418A7D56700E4ED89 /* BirdFather.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BirdFather.h; sourceTree = "<group>"; };
+		4B0D9B3518A7D56700E4ED89 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		4B0D9B3618A7D56700E4ED89 /* ObjCClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjCClass.h; sourceTree = "<group>"; };
+		4B0D9B3718A7D56700E4ED89 /* ObjCClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ObjCClass.m; sourceTree = "<group>"; };
 		4B9F30F51883B847009B94A9 /* example */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = example; sourceTree = BUILT_PRODUCTS_DIR; };
 		4BFC699618A77CDD0026C776 /* libmonkc.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libmonkc.a; path = "../../../../../Library/Developer/Xcode/DerivedData/MonkCWorkSpace-fmovabzixpzcxnguawdjmitbkzgl/Build/Products/Debug/libmonkc.a"; sourceTree = "<group>"; };
 		4BFC69DA18A7A1690026C776 /* liblemontea.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = liblemontea.a; path = "../../../../../Library/Developer/Xcode/DerivedData/MonkCWorkSpace-fmovabzixpzcxnguawdjmitbkzgl/Build/Products/Debug/liblemontea.a"; sourceTree = "<group>"; };
@@ -43,12 +53,26 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4B0D9B3018A7D56700E4ED89 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				4B0D9B3118A7D56700E4ED89 /* Bird.c */,
+				4B0D9B3218A7D56700E4ED89 /* Bird.h */,
+				4B0D9B3318A7D56700E4ED89 /* BirdFather.c */,
+				4B0D9B3418A7D56700E4ED89 /* BirdFather.h */,
+				4B0D9B3518A7D56700E4ED89 /* main.m */,
+				4B0D9B3618A7D56700E4ED89 /* ObjCClass.h */,
+				4B0D9B3718A7D56700E4ED89 /* ObjCClass.m */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
 		4B9F30EC1883B847009B94A9 = {
 			isa = PBXGroup;
 			children = (
 				4BFC69DA18A7A1690026C776 /* liblemontea.a */,
 				4BFC699618A77CDD0026C776 /* libmonkc.a */,
-				4B52D8B618A7D0FE00084D53 /* src */,
+				4B0D9B3018A7D56700E4ED89 /* src */,
 				4B9F30F61883B847009B94A9 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -112,6 +136,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4B0D9B3918A7D56700E4ED89 /* BirdFather.c in Sources */,
+				4B0D9B3A18A7D56700E4ED89 /* main.m in Sources */,
+				4B0D9B3B18A7D56700E4ED89 /* ObjCClass.m in Sources */,
+				4B0D9B3818A7D56700E4ED89 /* Bird.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

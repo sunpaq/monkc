@@ -7,11 +7,54 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4B0D9B1A18A7D52700E4ED89 /* MCBuffer.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B0D9B0418A7D52700E4ED89 /* MCBuffer.c */; };
+		4B0D9B1B18A7D52700E4ED89 /* MCBuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B0D9B0518A7D52700E4ED89 /* MCBuffer.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4B0D9B1C18A7D52700E4ED89 /* MCClock.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B0D9B0618A7D52700E4ED89 /* MCClock.c */; };
+		4B0D9B1D18A7D52700E4ED89 /* MCClock.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B0D9B0718A7D52700E4ED89 /* MCClock.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4B0D9B1E18A7D52700E4ED89 /* MCContext.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B0D9B0818A7D52700E4ED89 /* MCContext.c */; };
+		4B0D9B1F18A7D52700E4ED89 /* MCContext.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B0D9B0918A7D52700E4ED89 /* MCContext.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4B0D9B2018A7D52700E4ED89 /* MCException.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B0D9B0A18A7D52700E4ED89 /* MCException.c */; };
+		4B0D9B2118A7D52700E4ED89 /* MCException.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B0D9B0B18A7D52700E4ED89 /* MCException.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4B0D9B2218A7D52700E4ED89 /* MCIO.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B0D9B0C18A7D52700E4ED89 /* MCIO.c */; };
+		4B0D9B2318A7D52700E4ED89 /* MCIO.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B0D9B0D18A7D52700E4ED89 /* MCIO.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4B0D9B2418A7D52700E4ED89 /* MCMath.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B0D9B0E18A7D52700E4ED89 /* MCMath.c */; };
+		4B0D9B2518A7D52700E4ED89 /* MCMath.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B0D9B0F18A7D52700E4ED89 /* MCMath.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4B0D9B2618A7D52700E4ED89 /* MCProcess.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B0D9B1018A7D52700E4ED89 /* MCProcess.c */; };
+		4B0D9B2718A7D52700E4ED89 /* MCProcess.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B0D9B1118A7D52700E4ED89 /* MCProcess.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4B0D9B2818A7D52700E4ED89 /* MCSocket.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B0D9B1218A7D52700E4ED89 /* MCSocket.c */; };
+		4B0D9B2918A7D52700E4ED89 /* MCSocket.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B0D9B1318A7D52700E4ED89 /* MCSocket.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4B0D9B2A18A7D52700E4ED89 /* MCString.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B0D9B1418A7D52700E4ED89 /* MCString.c */; };
+		4B0D9B2B18A7D52700E4ED89 /* MCString.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B0D9B1518A7D52700E4ED89 /* MCString.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4B0D9B2C18A7D52700E4ED89 /* MCThread.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B0D9B1618A7D52700E4ED89 /* MCThread.c */; };
+		4B0D9B2D18A7D52700E4ED89 /* MCThread.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B0D9B1718A7D52700E4ED89 /* MCThread.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4B0D9B2E18A7D52700E4ED89 /* MCUnitTest.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B0D9B1818A7D52700E4ED89 /* MCUnitTest.c */; };
+		4B0D9B2F18A7D52700E4ED89 /* MCUnitTest.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B0D9B1918A7D52700E4ED89 /* MCUnitTest.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4BFC69D918A7881D0026C776 /* libmonkc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BFC69D818A7881D0026C776 /* libmonkc.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		4B52D8B718A7D16000084D53 /* src */ = {isa = PBXFileReference; lastKnownFileType = folder; path = src; sourceTree = "<group>"; };
+		4B0D9B0418A7D52700E4ED89 /* MCBuffer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = MCBuffer.c; sourceTree = "<group>"; };
+		4B0D9B0518A7D52700E4ED89 /* MCBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCBuffer.h; sourceTree = "<group>"; };
+		4B0D9B0618A7D52700E4ED89 /* MCClock.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = MCClock.c; sourceTree = "<group>"; };
+		4B0D9B0718A7D52700E4ED89 /* MCClock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCClock.h; sourceTree = "<group>"; };
+		4B0D9B0818A7D52700E4ED89 /* MCContext.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = MCContext.c; sourceTree = "<group>"; };
+		4B0D9B0918A7D52700E4ED89 /* MCContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCContext.h; sourceTree = "<group>"; };
+		4B0D9B0A18A7D52700E4ED89 /* MCException.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = MCException.c; sourceTree = "<group>"; };
+		4B0D9B0B18A7D52700E4ED89 /* MCException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCException.h; sourceTree = "<group>"; };
+		4B0D9B0C18A7D52700E4ED89 /* MCIO.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = MCIO.c; sourceTree = "<group>"; };
+		4B0D9B0D18A7D52700E4ED89 /* MCIO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCIO.h; sourceTree = "<group>"; };
+		4B0D9B0E18A7D52700E4ED89 /* MCMath.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = MCMath.c; sourceTree = "<group>"; };
+		4B0D9B0F18A7D52700E4ED89 /* MCMath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCMath.h; sourceTree = "<group>"; };
+		4B0D9B1018A7D52700E4ED89 /* MCProcess.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = MCProcess.c; sourceTree = "<group>"; };
+		4B0D9B1118A7D52700E4ED89 /* MCProcess.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCProcess.h; sourceTree = "<group>"; };
+		4B0D9B1218A7D52700E4ED89 /* MCSocket.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = MCSocket.c; sourceTree = "<group>"; };
+		4B0D9B1318A7D52700E4ED89 /* MCSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCSocket.h; sourceTree = "<group>"; };
+		4B0D9B1418A7D52700E4ED89 /* MCString.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = MCString.c; sourceTree = "<group>"; };
+		4B0D9B1518A7D52700E4ED89 /* MCString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCString.h; sourceTree = "<group>"; };
+		4B0D9B1618A7D52700E4ED89 /* MCThread.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = MCThread.c; sourceTree = "<group>"; };
+		4B0D9B1718A7D52700E4ED89 /* MCThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCThread.h; sourceTree = "<group>"; };
+		4B0D9B1818A7D52700E4ED89 /* MCUnitTest.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = MCUnitTest.c; sourceTree = "<group>"; };
+		4B0D9B1918A7D52700E4ED89 /* MCUnitTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCUnitTest.h; sourceTree = "<group>"; };
 		4BFC69A418A787910026C776 /* liblemontea.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = liblemontea.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		4BFC69D818A7881D0026C776 /* libmonkc.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libmonkc.a; path = "../../../../../../Library/Developer/Xcode/DerivedData/MonkCWorkSpace-fmovabzixpzcxnguawdjmitbkzgl/Build/Products/Debug/libmonkc.a"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -28,11 +71,40 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4B0D9B0318A7D52700E4ED89 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				4B0D9B0418A7D52700E4ED89 /* MCBuffer.c */,
+				4B0D9B0518A7D52700E4ED89 /* MCBuffer.h */,
+				4B0D9B0618A7D52700E4ED89 /* MCClock.c */,
+				4B0D9B0718A7D52700E4ED89 /* MCClock.h */,
+				4B0D9B0818A7D52700E4ED89 /* MCContext.c */,
+				4B0D9B0918A7D52700E4ED89 /* MCContext.h */,
+				4B0D9B0A18A7D52700E4ED89 /* MCException.c */,
+				4B0D9B0B18A7D52700E4ED89 /* MCException.h */,
+				4B0D9B0C18A7D52700E4ED89 /* MCIO.c */,
+				4B0D9B0D18A7D52700E4ED89 /* MCIO.h */,
+				4B0D9B0E18A7D52700E4ED89 /* MCMath.c */,
+				4B0D9B0F18A7D52700E4ED89 /* MCMath.h */,
+				4B0D9B1018A7D52700E4ED89 /* MCProcess.c */,
+				4B0D9B1118A7D52700E4ED89 /* MCProcess.h */,
+				4B0D9B1218A7D52700E4ED89 /* MCSocket.c */,
+				4B0D9B1318A7D52700E4ED89 /* MCSocket.h */,
+				4B0D9B1418A7D52700E4ED89 /* MCString.c */,
+				4B0D9B1518A7D52700E4ED89 /* MCString.h */,
+				4B0D9B1618A7D52700E4ED89 /* MCThread.c */,
+				4B0D9B1718A7D52700E4ED89 /* MCThread.h */,
+				4B0D9B1818A7D52700E4ED89 /* MCUnitTest.c */,
+				4B0D9B1918A7D52700E4ED89 /* MCUnitTest.h */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
 		4BFC699B18A787910026C776 = {
 			isa = PBXGroup;
 			children = (
 				4BFC69D818A7881D0026C776 /* libmonkc.a */,
-				4B52D8B718A7D16000084D53 /* src */,
+				4B0D9B0318A7D52700E4ED89 /* src */,
 				4BFC69A518A787910026C776 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -52,6 +124,17 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4B0D9B2B18A7D52700E4ED89 /* MCString.h in Headers */,
+				4B0D9B2318A7D52700E4ED89 /* MCIO.h in Headers */,
+				4B0D9B2D18A7D52700E4ED89 /* MCThread.h in Headers */,
+				4B0D9B2918A7D52700E4ED89 /* MCSocket.h in Headers */,
+				4B0D9B1B18A7D52700E4ED89 /* MCBuffer.h in Headers */,
+				4B0D9B2718A7D52700E4ED89 /* MCProcess.h in Headers */,
+				4B0D9B1D18A7D52700E4ED89 /* MCClock.h in Headers */,
+				4B0D9B2118A7D52700E4ED89 /* MCException.h in Headers */,
+				4B0D9B2F18A7D52700E4ED89 /* MCUnitTest.h in Headers */,
+				4B0D9B2518A7D52700E4ED89 /* MCMath.h in Headers */,
+				4B0D9B1F18A7D52700E4ED89 /* MCContext.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -106,6 +189,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4B0D9B2218A7D52700E4ED89 /* MCIO.c in Sources */,
+				4B0D9B1C18A7D52700E4ED89 /* MCClock.c in Sources */,
+				4B0D9B2018A7D52700E4ED89 /* MCException.c in Sources */,
+				4B0D9B2418A7D52700E4ED89 /* MCMath.c in Sources */,
+				4B0D9B2818A7D52700E4ED89 /* MCSocket.c in Sources */,
+				4B0D9B2E18A7D52700E4ED89 /* MCUnitTest.c in Sources */,
+				4B0D9B2A18A7D52700E4ED89 /* MCString.c in Sources */,
+				4B0D9B1A18A7D52700E4ED89 /* MCBuffer.c in Sources */,
+				4B0D9B2C18A7D52700E4ED89 /* MCThread.c in Sources */,
+				4B0D9B2618A7D52700E4ED89 /* MCProcess.c in Sources */,
+				4B0D9B1E18A7D52700E4ED89 /* MCContext.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
