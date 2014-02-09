@@ -10,7 +10,7 @@
 		4B9F30F91883B847009B94A9 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B9F30F81883B847009B94A9 /* main.c */; };
 		4B9F31141883BB4C009B94A9 /* Bird.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B9F31131883BB4C009B94A9 /* Bird.c */; };
 		4B9F31541883D060009B94A9 /* BirdFather.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B9F31531883D060009B94A9 /* BirdFather.c */; };
-		4BD49B9818A7495F00442351 /* libmonkc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BD49B9718A7495F00442351 /* libmonkc.a */; };
+		4BD49BA518A7612200442351 /* libmonkc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BD49BA418A7612200442351 /* libmonkc.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -32,7 +32,7 @@
 		4B9F31131883BB4C009B94A9 /* Bird.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Bird.c; sourceTree = "<group>"; };
 		4B9F31521883D04D009B94A9 /* BirdFather.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BirdFather.h; sourceTree = "<group>"; };
 		4B9F31531883D060009B94A9 /* BirdFather.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BirdFather.c; sourceTree = "<group>"; };
-		4BD49B9718A7495F00442351 /* libmonkc.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libmonkc.a; path = "../../../../../Library/Developer/Xcode/DerivedData/MonkCWorkSpace-fmovabzixpzcxnguawdjmitbkzgl/Build/Products/Debug/libmonkc.a"; sourceTree = "<group>"; };
+		4BD49BA418A7612200442351 /* libmonkc.a */ = {isa = PBXFileReference; lastKnownFileType = file; name = libmonkc.a; path = ../MonkCStatic/build/Release/libmonkc.a; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -40,7 +40,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4BD49B9818A7495F00442351 /* libmonkc.a in Frameworks */,
+				4BD49BA518A7612200442351 /* libmonkc.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -50,9 +50,9 @@
 		4B9F30EC1883B847009B94A9 = {
 			isa = PBXGroup;
 			children = (
+				4BD49BA418A7612200442351 /* libmonkc.a */,
 				4B9F30F71883B847009B94A9 /* MonkCAppXcodeTemplete */,
 				4B9F30F61883B847009B94A9 /* Products */,
-				4BD49B9718A7495F00442351 /* libmonkc.a */,
 			);
 			sourceTree = "<group>";
 		};

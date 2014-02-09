@@ -7,12 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		4B29DD6F1895106A00B60AA1 /* MCRuntimeAsm_ARM32.s in Sources */ = {isa = PBXBuildFile; fileRef = 4B9F31251883CD43009B94A9 /* MCRuntimeAsm_ARM32.s */; };
-		4B50396E189172530044985D /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B50396D189172530044985D /* XCTest.framework */; };
-		4B50396F189172530044985D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B50395F189172520044985D /* Foundation.framework */; };
-		4B503971189172530044985D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B503970189172530044985D /* UIKit.framework */; };
-		4B503974189172530044985D /* liblibmonkc_arm.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B50395D189172520044985D /* liblibmonkc_arm.a */; };
-		4B9F31301883CD43009B94A9 /* MCRuntimeAsm_X8664_darwin.s in Sources */ = {isa = PBXBuildFile; fileRef = 4B9F312A1883CD43009B94A9 /* MCRuntimeAsm_X8664_darwin.s */; };
 		4B9F31381883CD59009B94A9 /* HashTable.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B9F31321883CD59009B94A9 /* HashTable.c */; };
 		4B9F31391883CD59009B94A9 /* HashTable.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B9F31331883CD59009B94A9 /* HashTable.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4B9F313A1883CD59009B94A9 /* Lock.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B9F31341883CD59009B94A9 /* Lock.c */; };
@@ -29,35 +23,11 @@
 		4B9F314F1883CD78009B94A9 /* Key.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B9F31471883CD78009B94A9 /* Key.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4B9F31501883CD78009B94A9 /* Vectors.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B9F31481883CD78009B94A9 /* Vectors.c */; };
 		4B9F31511883CD78009B94A9 /* Vectors.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B9F31491883CD78009B94A9 /* Vectors.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4BD49BA618A7619F00442351 /* MCRuntimeAsm_X8664_darwin.s in Sources */ = {isa = PBXBuildFile; fileRef = 4B9F312A1883CD43009B94A9 /* MCRuntimeAsm_X8664_darwin.s */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		4B503972189172530044985D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 4B9F308F1883B560009B94A9 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 4B50395C189172520044985D;
-			remoteInfo = libmonkc_arm;
-		};
-/* End PBXContainerItemProxy section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		4B50395B189172520044985D /* Copy Files */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "include/$(PRODUCT_NAME)";
-			dstSubfolderSpec = 16;
-			files = (
-			);
-			name = "Copy Files";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
-
 /* Begin PBXFileReference section */
-		4B50395D189172520044985D /* liblibmonkc_arm.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = liblibmonkc_arm.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B50395F189172520044985D /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		4B50396C189172530044985D /* libmonkc_armTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = libmonkc_armTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B50396D189172530044985D /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		4B503970189172530044985D /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
 		4B9F30971883B560009B94A9 /* libmonkc.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libmonkc.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -86,24 +56,6 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		4B50395A189172520044985D /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		4B503969189172530044985D /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				4B50396E189172530044985D /* XCTest.framework in Frameworks */,
-				4B503974189172530044985D /* liblibmonkc_arm.a in Frameworks */,
-				4B503971189172530044985D /* UIKit.framework in Frameworks */,
-				4B50396F189172530044985D /* Foundation.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		4B9F30941883B560009B94A9 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -153,8 +105,6 @@
 			isa = PBXGroup;
 			children = (
 				4B9F30971883B560009B94A9 /* libmonkc.a */,
-				4B50395D189172520044985D /* liblibmonkc_arm.a */,
-				4B50396C189172530044985D /* libmonkc_armTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -193,41 +143,6 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		4B50395C189172520044985D /* libmonkc_arm */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 4B503981189172530044985D /* Build configuration list for PBXNativeTarget "libmonkc_arm" */;
-			buildPhases = (
-				4B503959189172520044985D /* Sources */,
-				4B50395A189172520044985D /* Frameworks */,
-				4B50395B189172520044985D /* Copy Files */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = libmonkc_arm;
-			productName = libmonkc_arm;
-			productReference = 4B50395D189172520044985D /* liblibmonkc_arm.a */;
-			productType = "com.apple.product-type.library.static";
-		};
-		4B50396B189172530044985D /* libmonkc_armTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 4B503982189172530044985D /* Build configuration list for PBXNativeTarget "libmonkc_armTests" */;
-			buildPhases = (
-				4B503968189172530044985D /* Sources */,
-				4B503969189172530044985D /* Frameworks */,
-				4B50396A189172530044985D /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				4B503973189172530044985D /* PBXTargetDependency */,
-			);
-			name = libmonkc_armTests;
-			productName = libmonkc_armTests;
-			productReference = 4B50396C189172530044985D /* libmonkc_armTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 		4B9F30961883B560009B94A9 /* MonkCStatic */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 4B9F309B1883B560009B94A9 /* Build configuration list for PBXNativeTarget "MonkCStatic" */;
@@ -267,44 +182,17 @@
 			projectRoot = "";
 			targets = (
 				4B9F30961883B560009B94A9 /* MonkCStatic */,
-				4B50395C189172520044985D /* libmonkc_arm */,
-				4B50396B189172530044985D /* libmonkc_armTests */,
 			);
 		};
 /* End PBXProject section */
 
-/* Begin PBXResourcesBuildPhase section */
-		4B50396A189172530044985D /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXResourcesBuildPhase section */
-
 /* Begin PBXSourcesBuildPhase section */
-		4B503959189172520044985D /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				4B29DD6F1895106A00B60AA1 /* MCRuntimeAsm_ARM32.s in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		4B503968189172530044985D /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		4B9F30931883B560009B94A9 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4BD49BA618A7619F00442351 /* MCRuntimeAsm_X8664_darwin.s in Sources */,
 				4B9F313A1883CD59009B94A9 /* Lock.c in Sources */,
-				4B9F31301883CD43009B94A9 /* MCRuntimeAsm_X8664_darwin.s in Sources */,
 				4B9F314A1883CD78009B94A9 /* monkc.c in Sources */,
 				4B9F314E1883CD78009B94A9 /* Key.c in Sources */,
 				4B9F31401883CD63009B94A9 /* Messaging.c in Sources */,
@@ -317,97 +205,7 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
-/* Begin PBXTargetDependency section */
-		4B503973189172530044985D /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 4B50395C189172520044985D /* libmonkc_arm */;
-			targetProxy = 4B503972189172530044985D /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
-
 /* Begin XCBuildConfiguration section */
-		4B50397D189172530044985D /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
-				CLANG_ENABLE_MODULES = YES;
-				DSTROOT = /tmp/libmonkc_arm.dst;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "libmonkc_arm/libmonkc_arm-Prefix.pch";
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-			};
-			name = Debug;
-		};
-		4B50397E189172530044985D /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
-				CLANG_ENABLE_MODULES = YES;
-				DSTROOT = /tmp/libmonkc_arm.dst;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "libmonkc_arm/libmonkc_arm-Prefix.pch";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				VALIDATE_PRODUCT = YES;
-			};
-			name = Release;
-		};
-		4B50397F189172530044985D /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
-				CLANG_ENABLE_MODULES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-					"$(DEVELOPER_FRAMEWORKS_DIR)",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "libmonkc_arm/libmonkc_arm-Prefix.pch";
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				INFOPLIST_FILE = "libmonkc_armTests/libmonkc_armTests-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				WRAPPER_EXTENSION = xctest;
-			};
-			name = Debug;
-		};
-		4B503980189172530044985D /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
-				CLANG_ENABLE_MODULES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-					"$(DEVELOPER_FRAMEWORKS_DIR)",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "libmonkc_arm/libmonkc_arm-Prefix.pch";
-				INFOPLIST_FILE = "libmonkc_armTests/libmonkc_armTests-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				VALIDATE_PRODUCT = YES;
-				WRAPPER_EXTENSION = xctest;
-			};
-			name = Release;
-		};
 		4B9F30991883B560009B94A9 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -481,6 +279,8 @@
 			buildSettings = {
 				EXECUTABLE_PREFIX = lib;
 				PRODUCT_NAME = monkc;
+				SDKROOT = macosx;
+				SUPPORTED_PLATFORMS = macosx;
 			};
 			name = Debug;
 		};
@@ -489,30 +289,14 @@
 			buildSettings = {
 				EXECUTABLE_PREFIX = lib;
 				PRODUCT_NAME = monkc;
+				SDKROOT = macosx;
+				SUPPORTED_PLATFORMS = macosx;
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		4B503981189172530044985D /* Build configuration list for PBXNativeTarget "libmonkc_arm" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				4B50397D189172530044985D /* Debug */,
-				4B50397E189172530044985D /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		4B503982189172530044985D /* Build configuration list for PBXNativeTarget "libmonkc_armTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				4B50397F189172530044985D /* Debug */,
-				4B503980189172530044985D /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		4B9F30921883B560009B94A9 /* Build configuration list for PBXProject "MonkCStatic" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
