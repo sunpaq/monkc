@@ -14,7 +14,19 @@
 initer(Bird)
 {
     obj->super = newc(mo, BirdFather);
+    obj->name = nil;
     return obj;
+}
+
+method(Bird, Bird*, initWithName, char* aname)
+{
+    obj->name = aname;
+    return obj;
+}
+
+method(Bird, void, yourName, xxx)
+{
+    printf("my name is: %s\n", obj->name);
 }
 
 method(Bird, void, fly, xxx)
@@ -34,6 +46,8 @@ method(Bird, void, eat, xxx)
 
 loader(Bird)
 {
+    binding(Bird, Bird*, initWithName, char* aname);
+    binding(Bird, void, yourName, xxx);
     binding(Bird, void, fly, xxx);
     binding(Bird, void, swim, xxx);
     binding(Bird, void, eat, xxx);
