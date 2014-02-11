@@ -22,6 +22,7 @@
 		4B0D9B6518A92AD100E4ED89 /* BirdGrandFather.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B0D9B5B18A92AD100E4ED89 /* BirdGrandFather.c */; };
 		4B0D9B6618A92AD100E4ED89 /* BirdModeA.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B0D9B5E18A92AD100E4ED89 /* BirdModeA.c */; };
 		4B0D9B6918A92AF000E4ED89 /* Main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B0D9B6818A92AF000E4ED89 /* Main.m */; };
+		4BF11B3718AA7BC200AD4C2B /* BirdBase.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BF11B3618AA7BC200AD4C2B /* BirdBase.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -66,6 +67,8 @@
 		4B0D9B6118A92AD100E4ED89 /* Flyable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Flyable.h; path = protocol/Flyable.h; sourceTree = "<group>"; };
 		4B0D9B6818A92AF000E4ED89 /* Main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Main.m; sourceTree = "<group>"; };
 		4B9F30F51883B847009B94A9 /* example */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = example; sourceTree = BUILT_PRODUCTS_DIR; };
+		4BF11B3518AA7B9D00AD4C2B /* BirdBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BirdBase.h; sourceTree = "<group>"; };
+		4BF11B3618AA7BC200AD4C2B /* BirdBase.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BirdBase.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -89,6 +92,8 @@
 				4B0D9B3218A7D56700E4ED89 /* LittleBird.h */,
 				4B0D9B3318A7D56700E4ED89 /* LittleBirdFather.c */,
 				4B0D9B3418A7D56700E4ED89 /* LittleBirdFather.h */,
+				4BF11B3518AA7B9D00AD4C2B /* BirdBase.h */,
+				4BF11B3618AA7BC200AD4C2B /* BirdBase.c */,
 				4B0D9B3618A7D56700E4ED89 /* ObjCClass.h */,
 				4B0D9B3718A7D56700E4ED89 /* ObjCClass.m */,
 				4B0D9B4718A92AAC00E4ED89 /* ClientServerExample.c */,
@@ -190,6 +195,7 @@
 				4B0D9B4F18A92AAC00E4ED89 /* ClientServerExample.c in Sources */,
 				4B0D9B6418A92AD100E4ED89 /* BirdFather.c in Sources */,
 				4B0D9B3B18A7D56700E4ED89 /* ObjCClass.m in Sources */,
+				4BF11B3718AA7BC200AD4C2B /* BirdBase.c in Sources */,
 				4B0D9B3818A7D56700E4ED89 /* LittleBird.c in Sources */,
 				4B0D9B6618A92AD100E4ED89 /* BirdModeA.c in Sources */,
 				4B0D9B5018A92AAC00E4ED89 /* MenuDrivenExample.c in Sources */,

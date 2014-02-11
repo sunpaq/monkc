@@ -45,7 +45,7 @@ method(LittleBird, void, eat, xxx)
 }
 
 //implement abs
-method(LittleBird, void, myHello, xxx)
+method(LittleBird, void, hello_imp, xxx)
 {
     printf("little bird: hello!\n");
 }
@@ -57,6 +57,6 @@ loader(LittleBird)
     binding(LittleBird, void, fly, xxx);
     binding(LittleBird, void, swim, xxx);
     binding(LittleBird, void, eat, xxx);
-    binding(LittleBird, void, myHello, xxx);
+    binding(LittleBird, void, hello_imp, xxx);
     return claz;
 }

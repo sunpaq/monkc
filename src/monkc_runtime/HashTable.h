@@ -12,7 +12,7 @@ mc_hashtable* new_table(const unsigned initlevel);
 
 unsigned set_item(mc_hashtable** const table_p,
 	mc_hashitem* const item, 
-	int isOverride, int isFreeValue);
+	int isOverride, int isFreeValue, char* classname);
 mc_hashitem* get_item_bykey(mc_hashtable** const table_p, const char* key);
 mc_hashitem* get_item_byhash(mc_hashtable** const table_p, const unsigned hashval, const char* refkey);
 mc_hashitem* get_item_byindex(mc_hashtable** const table_p, const unsigned index);

@@ -6,11 +6,12 @@
 //  Copyright (c) 2014年 sun yuli. All rights reserved.
 //
 
-#include <stdio.h>
 #include "LittleBirdFather.h"
+#include "BirdBase.h"
 
 initer(LittleBirdFather)
 {
+    obj->super = newc(mo, BirdBase);
     return obj;
 }
 
@@ -24,16 +25,21 @@ method(LittleBirdFather, void, fly, xxx)
     printf("little bird father can fly\n");
 }
 
-//abs
-method(LittleBirdFather, void, hello, xxx)
+method(LittleBirdFather, void, hello_abs, xxx)
 {
-    ff(receiver, myHello, nil);
+    ff(receiver, hello_imp, nil);
+}
+
+method(LittleBirdFather, void, land_imp, xxx)
+{
+    printf("little bird father landing\n");
 }
 
 loader(LittleBirdFather)
 {
     binding(LittleBirdFather, int, getAge, xxx);
     binding(LittleBirdFather, void, fly, xxx);
-    binding(LittleBirdFather, void, hello, xxx);
+    binding(LittleBirdFather, void, hello_abs, xxx);
+    binding(LittleBirdFather, void, land_imp, xxx);
     return claz;
 }

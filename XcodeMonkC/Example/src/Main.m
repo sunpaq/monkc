@@ -34,7 +34,8 @@ void testMonkC()
     ff(abird, eat, nil);
     
     //call abs method
-    ff(abird, hello, nil);
+    ff(abird, hello_abs, nil);
+    ff(abird, land_abs, nil);
     
     //dynamic call super class methods
     int fatherage = (int)ff(abird, getAge, nil);

@@ -123,7 +123,7 @@ mc_hashtable* new_table(const unsigned initlevel)
 
 unsigned set_item(mc_hashtable** const table_p,
 	mc_hashitem* const item, 
-	int isOverride, int isFreeValue)
+	int isOverride, int isFreeValue, char* classname)
 {
 	if(table_p==nil || *table_p==nil){
 		error_log("set_item(mc_hashtable** table_p) table_p or *table_p is nill return 0\n");
@@ -137,18 +137,18 @@ unsigned set_item(mc_hashtable** const table_p,
 		item->level = (*table_p)->level;
 		item->index = index;
 		(*table_p)->items[index] = item;
-		runtime_log("set-item[%d/%s]\n", item->index, item->key);
+		runtime_log("[%s]:set-item[%d/%s]\n", classname, item->index, item->key);
 		return index;
 	}else{
 		//if the item have already been setted. we free the old one
 		if(mc_compare_key(olditem->key, item->key) == 0){
 			if(isOverride == 0){
-				error_log("set-item key[%s] already been setted, free temp item\n", item->key);
+				error_log("[%s]:set-item key[%s] already been setted, free temp item\n", classname, item->key);
 				if(isFreeValue == 1)free(item->value);
 				free(item);
 				return index;
 			}else{
-				error_log("reset-item key[%s] already been setted, replace old item\n", item->key);
+				error_log("[%s]:reset-item key[%s] already been setted, replace old item\n", classname, item->key);
 				if(isFreeValue == 1)free(olditem->value);
 				free(olditem);
 				item->level = (*table_p)->level;
@@ -159,26 +159,22 @@ unsigned set_item(mc_hashtable** const table_p,
 
 		//conflict with other item. we expand the table and try again. until success
 		}else{
-			if(olditem->hash == item->hash){
-				error_log("hash conflict new[%s/%d]<->old[%s/%d]\n", 
-					item->key, item->hash,
-					olditem->key, olditem->hash);
-                return index;
-			}else{
-				error_log("index conflict new[%s/%d]<->old[%s/%d]\n",
-					item->key, index,
-					olditem->key, index);
-                return index;
-			}
+			if(olditem->hash == item->hash)
+				error_log("[%s]:hash conflict new[%s/%d]<->old[%s/%d]\n",
+					classname, item->key, item->hash, olditem->key, olditem->hash);
+			else
+				error_log("[%s]:index conflict new[%s/%d]<->old[%s/%d]\n",
+					classname, item->key, index, olditem->key, index);
 			unsigned tmplevel = (*table_p)->level+1;
 			if(tmplevel<5){
 				expand_table(table_p, tmplevel);
-				set_item(table_p, item, isOverride, isFreeValue);
+				set_item(table_p, item, isOverride, isFreeValue, nil);//recursive
                 return index;
 			}else{
 				//tmplevel = 5, table_p must have been expanded to level 4
 				//there still a item, use link list.
-				error_log("item key conflict can not be soloved. link the new one behind the old\n");
+				error_log("[%s]:item key conflict can not be soloved. link the new one[%s] behind the old[%s]\n",
+                          classname, item->key, olditem->key);
 				item->level = 4;
 				item->index = index;
 				olditem->next = item;

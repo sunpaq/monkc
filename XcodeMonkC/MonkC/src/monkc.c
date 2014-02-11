@@ -88,7 +88,7 @@ unsigned _binding_h(mc_class* const aclass, const char* methodname, void* value,
 	}
 	unsigned res = set_item(&(aclass->table), 
 		new_item_h(methodname, value, hashval),
-		0, 0);
+		0, 0, nameofc(aclass));
 	return res;
 }
 
@@ -109,7 +109,7 @@ unsigned _override_h(mc_class* const aclass, const char* methodname, void* value
 	}
 	unsigned res = set_item(&(aclass->table), 
 		new_item_h(methodname, value, hashval),
-		1, 0);
+		1, 0, nameofc(aclass));
 	return res;
 }
 
@@ -162,7 +162,7 @@ mc_class* _load_h(const char* name, size_t objsize, loaderFP loader, unsigned ha
 		package_by_item(&item, &aclass);
 		(*loader)(aclass);
 		//set item
-		set_item(&mc_global_classtable, item, 0, 1);
+		set_item(&mc_global_classtable, item, 0, 1, (char*)name);
 		runtime_log("load a class[%s]\n", nameofc(aclass));
 	}else{
 		runtime_log("find a class[%s]\n", nameofc((mc_class*)item->value));
