@@ -24,9 +24,16 @@ method(LittleBirdFather, void, fly, xxx)
     printf("little bird father can fly\n");
 }
 
+//abs
+method(LittleBirdFather, void, hello, xxx)
+{
+    ff(receiver, myHello, nil);
+}
+
 loader(LittleBirdFather)
 {
     binding(LittleBirdFather, int, getAge, xxx);
     binding(LittleBirdFather, void, fly, xxx);
+    binding(LittleBirdFather, void, hello, xxx);
     return claz;
 }

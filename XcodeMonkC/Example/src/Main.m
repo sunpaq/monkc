@@ -24,14 +24,17 @@ void testMonkC()
     LittleBird* abird = new(LittleBird);
     
     //static call methods
-    LittleBird_fly(abird, nil, nil);
-    LittleBird_eat(abird, nil, nil);
-    LittleBird_swim(abird, nil, nil);
+    //LittleBird_fly(abird, abird, nil, nil);
+    //LittleBird_eat(abird, abird, nil, nil);
+    //LittleBird_swim(abird, abird, nil, nil);
     
     //dynamic call methods
     ff(abird, fly, nil);
     ff(abird, swim, nil);
     ff(abird, eat, nil);
+    
+    //call abs method
+    ff(abird, hello, nil);
     
     //dynamic call super class methods
     int fatherage = (int)ff(abird, getAge, nil);
@@ -112,7 +115,7 @@ void test(MCContext* context)
 int main(int argc, char const *argv[])
 {
 	mc_init();
-		LOG_LEVEL = MC_VERBOSE;
+		LOG_LEVEL = MC_ERROR_ONLY;
 		monkc_runtime_check();
 //		test_method_jumpping();
 		test_object_life_cycle();

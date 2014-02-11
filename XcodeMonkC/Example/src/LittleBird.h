@@ -20,5 +20,6 @@ method(LittleBird, void, yourName, xxx);
 method(LittleBird, void, fly, xxx);
 method(LittleBird, void, swim, xxx);
 method(LittleBird, void, eat, xxx);
-
+//implement abs
+method(LittleBird, void, myHello, xxx);
 #endif

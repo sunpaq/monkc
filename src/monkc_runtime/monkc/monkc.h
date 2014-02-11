@@ -141,8 +141,8 @@ typedef mc_object* (*initerFP)(mc_object*);
 #define override(cls, type, met, ...) 		_override(claz, S(met), A_B(cls, met))
 #define hinding(cls, type, met, hash, ...)	_binding_h(claz, S(met), A_B(cls, met), hash)
 #define hverride(cls, type, met, hash, ...) _override_h(claz, S(met), A_B(cls, met), hash)
-#define method(cls, type, name, ...) 	type cls##_##name(cls* volatile obj, volatile void* entry, __VA_ARGS__)
-#define protocol(pro, type, name, ...)  static type pro##_##name(mo volatile obj, volatile void* entry, __VA_ARGS__)
+#define method(cls, type, name, ...) 	type cls##_##name(mo receiver, cls* volatile obj, volatile void* entry, __VA_ARGS__)
+#define protocol(pro, type, name, ...)  static type pro##_##name(mo receiver, mo volatile obj, volatile void* entry, __VA_ARGS__)
 #define cast(type, obj) 				((type)obj)
 
 //for create object
@@ -158,15 +158,15 @@ typedef mc_object* (*initerFP)(mc_object*);
 
 //for call method
 #define callc(obj, cls, rtype, name, ...)   (rtype)cls##_##name(obj, cls##_##name, __VA_ARGS__)//with cast
-#define call(obj, cls, name, ...)       cls##_##name(obj, cls##_##name, __VA_ARGS__)//static call
+#define call(obj, cls, name, ...)       cls##_##name((mo)obj, obj, cls##_##name, __VA_ARGS__)//static call
 #define response_to(obj, met) 			_response_to((mo)obj, S(met), 2)
 #define hesponse_to(obj, met, hash) 	_response_to_h((mo)obj, S(met), hash, 2)
-#define ffc(obj, type, met, ...)		(type)_push_jump(_response_to((mo)obj, S(met), MC_STRICT_MODE), __VA_ARGS__)//with cast
-#define ff(obj, met, ...)				_push_jump(_response_to((mo)obj, S(met), MC_STRICT_MODE), __VA_ARGS__)//send message
-#define fh(obj, met, hash, ...)			_push_jump(_response_to_h((mo)obj, S(met), hash, MC_STRICT_MODE), __VA_ARGS__)
-#define fs(obj, met, ...)				_push_jump(_self_response_to((mo)obj, S(met)), __VA_ARGS__)
-#define shift(obj, mode)				_shift(obj, S(mode), sizeof(mode), mode##_load)
-#define shift_back(obj)					_shift_back(obj)
+#define ffc(obj, type, met, ...)		(type)_push_jump((mo)obj, _response_to((mo)obj, S(met), MC_STRICT_MODE), __VA_ARGS__)//with cast
+#define ff(obj, met, ...)				_push_jump((mo)obj, _response_to((mo)obj, S(met), MC_STRICT_MODE), __VA_ARGS__)//send message
+#define fh(obj, met, hash, ...)			_push_jump((mo)obj, _response_to_h((mo)obj, S(met), hash, MC_STRICT_MODE), __VA_ARGS__)
+#define fs(obj, met, ...)				_push_jump((mo)obj, _self_response_to((mo)obj, S(met)), __VA_ARGS__)
+#define shift(obj, mode)				_shift((mo)obj, S(mode), sizeof(mode), mode##_load)
+#define shift_back(obj)					_shift_back((mo)obj)
 
 //global
 void mc_init();

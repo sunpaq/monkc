@@ -20,6 +20,6 @@ void TargetVoid()
 void test_method_jumpping()
 {
 	debug_log("start\n");
-	_push_jump(make_msg(nil, jumpTarget), 100, 200);
+	_push_jump(nil, make_msg(nil, jumpTarget), 100, 200);
 
 }

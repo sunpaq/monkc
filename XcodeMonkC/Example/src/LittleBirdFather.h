@@ -16,5 +16,6 @@ end(LittleBirdFather);
 
 method(LittleBirdFather, int, getAge, xxx);
 method(LittleBirdFather, void, fly, xxx);
-
+//abstract
+method(LittleBirdFather, void, hello, xxx);
 #endif

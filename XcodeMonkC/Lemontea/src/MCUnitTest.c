@@ -104,7 +104,7 @@ static void runMethodByPointer(MCUnitTestCase* obj, mc_hashitem* amethod)
 	runtime_log("%s\n", "runMethodByPointer start");
 
 	try{
-		_push_jump(_response_to(cast(mo, obj), amethod->key, 0), nil);
+		_push_jump((mo)obj, _response_to(cast(mo, obj), amethod->key, 0), nil);
 		//if exception generated, this line will never be reached
 	}
 	catch(MCAssertYESException){

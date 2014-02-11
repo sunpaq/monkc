@@ -49,9 +49,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .globl __push_jump
 .p2align 4, 0x90
 __push_jump:
-	cmpq $0, %rsi		#; confirm return address not nil
+	cmpq $0, %rdx		#; confirm return address not nil
 	je 0f
-	jmp *%rsi
+	jmp *%rdx
 0:
 	ret
 

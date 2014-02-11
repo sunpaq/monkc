@@ -1,12 +1,12 @@
 
 typedef struct mc_message_struct
 {
-	mo object;
+    mo object;
 	const void* addr;
 }mc_message;
 
 //write by asm
-void* _push_jump(mc_message msg, ...);
+void* _push_jump(mo receiver, mc_message msg, ...);
 void* _clean_jump1(mc_message msg, ...);
 void* _clean_jump2(mc_message msg, ...);
 void* _clean_jump3(mc_message msg, ...);
