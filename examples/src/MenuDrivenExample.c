@@ -6,7 +6,7 @@ void menu_drive_test(MCContext* context)
 	//printf("selection is: %c\n", putchar(selection));
 	//printf("context->selectionChar is: %c\n", context->selectionChar);
 
-	while(ff(context, showConfirmAndGetBOOL, "are you sure")!=1){
+	while(ffc(context, int, showConfirmAndGetBOOL, "are you sure")!=1){
 		call(context, MCContext, showMenuAndGetSelectionChar, 3, "male", "female", "double");
 	}
 	//printf("%d\n", bb);

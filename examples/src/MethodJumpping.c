@@ -1,6 +1,6 @@
 #include "MethodJumpping.h"
 
-int jumpTarget(mo const this, const void* entry, int arg1, int arg2)
+void jumpTarget(mo const this, const void* entry, int arg1, int arg2)
 {
 	static int count = 0;
 	printf("count %d\n", count);
@@ -10,7 +10,7 @@ int jumpTarget(mo const this, const void* entry, int arg1, int arg2)
 	_clean_jump2(make_msg(this, entry), 300, ++count);
 }
 
-int TargetVoid()
+void TargetVoid()
 {
 	printf("TargetVoid\n");
 	printf("TargetVoid haha\n");

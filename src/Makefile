@@ -41,7 +41,9 @@ clean:
 sync:
 	cp -r $(XCODEPATH)/MonkC/src/* $(RUNTIME_PATH)
 	cp $(XCODEPATH)/Lemontea/src/* $(LEMONTEA_PATH)
-	#cp $(XCODEPATH)/Example/src/* $(EXAMPLEPATH)
+	rm -fr $(EXAMPLEPATH)/src
+	mkdir -p $(EXAMPLEPATH)/src
+	cp -r $(XCODEPATH)/Example/src/* $(EXAMPLEPATH)/src
 
 test:
 	cd $(TESTPATH) && make && ./exec

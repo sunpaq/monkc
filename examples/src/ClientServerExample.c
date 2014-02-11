@@ -8,7 +8,7 @@ void mocha_clientsocket_test(MCContext* context)
 	ff(client, initWithTypeIpPort, MCSocket_Client_TCP, "127.0.0.1", "4000");
 
 	char sendbuff[1024];
-	char recvbuff[1024];
+	//char recvbuff[1024];
 	
 	for(;;){
 		memset(sendbuff, 0, 1024);
@@ -97,7 +97,7 @@ void mocha_serversocket_test()
 				memset(sendbuff, 0, 1024);
 				memset(recvbuff, 0, 1024);
 
-				if(readline(client_array[i], recvbuff)==-1){
+				if(readline(client_array[i], recvbuff[0])==-1){
 					printf("a client quite: %d Total[%d]\n", i, --client_count);
 					ff(fdcontroler, removeFd, MCSelect_Readfd, client_array[i]);
 					close(client_array[i]);
@@ -105,7 +105,7 @@ void mocha_serversocket_test()
 					break;
 				}
 				
-				printf("get a message from: %d Total[%d] ---- %s", i, client_count, recvbuff);
+				printf("get a message from: %d Total[%d] ---- %s", i, client_count, recvbuff[0]);
 			}
 		}
 	}
