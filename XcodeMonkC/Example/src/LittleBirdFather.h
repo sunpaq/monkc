@@ -15,5 +15,6 @@ monkc(LittleBirdFather);
 end(LittleBirdFather);
 
 method(LittleBirdFather, int, getAge, xxx);
+method(LittleBirdFather, void, fly, xxx);
 
 #endif

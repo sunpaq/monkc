@@ -112,7 +112,7 @@ void test(MCContext* context)
 int main(int argc, char const *argv[])
 {
 	mc_init();
-		LOG_LEVEL = MC_DEBUG;
+		LOG_LEVEL = MC_VERBOSE;
 		monkc_runtime_check();
 //		test_method_jumpping();
 		test_object_life_cycle();

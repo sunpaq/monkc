@@ -31,7 +31,7 @@ method(LittleBird, void, yourName, xxx)
 
 method(LittleBird, void, fly, xxx)
 {
-    printf("i can fly\n");
+    printf("little bird can fly\n");
 }
 
 method(LittleBird, void, swim, xxx)

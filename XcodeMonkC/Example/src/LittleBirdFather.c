@@ -19,8 +19,14 @@ method(LittleBirdFather, int, getAge, xxx)
     return 29;
 }
 
+method(LittleBirdFather, void, fly, xxx)
+{
+    printf("little bird father can fly\n");
+}
+
 loader(LittleBirdFather)
 {
     binding(LittleBirdFather, int, getAge, xxx);
+    binding(LittleBirdFather, void, fly, xxx);
     return claz;
 }
