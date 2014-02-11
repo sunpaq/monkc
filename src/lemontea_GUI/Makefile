@@ -14,7 +14,7 @@ XCB_example.o:XCB_example.c
 	$(CC) -c XCB_example.c $(LINK_HEAD)
 
 clean:
-	rm exec $(OBJS)
+	rm -f exec $(OBJS)
 
 dump:
 	ulimit -c unlimited

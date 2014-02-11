@@ -13,7 +13,7 @@ make:
 	#[sudo make sync] to copy xcode project files to src
 	#[make test] to make and run test
 
-install:
+install: clean
 	cd $(RUNTIME_PATH) && make && sudo make install
 	cd ..
 	cd $(LEMONTEA_PATH) && make && sudo make install

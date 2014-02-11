@@ -50,8 +50,8 @@ fi
 if [ "$1" = "-clean" ]
 then
 	echo "CLEAN..."
-	rm exec core
-	rm -r build	
+	rm -f exec core
+	rm -f -r build
 	mkdir -p -v build
 	echo -e $ROOTMAKETMP > Makefile	
 	echo -e $MAKEFLIETMP > build/Makefile
