@@ -165,8 +165,8 @@ typedef mc_object* (*initerFP)(mc_object*);
 #define ff(obj, met, ...)				_push_jump(_response_to((mo)obj, S(met), MC_STRICT_MODE), __VA_ARGS__)//send message
 #define fh(obj, met, hash, ...)			_push_jump(_response_to_h((mo)obj, S(met), hash, MC_STRICT_MODE), __VA_ARGS__)
 #define fs(obj, met, ...)				_push_jump(_self_response_to((mo)obj, S(met)), __VA_ARGS__)
-#define shift(obj, mode)				_shift(obj, S(mode), sizeof(mode), mode##_load)
-#define shift_back(obj)					_shift_back(obj)
+#define shift(obj, mode)				_shift((mo)obj, S(mode), sizeof(mode), mode##_load)
+#define shift_back(obj)					_shift_back((mo)obj)
 
 //global
 void mc_init();

@@ -7,13 +7,13 @@
 //
 
 #import "ObjCClass.h"
-#import "Bird.h"
+#import "LittleBird.h"
 
 @implementation ObjCClass
 
 -(void) callMonkCMethod
 {
-    Bird* abird = ff(new(Bird), initWithName, "fat bird");
+    LittleBird* abird = ff(new(LittleBird), initWithName, "fat bird");
     printf("my name is: %s\n", abird->name);
     ff(abird, fly, nil);
     

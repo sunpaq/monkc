@@ -11,9 +11,9 @@
 
 #include "monkc.h"
 
-monkc(BirdFather);
-end(BirdFather);
+monkc(LittleBirdFather);
+end(LittleBirdFather);
 
-method(BirdFather, int, getAge, xxx);
+method(LittleBirdFather, int, getAge, xxx);
 
 #endif

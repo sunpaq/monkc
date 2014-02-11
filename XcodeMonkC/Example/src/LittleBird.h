@@ -11,14 +11,14 @@
 
 #include "monkc.h"
 
-monkc(Bird);
+monkc(LittleBird);
 char* name;
-end(Bird);
+end(LittleBird);
 
-method(Bird, Bird*, initWithName, char* aname);
-method(Bird, void, yourName, xxx);
-method(Bird, void, fly, xxx);
-method(Bird, void, swim, xxx);
-method(Bird, void, eat, xxx);
+method(LittleBird, LittleBird*, initWithName, char* aname);
+method(LittleBird, void, yourName, xxx);
+method(LittleBird, void, fly, xxx);
+method(LittleBird, void, swim, xxx);
+method(LittleBird, void, eat, xxx);
 
 #endif

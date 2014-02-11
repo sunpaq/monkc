@@ -7,20 +7,20 @@
 //
 
 #include <stdio.h>
-#include "BirdFather.h"
+#include "LittleBirdFather.h"
 
-initer(BirdFather)
+initer(LittleBirdFather)
 {
     return obj;
 }
 
-method(BirdFather, int, getAge, xxx)
+method(LittleBirdFather, int, getAge, xxx)
 {
     return 29;
 }
 
-loader(BirdFather)
+loader(LittleBirdFather)
 {
-    binding(BirdFather, int, getAge, xxx);
+    binding(LittleBirdFather, int, getAge, xxx);
     return claz;
 }
