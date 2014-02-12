@@ -25,7 +25,6 @@ end(MCProcess);
 method(MCProcess, void, printIDs, xxx);
 //returns(0 in child/child-pid in parent/-1 on error)
 method(MCProcess, int, fork, xxx);
-method(MCProcess, int, vfork, xxx);
 
 //may be not supported by OS
 method(MCProcess, int, registerAtExitCallback, void (*func)(void));

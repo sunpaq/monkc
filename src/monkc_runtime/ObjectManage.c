@@ -72,7 +72,7 @@ void pushToTail(mc_blockpool* bpool, mc_block* ablock)
 {
 	mc_trylock(&(bpool->lock));
 	deref(ablock).next = nil;
-	if(NO_NODE(bpool)){
+	if(MC_NO_NODE(bpool)){
 		deref(bpool).tail = ablock;
 		deref(ablock).next = ablock;
 	}else{
@@ -88,9 +88,9 @@ mc_block* getFromHead(mc_blockpool* bpool)
 {
 	mc_trylock(&(bpool->lock));
 	mc_block* target = nil;
-	if(NO_NODE(bpool)){
+	if(MC_NO_NODE(bpool)){
 		target=nil;
-	}else if(ONE_NODE(bpool)){
+	}else if(MC_ONE_NODE(bpool)){
 		target=bpool->tail;
 		deref(bpool).tail = nil;
 	}else{
@@ -131,15 +131,15 @@ int cut(mc_blockpool* bpool, mc_block* ablock, mc_block** result)
 	//assume parameter is all checked outside
 	mc_trylock(&(bpool->lock));
 	int res = 0;//success
- 	if(NO_NODE(bpool)){
+ 	if(MC_NO_NODE(bpool)){
 		error_log("no node in used_pool but you request delete\n");
 		deref(result)=nil;
 		res=-1;//fail
-	}else if(ONE_NODE(bpool)){
+	}else if(MC_ONE_NODE(bpool)){
 		deref(bpool).tail=nil;
 		deref(ablock).next=nil;
 		deref(result)=ablock;
-	}else if(TWO_NODE(bpool)){//do not swap data
+	}else if(MC_TWO_NODE(bpool)){//do not swap data
 		if(deref(ablock).next==nil){
 			error_log("block not in the pool, refuse to cut\n");
 			res=-1;//fail
@@ -263,7 +263,7 @@ void _dealloc(mc_object* aobject, int is_recycle)
 		error_log("----dealloc(%s) obj->isa->pool is nil\n", nameof(aobject));
 		return;
 	}
-	if(NO_NODE(up)){
+	if(MC_NO_NODE(up)){
 		error_log("----dealloc(%s) have no block used, but you request dealloc\n", nameof(aobject));
 		return;
 	}

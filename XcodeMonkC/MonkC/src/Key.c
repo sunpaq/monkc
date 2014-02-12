@@ -1,6 +1,5 @@
 #include "monkc.h"
 #include <string.h>
-#include "Key.h"
 
 void mc_copy_key(char* const dest, const char* src)
 {

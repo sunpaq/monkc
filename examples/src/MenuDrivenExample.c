@@ -14,7 +14,7 @@ void menu_drive_test(MCContext* context)
 	char name[100];
 	ff(context, getUserInputString, name);
 	
-	char* sex;
+	char* sex = nil;
 	switch(selection){
 		case '1':
 			sex="Mr";

@@ -186,6 +186,7 @@ loader(MCUnitTestSuite)
 initer(MCUnitTestSuite)
 {
 	obj->first_case = nil;
+    obj->last_case_p = &(obj->first_case);
 	obj->test_case_count = 0;
 	obj->next_suite = nil;
 	return obj;
@@ -201,9 +202,8 @@ method(MCUnitTestSuite, void, bye, xxx)
 method(MCUnitTestSuite, void, addTestCase, MCUnitTestCase* volatile tcase)
 {
 	retain(tcase);
-	MCUnitTestCase *iter = nil;
-	for(iter=obj->first_case; iter!=nil; iter=iter->next_case);
-	iter=tcase;
+    *(obj->last_case_p) = tcase;
+    obj->last_case_p = cast(MCUnitTestCase**, &tcase);
 	obj->test_case_count++;
 }
 

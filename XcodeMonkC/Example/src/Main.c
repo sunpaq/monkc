@@ -46,7 +46,6 @@ void testMonkC()
 
 #include "MCString.h"
 #include "MCClock.h"
-#include "ObjCClass.h"
 
 void testLemontea()
 {
@@ -55,19 +54,12 @@ void testLemontea()
     ff(mcstr, add, " the third");
     ff(mcstr, add, " the forth\n");
     ff(mcstr, print, nil);
-    release(mcstr);
+    //recycle(mcstr);
     
     MCClock* mcclock = ff(new(MCClock), setTimeToNow, nil);
     ff(mcclock, printTime, nil);
     ff(mcclock, printCurrentGMTTime, nil);
-    release(mcclock);
-}
-
-void callFromObjC()
-{
-    printf("\n<call from objc class>\n\n");
-    ObjCClass* aobj = [ObjCClass new];
-    [aobj callMonkCMethod];
+    //recycle(mcclock);
 }
 
 void test(MCContext* context)
@@ -79,13 +71,12 @@ void test(MCContext* context)
 	int selection = call(context,
 		MCContext,
 		showMenuAndGetSelectionChar, 
-		6,
+		5,
 		"menu_drive_test", 
 		"MCSocket(Server) --- use one termial process run this", 
 		"MCSocket(Client) --- use another termial process run this",
         "test monkc",
-        "test lemontea",
-        "test call from objc"
+        "test lemontea"
                          
 		//"[x]syntex_test", 
 		//"[x]lib_test", 
@@ -103,7 +94,6 @@ void test(MCContext* context)
 		case '3':mocha_clientsocket_test(context);break;
         case '4':testMonkC();break;
         case '5':testLemontea();break;
-        case '6':callFromObjC();break;
         
 		//case '6':mocha_exception_test();break;
 		//case '7':test_MCThread();break;

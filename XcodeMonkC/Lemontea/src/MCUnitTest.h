@@ -51,6 +51,7 @@ method(MCUnitTestCase, void, runATestMethod, char* methodName);
 
 monkc(MCUnitTestSuite);
 	MCUnitTestCase *first_case;
+    MCUnitTestCase **last_case_p;
 	int test_case_count;
 	struct MCUnitTestSuite_struct* next_suite;
 end(MCUnitTestSuite);

@@ -46,7 +46,6 @@ void testMonkC()
 
 #include "MCString.h"
 #include "MCClock.h"
-//#include "ObjCClass.h"
 
 void testLemontea()
 {
@@ -63,16 +62,6 @@ void testLemontea()
     release(mcclock);
 }
 
-/*
-void callFromObjC()
-{
-    printf("\n<call from objc class>\n\n");
-    ObjCClass* aobj = [ObjCClass new];
-    [aobj callMonkCMethod];
-}
-*/
-
-
 void test(MCContext* context)
 {
 	printf("%s\n", "----------");
@@ -87,9 +76,7 @@ void test(MCContext* context)
 		"MCSocket(Server) --- use one termial process run this", 
 		"MCSocket(Client) --- use another termial process run this",
         "test monkc",
-        "test lemontea",
-        //
-        "test call from objc"
+        "test lemontea"
                          
 		//"[x]syntex_test", 
 		//"[x]lib_test", 
@@ -107,7 +94,6 @@ void test(MCContext* context)
 		case '3':mocha_clientsocket_test(context);break;
         case '4':testMonkC();break;
         case '5':testLemontea();break;
-        //case '6':callFromObjC();break;
         
 		//case '6':mocha_exception_test();break;
 		//case '7':test_MCThread();break;

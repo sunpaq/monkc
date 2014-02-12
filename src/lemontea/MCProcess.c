@@ -25,13 +25,6 @@ method(MCProcess, int, fork, xxx)
 	return fork();
 }
 
-method(MCProcess, int, vfork, xxx)
-{
-	//pid_t vfork(void);
-	//no copy, so the vfork will be faster than fork
-	return vfork();
-}
-
 method(MCProcess, int, registerAtExitCallback, void (*func)(void))
 {
 	if(atexit(func)==0)
@@ -126,7 +119,6 @@ loader(MCProcess)
 {
 	binding(MCProcess, void, printIDs, xxx);
 	binding(MCProcess, int, fork, xxx);
-	binding(MCProcess, int, vfork, xxx);
 	
 	binding(MCProcess, int, registerAtExitCallback, void (*func)(void));
 	binding(MCProcess, void, exitWithStatus, int status);
