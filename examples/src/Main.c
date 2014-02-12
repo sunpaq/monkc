@@ -41,7 +41,7 @@ void testMonkC()
     int fatherage = (int)ff(abird, getAge, nil);
     printf("my father age is : %d\n", fatherage);
     
-    release(abird);
+    recycle(abird);
 }
 
 #include "MCString.h"
@@ -49,17 +49,26 @@ void testMonkC()
 
 void testLemontea()
 {
+    
     MCString* mcstr = ff(new(MCString), initWithCString, "a MCString");
     ff(mcstr, add, " the second");
     ff(mcstr, add, " the third");
     ff(mcstr, add, " the forth\n");
+    
+    int i;
+    for (i=0; i<100; i++) {
+        int old = LOG_LEVEL;
+        LOG_LEVEL = MC_ERROR_ONLY;
+        ff(mcstr, add, " a piece of string");
+        LOG_LEVEL = old;
+    }
     ff(mcstr, print, nil);
-    release(mcstr);
+    recycle(mcstr);
     
     MCClock* mcclock = ff(new(MCClock), setTimeToNow, nil);
     ff(mcclock, printTime, nil);
     ff(mcclock, printCurrentGMTTime, nil);
-    release(mcclock);
+    recycle(mcclock);
 }
 
 void test(MCContext* context)
@@ -106,7 +115,7 @@ void test(MCContext* context)
 int main(int argc, char const *argv[])
 {
 	mc_init();
-		LOG_LEVEL = MC_ERROR_ONLY;
+		LOG_LEVEL = MC_VERBOSE;
 		monkc_runtime_check();
 //		test_method_jumpping();
 		test_object_life_cycle();

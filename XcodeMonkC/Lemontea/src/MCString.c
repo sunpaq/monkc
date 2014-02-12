@@ -1,40 +1,25 @@
 #include "MCString.h"
 
+static int block_size = 1024;
 initer(MCString)
 {
 	//nothing to init
+    obj->buff = malloc(block_size*sizeof(char));
 	return obj;
+}
+
+method(MCString, void, bye, xxx)
+{
+    free(obj->buff);
 }
 
 method(MCString, MCString*, initWithCString, char* str)
 {
-	/*
-    if(str==nil)return nil;
-	size_t len = strlen(str);
-	MCString* newthis = nil;
-	//realloc will return a new mem if can now expand the old one!
-	if(len > 0){
-		newthis = (MCString*)realloc(obj, sizeof(MCString) + len + 1);
-	}else{
-		newthis = (MCString*)realloc(obj, sizeof(MCString) + 1);
-		error_log("MCString input string length <= 0\n");
-	}
-
-	if(newthis!=nil){
-		strncpy(newthis->buff, str, strlen(str) + 1);
-	}else{
-		error_log("mem realloc failed, nothing is in buff\n");
-		exit(-1);
-	}
-    */
-	
 	obj->length = strlen(str);
 	obj->size = strlen(str) + 1;
-	//obj->next = nil;
     strcpy(obj->buff, str);
 	return obj;
 }
-
 
 MCString* MCString_newWithCString(char* cstr)
 {
@@ -54,32 +39,9 @@ MCString* MCString_newForHttp(char* cstr, int isHttps)
 	else
 		res = ff(new(MCString), initWithCString, "http://");
 
-	ff(res, MK(add), cstr);
+	ff(res, add, cstr);
 	return res;
 }
-
-// MCString* MCString_newWithCStringAnony(char* cstr)
-// {
-// 	return new_anony(MCString, cstr);
-// }
-
-// MCString* MCString_newWithMCStringAnony(MCString* mcstr)
-// {
-// 	return new_anony(MCString, mcstr->buff);
-// }
-
-// MCString* MCString_newForHttpAnony(char* cstr, BOOL isHttps)
-// {
-// 	MCString* res;
-// 	if (isHttps)
-// 		res = new(MCString, "https://");
-// 	else
-// 		res = new(MCString, "http://");
-
-// 	ff(res, MK(add), cstr);
-// 	res->ref_count = 0;
-// 	return res;
-// }
 
 static char get_one_char()
 {
@@ -101,43 +63,24 @@ static void get_chars_until_enter(char resultString[])
 
 method(MCString, void, add, char* str)
 {
-	/*
-    MCString* iterator = obj;
-	while(iterator->next!=nil)
-		iterator = (MCString*)iterator->next;
-	(iterator->next) = ff(new(MCString), initWithCString, str);
-	obj->length += strlen(str);
-	obj->size += strlen(str) + 1;
-    */
-    
-    strcat(obj->buff, str);
+    if (1024-obj->size < strlen(str)+1) {
+        char* newbuff = malloc(sizeof(char) * (obj->size + block_size));
+        strncpy(newbuff, obj->buff, obj->size-1);
+        newbuff[obj->size-1]='\0';
+        free(obj->buff);
+        obj->buff = newbuff;
+    }
+    strncat(obj->buff, str, strlen(str));
 }
 
 method(MCString, void, print, xxx)
 {
 	printf("%s", obj->buff);
-    /*
-	MCString* iterator = obj;
-	while(iterator->next!=nil)
-	{
-		iterator = (MCString*)iterator->next;
-		printf("%s", iterator->buff);
-	}
-	printf("\n");
-    */
 }
 
 method(MCString, const char*, toCString, char const buff[])
 {
-	//MCString* iterator = obj;
 	strcpy(cast(char*, buff), obj->buff);
-    /*
-	while(iterator->next!=nil)
-	{
-		iterator = cast(MCString*, iterator->next);
-		strcat(cast(char*, buff), iterator->buff);
-	}
-    */ 
 	return buff;
 }
 
@@ -149,19 +92,6 @@ method(MCString, int, equalTo, MCString* stringToComp)
 		return 1;
 	else
 		return 0;
-}
-
-method(MCString, void, bye, xxx)
-{
-	/*
-    //only release the added sub strings.
-	debug_log("MCString - bye\n");
-	MCString *iterator, *save;
-	for(iterator=obj->next; (save=iterator)!=nil; free(save)){
-		iterator = iterator->next;
-		debug_log("MCString - free a sub string\n");
-	}
-    */
 }
 
 method(MCString, char, getOneChar, xxx)

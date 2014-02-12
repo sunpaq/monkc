@@ -15,6 +15,6 @@ monkc(BirdBase);
 end(BirdBase);
 
 //abs
-method(BirdBase, void, land_abs, xxx);
+method(BirdBase, void, land_abs, mo receiver);
 
 #endif

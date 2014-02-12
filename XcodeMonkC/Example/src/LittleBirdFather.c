@@ -25,7 +25,7 @@ method(LittleBirdFather, void, fly, xxx)
     printf("little bird father can fly\n");
 }
 
-method(LittleBirdFather, void, hello_abs, xxx)
+method(LittleBirdFather, void, hello_abs, mo receiver)
 {
     ff(receiver, hello_imp, nil);
 }
@@ -39,7 +39,7 @@ loader(LittleBirdFather)
 {
     binding(LittleBirdFather, int, getAge, xxx);
     binding(LittleBirdFather, void, fly, xxx);
-    binding(LittleBirdFather, void, hello_abs, xxx);
+    binding(LittleBirdFather, void, hello_abs, mo receiver);
     binding(LittleBirdFather, void, land_imp, xxx);
     return claz;
 }

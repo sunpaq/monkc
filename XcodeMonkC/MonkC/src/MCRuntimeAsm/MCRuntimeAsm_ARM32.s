@@ -37,9 +37,9 @@ keep-fp:		-mapcs-frame will keep the fp not to be optimized out
 .globl _push_jump
 .p2align 3 			
 _push_jump:
-	cmp r2, #0
+	cmp r1, #0
 	beq 0f
-	bx r2
+	bx r1
 0:
 	bx lr
 

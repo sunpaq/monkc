@@ -7,8 +7,7 @@
 monkc(MCString);
 	size_t length;
 	size_t size; 
-	//struct MCString_struct* next;
-	char buff[];
+	char* buff;
 end(MCString);
 
 //length not include '\0'
@@ -30,9 +29,6 @@ MCString* MCString_newWithCString(char* cstr);
 MCString* MCString_newWithMCString(MCString* mcstr);
 MCString* MCString_newForHttp(char* cstr, int isHttps);
 
-// MCString* MCString_newWithCStringAnony(char* cstr);
-// MCString* MCString_newWithMCStringAnony(MCString* mcstr);
-// MCString* MCString_newForHttpAnony(char* cstr, BOOL isHttps);
 #endif
 
 

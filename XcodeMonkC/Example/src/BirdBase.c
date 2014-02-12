@@ -20,7 +20,7 @@ loader(BirdBase)
 }
 
 //abs
-method(BirdBase, void, land_abs, xxx)
+method(BirdBase, void, land_abs, mo receiver)
 {
     ff(receiver, land_imp, nil);
 }
