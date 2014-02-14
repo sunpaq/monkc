@@ -17,6 +17,16 @@
 		4B0D9AFE18A7D4A000E4ED89 /* monkc.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B0D9AE818A7D4A000E4ED89 /* monkc.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4B0D9AFF18A7D4A000E4ED89 /* ObjectManage.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B0D9AE918A7D4A000E4ED89 /* ObjectManage.c */; };
 		4B0D9B0118A7D4A000E4ED89 /* Vectors.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B0D9AEB18A7D4A000E4ED89 /* Vectors.c */; };
+		4B0FFE5418AE6A870015F4E0 /* monkc.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B0D9AE718A7D4A000E4ED89 /* monkc.c */; };
+		4B0FFE5518AE6A870015F4E0 /* HashTable.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B0D9AD618A7D4A000E4ED89 /* HashTable.c */; };
+		4B0FFE5618AE6A870015F4E0 /* Key.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B0D9AD818A7D4A000E4ED89 /* Key.c */; };
+		4B0FFE5718AE6A870015F4E0 /* Lock.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B0D9ADA18A7D4A000E4ED89 /* Lock.c */; };
+		4B0FFE5818AE6A870015F4E0 /* Log.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B0D9ADC18A7D4A000E4ED89 /* Log.c */; };
+		4B0FFE5918AE6A870015F4E0 /* Messaging.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B0D9AE518A7D4A000E4ED89 /* Messaging.c */; };
+		4B0FFE5A18AE6A870015F4E0 /* ObjectManage.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B0D9AE918A7D4A000E4ED89 /* ObjectManage.c */; };
+		4B0FFE5B18AE6A870015F4E0 /* Vectors.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B0D9AEB18A7D4A000E4ED89 /* Vectors.c */; };
+		4B0FFE5D18AE6A940015F4E0 /* monkc.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B0D9AE818A7D4A000E4ED89 /* monkc.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4B0FFE6018AE6C920015F4E0 /* MCRuntimeAsm_IA32_darwin.s in Sources */ = {isa = PBXBuildFile; fileRef = 4B0D9AE218A7D4A000E4ED89 /* MCRuntimeAsm_IA32_darwin.s */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,10 +45,18 @@
 		4B0D9AE818A7D4A000E4ED89 /* monkc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = monkc.h; sourceTree = "<group>"; };
 		4B0D9AE918A7D4A000E4ED89 /* ObjectManage.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ObjectManage.c; sourceTree = "<group>"; };
 		4B0D9AEB18A7D4A000E4ED89 /* Vectors.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Vectors.c; sourceTree = "<group>"; };
+		4B0FFE5018AE699F0015F4E0 /* libmonkc4ios.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libmonkc4ios.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B9F30971883B560009B94A9 /* libmonkc.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libmonkc.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		4B0FFE4D18AE699F0015F4E0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		4B9F30941883B560009B94A9 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -91,6 +109,7 @@
 			isa = PBXGroup;
 			children = (
 				4B9F30971883B560009B94A9 /* libmonkc.a */,
+				4B0FFE5018AE699F0015F4E0 /* libmonkc4ios.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -98,6 +117,14 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
+		4B0FFE4E18AE699F0015F4E0 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4B0FFE5D18AE6A940015F4E0 /* monkc.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		4B9F30951883B560009B94A9 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -109,6 +136,23 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		4B0FFE4F18AE699F0015F4E0 /* monkc4ios */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4B0FFE5118AE699F0015F4E0 /* Build configuration list for PBXNativeTarget "monkc4ios" */;
+			buildPhases = (
+				4B0FFE4C18AE699F0015F4E0 /* Sources */,
+				4B0FFE4D18AE699F0015F4E0 /* Frameworks */,
+				4B0FFE4E18AE699F0015F4E0 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = monkc4ios;
+			productName = monkc4ios;
+			productReference = 4B0FFE5018AE699F0015F4E0 /* libmonkc4ios.a */;
+			productType = "com.apple.product-type.library.static";
+		};
 		4B9F30961883B560009B94A9 /* monkc */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 4B9F309B1883B560009B94A9 /* Build configuration list for PBXNativeTarget "monkc" */;
@@ -148,11 +192,28 @@
 			projectRoot = "";
 			targets = (
 				4B9F30961883B560009B94A9 /* monkc */,
+				4B0FFE4F18AE699F0015F4E0 /* monkc4ios */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXSourcesBuildPhase section */
+		4B0FFE4C18AE699F0015F4E0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4B0FFE6018AE6C920015F4E0 /* MCRuntimeAsm_IA32_darwin.s in Sources */,
+				4B0FFE5418AE6A870015F4E0 /* monkc.c in Sources */,
+				4B0FFE5518AE6A870015F4E0 /* HashTable.c in Sources */,
+				4B0FFE5618AE6A870015F4E0 /* Key.c in Sources */,
+				4B0FFE5718AE6A870015F4E0 /* Lock.c in Sources */,
+				4B0FFE5818AE6A870015F4E0 /* Log.c in Sources */,
+				4B0FFE5918AE6A870015F4E0 /* Messaging.c in Sources */,
+				4B0FFE5A18AE6A870015F4E0 /* ObjectManage.c in Sources */,
+				4B0FFE5B18AE6A870015F4E0 /* Vectors.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		4B9F30931883B560009B94A9 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -172,6 +233,30 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		4B0FFE5218AE699F0015F4E0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				EXECUTABLE_PREFIX = lib;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos7.0;
+				VALID_ARCHS = "armv7 armv7s";
+			};
+			name = Debug;
+		};
+		4B0FFE5318AE699F0015F4E0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				EXECUTABLE_PREFIX = lib;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos7.0;
+				VALID_ARCHS = "armv7 armv7s";
+			};
+			name = Release;
+		};
 		4B9F30991883B560009B94A9 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -263,6 +348,14 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		4B0FFE5118AE699F0015F4E0 /* Build configuration list for PBXNativeTarget "monkc4ios" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4B0FFE5218AE699F0015F4E0 /* Debug */,
+				4B0FFE5318AE699F0015F4E0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		4B9F30921883B560009B94A9 /* Build configuration list for PBXProject "monkc" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

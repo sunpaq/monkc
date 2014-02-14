@@ -15,7 +15,7 @@ initer(BirdBase)
 
 loader(BirdBase)
 {
-    binding(BirdBase, void, land_abs, mo receiver);
+    binding(BirdBase, void, land_abs, xxx);
     return claz;
 }
 

@@ -15,12 +15,12 @@ initer(BirdBase)
 
 loader(BirdBase)
 {
-    binding(BirdBase, void, land_abs, mo receiver);
+    hinding(BirdBase, void, land_abs, 2677951518, xxx);
     return claz;
 }
 
 //abs
 method(BirdBase, void, land_abs, mo receiver)
 {
-    ff(receiver, land_imp, nil);
+    fh(receiver,land_imp, 2677959544, nil);
 }
