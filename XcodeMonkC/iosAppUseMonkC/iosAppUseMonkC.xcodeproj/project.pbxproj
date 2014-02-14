@@ -34,6 +34,7 @@
 		4B0FFECE18AE7BC00015F4E0 /* MCString.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B0FFEC018AE7BC00015F4E0 /* MCString.c */; };
 		4B0FFECF18AE7BC00015F4E0 /* MCThread.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B0FFEC218AE7BC00015F4E0 /* MCThread.c */; };
 		4B0FFED018AE7BC00015F4E0 /* MCUnitTest.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B0FFEC418AE7BC00015F4E0 /* MCUnitTest.c */; };
+		4B0FFED618AE87100015F4E0 /* BirdFather.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B0FFED518AE87100015F4E0 /* BirdFather.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -92,6 +93,8 @@
 		4B0FFEC318AE7BC00015F4E0 /* MCThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCThread.h; sourceTree = "<group>"; };
 		4B0FFEC418AE7BC00015F4E0 /* MCUnitTest.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = MCUnitTest.c; sourceTree = "<group>"; };
 		4B0FFEC518AE7BC00015F4E0 /* MCUnitTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCUnitTest.h; sourceTree = "<group>"; };
+		4B0FFED418AE86F50015F4E0 /* BirdFather.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BirdFather.h; sourceTree = "<group>"; };
+		4B0FFED518AE87100015F4E0 /* BirdFather.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BirdFather.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -158,10 +161,7 @@
 				4B0FFE7D18AE6DC10015F4E0 /* AppDelegate.m */,
 				4B0FFE7F18AE6DC10015F4E0 /* Images.xcassets */,
 				4B0FFE7418AE6DC10015F4E0 /* Supporting Files */,
-				4B0FFEA418AE6FCD0015F4E0 /* monkcInterface.h */,
-				4B0FFEA518AE6FE50015F4E0 /* monkcInterface.c */,
-				4B0FFEA718AE70700015F4E0 /* Bird.h */,
-				4B0FFEA818AE70830015F4E0 /* Bird.c */,
+				4B0FFED318AE86A60015F4E0 /* monkcClasses */,
 				4B0FFED218AE7BFF0015F4E0 /* lemontea */,
 			);
 			path = iosAppUseMonkC;
@@ -249,6 +249,19 @@
 				4B0FFEC518AE7BC00015F4E0 /* MCUnitTest.h */,
 			);
 			name = lemontea;
+			sourceTree = "<group>";
+		};
+		4B0FFED318AE86A60015F4E0 /* monkcClasses */ = {
+			isa = PBXGroup;
+			children = (
+				4B0FFEA418AE6FCD0015F4E0 /* monkcInterface.h */,
+				4B0FFEA518AE6FE50015F4E0 /* monkcInterface.c */,
+				4B0FFEA718AE70700015F4E0 /* Bird.h */,
+				4B0FFEA818AE70830015F4E0 /* Bird.c */,
+				4B0FFED418AE86F50015F4E0 /* BirdFather.h */,
+				4B0FFED518AE87100015F4E0 /* BirdFather.c */,
+			);
+			name = monkcClasses;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -354,6 +367,7 @@
 				4B0FFEC718AE7BC00015F4E0 /* MCClock.c in Sources */,
 				4B0FFEA618AE6FE50015F4E0 /* monkcInterface.c in Sources */,
 				4B0FFECA18AE7BC00015F4E0 /* MCIO.c in Sources */,
+				4B0FFED618AE87100015F4E0 /* BirdFather.c in Sources */,
 				4B0FFEC918AE7BC00015F4E0 /* MCException.c in Sources */,
 				4B0FFECD18AE7BC00015F4E0 /* MCSocket.c in Sources */,
 				4B0FFECF18AE7BC00015F4E0 /* MCThread.c in Sources */,
@@ -581,6 +595,7 @@
 				4B0FFE9818AE6DC10015F4E0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		4B0FFE9918AE6DC10015F4E0 /* Build configuration list for PBXNativeTarget "iosAppUseMonkCTests" */ = {
 			isa = XCConfigurationList;
@@ -589,6 +604,7 @@
 				4B0FFE9B18AE6DC10015F4E0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

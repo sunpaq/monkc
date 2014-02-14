@@ -14,6 +14,7 @@ char* runMonkCCode()
 {
     Bird* abird = ff(new(Bird), initWithName, "a little bird");
     ff(abird, sayHello, NULL);
+    return ff(abird, onlyFatherCanDo, NULL);
     
     MCString* str = ff(new(MCString), initWithCString, "a string ");
     int i;

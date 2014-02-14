@@ -7,8 +7,11 @@
 //
 
 #include "Bird.h"
+#include "BirdFather.h"
 
 initer(Bird){
+    obj->super = newc(mo, BirdFather);
+    ff(obj->super, initWithName, "a father bird");
     obj->name = NULL;
     obj->age = 29;
     return obj;
