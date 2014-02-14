@@ -7,6 +7,8 @@
 //
 
 #import "AppDelegate.h"
+#import "monkc.h"
+#import "monkcInterface.h"
 
 @implementation AppDelegate
 
@@ -16,6 +18,20 @@
     // Override point for customization after application launch.
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
+    
+    UITextField* text = [[UITextField alloc] initWithFrame:CGRectMake(0, 0, 320, 640)];
+    text.userInteractionEnabled = NO;
+    text.textColor = [UIColor colorWithRed:0 green:0.5 blue:0.5 alpha:1.0];
+    text.text = @"i want monkc run on iOS";
+    [self.window addSubview:text];
+    
+    text.text = @"change text";
+    
+    //init monkc
+    mc_init();
+    text.text = [NSString stringWithCString:runMonkCCode()
+                                   encoding:NSStringEncodingConversionAllowLossy];
+    //runMonkCCode();
     return YES;
 }
 
@@ -44,6 +60,9 @@
 - (void)applicationWillTerminate:(UIApplication *)application
 {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+    
+    //clean monkc
+    mc_end();
 }
 
 @end

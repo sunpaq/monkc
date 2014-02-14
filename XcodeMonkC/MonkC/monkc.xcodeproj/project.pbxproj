@@ -26,7 +26,7 @@
 		4B0FFE5A18AE6A870015F4E0 /* ObjectManage.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B0D9AE918A7D4A000E4ED89 /* ObjectManage.c */; };
 		4B0FFE5B18AE6A870015F4E0 /* Vectors.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B0D9AEB18A7D4A000E4ED89 /* Vectors.c */; };
 		4B0FFE5D18AE6A940015F4E0 /* monkc.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B0D9AE818A7D4A000E4ED89 /* monkc.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		4B0FFE6018AE6C920015F4E0 /* MCRuntimeAsm_IA32_darwin.s in Sources */ = {isa = PBXBuildFile; fileRef = 4B0D9AE218A7D4A000E4ED89 /* MCRuntimeAsm_IA32_darwin.s */; };
+		4B0FFEAA18AE72CE0015F4E0 /* MCRuntimeAsm_ARM32.s in Sources */ = {isa = PBXBuildFile; fileRef = 4B0D9ADF18A7D4A000E4ED89 /* MCRuntimeAsm_ARM32.s */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -202,7 +202,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4B0FFE6018AE6C920015F4E0 /* MCRuntimeAsm_IA32_darwin.s in Sources */,
+				4B0FFEAA18AE72CE0015F4E0 /* MCRuntimeAsm_ARM32.s in Sources */,
 				4B0FFE5418AE6A870015F4E0 /* monkc.c in Sources */,
 				4B0FFE5518AE6A870015F4E0 /* HashTable.c in Sources */,
 				4B0FFE5618AE6A870015F4E0 /* Key.c in Sources */,

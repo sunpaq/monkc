@@ -148,15 +148,15 @@ typedef mc_object* (*initerFP)(mc_object*);
 #define cast(type, obj) 				((type)obj)
 
 //for create object
-#define newc(type, cls)                 (type)_new(_alloc(S(cls), sizeof(cls), (loaderFP)cls##_load), (initerFP)cls##_init)//with cast
-#define new(cls)						(cls*)_new(_alloc(S(cls), sizeof(cls), (loaderFP)cls##_load), (initerFP)cls##_init)//create instance
-#define hew(cls, hash)					(cls*)_new(_alloc_h(S(cls), sizeof(cls), cls##_load, hash), cls##_init)
-#define new_category(ori, cat)			(ori*)_new_category(_alloc(S(ori), sizeof(ori), ori##_load), ori##_init, cat##_load, cat##_init)
-#define hew_category(ori, hash, cat)	(ori*)_new_category(_alloc_h(S(ori), sizeof(ori), ori##_load, hash), ori##_init, cat##_load, cat##_init)
-#define clear(cls)  					_clear(S(cls), sizeof(cls), cls##_load)
-#define hlear(cls, hash)  				_clear_h(S(cls), sizeof(cls), cls##_load, hash)
-#define info(cls)                  		_info(S(cls), sizeof(cls), cls##_load)
-#define hnfo(cls, hash)                 _info_h(S(cls), sizeof(cls), cls##_load, hash)
+#define newc(type, cls)                 (type)_new(mc_alloc(S(cls), sizeof(cls), (loaderFP)cls##_load), (initerFP)cls##_init)//with cast
+#define new(cls)						(cls*)_new(mc_alloc(S(cls), sizeof(cls), (loaderFP)cls##_load), (initerFP)cls##_init)//create instance
+#define hew(cls, hash)					(cls*)_new(mc_alloc_h(S(cls), sizeof(cls), cls##_load, hash), cls##_init)
+#define new_category(ori, cat)			(ori*)_new_category(mc_alloc(S(ori), sizeof(ori), ori##_load), ori##_init, cat##_load, cat##_init)
+#define hew_category(ori, hash, cat)	(ori*)_new_category(mc_alloc_h(S(ori), sizeof(ori), ori##_load, hash), ori##_init, cat##_load, cat##_init)
+#define clear(cls)  					mc_clear(S(cls), sizeof(cls), cls##_load)
+#define hlear(cls, hash)  				mc_clear_h(S(cls), sizeof(cls), cls##_load, hash)
+#define info(cls)                  		mc_info(S(cls), sizeof(cls), cls##_load)
+#define hnfo(cls, hash)                 mc_info_h(S(cls), sizeof(cls), cls##_load, hash)
 
 //for call method
 #define callc(obj, cls, rtype, name, ...)   (rtype)cls##_##name(obj, cls##_##name, __VA_ARGS__)//with cast
@@ -403,13 +403,13 @@ void package_by_block(mc_block* ablock, mc_object* aobject);
 
 mc_blockpool* new_mc_blockpool();
 
-void _info(const char* classname, size_t size, loaderFP loader);
-void _clear(const char* classname, size_t size, loaderFP loader);
-mo _alloc(const char* classname, size_t size, loaderFP loader);
-void _info_h(const char* classname, size_t size, loaderFP loader, unsigned hashval);
-void _clear_h(const char* classname, size_t size, loaderFP loader, unsigned hashval);
-mo _alloc_h(const char* classname, size_t size, loaderFP loader, unsigned hashval);
-void _dealloc(mc_object* aobject, int is_recycle);
+void mc_info(const char* classname, size_t size, loaderFP loader);
+void mc_clear(const char* classname, size_t size, loaderFP loader);
+mo mc_alloc(const char* classname, size_t size, loaderFP loader);
+void mc_info_h(const char* classname, size_t size, loaderFP loader, unsigned hashval);
+void mc_clear_h(const char* classname, size_t size, loaderFP loader, unsigned hashval);
+mo mc_alloc_h(const char* classname, size_t size, loaderFP loader, unsigned hashval);
+void mc_dealloc(mc_object* aobject, int is_recycle);
 
 #define MC_NO_NODE(bpool) (bpool->tail==nil)
 #define MC_ONE_NODE(bpool) (bpool->tail->next==bpool->tail)
