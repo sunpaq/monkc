@@ -253,11 +253,11 @@ int LOG_LEVEL;
 #define LOG_COLOR_RED ""
 #define LOG_COLOR_LIGHT_RED ""
 #define LOG_COLOR_PURPLE ""
-#define LOG_COLOR_LIGHT_PURPLE "\033[1;35m"
-#define LOG_COLOR_BROWN "\033[0;33m"
-#define LOG_COLOR_YELLOW "\033[1;33m"
-#define LOG_COLOR_LIGHT_GRAY "\033[0;37m"
-#define LOG_COLOR_WHITE "\033[1;37m"
+#define LOG_COLOR_LIGHT_PURPLE ""
+#define LOG_COLOR_BROWN ""
+#define LOG_COLOR_YELLOW ""
+#define LOG_COLOR_LIGHT_GRAY ""
+#define LOG_COLOR_WHITE ""
 #define LOG_FMT "%s%s"
 #endif
 
