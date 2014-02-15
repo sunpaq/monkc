@@ -28,7 +28,7 @@
 #ifndef __MCRuntime__
 #define __MCRuntime__
 
-/* Mocha use many C99 standard features, make sure your compiler and platform support C99 standard */
+/* Monk-C use many C99 standard features, make sure your compiler and platform support C99 standard */
 //#pragma warning(disable:3)
 
 #include <stdio.h>
@@ -127,6 +127,7 @@ mc_class* mode;\
 mc_class* cls##_load(mc_class* const claz);\
 cls* cls##_init(cls* const obj);
 
+//macros expand to nothing just a marker
 #define implements(protocol)
 #define extends(super)
 
@@ -218,6 +219,9 @@ int LOG_LEVEL;
 #define MC_ERROR_ONLY 1
 #define MC_DEBUG      2
 #define MC_VERBOSE    3
+
+#define MC_LOG_USE_COLOR
+#ifdef MC_LOG_USE_COLOR
 #define LOG_COLOR_NONE "\033[0m"
 #define LOG_COLOR_BLACK "\033[0;30m"
 #define LOG_COLOR_DARK_GRAY "\033[1;30m"
@@ -236,6 +240,26 @@ int LOG_LEVEL;
 #define LOG_COLOR_LIGHT_GRAY "\033[0;37m"
 #define LOG_COLOR_WHITE "\033[1;37m"
 #define LOG_FMT "%s%s\033[0m"
+#else
+#define LOG_COLOR_NONE ""
+#define LOG_COLOR_BLACK ""
+#define LOG_COLOR_DARK_GRAY ""
+#define LOG_COLOR_BLUE ""
+#define LOG_COLOR_LIGHT_BLUE ""
+#define LOG_COLOR_GREEN ""
+#define LOG_COLOR_LIGHT_GREEN ""
+#define LOG_COLOR_CYAN ""
+#define LOG_COLOR_LIGHT_CYAN ""
+#define LOG_COLOR_RED ""
+#define LOG_COLOR_LIGHT_RED ""
+#define LOG_COLOR_PURPLE ""
+#define LOG_COLOR_LIGHT_PURPLE "\033[1;35m"
+#define LOG_COLOR_BROWN "\033[0;33m"
+#define LOG_COLOR_YELLOW "\033[1;33m"
+#define LOG_COLOR_LIGHT_GRAY "\033[0;37m"
+#define LOG_COLOR_WHITE "\033[1;37m"
+#define LOG_FMT "%s%s"
+#endif
 
 void error_log(char* volatile fmt, ...);
 void debug_log(char* volatile fmt, ...);
