@@ -138,6 +138,7 @@ a toolkit for OOP programming in C language
 		obj->super = new(BirdFather); ---> new your super by hand!
 		obj->type = 3;
 		debug_logt("Bird", "[%p] init called\n", obj);
+		return obj;
 	}
 
 	method(Bird, void, bye, xxx) ---> 1.public method implements
