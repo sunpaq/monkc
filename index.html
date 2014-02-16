@@ -199,6 +199,7 @@ initer(Bird) ---&gt; must have. initialize the class data
     obj-&gt;super = new(BirdFather); ---&gt; new your super by hand!
     obj-&gt;type = 3;
     debug_logt("Bird", "[%p] init called\n", obj);
+    return obj;
 }
 
 method(Bird, void, bye, xxx) ---&gt; 1.public method implements
