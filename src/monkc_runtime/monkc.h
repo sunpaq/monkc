@@ -154,10 +154,10 @@ typedef mc_object* (*initerFP)(mc_object*);
 #define hew(cls, hash)					(cls*)_new(mc_alloc_h(S(cls), sizeof(cls), cls##_load, hash), cls##_init)
 #define new_category(ori, cat)			(ori*)_new_category(mc_alloc(S(ori), sizeof(ori), ori##_load), ori##_init, cat##_load, cat##_init)
 #define hew_category(ori, hash, cat)	(ori*)_new_category(mc_alloc_h(S(ori), sizeof(ori), ori##_load, hash), ori##_init, cat##_load, cat##_init)
-#define clear(cls)  					_clear(S(cls), sizeof(cls), cls##_load)
-#define hlear(cls, hash)  				_clear_h(S(cls), sizeof(cls), cls##_load, hash)
-#define info(cls)                  		_info(S(cls), sizeof(cls), cls##_load)
-#define hnfo(cls, hash)                 _info_h(S(cls), sizeof(cls), cls##_load, hash)
+#define clear(cls)  					mc_clear(S(cls), sizeof(cls), cls##_load)
+#define hlear(cls, hash)  				mc_clear_h(S(cls), sizeof(cls), cls##_load, hash)
+#define info(cls)                  		mc_info(S(cls), sizeof(cls), cls##_load)
+#define hnfo(cls, hash)                 mc_info_h(S(cls), sizeof(cls), cls##_load, hash)
 
 //for call method
 #define callc(obj, cls, rtype, name, ...)   (rtype)cls##_##name(obj, cls##_##name, __VA_ARGS__)//with cast
