@@ -249,7 +249,7 @@ void _recycle(mo const this)
 	if(ref_count_down(this) == 0){
 		//call the "bye" method on object
 		fs(this, bye, nil);
-		_dealloc(this, 1);
+		mc_dealloc(this, 1);
 	}
 }
 
@@ -258,7 +258,7 @@ void _release(mo const this)
 	if(ref_count_down(this) == 0){
 		//call the "bye" method on object
 		fs(this, bye, nil);
-		_dealloc(this, 0);
+		mc_dealloc(this, 0);
 	}
 }
 
