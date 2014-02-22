@@ -32,6 +32,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 	we use the same syntex with printf
 */
 
+int LOG_LEVEL = MC_DEBUG;
+
 //static char log_buf[1024];
 void error_log(char* volatile fmt, ...)
 {

@@ -47,6 +47,7 @@ static void mc_check()
 	//do some checks
 }
 
+/*
 void mc_init()
 {
 	//default we set log level to debug
@@ -66,6 +67,7 @@ void mc_end()
 {
 	runtime_log("mc_end finished\n");
 }
+*/
 
 /*
 for method binding
@@ -151,6 +153,10 @@ mc_class* _load(const char* name, size_t objsize, loaderFP loader)
 
 mc_class* _load_h(const char* name, size_t objsize, loaderFP loader, unsigned hashval)
 {
+	//create a class hashtable
+	if(mc_global_classtable == nil)
+		mc_global_classtable = new_table(0);
+
 	//try lock spin lock
 	trylock_global_classtable();
 

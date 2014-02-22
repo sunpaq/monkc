@@ -38,7 +38,7 @@ clean:
 	cd $(MCPP_PATH) && sudo make clean
 	cd ..
 
-sync:
+syncFromXcode:
 	cp -r $(XCODEPATH)/MonkC/src/* $(RUNTIME_PATH)
 	cp $(XCODEPATH)/Lemontea/src/* $(LEMONTEA_PATH)
 	rm -fr $(EXAMPLEPATH)/src

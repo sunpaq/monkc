@@ -172,8 +172,8 @@ typedef mc_object* (*initerFP)(mc_object*);
 #define shift_back(obj)					_shift_back((mo)obj)
 
 //global
-void mc_init();
-void mc_end();
+//void mc_init();
+//void mc_end();
 void trylock_global_classtable();
 void unlock_global_classtable();
 //binding method api

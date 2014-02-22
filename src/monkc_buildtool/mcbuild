@@ -46,6 +46,7 @@ then
 	cp $(find ./src -name '*.h') ./build
 	cp $(find ./src -name '*.p') ./build
 	make
+	echo "BUILD SUCCESS"
 fi
 if [ "$1" = "-clean" ]
 then
