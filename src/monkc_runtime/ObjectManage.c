@@ -179,7 +179,7 @@ int cut(mc_blockpool* bpool, mc_block* ablock, mc_block** result)
 
 void mc_info(const char* classname, size_t size, loaderFP loader)
 {
-	_info_h(classname, size, loader, hash(classname));
+	mc_info_h(classname, size, loader, hash(classname));
 }
 
 void mc_info_h(const char* classname, size_t size, loaderFP loader, unsigned hashval)
@@ -191,7 +191,7 @@ void mc_info_h(const char* classname, size_t size, loaderFP loader, unsigned has
 
 void mc_clear(const char* classname, size_t size, loaderFP loader)
 {
-	_clear_h(classname, size, loader, hash(classname));
+	mc_clear_h(classname, size, loader, hash(classname));
 }
 
 void mc_clear_h(const char* classname, size_t size, loaderFP loader, unsigned hashval)
@@ -212,7 +212,7 @@ void mc_clear_h(const char* classname, size_t size, loaderFP loader, unsigned ha
 //always return a object of size. packaged by a block.
 mo mc_alloc(const char* classname, size_t size, loaderFP loader)
 {
-	return _alloc_h(classname, size, loader, hash(classname));
+	return mc_alloc_h(classname, size, loader, hash(classname));
 }
 
 mo mc_alloc_h(const char* classname, size_t size, loaderFP loader, unsigned hashval)
