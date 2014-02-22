@@ -11,7 +11,7 @@ initer(Bird)
 method(Bird, void, bye, xxx)
 {
 	recycle(obj->super);
-	debug_logt(nameof((mo)obj), "[%p] bye called\n", obj);
+	debug_logt(nameof(obj), "[%p] bye called\n", obj);
 }
 
 void funcA(Bird* obj, int arg1)

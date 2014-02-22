@@ -1,5 +1,5 @@
 /*
- Copyright (c) <2013>, <Sun Yuli>
+ Copyright (c) <2013-2014>, <Sun Yuli>
  All rights reserved.
  
  Redistribution and use in source and binary forms, with or without
@@ -28,7 +28,7 @@
 #ifndef __MCRuntime__
 #define __MCRuntime__
 
-/* Mocha use many C99 standard features, make sure your compiler and platform support C99 standard */
+/* Monk-C use many C99 standard features, make sure your compiler and platform support C99 standard */
 //#pragma warning(disable:3)
 
 #include <stdio.h>
@@ -121,12 +121,13 @@ mc_class* isa;\
 mc_block* block;\
 int ref_count;\
 mc_class* saved_isa;\
-mc_class* mode;\
+mc_class* mode\
 
 #define end(cls) }cls;\
 mc_class* cls##_load(mc_class* const claz);\
 cls* cls##_init(cls* const obj);
 
+//macros expand to nothing just a marker
 #define implements(protocol)
 #define extends(super)
 
@@ -171,8 +172,8 @@ typedef mc_object* (*initerFP)(mc_object*);
 #define shift_back(obj)					_shift_back((mo)obj)
 
 //global
-void mc_init();
-void mc_end();
+//void mc_init();
+//void mc_end();
 void trylock_global_classtable();
 void unlock_global_classtable();
 //binding method api
@@ -203,8 +204,10 @@ mo _retain(mo const obj);
 mc_class* alloc_mc_class();
 mc_class* init_mc_class(mc_class* const aclass, const size_t objsize);
 mc_class* new_mc_class(const size_t objsize);
-char* nameof(mc_object* const aobject);
-char* nameofc(mc_class* const aclass);
+char* mc_nameof(mc_object* const aobject);
+char* mc_nameofc(mc_class* const aclass);
+#define nameof(obj) mc_nameof((mo)obj)
+#define nameofc(cls) mc_nameofc(cls)
 #define deref(x) (*(x))
 #define addrof(x) (&(x))
 
@@ -401,6 +404,8 @@ typedef struct mc_message_struct
     mo object;
 	const void* addr;
 }mc_message;
+#define lamda(name) make_msg(nil, name)
+#define _lamda mo volatile _obj, volatile void* _entry
 
 //write by asm
 void* _push_jump(mc_message msg, ...);

@@ -7,45 +7,50 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		4B0D9AED18A7D4A000E4ED89 /* HashTable.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B0D9AD618A7D4A000E4ED89 /* HashTable.c */; };
-		4B0D9AEF18A7D4A000E4ED89 /* Key.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B0D9AD818A7D4A000E4ED89 /* Key.c */; };
-		4B0D9AF118A7D4A000E4ED89 /* Lock.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B0D9ADA18A7D4A000E4ED89 /* Lock.c */; };
-		4B0D9AF318A7D4A000E4ED89 /* Log.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B0D9ADC18A7D4A000E4ED89 /* Log.c */; };
-		4B0D9AFA18A7D4A000E4ED89 /* MCRuntimeAsm_X8664_darwin.s in Sources */ = {isa = PBXBuildFile; fileRef = 4B0D9AE418A7D4A000E4ED89 /* MCRuntimeAsm_X8664_darwin.s */; };
-		4B0D9AFB18A7D4A000E4ED89 /* Messaging.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B0D9AE518A7D4A000E4ED89 /* Messaging.c */; };
-		4B0D9AFD18A7D4A000E4ED89 /* monkc.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B0D9AE718A7D4A000E4ED89 /* monkc.c */; };
-		4B0D9AFE18A7D4A000E4ED89 /* monkc.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B0D9AE818A7D4A000E4ED89 /* monkc.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		4B0D9AFF18A7D4A000E4ED89 /* ObjectManage.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B0D9AE918A7D4A000E4ED89 /* ObjectManage.c */; };
-		4B0D9B0118A7D4A000E4ED89 /* Vectors.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B0D9AEB18A7D4A000E4ED89 /* Vectors.c */; };
-		4B0FFE5418AE6A870015F4E0 /* monkc.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B0D9AE718A7D4A000E4ED89 /* monkc.c */; };
-		4B0FFE5518AE6A870015F4E0 /* HashTable.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B0D9AD618A7D4A000E4ED89 /* HashTable.c */; };
-		4B0FFE5618AE6A870015F4E0 /* Key.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B0D9AD818A7D4A000E4ED89 /* Key.c */; };
-		4B0FFE5718AE6A870015F4E0 /* Lock.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B0D9ADA18A7D4A000E4ED89 /* Lock.c */; };
-		4B0FFE5818AE6A870015F4E0 /* Log.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B0D9ADC18A7D4A000E4ED89 /* Log.c */; };
-		4B0FFE5918AE6A870015F4E0 /* Messaging.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B0D9AE518A7D4A000E4ED89 /* Messaging.c */; };
-		4B0FFE5A18AE6A870015F4E0 /* ObjectManage.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B0D9AE918A7D4A000E4ED89 /* ObjectManage.c */; };
-		4B0FFE5B18AE6A870015F4E0 /* Vectors.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B0D9AEB18A7D4A000E4ED89 /* Vectors.c */; };
-		4B0FFE5D18AE6A940015F4E0 /* monkc.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B0D9AE818A7D4A000E4ED89 /* monkc.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		4B0FFEAA18AE72CE0015F4E0 /* MCRuntimeAsm_ARM32.s in Sources */ = {isa = PBXBuildFile; fileRef = 4B0D9ADF18A7D4A000E4ED89 /* MCRuntimeAsm_ARM32.s */; };
+		4B60BD2018B915CF00A294D5 /* HashTable.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B60BD1018B915CF00A294D5 /* HashTable.c */; };
+		4B60BD2118B915CF00A294D5 /* HashTable.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B60BD1018B915CF00A294D5 /* HashTable.c */; };
+		4B60BD2218B915CF00A294D5 /* Key.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B60BD1118B915CF00A294D5 /* Key.c */; };
+		4B60BD2318B915CF00A294D5 /* Key.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B60BD1118B915CF00A294D5 /* Key.c */; };
+		4B60BD2418B915CF00A294D5 /* Lock.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B60BD1218B915CF00A294D5 /* Lock.c */; };
+		4B60BD2518B915CF00A294D5 /* Lock.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B60BD1218B915CF00A294D5 /* Lock.c */; };
+		4B60BD2618B915CF00A294D5 /* Log.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B60BD1318B915CF00A294D5 /* Log.c */; };
+		4B60BD2718B915CF00A294D5 /* Log.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B60BD1318B915CF00A294D5 /* Log.c */; };
+		4B60BD2918B915CF00A294D5 /* MCRuntimeAsm_ARM32.s in Sources */ = {isa = PBXBuildFile; fileRef = 4B60BD1518B915CF00A294D5 /* MCRuntimeAsm_ARM32.s */; };
+		4B60BD2B18B915CF00A294D5 /* MCRuntimeAsm_ARM64.s in Sources */ = {isa = PBXBuildFile; fileRef = 4B60BD1618B915CF00A294D5 /* MCRuntimeAsm_ARM64.s */; };
+		4B60BD2D18B915CF00A294D5 /* MCRuntimeAsm_IA32.s in Sources */ = {isa = PBXBuildFile; fileRef = 4B60BD1718B915CF00A294D5 /* MCRuntimeAsm_IA32.s */; };
+		4B60BD2F18B915CF00A294D5 /* MCRuntimeAsm_IA32_darwin.s in Sources */ = {isa = PBXBuildFile; fileRef = 4B60BD1818B915CF00A294D5 /* MCRuntimeAsm_IA32_darwin.s */; };
+		4B60BD3118B915CF00A294D5 /* MCRuntimeAsm_X8664.s in Sources */ = {isa = PBXBuildFile; fileRef = 4B60BD1918B915CF00A294D5 /* MCRuntimeAsm_X8664.s */; };
+		4B60BD3218B915CF00A294D5 /* MCRuntimeAsm_X8664_darwin.s in Sources */ = {isa = PBXBuildFile; fileRef = 4B60BD1A18B915CF00A294D5 /* MCRuntimeAsm_X8664_darwin.s */; };
+		4B60BD3318B915CF00A294D5 /* MCRuntimeAsm_X8664_darwin.s in Sources */ = {isa = PBXBuildFile; fileRef = 4B60BD1A18B915CF00A294D5 /* MCRuntimeAsm_X8664_darwin.s */; };
+		4B60BD3418B915CF00A294D5 /* Messaging.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B60BD1B18B915CF00A294D5 /* Messaging.c */; };
+		4B60BD3518B915CF00A294D5 /* Messaging.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B60BD1B18B915CF00A294D5 /* Messaging.c */; };
+		4B60BD3618B915CF00A294D5 /* monkc.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B60BD1C18B915CF00A294D5 /* monkc.c */; };
+		4B60BD3718B915CF00A294D5 /* monkc.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B60BD1C18B915CF00A294D5 /* monkc.c */; };
+		4B60BD3818B915CF00A294D5 /* monkc.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B60BD1D18B915CF00A294D5 /* monkc.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4B60BD3918B915CF00A294D5 /* monkc.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B60BD1D18B915CF00A294D5 /* monkc.h */; };
+		4B60BD3A18B915CF00A294D5 /* ObjectManage.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B60BD1E18B915CF00A294D5 /* ObjectManage.c */; };
+		4B60BD3B18B915CF00A294D5 /* ObjectManage.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B60BD1E18B915CF00A294D5 /* ObjectManage.c */; };
+		4B60BD3C18B915CF00A294D5 /* Vectors.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B60BD1F18B915CF00A294D5 /* Vectors.c */; };
+		4B60BD3D18B915CF00A294D5 /* Vectors.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B60BD1F18B915CF00A294D5 /* Vectors.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		4B0D9AD618A7D4A000E4ED89 /* HashTable.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = HashTable.c; sourceTree = "<group>"; };
-		4B0D9AD818A7D4A000E4ED89 /* Key.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Key.c; sourceTree = "<group>"; };
-		4B0D9ADA18A7D4A000E4ED89 /* Lock.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Lock.c; sourceTree = "<group>"; };
-		4B0D9ADC18A7D4A000E4ED89 /* Log.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Log.c; sourceTree = "<group>"; };
-		4B0D9ADF18A7D4A000E4ED89 /* MCRuntimeAsm_ARM32.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = MCRuntimeAsm_ARM32.s; sourceTree = "<group>"; };
-		4B0D9AE018A7D4A000E4ED89 /* MCRuntimeAsm_ARM64.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = MCRuntimeAsm_ARM64.s; sourceTree = "<group>"; };
-		4B0D9AE118A7D4A000E4ED89 /* MCRuntimeAsm_IA32.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = MCRuntimeAsm_IA32.s; sourceTree = "<group>"; };
-		4B0D9AE218A7D4A000E4ED89 /* MCRuntimeAsm_IA32_darwin.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = MCRuntimeAsm_IA32_darwin.s; sourceTree = "<group>"; };
-		4B0D9AE318A7D4A000E4ED89 /* MCRuntimeAsm_X8664.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = MCRuntimeAsm_X8664.s; sourceTree = "<group>"; };
-		4B0D9AE418A7D4A000E4ED89 /* MCRuntimeAsm_X8664_darwin.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = MCRuntimeAsm_X8664_darwin.s; sourceTree = "<group>"; };
-		4B0D9AE518A7D4A000E4ED89 /* Messaging.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Messaging.c; sourceTree = "<group>"; };
-		4B0D9AE718A7D4A000E4ED89 /* monkc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = monkc.c; sourceTree = "<group>"; };
-		4B0D9AE818A7D4A000E4ED89 /* monkc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = monkc.h; sourceTree = "<group>"; };
-		4B0D9AE918A7D4A000E4ED89 /* ObjectManage.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ObjectManage.c; sourceTree = "<group>"; };
-		4B0D9AEB18A7D4A000E4ED89 /* Vectors.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Vectors.c; sourceTree = "<group>"; };
 		4B0FFE5018AE699F0015F4E0 /* libmonkc4ios.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libmonkc4ios.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		4B60BD1018B915CF00A294D5 /* HashTable.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = HashTable.c; sourceTree = "<group>"; };
+		4B60BD1118B915CF00A294D5 /* Key.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Key.c; sourceTree = "<group>"; };
+		4B60BD1218B915CF00A294D5 /* Lock.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Lock.c; sourceTree = "<group>"; };
+		4B60BD1318B915CF00A294D5 /* Log.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Log.c; sourceTree = "<group>"; };
+		4B60BD1518B915CF00A294D5 /* MCRuntimeAsm_ARM32.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = MCRuntimeAsm_ARM32.s; sourceTree = "<group>"; };
+		4B60BD1618B915CF00A294D5 /* MCRuntimeAsm_ARM64.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = MCRuntimeAsm_ARM64.s; sourceTree = "<group>"; };
+		4B60BD1718B915CF00A294D5 /* MCRuntimeAsm_IA32.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = MCRuntimeAsm_IA32.s; sourceTree = "<group>"; };
+		4B60BD1818B915CF00A294D5 /* MCRuntimeAsm_IA32_darwin.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = MCRuntimeAsm_IA32_darwin.s; sourceTree = "<group>"; };
+		4B60BD1918B915CF00A294D5 /* MCRuntimeAsm_X8664.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = MCRuntimeAsm_X8664.s; sourceTree = "<group>"; };
+		4B60BD1A18B915CF00A294D5 /* MCRuntimeAsm_X8664_darwin.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = MCRuntimeAsm_X8664_darwin.s; sourceTree = "<group>"; };
+		4B60BD1B18B915CF00A294D5 /* Messaging.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Messaging.c; sourceTree = "<group>"; };
+		4B60BD1C18B915CF00A294D5 /* monkc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = monkc.c; sourceTree = "<group>"; };
+		4B60BD1D18B915CF00A294D5 /* monkc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = monkc.h; sourceTree = "<group>"; };
+		4B60BD1E18B915CF00A294D5 /* ObjectManage.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ObjectManage.c; sourceTree = "<group>"; };
+		4B60BD1F18B915CF00A294D5 /* Vectors.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Vectors.c; sourceTree = "<group>"; };
 		4B9F30971883B560009B94A9 /* libmonkc.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libmonkc.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -70,29 +75,29 @@
 		4B0D9AD518A7D4A000E4ED89 /* src */ = {
 			isa = PBXGroup;
 			children = (
-				4B0D9AE818A7D4A000E4ED89 /* monkc.h */,
-				4B0D9AE718A7D4A000E4ED89 /* monkc.c */,
-				4B0D9AD618A7D4A000E4ED89 /* HashTable.c */,
-				4B0D9AD818A7D4A000E4ED89 /* Key.c */,
-				4B0D9ADA18A7D4A000E4ED89 /* Lock.c */,
-				4B0D9ADC18A7D4A000E4ED89 /* Log.c */,
-				4B0D9AE518A7D4A000E4ED89 /* Messaging.c */,
-				4B0D9AE918A7D4A000E4ED89 /* ObjectManage.c */,
-				4B0D9AEB18A7D4A000E4ED89 /* Vectors.c */,
-				4B0D9ADE18A7D4A000E4ED89 /* MCRuntimeAsm */,
+				4B60BD1018B915CF00A294D5 /* HashTable.c */,
+				4B60BD1118B915CF00A294D5 /* Key.c */,
+				4B60BD1218B915CF00A294D5 /* Lock.c */,
+				4B60BD1318B915CF00A294D5 /* Log.c */,
+				4B60BD1418B915CF00A294D5 /* MCRuntimeAsm */,
+				4B60BD1B18B915CF00A294D5 /* Messaging.c */,
+				4B60BD1C18B915CF00A294D5 /* monkc.c */,
+				4B60BD1D18B915CF00A294D5 /* monkc.h */,
+				4B60BD1E18B915CF00A294D5 /* ObjectManage.c */,
+				4B60BD1F18B915CF00A294D5 /* Vectors.c */,
 			);
 			path = src;
 			sourceTree = "<group>";
 		};
-		4B0D9ADE18A7D4A000E4ED89 /* MCRuntimeAsm */ = {
+		4B60BD1418B915CF00A294D5 /* MCRuntimeAsm */ = {
 			isa = PBXGroup;
 			children = (
-				4B0D9ADF18A7D4A000E4ED89 /* MCRuntimeAsm_ARM32.s */,
-				4B0D9AE018A7D4A000E4ED89 /* MCRuntimeAsm_ARM64.s */,
-				4B0D9AE118A7D4A000E4ED89 /* MCRuntimeAsm_IA32.s */,
-				4B0D9AE318A7D4A000E4ED89 /* MCRuntimeAsm_X8664.s */,
-				4B0D9AE218A7D4A000E4ED89 /* MCRuntimeAsm_IA32_darwin.s */,
-				4B0D9AE418A7D4A000E4ED89 /* MCRuntimeAsm_X8664_darwin.s */,
+				4B60BD1518B915CF00A294D5 /* MCRuntimeAsm_ARM32.s */,
+				4B60BD1618B915CF00A294D5 /* MCRuntimeAsm_ARM64.s */,
+				4B60BD1718B915CF00A294D5 /* MCRuntimeAsm_IA32.s */,
+				4B60BD1818B915CF00A294D5 /* MCRuntimeAsm_IA32_darwin.s */,
+				4B60BD1918B915CF00A294D5 /* MCRuntimeAsm_X8664.s */,
+				4B60BD1A18B915CF00A294D5 /* MCRuntimeAsm_X8664_darwin.s */,
 			);
 			path = MCRuntimeAsm;
 			sourceTree = "<group>";
@@ -121,7 +126,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4B0FFE5D18AE6A940015F4E0 /* monkc.h in Headers */,
+				4B60BD3918B915CF00A294D5 /* monkc.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -129,7 +134,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4B0D9AFE18A7D4A000E4ED89 /* monkc.h in Headers */,
+				4B60BD3818B915CF00A294D5 /* monkc.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -202,15 +207,20 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4B0FFEAA18AE72CE0015F4E0 /* MCRuntimeAsm_ARM32.s in Sources */,
-				4B0FFE5418AE6A870015F4E0 /* monkc.c in Sources */,
-				4B0FFE5518AE6A870015F4E0 /* HashTable.c in Sources */,
-				4B0FFE5618AE6A870015F4E0 /* Key.c in Sources */,
-				4B0FFE5718AE6A870015F4E0 /* Lock.c in Sources */,
-				4B0FFE5818AE6A870015F4E0 /* Log.c in Sources */,
-				4B0FFE5918AE6A870015F4E0 /* Messaging.c in Sources */,
-				4B0FFE5A18AE6A870015F4E0 /* ObjectManage.c in Sources */,
-				4B0FFE5B18AE6A870015F4E0 /* Vectors.c in Sources */,
+				4B60BD3718B915CF00A294D5 /* monkc.c in Sources */,
+				4B60BD2718B915CF00A294D5 /* Log.c in Sources */,
+				4B60BD2518B915CF00A294D5 /* Lock.c in Sources */,
+				4B60BD2F18B915CF00A294D5 /* MCRuntimeAsm_IA32_darwin.s in Sources */,
+				4B60BD2918B915CF00A294D5 /* MCRuntimeAsm_ARM32.s in Sources */,
+				4B60BD3518B915CF00A294D5 /* Messaging.c in Sources */,
+				4B60BD3318B915CF00A294D5 /* MCRuntimeAsm_X8664_darwin.s in Sources */,
+				4B60BD3118B915CF00A294D5 /* MCRuntimeAsm_X8664.s in Sources */,
+				4B60BD3B18B915CF00A294D5 /* ObjectManage.c in Sources */,
+				4B60BD2B18B915CF00A294D5 /* MCRuntimeAsm_ARM64.s in Sources */,
+				4B60BD2D18B915CF00A294D5 /* MCRuntimeAsm_IA32.s in Sources */,
+				4B60BD2118B915CF00A294D5 /* HashTable.c in Sources */,
+				4B60BD3D18B915CF00A294D5 /* Vectors.c in Sources */,
+				4B60BD2318B915CF00A294D5 /* Key.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -218,15 +228,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4B0D9AFD18A7D4A000E4ED89 /* monkc.c in Sources */,
-				4B0D9AF318A7D4A000E4ED89 /* Log.c in Sources */,
-				4B0D9AF118A7D4A000E4ED89 /* Lock.c in Sources */,
-				4B0D9AFB18A7D4A000E4ED89 /* Messaging.c in Sources */,
-				4B0D9AFA18A7D4A000E4ED89 /* MCRuntimeAsm_X8664_darwin.s in Sources */,
-				4B0D9AFF18A7D4A000E4ED89 /* ObjectManage.c in Sources */,
-				4B0D9AED18A7D4A000E4ED89 /* HashTable.c in Sources */,
-				4B0D9B0118A7D4A000E4ED89 /* Vectors.c in Sources */,
-				4B0D9AEF18A7D4A000E4ED89 /* Key.c in Sources */,
+				4B60BD3618B915CF00A294D5 /* monkc.c in Sources */,
+				4B60BD2618B915CF00A294D5 /* Log.c in Sources */,
+				4B60BD2418B915CF00A294D5 /* Lock.c in Sources */,
+				4B60BD3418B915CF00A294D5 /* Messaging.c in Sources */,
+				4B60BD3218B915CF00A294D5 /* MCRuntimeAsm_X8664_darwin.s in Sources */,
+				4B60BD3A18B915CF00A294D5 /* ObjectManage.c in Sources */,
+				4B60BD2018B915CF00A294D5 /* HashTable.c in Sources */,
+				4B60BD3C18B915CF00A294D5 /* Vectors.c in Sources */,
+				4B60BD2218B915CF00A294D5 /* Key.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -355,6 +365,7 @@
 				4B0FFE5318AE699F0015F4E0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		4B9F30921883B560009B94A9 /* Build configuration list for PBXProject "monkc" */ = {
 			isa = XCConfigurationList;

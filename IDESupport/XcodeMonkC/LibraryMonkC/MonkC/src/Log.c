@@ -1,5 +1,5 @@
 /*
-Copyright (c) <2013>, <Sun Yuli>
+Copyright (c) <2013-2014>, <Sun Yuli>
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -31,6 +31,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 	Logs with color tags
 	we use the same syntex with printf
 */
+
+int LOG_LEVEL = MC_DEBUG;
 
 //static char log_buf[1024];
 void error_log(char* volatile fmt, ...)

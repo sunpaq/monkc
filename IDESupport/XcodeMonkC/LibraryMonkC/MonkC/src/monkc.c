@@ -1,5 +1,5 @@
 /*
-Copyright (c) <2013>, <Sun Yuli>
+Copyright (c) <2013-2014>, <Sun Yuli>
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -40,6 +40,7 @@ void unlock_global_classtable()
 	mc_unlock(&(mc_global_classtable->lock));
 }
 
+/*
 static void mc_check()
 {
 	mc_object* obj = (mc_object*)malloc(sizeof(mc_object));
@@ -66,6 +67,7 @@ void mc_end()
 {
 	runtime_log("mc_end finished\n");
 }
+*/
 
 /*
 for method binding
@@ -151,6 +153,10 @@ mc_class* _load(const char* name, size_t objsize, loaderFP loader)
 
 mc_class* _load_h(const char* name, size_t objsize, loaderFP loader, unsigned hashval)
 {
+	//create a class hashtable
+	if(mc_global_classtable == nil)
+		mc_global_classtable = new_table(0);
+
 	//try lock spin lock
 	trylock_global_classtable();
 
@@ -287,7 +293,7 @@ mo _retain(mo const this)
 	return this;
 }
 
-char* nameof(mc_object* const aobject)
+char* mc_nameof(mc_object* const aobject)
 {
 	if(aobject==nil)
 		return "";
@@ -296,7 +302,7 @@ char* nameof(mc_object* const aobject)
 	return nameofc(aobject->isa);
 }
 
-char* nameofc(mc_class* const aclass)
+char* mc_nameofc(mc_class* const aclass)
 {
 	if(aclass==nil)
 		return "";
