@@ -4,7 +4,9 @@ a toolkit for OOP programming in C language
 
 ## Overview
 
-**Monk-C**, is a toolkit for OOP programming use pure C. the aim of Monk-C is to support OOP in pure C with some tiny C macros, functions and even a light preprocessor. Monk-C is inspired by Apple Objective-C and gcc builtin "Constructing Calls". It is tiny and primitive but full of fun. I use it to play with my RaspberryPi and it really vary suitable for the ARM/Linux based embeded systems. It is open source under BSD license(3-clause license). I written it under the X86/Linux platform and X86/MacOS ARM/Linux is also fully tested and supportted both 32bit and 64bit.
+**Monk-C**, is a toolkit for OOP programming use pure C. the aim of Monk-C is to support OOP in pure C with some tiny C macros, functions and even a light preprocessor. Monk-C is inspired by Apple Objective-C and gcc builtin "Constructing Calls". It is tiny and primitive but full of fun. I use it to play with my RaspberryPi and it really vary suitable for the ARM/Linux based embeded systems. It is open source under **BSD** license(3-clause license). I written it under the X86/Linux platform and X86/MacOS ARM/Linux is also fully tested and supportted both 32bit and 64bit.
+
+#### Monk-C is based on **C99** standard
 
 #### Version Now: 0.1.140216
 
@@ -186,6 +188,9 @@ a toolkit for OOP programming in C language
 		debug_logt(nameofc(class), "load called\n");
 		#include "Flyable.p" ---> protocol itself is just a header file
 
+		//DO NOT WRITE THEM BY HAND!
+		//YOU CAN COPY ALL THE METHODS DECLEARED IN HEADER FILE
+		//AND CHANGE "method->binding"
 		binding(Bird, Bird*, initWithType, int type);
 		binding(Bird, void, bye, xxx);
 		binding(Bird, void, fly, xxx);
