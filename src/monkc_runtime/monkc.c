@@ -287,7 +287,7 @@ mo _retain(mo const this)
 	return this;
 }
 
-char* nameof(mc_object* const aobject)
+char* mc_nameof(mc_object* const aobject)
 {
 	if(aobject==nil)
 		return "";
@@ -296,7 +296,7 @@ char* nameof(mc_object* const aobject)
 	return nameofc(aobject->isa);
 }
 
-char* nameofc(mc_class* const aclass)
+char* mc_nameofc(mc_class* const aclass)
 {
 	if(aclass==nil)
 		return "";
