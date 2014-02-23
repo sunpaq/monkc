@@ -1,6 +1,7 @@
 # Monk-C
 a toolkit for OOP programming in C language
-[download source and get more detail at github](https://github.com/sunpaq/monkc/)
+
+![Mou icon](https://secure.gravatar.com/avatar/63f7c4c0a269ebaf049724a024bf01b4?s=420&d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-user-420.png)
 
 ## Overview
 
@@ -267,5 +268,3 @@ Total only **16** words.[^1]
 	6. lemontea_3D
 
 [^1]: the syntex is improving, maybe more/less keywords in the future.
-
-![Mou icon](https://secure.gravatar.com/avatar/63f7c4c0a269ebaf049724a024bf01b4?s=420&d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-user-420.png)
