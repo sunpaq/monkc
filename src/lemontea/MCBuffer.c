@@ -34,3 +34,9 @@ MCDoubleBuffer* NewMCDoubleBuffer(size_t size)
 	instance->size = size;
 	return instance;
 }
+
+void ReleaseMCBuffer(void* buffer)
+{
+	if (buffer)
+		free(buffer);
+}

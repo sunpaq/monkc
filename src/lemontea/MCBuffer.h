@@ -34,4 +34,6 @@ MCUnsignedBuffer* NewMCUnsignedBuffer(size_t size);
 MCLongBuffer* NewMCLongBuffer(size_t size);
 MCDoubleBuffer* NewMCDoubleBuffer(size_t size);
 
+void ReleaseMCBuffer(void* buffer);
+
 #endif

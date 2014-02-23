@@ -63,7 +63,7 @@ static void get_chars_until_enter(char resultString[])
 
 method(MCString, void, add, char* str)
 {
-    if (1024-obj->size < strlen(str)+1) {
+    if (block_size-obj->size < strlen(str)+1) {
         char* newbuff = malloc(sizeof(char) * (obj->size + block_size));
         strncpy(newbuff, obj->buff, obj->size-1);
         newbuff[obj->size-1]='\0';
