@@ -34,18 +34,20 @@
         <h1>
 <a name="monk-c" class="anchor" href="#monk-c"><span class="octicon octicon-link"></span></a>Monk-C</h1>
 
-<p>a toolkit for OOP programming in C language
-<a href="https://github.com/sunpaq/monkc/">download source and get more detail at github</a></p>
+<p>a toolkit for OOP programming in C language</p>
 
 <p><img src="https://secure.gravatar.com/avatar/63f7c4c0a269ebaf049724a024bf01b4?s=420&amp;d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-user-420.png" alt="Mou icon"></p>
 
 <h2>
 <a name="overview" class="anchor" href="#overview"><span class="octicon octicon-link"></span></a>Overview</h2>
 
-<p><strong>Monk-C</strong>, is a toolkit for OOP programming use pure C. the aim of Monk-C is to support OOP in pure C with some tiny C macros, functions and even a light preprocessor. Monk-C is inspired by Apple Objective-C and gcc builtin "Constructing Calls". It is tiny and primitive but full of fun. I use it to play with my RaspberryPi and it really vary suitable for the ARM/Linux based embeded systems. It is open source under BSD license(3-clause license). I written it under the X86/Linux platform and X86/MacOS ARM/Linux is also fully tested and supportted both 32bit and 64bit.</p>
+<p><strong>Monk-C</strong>, is a toolkit for OOP programming use pure C (static library). the aim of Monk-C is to support OOP in pure C with some tiny C macros, functions and even a light preprocessor. Monk-C is inspired by Apple Objective-C and gcc builtin "Constructing Calls". It is tiny and primitive but full of fun. I use it to play with my RaspberryPi and it really vary suitable for the ARM/Linux based embeded systems. It is open source under <strong>BSD</strong> license(3-clause license). I written it under the X86/Linux platform and X86/MacOS ARM/Linux is also fully tested and supportted both 32bit and 64bit.</p>
 
-<h4>
-<a name="version-now-01140216" class="anchor" href="#version-now-01140216"><span class="octicon octicon-link"></span></a>Version Now: 0.1.140216</h4>
+<h6>
+<a name="monk-c-is-based-on-c99-standard" class="anchor" href="#monk-c-is-based-on-c99-standard"><span class="octicon octicon-link"></span></a>Monk-C is based on <strong>C99</strong> standard</h6>
+
+<h6>
+<a name="no-stable-version-released-now-developing-commit-01140223" class="anchor" href="#no-stable-version-released-now-developing-commit-01140223"><span class="octicon octicon-link"></span></a>No stable version released now, developing commit: 0.1.140223</h6>
 
 <h4>
 <a name="supported-platforms" class="anchor" href="#supported-platforms"><span class="octicon octicon-link"></span></a>supported platforms:</h4>
@@ -85,11 +87,11 @@ flex - this is needed to build the 'mcpp' preprocessor for monkc
 <h4>
 <a name="ide-support-template-project" class="anchor" href="#ide-support-template-project"><span class="octicon octicon-link"></span></a>IDE support (template project):</h4>
 
-<pre><code>[OS/Tool/SourceFolder]
-
-MacOS/Xcode/[XcodeMonkC]
-Linux/EclipseCDT/[EclipseMonkC/linux]
-Windows/EclipseCDT/[EclipseMonkC/win]
+<pre><code>all templete project in /IDESupport folder
+here is the IDEs:
+1. Xcode            (MacOS)
+2. Eclipse          (Linux/Windows)
+3. VisualStudio12   (Windows)
 </code></pre>
 
 <h4>
@@ -136,17 +138,10 @@ and copy the &lt;mcpp&gt; &lt;mcbuild&gt; tool to       /usr/local/bin/
 <h4>
 <a name="main-entry" class="anchor" href="#main-entry"><span class="octicon octicon-link"></span></a>main entry</h4>
 
-<pre><code>make sure you called all the code written by monkc
-between mc_init() and mc_end()
-it is better to put the mc_init() at the very beginning of main()
-and to put the mc_end() at the end of main()
-
-int main(int argc, char const *argv[])
+<pre><code>int main(int argc, char const *argv[])
 {
-    mc_init();
-        LOG_LEVEL = MC_VERBOSE;
-        test_object_life_cycle();
-    mc_end();
+    LOG_LEVEL = MC_VERBOSE;
+    //your code here
     return 0;
 }
 
@@ -247,6 +242,9 @@ loader(Bird) ---&gt; must have. binding methods at runtime.
     debug_logt(nameofc(class), "load called\n");
     #include "Flyable.p" ---&gt; protocol itself is just a header file
 
+    //DO NOT WRITE THEM BY HAND!
+    //YOU CAN COPY ALL THE METHODS DECLEARED IN HEADER FILE
+    //AND CHANGE "method-&gt;binding"
     binding(Bird, Bird*, initWithType, int type);
     binding(Bird, void, bye, xxx);
     binding(Bird, void, fly, xxx);
@@ -317,6 +315,9 @@ binding(Flyable, void, chickenFly, xxx);
     return claz;
 }
 </code></pre>
+
+<h4>
+<a name="for-more-infomation-please-goto-wiki-page-on-github" class="anchor" href="#for-more-infomation-please-goto-wiki-page-on-github"><span class="octicon octicon-link"></span></a>For more infomation please goto <a href="https://github.com/sunpaq/monkc/wiki">wiki page</a> on github</h4>
 
 <h4>
 <a name="todo-list" class="anchor" href="#todo-list"><span class="octicon octicon-link"></span></a>TODO list:</h4>
