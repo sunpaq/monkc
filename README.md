@@ -6,9 +6,9 @@ a toolkit for OOP programming in C language
 
 **Monk-C**, is a toolkit for OOP programming use pure C (static library). the aim of Monk-C is to support OOP in pure C with some tiny C macros, functions and even a light preprocessor. Monk-C is inspired by Apple Objective-C and gcc builtin "Constructing Calls". It is tiny and primitive but full of fun. I use it to play with my RaspberryPi and it really vary suitable for the ARM/Linux based embeded systems. It is open source under **BSD** license(3-clause license). I written it under the X86/Linux platform and X86/MacOS ARM/Linux is also fully tested and supportted both 32bit and 64bit.
 
-#### Monk-C is based on **C99** standard
+###### Monk-C is based on **C99** standard
 
-#### No stable version released now, developing commit: 0.1.140223
+###### No stable version released now, developing commit: 0.1.140223
 
 #### supported platforms:
 
@@ -41,9 +41,9 @@ a toolkit for OOP programming in C language
 
 	all templete project in /IDESupport folder
 	here is the IDEs:
-	1. Xcode   (MacOS)
-	2. Eclipse (Linux/Windows)
-	3.n
+	1. Xcode   			(MacOS)
+	2. Eclipse 			(Linux/Windows)
+	3. VisualStudio12 	(Windows)
 
 #### how to compile and install (command line):
 
