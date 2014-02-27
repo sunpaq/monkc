@@ -31,7 +31,8 @@ a toolkit for OOP programming in C language
 	ARM64/iOS/clang								On Working
 
 #### need these tools:
-	clang - I strongly recommand use this C compiler. because i found it can report more detailed error infomations
+	clang - I strongly recommand use this C compiler. 
+	        because i found it can report more detailed error infomations
 	flex - this is needed to build the 'mcpp' preprocessor for monkc
 
 #### recomand code editor:
