@@ -19,40 +19,40 @@ all:$(LIBOBJS) MCRuntimeAsm.o
 MCRuntimeAsm.o:
 ifeq ($(ARCH),x86_64)
 ifeq ($(OS),Darwin)
-	$(AS) -o MCRuntimeAsm.o MCRuntimeAsm/MCRuntimeAsm_X8664_darwin.s
+	$(AS) -o MCRuntimeAsm.o MCRuntimeAsm/MCRuntimeAsm_X8664_darwin.asm
 endif
 endif
 ifeq ($(ARCH),i386)
 ifeq ($(OS),Darwin)
-	$(AS) -o MCRuntimeAsm.o MCRuntimeAsm/MCRuntimeAsm_IA32_darwin.s
+	$(AS) -o MCRuntimeAsm.o MCRuntimeAsm/MCRuntimeAsm_IA32_darwin.asm
 endif
 endif
 ifeq ($(ARCH),i686)
 ifeq ($(OS),Darwin)
-	$(AS) -o MCRuntimeAsm.o MCRuntimeAsm/MCRuntimeAsm_IA32_darwin.s
+	$(AS) -o MCRuntimeAsm.o MCRuntimeAsm/MCRuntimeAsm_IA32_darwin.asm
 endif
 endif
 ifeq ($(ARCH),x86_64)
 ifeq ($(OS),Linux)
-	$(AS) -o MCRuntimeAsm.o MCRuntimeAsm/MCRuntimeAsm_X8664.s
+	$(AS) -o MCRuntimeAsm.o MCRuntimeAsm/MCRuntimeAsm_X8664.asm
 endif
 endif
 ifeq ($(ARCH),i386)
 ifeq ($(OS),Linux)
-	$(AS) -o MCRuntimeAsm.o MCRuntimeAsm/MCRuntimeAsm_IA32.s
+	$(AS) -o MCRuntimeAsm.o MCRuntimeAsm/MCRuntimeAsm_IA32.asm
 endif
 endif
 ifeq ($(ARCH),i686)
 ifeq ($(OS),Linux)
-	$(AS) -o MCRuntimeAsm.o MCRuntimeAsm/MCRuntimeAsm_IA32.s
+	$(AS) -o MCRuntimeAsm.o MCRuntimeAsm/MCRuntimeAsm_IA32.asm
 endif
 endif
 ifeq ($(ARCH),armv6l)
-	$(AS) -o MCRuntimeAsm.o MCRuntimeAsm/MCRuntimeAsm_ARM32.s
+	$(AS) -o MCRuntimeAsm.o MCRuntimeAsm/MCRuntimeAsm_ARM32.asm
 endif
 #TODO
 ifeq ($(ARCH),armv9)
-	$(AS) -o MCRuntimeAsm.o MCRuntimeAsm/MCRuntimeAsm_ARM64.s
+	$(AS) -o MCRuntimeAsm.o MCRuntimeAsm/MCRuntimeAsm_ARM64.asm
 endif
 
 #general target

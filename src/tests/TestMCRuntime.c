@@ -10,11 +10,14 @@ loader(TestMCRuntimeMockObj)
 	binding(TestMCRuntimeMockObj, void, test_float_string, float a, char* b);
 	binding(TestMCRuntimeMockObj, void, test_string_double, char* a, double b);
 	binding(TestMCRuntimeMockObj, void, test_string_float, char* a, float b);
+
+	return claz;
 }
 
 initer(TestMCRuntimeMockObj)
 {
 	//nothing to init
+	return obj;
 }
 
 
@@ -61,66 +64,66 @@ loader(TestMCRuntime)
 	//override
 	override(TestMCRuntime, void, setUp, xxx);
 	override(TestMCRuntime, void, tearDown, xxx);
+	return claz;
 }
 
 initer(TestMCRuntime)
 {
-	this->super = new(MCUnitTestCase);
-	this->mockobj = nil;
+	obj->super = new(MCUnitTestCase);
+	obj->mockobj = nil;
+	return obj;
 }
 //override
 method(TestMCRuntime, void, setUp, xxx)
 {
-	call(this, MCUnitTestCase, setUp, nil);
+	call(obj, MCUnitTestCase, setUp, nil);
 	runtime_log("----TestMCRuntime setUp");
-	this->mockobj = new(TestMCRuntimeMockObj);
-	if (this->mockobj==nil){
+	obj->mockobj = new(TestMCRuntimeMockObj);
+	if (obj->mockobj==nil){
 		error_log("TestMCRuntime setUp failed");
 		exit(-1);
 	}
-
 }
 
 method(TestMCRuntime, void, tearDown, xxx)
 {
-	call(this, MCUnitTestCase, tearDown, nil);
-	release(&(this->mockobj));
-
+	call(obj, MCUnitTestCase, tearDown, nil);
+	release(&(obj->mockobj));
 }
 
 method(TestMCRuntime, void, testArgument_float_all, xxx)
 {
 	debug_logt(LOG_TAG, " testArgument_float_all\n");
-	ff(this->mockobj, test_float, 0.01, 0.02, 0.03);
+	ff(obj->mockobj, test_float, 0.01, 0.02, 0.03);
 }
 
 method(TestMCRuntime, void, testArgument_double_all, xxx)
 {
 	debug_logt(LOG_TAG, " testArgument_double_all\n");
-	ff(this->mockobj, test_double, 0.01, 0.02, 0.03);
+	ff(obj->mockobj, test_double, 0.01, 0.02, 0.03);
 }
 
 method(TestMCRuntime, void, testArgument_double_string, xxx)
 {
 	debug_logt(LOG_TAG, " testArgument_double_string\n");
-	ff(this->mockobj, test_double_string, 0.04, "this is a string after double");
+	ff(obj->mockobj, test_double_string, 0.04, "this is a string after double");
 }
 
 method(TestMCRuntime, void, testArgument_float_string, xxx)
 {
 	debug_logt(LOG_TAG, " testArgument_float_string\n");
-	ff(this->mockobj, test_float_string, 0.04, "this is a string after float");
+	ff(obj->mockobj, test_float_string, 0.04, "this is a string after float");
 }
 
 method(TestMCRuntime, void, testArgument_string_double, xxx)
 {
 	debug_logt(LOG_TAG, " testArgument_string_double\n");
-	ff(this->mockobj, test_string_double, "this is a string before double", 0.04);
+	ff(obj->mockobj, test_string_double, "this is a string before double", 0.04);
 }
 
 method(TestMCRuntime, void, testArgument_string_float, xxx)
 {
 	debug_logt(LOG_TAG, " testArgument_string_float\n");
-	ff(this->mockobj, test_string_float, "this is a string before float", 0.04);
+	ff(obj->mockobj, test_string_float, "this is a string before float", 0.04);
 }
 

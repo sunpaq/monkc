@@ -29,41 +29,41 @@ loader(TestMCClock)
 
 initer(TestMCClock)
 {
-	this->super = new(MCUnitTestCase);
-	this->toBeTest = nil;
+	obj->super = new(MCUnitTestCase);
+	obj->toBeTest = nil;
 }
 
 //override
 method(TestMCClock, void, setUp, xxx)
 {
-	call(this, MCUnitTestCase, setUp, nil);
-	if(this->toBeTest==nil)
-		this->toBeTest = new(MCClock);
+	call(obj, MCUnitTestCase, setUp, nil);
+	if(obj->toBeTest==nil)
+		obj->toBeTest = new(MCClock);
 }
 
 method(TestMCClock, void, tearDown, xxx)
 {
-	call(this, MCUnitTestCase, tearDown, nil);
-	if(this->toBeTest!=nil)
-		release(&(this->toBeTest));
+	call(obj, MCUnitTestCase, tearDown, nil);
+	if(obj->toBeTest!=nil)
+		release(&(obj->toBeTest));
 }
 
 method(TestMCClock, void, setTimeToNow, xxx)
 {
 	debug_logt(LOG_TAG, "TestMCClock setTimeToNow\n");
-	ff(this->toBeTest, setTimeToNow, nil);
-	assertNotNil(this->toBeTest);
+	ff(obj->toBeTest, setTimeToNow, nil);
+	assertNotNil(obj->toBeTest);
 	//for test, we need time output
-	ff(this->toBeTest, printTime, nil);
+	ff(obj->toBeTest, printTime, nil);
 }
 
 method(TestMCClock, void, setTime, xxx)
 {
 	debug_logt(LOG_TAG, "TestMCClock setTime\n");
-	ff(this->toBeTest, setTime, 59, 10, 21, 29, MAR, 2013, FRI);
-	assertNotNil(this->toBeTest);
+	ff(obj->toBeTest, setTime, 59, 10, 21, 29, MAR, 2013, FRI);
+	assertNotNil(obj->toBeTest);
 	//for test, we need time output
-	ff(this->toBeTest, printTime, nil);
+	ff(obj->toBeTest, printTime, nil);
 }
 
 method(TestMCClock, void, adjustTime, xxx)

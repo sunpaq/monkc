@@ -6,7 +6,6 @@
 
 int main(int argc, char const *argv[])
 {
-	mc_init();
 	LOG_LEVEL = MC_VERBOSE;
 	//while(1){
 
@@ -31,6 +30,5 @@ int main(int argc, char const *argv[])
 		//sleep(5);
 	//}
 
-	mc_end();
 	return 0;
 }
