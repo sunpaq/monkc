@@ -40,35 +40,6 @@ void unlock_global_classtable()
 	mc_unlock(&(mc_global_classtable->lock));
 }
 
-static void mc_check()
-{
-	mc_object* obj = (mc_object*)malloc(sizeof(mc_object));
-	runtime_log("sizeof obj pointer is: %p", obj);
-	//do some checks
-}
-
-/*
-void mc_init()
-{
-	//default we set log level to debug
-	LOG_LEVEL = MC_DEBUG;
-	//create a class hashtable
-	if(mc_global_classtable == nil)
-		mc_global_classtable = new_table(0);
-	//_init_class_list();
-	//_init_anony_pool();
-	//_init_vector_stack();
-	//_init_wector_stack();
-	mc_check();
-	runtime_log("mc_init finished\n");
-}
-
-void mc_end()
-{
-	runtime_log("mc_end finished\n");
-}
-*/
-
 /*
 for method binding
 */

@@ -29,35 +29,53 @@
 #define __MCRuntime__
 
 /* Monk-C use many C99 standard features, make sure your compiler and platform support C99 standard */
-//#pragma warning(disable:3)
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
 
-//max memory useage for class  table is: 4Byte x 4000 = 16KB
-//max memory useage for method table is: 4Byte x 4000 x 1000 = 16000KB = 16M
+/* *
+ * Configure hash table size:
+ * have 5 levels of size
+ * and it can auto expand to next level when some key conflicted
+ *
+ * Example of memory usage:
+ * max memory useage for one class  table is: 4Byte x 10000 = 40KB
+ * max memory useage for one method table is: 4Byte x 10000 = 40KB
+ * max total memory useage is 4Byte x 10000 x 10000 = 400000KB = 400MB
+ * */
+#define MC_HASHTABLE_SIZE_L1 100
+#define MC_HASHTABLE_SIZE_L2 200
+#define MC_HASHTABLE_SIZE_L3 1000
+#define MC_HASHTABLE_SIZE_L4 4000
+#define MC_HASHTABLE_SIZE_L5 10000
 
-//1000 classes 16M
-//100  classes 1.6M
-//10   classes 160KB
-
-//MAX_METHOD_NUM set to 4 time of the space needed
-//10level x 100 x 4 = 4000
-
-//MC_STRICT_MODE=1/0
-//when ff an invalid method. exit the process.
-//and dump the error message.
-#define MC_STRICT_MODE 1
-
+/* *
+ * Configure method name max length:
+ * */
 #ifndef MAX_KEY_CHARS
 #define MAX_KEY_CHARS 100
 #endif
 
+/* *
+ * Configure strict mode:
+ * MC_STRICT_MODE=1/0
+ * in strict mode if dynamic call a invalid method use ff()
+ * exit the process and dump the error message.
+ * in normal mode there is a error log only
+ * */
+#define MC_STRICT_MODE 1
+
+/* *
+ * Configure whether use colored output log
+ * some terminal/IDE can not support ANSI color codes
+ * (comment out it to avoid strange output strings on some IDE)
+ * */
+//#define MC_LOG_USE_COLOR
+
 #ifndef nil
 #define nil ((void*)0)
 #endif
-
 #define xxx void* xxx
 #define S(value) #value
 #define A_B(a, b) a##_##b
@@ -171,26 +189,29 @@ typedef mc_object* (*initerFP)(mc_object*);
 #define shift(obj, mode)				_shift((mo)obj, S(mode), sizeof(mode), mode##_load)
 #define shift_back(obj)					_shift_back((mo)obj)
 
-//global
-//void mc_init();
-//void mc_end();
+//lock
 void trylock_global_classtable();
 void unlock_global_classtable();
+
 //binding method api
 unsigned _binding(mc_class* const aclass, const char* methodname, void* value);
 unsigned _binding_h(mc_class* const aclass, const char* methodname, void* value, unsigned hashval);
 unsigned _override(mc_class* const aclass, const char* methodname, void* value);
 unsigned _override_h(mc_class* const aclass, const char* methodname, void* value, unsigned hashval);
+
 //class load
 mc_class* _load(const char* name, size_t objsize, loaderFP loader);
 mc_class* _load_h(const char* name, size_t objsize, loaderFP loader, unsigned hashval);
+
 //object create
 mo _new(mo const obj, initerFP initer);
 mo _new_category(mo const obj, initerFP initer, loaderFP loader_cat, initerFP initer_cat);
+
 //object mode change
 void _shift(mo const obj, const char* modename, size_t objsize, loaderFP loader);
 void _shift_back(mo const obj);
-//mm
+
+//memory management
 #define REFCOUNT_NO_MM 	-1
 #define REFCOUNT_ERR 	-100
 void _recycle(mo const obj);
@@ -200,10 +221,12 @@ mo _retain(mo const obj);
 #define release(obj) _release((mo)obj)
 #define retain(obj)  _retain((mo)obj)
 
-//functions
+//tool for class
 mc_class* alloc_mc_class();
 mc_class* init_mc_class(mc_class* const aclass, const size_t objsize);
 mc_class* new_mc_class(const size_t objsize);
+extern void _init_class_list();
+extern void _clear_class_list();
 char* mc_nameof(mc_object* const aobject);
 char* mc_nameofc(mc_class* const aclass);
 #define nameof(obj) mc_nameof((mo)obj)
@@ -222,7 +245,6 @@ int LOG_LEVEL;
 #define MC_DEBUG      2
 #define MC_VERBOSE    3
 
-#define MC_LOG_USE_COLOR
 #ifdef MC_LOG_USE_COLOR
 #define LOG_COLOR_NONE "\033[0m"
 #define LOG_COLOR_BLACK "\033[0;30m"
@@ -277,7 +299,6 @@ int mc_atomic_get_integer(volatile int* target);
 void* mc_atomic_get_pointer(volatile void** target);
 int mc_atomic_set_integer(volatile int* target, volatile int old, volatile int value);
 int mc_atomic_set_pointer(volatile void** target, volatile void* old, volatile void* value);
-
 void mc_trylock(volatile int* lock_p);
 void mc_unlock(volatile int* lock_p);
 
@@ -286,98 +307,6 @@ void mc_unlock(volatile int* lock_p);
  */
 void mc_copy_key(char* const dest, const char* src);
 int mc_compare_key(char* const dest, const char* src);
-
-/*
- Vectors.h
- */
-#ifndef VEC_STACK_SIZE
-#define VEC_STACK_SIZE 100
-#endif
-
-//the types can not be used in Monk-C method arguments:
-//char/signed char/unsigned char(use int)
-//short/signed short/unsigned short(use int)
-//short int/signed short int/unsigned short int(use int)
-//float(use double)
-
-//vectors
-typedef struct{
-	double x;
-}vector_struct;
-typedef vector_struct* vector;
-
-typedef struct{
-	double x;
-	double y;
-}vector2_struct;
-typedef vector2_struct* vector2;
-
-typedef struct{
-	double x;
-	double y;
-	double z;
-}vector3_struct;
-typedef vector3_struct* vector3;
-
-typedef struct{
-	double x;
-	double y;
-	double z;
-	double t;
-}vector4_struct;
-typedef vector4_struct* vector4;
-
-vector pushv(double x);
-vector2 pushv2(double x, double y);
-vector3 pushv3(double x, double y, double z);
-vector4 pushv4(double x, double y, double z, double t);
-
-#define popvx(vec) vec->x
-#define popvy(vec) vec->y
-#define popvz(vec) vec->z
-#define popvt(vec) vec->t
-
-//wectors: vectors with long double raw datas
-typedef struct{
-	long double x;
-}wector_struct;
-typedef wector_struct* wector;
-
-typedef struct{
-	long double x;
-	long double y;
-}wector2_struct;
-typedef wector2_struct* wector2;
-
-typedef struct{
-	long double x;
-	long double y;
-	long double z;
-}wector3_struct;
-typedef wector3_struct* wector3;
-
-typedef struct{
-	long double x;
-	long double y;
-	long double z;
-	long double t;
-}wector4_struct;
-typedef wector4_struct* wector4;
-
-wector pushw(long double x);
-wector2 pushw2(long double x, long double y);
-wector3 pushw3(long double x, long double y, long double z);
-wector4 pushw4(long double x, long double y, long double z, long double t);
-
-#define popwx(vec) vec->x
-#define popwy(vec) vec->y
-#define popwz(vec) vec->z
-#define popwt(vec) vec->t
-
-extern void _init_vector_stack();
-extern void _init_wector_stack();
-extern void _init_class_list();
-extern void _clear_class_list();
 
 /*
  HashTable.h
@@ -407,6 +336,19 @@ typedef struct mc_message_struct
 #define lamda(name) make_msg(nil, name)
 #define _lamda mo volatile _obj, volatile void* _entry
 
+/**
+ * the types can not be used in Monk-C method arguments:
+ * (Limitation of C variable arguments method)
+ *
+ * char/signed char/unsigned char(use int)
+ * short/signed short/unsigned short(use int)
+ * short int/signed short int/unsigned short int(use int)
+ * float(use double)
+ *
+ * any int type should larger than int
+ * any float type should larger than double
+ * */
+
 //write by asm
 void* _push_jump(mc_message msg, ...);
 void* _clean_jump1(mc_message msg, ...);
@@ -428,7 +370,6 @@ mc_block* alloc_mc_block();
 mc_block* init_mc_block(mc_block* ablock, void* data);
 mc_block* new_mc_block(void* data);
 void package_by_block(mc_block* ablock, mc_object* aobject);
-
 mc_blockpool* new_mc_blockpool();
 
 void mc_info(const char* classname, size_t size, loaderFP loader);
@@ -448,4 +389,5 @@ mc_block* getFromHead(mc_blockpool* bpool);
 void empty(mc_blockpool* bpool);
 int count(mc_blockpool* bpool);
 int cut(mc_blockpool* bpool, mc_block* ablock, mc_block** result);
+
 #endif
