@@ -27,11 +27,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "monkc.h"
 
-mc_message make_msg(mo const this, const void* entry)
+mc_message make_msg(mo const obj, const void* entry)
 {
 	//we will return a struct
 	mc_message tmpmsg = {nil, nil};
-	tmpmsg.object = this;
+	tmpmsg.object = obj;
 	tmpmsg.addr = entry;
 	return tmpmsg;
 }

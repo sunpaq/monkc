@@ -92,7 +92,8 @@ mc_hashitem* new_item_h(const char* key, void* value, const unsigned hashval)
 	aitem->hash = hashval;
 	aitem->index = 0;
 	aitem->level = 0;
-	mc_copy_key(aitem->key, key);
+	//mc_copy_key(aitem->key, key);
+	aitem->key = (char*)key;
 	aitem->value = value;
 	return aitem;
 }

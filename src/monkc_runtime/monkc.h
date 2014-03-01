@@ -51,13 +51,6 @@
 #define MC_HASHTABLE_SIZE_L5 10000
 
 /* *
- * Configure method name max length:
- * */
-#ifndef MAX_KEY_CHARS
-#define MAX_KEY_CHARS 100
-#endif
-
-/* *
  * Configure strict mode:
  * MC_STRICT_MODE=1/0
  * in strict mode if dynamic call a invalid method use ff()
@@ -87,7 +80,8 @@ typedef struct mc_hashitem_struct
 	unsigned index;
 	unsigned level;
 	void* value;
-	char key[MAX_KEY_CHARS+1];
+	//char key[MAX_KEY_CHARS+1];
+	char* key;
 }mc_hashitem;
 
 typedef struct mc_hashtable_struct
@@ -305,7 +299,7 @@ void mc_unlock(volatile int* lock_p);
 /*
  Key.h
  */
-void mc_copy_key(char* const dest, const char* src);
+//void mc_copy_key(char* const dest, const char* src);
 int mc_compare_key(char* const dest, const char* src);
 
 /*
@@ -357,7 +351,7 @@ void* _clean_jump3(mc_message msg, ...);
 void* _clean_jump4(mc_message msg, ...);
 
 //write by c
-mc_message make_msg(mo const this, const void* entry);
+mc_message make_msg(mo const obj, const void* entry);
 mc_message _self_response_to(const mo obj, const char* methodname);
 mc_message _self_response_to_h(const mo obj, const char* methodname, unsigned hashval);
 mc_message _response_to(mo const obj, const char* methodname, int strict);

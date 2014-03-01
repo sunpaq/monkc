@@ -46,9 +46,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #;void* _push_jump(id const obj, void* addr, ...);
 
 .text
-.globl _push_jump
+.globl __push_jump
 .p2align 4, 0x90
-_push_jump:
+__push_jump:
 	cmpq $0, %rsi		#; confirm return address not nil
 	je 0f
 	jmp *%rsi
@@ -58,9 +58,9 @@ _push_jump:
 #;void* _clean_jump2(id const obj, void* addr, ...);
 
 .text
-.globl _clean_jump1
+.globl __clean_jump1
 .p2align 4, 0x90
-_clean_jump1:
+__clean_jump1:
 	movq %rbp, %rsp			#; unwind the current start frame
 	popq %rbp				#;
 	cmpq $0, %rsi		
@@ -71,9 +71,9 @@ _clean_jump1:
 
 
 .text
-.globl _clean_jump2
+.globl __clean_jump2
 .p2align 4, 0x90
-_clean_jump2:
+__clean_jump2:
 	movq %rbp, %rsp			#; unwind the current start frame
 	popq %rbp				#;
 	cmpq $0, %rsi		
@@ -84,9 +84,9 @@ _clean_jump2:
 
 
 .text
-.globl _clean_jump3
+.globl __clean_jump3
 .p2align 4, 0x90
-_clean_jump3:
+__clean_jump3:
 	movq %rbp, %rsp			#; unwind the current start frame
 	popq %rbp				#;
 	cmpq $0, %rsi		
@@ -97,9 +97,9 @@ _clean_jump3:
 
 
 .text
-.globl _clean_jump4
+.globl __clean_jump4
 .p2align 4, 0x90
-_clean_jump4:
+__clean_jump4:
 	movq %rbp, %rsp			#; unwind the current start frame
 	popq %rbp				#;
 	cmpq $0, %rsi		
@@ -120,9 +120,9 @@ _clean_jump4:
 #;int mc_atomic_set_pointer(volatile void** target, volatile void* old, volatile void* value);
 
 .text
-.globl	mc_atomic_get_integer
+.globl _mc_atomic_get_integer
 .p2align 4, 0x90
-mc_atomic_get_integer:
+_mc_atomic_get_integer:
 	pushq %rbp				
 	movq %rsp, %rbp
 								#; %rdi addr
@@ -134,9 +134,9 @@ mc_atomic_get_integer:
 
 
 .text
-.globl	mc_atomic_get_pointer
+.globl _mc_atomic_get_pointer
 .p2align 4, 0x90
-mc_atomic_get_pointer:
+_mc_atomic_get_pointer:
 	pushq %rbp				
 	movq %rsp, %rbp
 								#; %rdi addr
@@ -148,9 +148,9 @@ mc_atomic_get_pointer:
 
 
 .text
-.globl	mc_atomic_set_integer
+.globl _mc_atomic_set_integer
 .p2align 4, 0x90
-mc_atomic_set_integer:
+_mc_atomic_set_integer:
 	pushq %rbp				
 	movq %rsp, %rbp
 	 							#; %rdi addr
@@ -173,9 +173,9 @@ mc_atomic_set_integer:
 
 
 .text
-.globl	mc_atomic_set_pointer
+.globl _mc_atomic_set_pointer
 .p2align 4, 0x90
-mc_atomic_set_pointer:
+_mc_atomic_set_pointer:
 	pushq %rbp				
 	movq %rsp, %rbp
 	 							#; %rdi addr
