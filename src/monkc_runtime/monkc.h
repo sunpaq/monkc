@@ -87,7 +87,7 @@ typedef struct mc_hashitem_struct
 	unsigned index;
 	unsigned level;
 	void* value;
-	char key[MAX_KEY_CHARS];
+	char key[MAX_KEY_CHARS+1];
 }mc_hashitem;
 
 typedef struct mc_hashtable_struct
@@ -178,8 +178,8 @@ typedef mc_object* (*initerFP)(mc_object*);
 #define hnfo(cls, hash)                 mc_info_h(S(cls), sizeof(cls), cls##_load, hash)
 
 //for call method
-#define callc(obj, cls, rtype, name, ...)   (rtype)cls##_##name(obj, cls##_##name, __VA_ARGS__)//with cast
-#define call(obj, cls, name, ...)       cls##_##name(obj, cls##_##name, __VA_ARGS__)//static call
+#define callc(obj, cls, rtype, name, ...)   (rtype)cls##_##name((cls*)obj, cls##_##name, __VA_ARGS__)//with cast
+#define call(obj, cls, name, ...)       cls##_##name((cls*)obj, cls##_##name, __VA_ARGS__)//static call
 #define response_to(obj, met) 			_response_to((mo)obj, S(met), 2)
 #define hesponse_to(obj, met, hash) 	_response_to_h((mo)obj, S(met), hash, 2)
 #define ffc(obj, type, met, ...)		(type)_push_jump(_response_to((mo)obj, S(met), MC_STRICT_MODE), __VA_ARGS__)//with cast

@@ -30,13 +30,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 void mc_copy_key(char* const dest, const char* src)
 {
-	size_t srclen = strnlen(src, MAX_KEY_CHARS-1);
-	strncpy(dest, src, srclen);
-	dest[srclen+1]='\0';
+  size_t srclen = strlen(src);
+  strncpy(dest, src, srclen>MAX_KEY_CHARS? MAX_KEY_CHARS : srclen);
+  dest[srclen]='\0';
+  //runtime_log("mc_copy_key->[dest:%s <> src:%s]", dest, src);
 }
 
 int mc_compare_key(char* const dest, const char* src)
 {
-	size_t srclen = strnlen(src, MAX_KEY_CHARS-1);
-	return strncmp(dest, src, srclen);
+  size_t srclen = strlen(src);
+  return strncmp(dest, src, srclen>MAX_KEY_CHARS? MAX_KEY_CHARS : srclen);
 }
