@@ -51,6 +51,7 @@ unsigned _binding(mc_class* const aclass, const char* methodname, void* value)
 
 unsigned _binding_h(mc_class* const aclass, const char* methodname, void* value, unsigned hashval)
 {
+	unsigned res;
 	if(aclass==nil){
 		error_log("_binding_h(mc_class* aclass) aclass is nill return 0\n");
 		return 0;
@@ -59,7 +60,7 @@ unsigned _binding_h(mc_class* const aclass, const char* methodname, void* value,
 		error_log("_binding_h(mc_class* aclass) aclass->table is nill return 0\n");
 		return 0;
 	}
-	unsigned res = set_item(&(aclass->table), 
+	res = set_item(&(aclass->table),
 		new_item_h(methodname, value, hashval),
 		0, 0, nameofc(aclass));
 	return res;
@@ -72,6 +73,7 @@ unsigned _override(mc_class* const aclass, const char* methodname, void* value)
 
 unsigned _override_h(mc_class* const aclass, const char* methodname, void* value, unsigned hashval)
 {
+	unsigned res;
 	if(aclass==nil){
 		error_log("_override_h(mc_class* aclass) aclass is nill return 0\n");
 		return 0;
@@ -80,7 +82,7 @@ unsigned _override_h(mc_class* const aclass, const char* methodname, void* value
 		error_log("_override_h(mc_class* aclass) aclass->table is nill return 0\n");
 		return 0;
 	}
-	unsigned res = set_item(&(aclass->table), 
+	res = set_item(&(aclass->table),
 		new_item_h(methodname, value, hashval),
 		1, 0, nameofc(aclass));
 	return res;
@@ -124,14 +126,13 @@ mc_class* _load(const char* name, size_t objsize, loaderFP loader)
 
 mc_class* _load_h(const char* name, size_t objsize, loaderFP loader, unsigned hashval)
 {
+	mc_hashitem* item = nil;
 	//create a class hashtable
 	if(mc_global_classtable == nil)
 		mc_global_classtable = new_table(0);
 
 	//try lock spin lock
 	trylock_global_classtable();
-
-	mc_hashitem* item = nil;
 	if((item=get_item_byhash(&mc_global_classtable, hashval, name)) == nil){
 		//new a item
 		mc_class* aclass = new_mc_class(objsize);
@@ -191,6 +192,8 @@ void _shift_back(mo const obj)
 
 static int ref_count_down(mo const this)
 {
+	int oldcount, newcount;
+	int *addr;
 	for(;;){
 		if(this == nil){
 			error_log("recycle/release(nil) do nothing.\n");
@@ -210,9 +213,9 @@ static int ref_count_down(mo const this)
 			return REFCOUNT_ERR;
 		}
 
-		int* addr = &(this->ref_count);
-		int oldcount = mc_atomic_get_integer(addr);
-		int newcount = oldcount;
+		addr = &(this->ref_count);
+		oldcount = mc_atomic_get_integer(addr);
+		newcount = oldcount;
 		if(newcount > 0)
 			newcount--;
 		if(!mc_atomic_set_integer(addr, oldcount, newcount))
@@ -241,6 +244,8 @@ void _release(mo const this)
 
 mo _retain(mo const this)
 {
+	int* rcountaddr;
+	int oldcount;
 	for(;;){
 		if(this == nil){
 			error_log("retain(nil) do nothing.\n");
@@ -255,9 +260,9 @@ mo _retain(mo const this)
 			return this;
 		}
 
-		int* addr = &(this->ref_count);
-		int oldcount = mc_atomic_get_integer(addr);
-		if(!mc_atomic_set_integer(addr, oldcount, oldcount+1))
+		rcountaddr = &(this->ref_count);
+		oldcount = mc_atomic_get_integer(rcountaddr);
+		if(!mc_atomic_set_integer(rcountaddr, oldcount, oldcount+1))
 			break;
 	}
 	runtime_log("%s - ref_count:%d\n", nameof(this), this->ref_count);

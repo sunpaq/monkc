@@ -86,8 +86,9 @@ void pushToTail(mc_blockpool* bpool, mc_block* ablock)
 
 mc_block* getFromHead(mc_blockpool* bpool)
 {
+	mc_block *target, *H, *HN;
 	mc_trylock(&(bpool->lock));
-	mc_block* target = nil;
+	target = nil;
 	if(MC_NO_NODE(bpool)){
 		target=nil;
 	}else if(MC_ONE_NODE(bpool)){
@@ -95,8 +96,8 @@ mc_block* getFromHead(mc_blockpool* bpool)
 		deref(bpool).tail = nil;
 	}else{
 		target=bpool->tail->next;
-		mc_block* H = bpool->tail->next;
-		mc_block* HN = H->next;
+		H = bpool->tail->next;
+		HN = H->next;
 		deref(deref(bpool).tail).next = HN;
 	}
 	mc_unlock(&(bpool->lock));
@@ -115,10 +116,11 @@ void empty(mc_blockpool* bpool)
 
 int count(mc_blockpool* bpool)
 {
+	int i = 1;
+	mc_block* H;
 	if(deref(bpool).tail==nil)
 		return 0;
-	mc_block* H = deref(bpool).tail->next;
-	int i = 1;
+	H = deref(bpool).tail->next;
 	for(;H!=deref(bpool).tail ;H=H->next){
 		i++;
 	}
@@ -128,9 +130,10 @@ int count(mc_blockpool* bpool)
 //will output a new block
 int cut(mc_blockpool* bpool, mc_block* ablock, mc_block** result)
 {
+	int res = 0;//success
+	mc_block* NN;
 	//assume parameter is all checked outside
 	mc_trylock(&(bpool->lock));
-	int res = 0;//success
  	if(MC_NO_NODE(bpool)){
 		error_log("no node in used_pool but you request delete\n");
 		deref(result)=nil;
@@ -164,7 +167,7 @@ int cut(mc_blockpool* bpool, mc_block* ablock, mc_block** result)
 		}else{
 			if(deref(ablock).next==bpool->tail)//don not delete the tail!
 				deref(bpool).tail = ablock;
-			mc_block* NN = ablock->next->next;
+			NN = ablock->next->next;
 			//result
 			deref(deref(ablock).next).next = nil;
 			deref(result) = deref(ablock).next;
@@ -196,7 +199,6 @@ void mc_clear(const char* classname, size_t size, loaderFP loader)
 
 void mc_clear_h(const char* classname, size_t size, loaderFP loader, unsigned hashval)
 {
-	runtime_log("empty [%s] ...\n", classname);
 	mc_class* aclass = _load_h(classname, size, loader, hashval);
 	if(aclass->used_pool!=nil && aclass->used_pool->tail!=nil)
 		empty(aclass->used_pool);
@@ -247,6 +249,8 @@ void mc_dealloc(mc_object* aobject, int is_recycle)
 	mc_class* cls = aobject->isa;
 	mc_blockpool* fp = cls->free_pool;
 	mc_blockpool* up = cls->used_pool;
+	mc_block* nb = nil;
+
 	if(aobject==nil){
 		error_log("----dealloc(%s) obj is nil\n", nameof(aobject));
 		return;
@@ -268,7 +272,6 @@ void mc_dealloc(mc_object* aobject, int is_recycle)
 		return;
 	}
 	//dealloc start
-	mc_block* nb = nil;
 	if(!cut(up, blk, &nb))//success
 	{
 		if(is_recycle==1){

@@ -46,7 +46,9 @@ mc_message _self_response_to(const mo obj, const char* methodname)
 mc_message _self_response_to_h(const mo obj, const char* methodname, unsigned hashval)
 {
 	//we will return a struct
+	mc_hashitem* res;
 	mc_message tmpmsg = {nil, nil};
+
 	if(obj == nil){
 		error_log("_self_response_to(obj) obj is nil. return {nil, nil}\n");
 		return tmpmsg;
@@ -56,7 +58,6 @@ mc_message _self_response_to_h(const mo obj, const char* methodname, unsigned ha
 		return tmpmsg;
 	}
 
-	mc_hashitem* res;
 	if((res=get_item_byhash(&(obj->isa->table), hashval, methodname)) != nil){
 		tmpmsg.object = obj;
 		tmpmsg.addr = res->value;
@@ -75,12 +76,6 @@ mc_message _response_to(const mo obj, const char* methodname, int strict)
 
 mc_message _response_to_h(const mo obj, const char* methodname, unsigned hashval, int strict)
 {
-	mc_message tmpmsg = {nil, nil};
-	if(obj == nil || obj->isa == nil){
-		error_log("_response_to(obj) obj is nil or obj->isa is nil. return {nil, nil}\n");
-		return tmpmsg;
-	}
-
 	mc_object* obj_iterator = obj;
 	mc_object* obj_first_hit = nil;
 	mc_hashitem* met_first_hit = nil;
@@ -89,6 +84,12 @@ mc_message _response_to_h(const mo obj, const char* methodname, unsigned hashval
 	int iter_count = 0;
 	//int max_iter = get_tablesize(5);
 	int max_iter = 10000;
+
+	mc_message tmpmsg = {nil, nil};
+	if(obj == nil || obj->isa == nil){
+		error_log("_response_to(obj) obj is nil or obj->isa is nil. return {nil, nil}\n");
+		return tmpmsg;
+	}
 
 	for(obj_iterator = obj;
 		obj_iterator!= nil;

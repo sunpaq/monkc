@@ -59,6 +59,7 @@ unsigned hash(const char *s)
 
 static mc_hashtable* expand_table(mc_hashtable** const table_p, unsigned tolevel)
 {
+	int i;
 	unsigned oldlevel = (*table_p)->level;
 	size_t newsize = sizeof(mc_hashtable) + get_tablesize(tolevel)*sizeof(mc_hashitem*);
 	//size_t oldsize = sizeof(mc_hashtable) + get_tablesize(oldlevel)*sizeof(mc_hashitem*);
@@ -66,7 +67,6 @@ static mc_hashtable* expand_table(mc_hashtable** const table_p, unsigned tolevel
 	mc_hashtable* newtable = (mc_hashtable*)realloc((*table_p), newsize);
 	newtable->level = tolevel;
 	//fill new slots to nil
-	unsigned i;
 	for(i=get_tablesize(oldlevel)+1; i<get_tablesize(tolevel); i++)
 		newtable->items[i]=nil;
 	(*table_p) = newtable;
@@ -107,6 +107,7 @@ mc_hashitem* new_item_h(const char* key, void* value, const unsigned hashval)
 
 mc_hashtable* new_table(const unsigned initlevel)
 {
+	int i;
 	//alloc
 	mc_hashtable* atable = (mc_hashtable*)malloc(sizeof(mc_hashtable)
 		+get_tablesize(initlevel)*sizeof(mc_hashitem*));
@@ -115,7 +116,6 @@ mc_hashtable* new_table(const unsigned initlevel)
 	atable->level = initlevel;
 	atable->count = 0;
 	//set all the slot to nil
-	unsigned i;
 	for (i = 0; i < get_tablesize(initlevel); i++)
 		(atable->items)[i]=nil;
 	return atable;
@@ -125,14 +125,16 @@ unsigned set_item(mc_hashtable** const table_p,
 	mc_hashitem* const item, 
 	int isOverride, int isFreeValue, char* classname)
 {
+	unsigned hashval, index, tmplevel;
+	mc_hashitem* olditem;
 	if(table_p==nil || *table_p==nil){
 		error_log("set_item(mc_hashtable** table_p) table_p or *table_p is nill return 0\n");
 		return 0;
 	}
 
-	unsigned hashval = item->hash;
-	unsigned index = hashval % get_tablesize((*table_p)->level);
-	mc_hashitem* olditem;
+	hashval = item->hash;
+	index = hashval % get_tablesize((*table_p)->level);
+
 	if((olditem=(*table_p)->items[index]) == nil){
 		item->level = (*table_p)->level;
 		item->index = index;
@@ -165,7 +167,7 @@ unsigned set_item(mc_hashtable** const table_p,
 			else
 				error_log("[%s]:index conflict new[%s/%d]<->old[%s/%d]\n",
 					classname, item->key, index, olditem->key, index);
-			unsigned tmplevel = (*table_p)->level+1;
+			tmplevel = (*table_p)->level+1;
 			if(tmplevel<5){
 				expand_table(table_p, tmplevel);
 				set_item(table_p, item, isOverride, isFreeValue, nil);//recursive
@@ -186,23 +188,23 @@ unsigned set_item(mc_hashtable** const table_p,
 
 mc_hashitem* get_item_bykey(mc_hashtable** const table_p, const char* key)
 {
+
 	if((*table_p)==nil){
 		error_log("get_item_bykey(table_p) table_p is nil return nil\n");
 		return nil;
 	}
-	unsigned hashval = hash(key);
 	//try get index
-	return get_item_byhash(table_p, hashval, key);
+	return get_item_byhash(table_p, hash(key), key);
 }
 
 mc_hashitem* get_item_byhash(mc_hashtable** const table_p, const unsigned hashval, const char* refkey)
 {
+	unsigned level;
+	mc_hashitem* res;
 	if((*table_p)==nil){
 		error_log("get_item_byhash(table_p) table_p is nil return nil\n");
 		return nil;
 	}
-	unsigned level;
-	mc_hashitem* res;
 	//level<4
 	for(level = 0; level<4; level++){
 		if((res=get_item_byindex(table_p, hashval % get_tablesize(level))) == nil)
