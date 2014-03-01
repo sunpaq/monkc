@@ -10,6 +10,7 @@ initer(MCString)
 
 method(MCString, void, bye, xxx)
 {
+    debug_log("MCString bye");    
     free(obj->buff);
 }
 
@@ -69,6 +70,7 @@ method(MCString, void, add, char* str)
         newbuff[obj->size-1]='\0';
         free(obj->buff);
         obj->buff = newbuff;
+        obj->size = obj->size + block_size;
     }
     strncat(obj->buff, str, strlen(str));
 }
