@@ -32,16 +32,16 @@ then
 	echo "create a project"
 	mkdir -p -v build
 	mkdir -p -v src
-	echo -e $ROOTMAKETMP > Makefile	
-	echo -e $MAKEFLIETMP > build/Makefile
+	echo $ROOTMAKETMP > Makefile
+	echo $MAKEFLIETMP > build/Makefile
 fi
 if [ "$1" = "-build" ]
 then
 	echo "CLEAN AND BUILD..."
 	rm -r build	
 	mkdir -p -v build
-	echo -e $ROOTMAKETMP > Makefile	
-	echo -e $MAKEFLIETMP > build/Makefile
+	echo $ROOTMAKETMP > Makefile	
+	echo $MAKEFLIETMP > build/Makefile
 	cp -f $(find ./src -name '*.c') ./build
 	cp -f $(find ./src -name '*.h') ./build
 	cp -f $(find ./src -name '*.p') ./build
@@ -53,6 +53,6 @@ then
 	rm -f exec core
 	rm -f -r build
 	mkdir -p -v build
-	echo -e $ROOTMAKETMP > Makefile	
-	echo -e $MAKEFLIETMP > build/Makefile
+	echo $ROOTMAKETMP > Makefile	
+	echo $MAKEFLIETMP > build/Makefile
 fi

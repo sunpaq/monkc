@@ -7,7 +7,7 @@ TESTPATH	= ./tests
 XCODEPATH       = ../XcodeMonkC
 EXAMPLEPATH     = ../examples
 
-make:
+info:
 	#[sudo make install] to install monkc and lemontea
 	#[sudo make clean] to clean the monkc and lemontea
 	#[sudo make sync] to copy xcode project files to src

@@ -1,13 +1,58 @@
-INCPATH = /usr/local/include/
-LIBPATH = /usr/local/lib/
+INCPATH=/usr/local/include/
+LIBPATH=/usr/local/lib/
 
-SRCS = $(wildcard *.c)
-LIBOBJS = $(patsubst %.c, %.o, $(SRCS))
-ARCH = $(strip $(shell uname -m))
-OS = $(strip $(shell uname -s))
+SRCS=$(wildcard *.c)
+LIBOBJS=$(patsubst %.c, %.o, $(SRCS))
+ARCH=$(strip $(shell uname -m))
+OS=$(strip $(shell uname -s))
 
-CC = clang -g -w -Wall -Wno-unused-variable -Wno-return-type
-AS = as
+#-w -Wno-unused-variable -Wno-return-type
+CC=clang -g -Wall
+AS=as
+
+ASMFILE=MCRuntimeAsm_IA32.asm
+ifeq ($(ARCH),x86_64)
+ifeq ($(OS),Darwin)
+	ASMFILE=MCRuntimeAsm_X8664_darwin.asm
+endif
+endif
+ifeq ($(ARCH),i386)
+ifeq ($(OS),Darwin)
+	ASMFILE=MCRuntimeAsm_IA32_darwin.asm
+endif
+endif
+ifeq ($(ARCH),i686)
+ifeq ($(OS),Darwin)
+	ASMFILE=MCRuntimeAsm_IA32_darwin.asm
+endif
+endif
+ifeq ($(ARCH),x86_64)
+ifeq ($(OS),Linux)
+	ASMFILE=MCRuntimeAsm_X8664.asm
+endif
+endif
+ifeq ($(ARCH),amd64)
+ifeq ($(OS),FreeBSD)
+	ASMFILE=MCRuntimeAsm_X8664.asm
+endif
+endif
+ifeq ($(ARCH),i386)
+ifeq ($(OS),Linux)
+	ASMFILE=MCRuntimeAsm_IA32.asm
+endif
+endif
+ifeq ($(ARCH),i686)
+ifeq ($(OS),Linux)
+	ASMFILE=MCRuntimeAsm_IA32.asm
+endif
+endif
+ifeq ($(ARCH),armv6l)
+	ASMFILE=MCRuntimeAsm_ARM32.asm
+endif
+#TODO
+ifeq ($(ARCH),armv9)
+	ASMFILE=MCRuntimeAsm_ARM64.asm
+endif
 
 #default is IA-32 cpus
 all:$(LIBOBJS) MCRuntimeAsm.o
@@ -17,48 +62,7 @@ all:$(LIBOBJS) MCRuntimeAsm.o
 	tar -czvf monkc.tar.gz ./monkc/*
 
 MCRuntimeAsm.o:
-ifeq ($(ARCH),x86_64)
-ifeq ($(OS),Darwin)
-	$(AS) -o MCRuntimeAsm.o MCRuntimeAsm/MCRuntimeAsm_X8664_darwin.asm
-endif
-endif
-ifeq ($(ARCH),i386)
-ifeq ($(OS),Darwin)
-	$(AS) -o MCRuntimeAsm.o MCRuntimeAsm/MCRuntimeAsm_IA32_darwin.asm
-endif
-endif
-ifeq ($(ARCH),i686)
-ifeq ($(OS),Darwin)
-	$(AS) -o MCRuntimeAsm.o MCRuntimeAsm/MCRuntimeAsm_IA32_darwin.asm
-endif
-endif
-ifeq ($(ARCH),x86_64)
-ifeq ($(OS),Linux)
-	$(AS) -o MCRuntimeAsm.o MCRuntimeAsm/MCRuntimeAsm_X8664.asm
-endif
-endif
-ifeq ($(ARCH),amd64)
-ifeq ($(OS),FreeBSD)
-	$(AS) -o MCRuntimeAsm.o MCRuntimeAsm/MCRuntimeAsm_X8664.asm
-endif
-endif
-ifeq ($(ARCH),i386)
-ifeq ($(OS),Linux)
-	$(AS) -o MCRuntimeAsm.o MCRuntimeAsm/MCRuntimeAsm_IA32.asm
-endif
-endif
-ifeq ($(ARCH),i686)
-ifeq ($(OS),Linux)
-	$(AS) -o MCRuntimeAsm.o MCRuntimeAsm/MCRuntimeAsm_IA32.asm
-endif
-endif
-ifeq ($(ARCH),armv6l)
-	$(AS) -o MCRuntimeAsm.o MCRuntimeAsm/MCRuntimeAsm_ARM32.asm
-endif
-#TODO
-ifeq ($(ARCH),armv9)
-	$(AS) -o MCRuntimeAsm.o MCRuntimeAsm/MCRuntimeAsm_ARM64.asm
-endif
+	$(AS) -o MCRuntimeAsm.o MCRuntimeAsm/$(ASMFILE)
 
 #general target
 %.o:%.c

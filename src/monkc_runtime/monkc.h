@@ -328,7 +328,7 @@ typedef struct mc_message_struct
 	const void* addr;
 }mc_message;
 #define lamda(name) make_msg(nil, name)
-#define _lamda mo volatile _obj, volatile void* _entry
+#define _lamda mo volatile obj, volatile void* entry
 
 /**
  * the types can not be used in Monk-C method arguments:

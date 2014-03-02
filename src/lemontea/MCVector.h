@@ -5,8 +5,6 @@
 #define VEC_STACK_SIZE 100
 #endif
 
-
-
 //vectors
 typedef struct{
 	double x;

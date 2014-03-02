@@ -1,6 +1,6 @@
-#!/bin/bash
 BINPATH = /usr/local/bin/
 
 install:
+	rm -f $(BINPATH)mcbuild
 	cp mcbuild $(BINPATH)
-	chmod +x /usr/local/bin/mcbuild
+	chmod +x $(BINPATH)mcbuild

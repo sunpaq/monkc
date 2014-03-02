@@ -89,13 +89,14 @@ method(MCArray, MCArray*, removeLastItem, xxx)
 	return obj;
 }
 
+static void visitor(_lamda, void* eachitem, int index)
+{
+	delete_item(obj, index);
+}
+
 method(MCArray, MCArray*, removeItem, void* item)
 {
-	void visitor(_lamda, void* eachitem, int index){
-		if(eachitem == item){
-			delete_item(obj, index);
-		}
-	}call(obj, MCArray, visiteEachBy, lamda(visitor));
+	call(obj, MCArray, visiteEachBy, lamda(visitor));
 	return obj;
 }
 
