@@ -3,23 +3,23 @@ ROOT=$PWD
 
 dumpBuild()
 {
-	echo 'MODULES = $(wildcard *.c)' 											> build/Makefile
-	echo 'OBJS = $(patsubst %.c, %.o, $(MODULES))' 								>> build/Makefile                        
+	echo 'MODULES = $(wildcard *.c)' > build/Makefile
+	echo 'OBJS = $(patsubst %.c, %.o, $(MODULES))' >> build/Makefile                        
 	echo 'LINK_HEAD = -I/usr/local/include/monkc -I/usr/local/include/lemontea' >> build/Makefile    
-	echo 'LINK_BIN = -lpthread -L/usr/local/lib -lmonkc -llemontea' 			>> build/Makefile
-	echo 'CC = clang -g -w -Wall -Wno-unused-variable -Wno-return-type' 		>> build/Makefile             
-	echo 'AS = as' 																>> build/Makefile
-	echo 'LEX = mcpp' 															>> build/Makefile                                               
-	echo 'exec:$(OBJS)' 														>> build/Makefile
-	echo '	$(CC) -o exec $(OBJS) $(LINK_BIN)' 									>> build/Makefile
-	echo '%.o:%.c' 																>> build/Makefile
-	echo '	$(LEX) $< .hash' 													>> build/Makefile
-	echo '	mv -f .hash $<' 													>> build/Makefile
-	echo '	$(CC) -c $< $(LINK_HEAD)' 											>> build/Makefile                                             
-	echo 'clean:' 																>> build/Makefile
-	echo '	rm -f exec $(OBJS) temp.* stream.txt core'							>> build/Makefile
-	echo 'dump:'																>> build/Makefile
-	echo '	ulimit -c unlimited'												>> build/Makefile
+	echo 'LINK_BIN = -lpthread -L/usr/local/lib -lmonkc -llemontea' >> build/Makefile
+	echo 'CC = clang -g -w -Wall -Wno-unused-variable -Wno-return-type' >> build/Makefile             
+	echo 'AS = as' >> build/Makefile
+	echo 'LEX = mcpp' >> build/Makefile                                               
+	echo 'exec:$(OBJS)' >> build/Makefile
+	echo '	$(CC) -o exec $(OBJS) $(LINK_BIN)' >> build/Makefile
+	echo '%.o:%.c' >> build/Makefile
+	echo '	$(LEX) $< .hash' >> build/Makefile
+	echo '	mv -f .hash $<' >> build/Makefile
+	echo '	$(CC) -c $< $(LINK_HEAD)' >> build/Makefile                                             
+	echo 'clean:' >> build/Makefile
+	echo '	rm -f exec $(OBJS) temp.* stream.txt core' >> build/Makefile
+	echo 'dump:' >> build/Makefile
+	echo '	ulimit -c unlimited' >> build/Makefile
 }
 
 if [ "$1" = "" ]
