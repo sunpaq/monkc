@@ -82,8 +82,9 @@ a toolkit for OOP programming in C language
 	2. cd <your project dir> && mcbuild -create
 	3. write code in the <your project dir/src> folder
 	  (you can use any folder structure to organize your code)
-	4. cd <your project dir> && mcbuild -build
-	5. the output binary will be 'exec' in the project root dir
+	4. cd <your project dir> && mcbuild -sync
+	5. cd <your project dir>/build && make
+	   the output binary will be 'exec' in the build folder
 	  (see the examples folder for more details)
 
 ## Syntax
