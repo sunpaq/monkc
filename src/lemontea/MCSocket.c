@@ -62,7 +62,7 @@ static void create_and_bind_socket(MCSocket* this, MCSocketType socket_type, cha
 	//prepare hint
 	memset(&hint, 0, sizeof(struct addrinfo));
 	hint.ai_family = AF_UNSPEC;
-	hint.ai_protocol = IPPROTO_IP;
+	//hint.ai_protocol = IPPROTO_IP;
 	switch(socket_type){
 		case MCSocket_Server_TCP:
 			hint.ai_socktype = SOCK_STREAM;

@@ -15,14 +15,17 @@ a toolkit for OOP programming in C language
 
 	[CPUArch/OS/Compiler]
 
+	IA-32/FreeBSD/clang                         On Working
 	IA-32/Linux/gcc&clang    					OK
 	IA-32/MacOS/gcc&clang 	 					No Test
 	IA-32/Windows7(MinGW-32bit)/mingw-gcc		OK
 
-	X86-64/Linux/gcc&clang 	 					No Test
+	X86-64/FreeBSD/clang                        OK
+	X86-64/Linux/gcc&clang 	 					OK
 	X86-64/MacOS/gcc&clang   					OK
 	X86-64/Windows7(MinGW-32bit)/mingw-gcc		OK
 
+	ARM32/FreeBSD/clang                         On Working (RaspberryPi)
 	ARM32/Linux/gcc&clang    					OK (RaspberryPi/Debian)
 	ARM32/iOS/clang								OK
 	ARM32/Android/clang							On Working
@@ -31,6 +34,7 @@ a toolkit for OOP programming in C language
 	ARM64/iOS/clang								On Working
 
 #### need these tools:
+    gmake - this is needed on FreeBSD
 	clang - I strongly recommand use this C compiler. 
 	        because i found it can report more detailed error infomations
 	flex - this is needed to build the 'mcpp' preprocessor for monkc
