@@ -7,6 +7,12 @@ TESTPATH	= ./tests
 XCODEPATH       = ../XcodeMonkC
 EXAMPLEPATH     = ../examples
 
+OS=$(strip $(shell uname -s))
+MAKE = make
+ifeq ($(OS),FreeBSD)
+	MAKE = gmake
+endif
+
 info:
 	#[sudo make install] to install monkc and lemontea
 	#[sudo make clean] to clean the monkc and lemontea
@@ -14,13 +20,13 @@ info:
 	#[make test] to make and run test
 
 install: clean
-	cd $(RUNTIME_PATH) && make && make install
+	cd $(RUNTIME_PATH) && $(MAKE) && $(MAKE) install
 	cd ..
-	cd $(LEMONTEA_PATH) && make && make install
+	cd $(LEMONTEA_PATH) && $(MAKE) && $(MAKE) install
 	cd ..
-	cd $(MCPP_PATH) && make && sudo make install
+	cd $(MCPP_PATH) && $(MAKE) && sudo $(MAKE) install
 	cd ..
-	cd $(MCBUILD_PATH) && sudo make install
+	cd $(MCBUILD_PATH) && $(MAKE) install
 	cd ..
 	#install success
 	#/usr/local/lib/libmonkc.a
@@ -29,13 +35,13 @@ install: clean
 	#/usr/local/bin/mcbuild
 
 clean:
-	cd $(RUNTIME_PATH) && make clean
+	cd $(RUNTIME_PATH) && $(MAKE) clean
 	cd ..
-	cd $(LEMONTEA_PATH) && make clean
+	cd $(LEMONTEA_PATH) && $(MAKE) clean
 	cd ..
-	cd $(TESTPATH) && make clean
+	cd $(TESTPATH) && $(MAKE) clean
 	cd ..
-	cd $(MCPP_PATH) && make clean
+	cd $(MCPP_PATH) && $(MAKE) clean
 	cd ..
 
 syncFromXcode:
@@ -46,7 +52,7 @@ syncFromXcode:
 	cp -r $(XCODEPATH)/Example/src/* $(EXAMPLEPATH)/src
 
 test:
-	cd $(TESTPATH) && make && ./exec
+	cd $(TESTPATH) && $(MAKE) && ./exec
 	cd ..
 
 
