@@ -37,7 +37,7 @@ ifeq ($(OS),Linux)
 	$(AS) -o MCRuntimeAsm.o MCRuntimeAsm/MCRuntimeAsm_X8664.asm
 endif
 endif
-ifeq ($(ARCH),x86_64)
+ifeq ($(ARCH),amd64)
 ifeq ($(OS),FreeBSD)
 	$(AS) -o MCRuntimeAsm.o MCRuntimeAsm/MCRuntimeAsm_X8664.asm
 endif
