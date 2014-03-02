@@ -24,8 +24,8 @@ dumpBuild()
 
 if [ "$1" = "" ]
 then
-	echo "1.mcbuild -create			//create a project at current path"
-	echo "2.mcbuild -sync 			//sync src to build"
+	echo "1.mcbuild -create         //create a project at current path"
+	echo "2.mcbuild -sync           //sync src to build"
 	echo "3.cd ./build && make      //compile"
 fi
 if [ "$1" = "-create" ]
