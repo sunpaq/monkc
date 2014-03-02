@@ -1,14 +1,6 @@
 #!/bin/sh
 ROOT=$PWD
 
-dumpRoot()
-{
-	echo 'all:' 									> Makefile
-	echo '	cd ./build && make && cp exec ../' 		>> Makefile
-	echo 'clean:' 									>> Makefile
-	echo '	cd ./build && make clean' 				>> Makefile
-}
-
 dumpBuild()
 {
 	echo 'MODULES = $(wildcard *.c)' 											> build/Makefile
@@ -32,36 +24,28 @@ dumpBuild()
 
 if [ "$1" = "" ]
 then
-	echo "mcbuild -create			//create a project at current path"
-	echo "mcbuild -build 			//build a project"
-	echo "mcbuild -clean            //clean a project"
+	echo "1.mcbuild -create			//create a project at current path"
+	echo "2.mcbuild -sync 			//sync src to build"
+	echo "3.cd ./build && make      //compile"
 fi
 if [ "$1" = "-create" ]
 then
-	echo "create a project"
-	mkdir -p -v build
 	mkdir -p -v src
-	dumpRoot
-	dumpBuild
-fi
-if [ "$1" = "-build" ]
-then
-	echo "CLEAN AND BUILD..."
-	rm -r build	
 	mkdir -p -v build
-	dumpRoot
 	dumpBuild
-	cp -f $(find ./src -name '*.c') ./build
-	cp -f $(find ./src -name '*.h') ./build
-	cp -f $(find ./src -name '*.p') ./build
-	make && echo "BUILD SUCCESS"
+	echo "1.[o] -create"
+	echo "2.[x] -sync"
+	echo "3.[x] ./build && make"
 fi
-if [ "$1" = "-clean" ]
+if [ "$1" = "-sync" ]
 then
-	echo "CLEAN..."
-	rm -f exec core
 	rm -f -r build
 	mkdir -p -v build
-	dumpRoot
 	dumpBuild
+	cp -vf $(find ./src -name '*.c') build
+	cp -vf $(find ./src -name '*.h') build
+	cp -vf $(find ./src -name '*.p') build
+	echo "1.[o] -create"
+	echo "2.[o] -sync"
+	echo "3.[x] ./build && make"
 fi
