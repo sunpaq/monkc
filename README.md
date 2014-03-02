@@ -35,6 +35,9 @@ a toolkit for OOP programming in C language
 
 #### need these tools:
     gmake - this is needed on FreeBSD
+            i am trying to write a generic makefile for both
+            make and GNU make. but for now. please alias your
+            make to gmake.
 	clang - I strongly recommand use this C compiler. 
 	        because i found it can report more detailed error infomations
 	flex - this is needed to build the 'mcpp' preprocessor for monkc
