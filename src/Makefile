@@ -1,11 +1,11 @@
-BINPATH 		= /usr/local/bin
+BINPATH 	= /usr/local/bin
 RUNTIME_PATH 	= ./monkc_runtime
 LEMONTEA_PATH 	= ./lemontea
-MCPP_PATH 		= ./monkc_preprocessor
+MCPP_PATH 	= ./monkc_preprocessor
 MCBUILD_PATH 	= ./monkc_buildtool
-TESTPATH		= ./tests
+TESTPATH	= ./tests
 XCODEPATH       = ../XcodeMonkC
-EXAMPLEPATH	    = ../examples
+EXAMPLEPATH     = ../examples
 
 make:
 	#[sudo make install] to install monkc and lemontea

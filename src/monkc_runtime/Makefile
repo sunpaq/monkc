@@ -37,6 +37,11 @@ ifeq ($(OS),Linux)
 	$(AS) -o MCRuntimeAsm.o MCRuntimeAsm/MCRuntimeAsm_X8664.asm
 endif
 endif
+ifeq ($(ARCH),x86_64)
+ifeq ($(OS),FreeBSD)
+	$(AS) -o MCRuntimeAsm.o MCRuntimeAsm/MCRuntimeAsm_X8664.asm
+endif
+endif
 ifeq ($(ARCH),i386)
 ifeq ($(OS),Linux)
 	$(AS) -o MCRuntimeAsm.o MCRuntimeAsm/MCRuntimeAsm_IA32.asm
@@ -70,6 +75,7 @@ install:
 clean:
 	rm -f $(LIBOBJS) MCRuntimeAsm.o monkc.tar.gz 
 	rm -f -r monkc
+	rm -f *.o
 
 dump:
 	ulimit -c unlimited

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 ROOT=$PWD
 
 ROOTMAKETMP="all:
@@ -25,7 +25,7 @@ if [ "$1" = "" ]
 then
 	echo "mcbuild -create			//create a project at current path"
 	echo "mcbuild -build 			//build a project"
-	echo "mcbuild -clean                    //clean a project"
+	echo "mcbuild -clean            //clean a project"
 fi
 if [ "$1" = "-create" ]
 then
@@ -42,11 +42,10 @@ then
 	mkdir -p -v build
 	echo -e $ROOTMAKETMP > Makefile	
 	echo -e $MAKEFLIETMP > build/Makefile
-	cp $(find ./src -name '*.c') ./build
-	cp $(find ./src -name '*.h') ./build
-	cp $(find ./src -name '*.p') ./build
-	make
-	echo "BUILD SUCCESS"
+	cp -f $(find ./src -name '*.c') ./build
+	cp -f $(find ./src -name '*.h') ./build
+	cp -f $(find ./src -name '*.p') ./build
+	make && echo "BUILD SUCCESS"
 fi
 if [ "$1" = "-clean" ]
 then

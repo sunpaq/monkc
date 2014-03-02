@@ -7,11 +7,10 @@ LINK_HEAD = -I/usr/local/include/monkc -I/usr/local/include/lemontea
 #LINK_BIN = -lpthread -L/usr/local/lib -lmonkc -llemontea
 
 CC = clang -g -w -Wall -Wno-unused-variable -Wno-return-type
-AS = as
 
 all:$(LIBOBJS)
 	mkdir -p lemontea
-	cp *.h ./lemontea
+	cp -f *.h ./lemontea
 	ar -r ./lemontea/liblemontea.a $(LIBOBJS)
 	tar -czvf lemontea.tar.gz ./lemontea/*
 
