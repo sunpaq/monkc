@@ -1,25 +1,34 @@
 #!/bin/sh
 ROOT=$PWD
 
-ROOTMAKETMP="all:
-\n\tcd ./build && make && cp exec ../
-\nclean:
-\n\tcd ./build && make clean"
+dumpRoot()
+{
+	echo 'all:' 									> Makefile
+	echo '	cd ./build && make && cp exec ../' 		>> Makefile
+	echo 'clean:' 									>> Makefile
+	echo '	cd ./build && make clean' 				>> Makefile
+}
 
-MAKEFLIETMP="MODULES = \$(wildcard *.c)
-\nOBJS = \$(patsubst %.c, %.o, \$(MODULES))                             
-\nLINK_HEAD = -I/usr/local/include/monkc -I/usr/local/include/lemontea    
-\nLINK_BIN = -lpthread -L/usr/local/lib -lmonkc -llemontea                                                                    
-\nCC = clang -g -w -Wall -Wno-unused-variable -Wno-return-type             
-\nAS = as
-\nLEX = mcpp                                                                 
-\nexec:\$(OBJS)\n\t\$(CC) -o exec \$(OBJS) \$(LINK_BIN)                                  
-\n%.o:%.c
-\n\t\$(LEX) \$< .hash
-\n\tmv -f .hash \$<
-\n\t\$(CC) -c \$< \$(LINK_HEAD)                                             
-\nclean:\n\trm -f exec \$(OBJS) temp.* stream.txt core                            
-\ndump:\n\tulimit -c unlimited"
+dumpBuild()
+{
+	echo 'MODULES = $(wildcard *.c)' 											> build/Makefile
+	echo 'OBJS = $(patsubst %.c, %.o, $(MODULES))' 								>> build/Makefile                        
+	echo 'LINK_HEAD = -I/usr/local/include/monkc -I/usr/local/include/lemontea' >> build/Makefile    
+	echo 'LINK_BIN = -lpthread -L/usr/local/lib -lmonkc -llemontea' 			>> build/Makefile
+	echo 'CC = clang -g -w -Wall -Wno-unused-variable -Wno-return-type' 		>> build/Makefile             
+	echo 'AS = as' 																>> build/Makefile
+	echo 'LEX = mcpp' 															>> build/Makefile                                               
+	echo 'exec:$(OBJS)' 														>> build/Makefile
+	echo '	$(CC) -o exec $(OBJS) $(LINK_BIN)' 									>> build/Makefile
+	echo '%.o:%.c' 																>> build/Makefile
+	echo '	$(LEX) $< .hash' 													>> build/Makefile
+	echo '	mv -f .hash $<' 													>> build/Makefile
+	echo '	$(CC) -c $< $(LINK_HEAD)' 											>> build/Makefile                                             
+	echo 'clean:' 																>> build/Makefile
+	echo '	rm -f exec $(OBJS) temp.* stream.txt core'							>> build/Makefile
+	echo 'dump:'																>> build/Makefile
+	echo '	ulimit -c unlimited'												>> build/Makefile
+}
 
 if [ "$1" = "" ]
 then
@@ -32,16 +41,16 @@ then
 	echo "create a project"
 	mkdir -p -v build
 	mkdir -p -v src
-	echo $ROOTMAKETMP > Makefile
-	echo $MAKEFLIETMP > build/Makefile
+	dumpRoot
+	dumpBuild
 fi
 if [ "$1" = "-build" ]
 then
 	echo "CLEAN AND BUILD..."
 	rm -r build	
 	mkdir -p -v build
-	echo $ROOTMAKETMP > Makefile	
-	echo $MAKEFLIETMP > build/Makefile
+	dumpRoot
+	dumpBuild
 	cp -f $(find ./src -name '*.c') ./build
 	cp -f $(find ./src -name '*.h') ./build
 	cp -f $(find ./src -name '*.p') ./build
@@ -53,6 +62,6 @@ then
 	rm -f exec core
 	rm -f -r build
 	mkdir -p -v build
-	echo $ROOTMAKETMP > Makefile	
-	echo $MAKEFLIETMP > build/Makefile
+	dumpRoot
+	dumpBuild
 fi
