@@ -14,9 +14,9 @@ make:
 	#[make test] to make and run test
 
 install: clean
-	cd $(RUNTIME_PATH) && make && sudo make install
+	cd $(RUNTIME_PATH) && make && make install
 	cd ..
-	cd $(LEMONTEA_PATH) && make && sudo make install
+	cd $(LEMONTEA_PATH) && make && make install
 	cd ..
 	cd $(MCPP_PATH) && make && sudo make install
 	cd ..
@@ -29,13 +29,13 @@ install: clean
 	#/usr/local/bin/mcbuild
 
 clean:
-	cd $(RUNTIME_PATH) && sudo make clean
+	cd $(RUNTIME_PATH) && make clean
 	cd ..
-	cd $(LEMONTEA_PATH) && sudo make clean
+	cd $(LEMONTEA_PATH) && make clean
 	cd ..
-	cd $(TESTPATH) && sudo make clean
+	cd $(TESTPATH) && make clean
 	cd ..
-	cd $(MCPP_PATH) && sudo make clean
+	cd $(MCPP_PATH) && make clean
 	cd ..
 
 syncFromXcode:
