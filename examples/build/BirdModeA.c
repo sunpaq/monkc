@@ -27,9 +27,9 @@ method(Bird, void, modemethodD, xxx)
 
 loader(BirdModeA)
 {
-	binding(Bird, void, modemethodA, xxx);
-	binding(Bird, void, modemethodB, int type);
-	binding(Bird, void, modemethodC, xxx);
-	binding(Bird, void, modemethodD, xxx);
+	hinding(Bird, void, modemethodA, 1891533949, xxx);
+	hinding(Bird, void, modemethodB, 1891533950, int type);
+	hinding(Bird, void, modemethodC, 1891533951, xxx);
+	hinding(Bird, void, modemethodD, 1891533952, xxx);
 	return claz;
 }

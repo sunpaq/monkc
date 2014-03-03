@@ -53,10 +53,10 @@ method(LittleBird, void, hello_imp, xxx)
 loader(LittleBird)
 {
     binding(LittleBird, Bird*, initWithName, char* aname);
-    binding(LittleBird, void, yourName, xxx);
-    binding(LittleBird, void, fly, xxx);
-    binding(LittleBird, void, swim, xxx);
-    binding(LittleBird, void, eat, xxx);
-    binding(LittleBird, void, hello_imp, xxx);
+    hinding(LittleBird, void, yourName, 3612626270, xxx);
+    hinding(LittleBird, void, fly, 101491, xxx);
+    hinding(LittleBird, void, swim, 3543688, xxx);
+    hinding(LittleBird, void, eat, 100184, xxx);
+    hinding(LittleBird, void, hello_imp, 1197024991, xxx);
     return claz;
 }

@@ -31,9 +31,9 @@ method(BirdFather, void, singAsong, char* asong)
 
 loader(BirdFather)
 {
-	binding(BirdFather, void, bye, xxx);
-	binding(BirdFather, void, flyhigh, xxx);
-	binding(BirdFather, void, fly, xxx);
+	hinding(BirdFather, void, bye, 98030, xxx);
+	hinding(BirdFather, void, flyhigh, 3537959061, xxx);
+	hinding(BirdFather, void, fly, 101491, xxx);
 	binding(BirdFather, void, singAsong, char* asong);
 	debug_logt(nameofc(claz), "load called\n");
 	return claz;

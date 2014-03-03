@@ -27,7 +27,7 @@ method(LittleBirdFather, void, fly, xxx)
 
 method(LittleBirdFather, void, hello_abs, mo receiver)
 {
-    ff(receiver, hello_imp, nil);
+    fh(receiver,hello_imp, 1197024991, nil);
 }
 
 method(LittleBirdFather, void, land_imp, xxx)
@@ -37,9 +37,9 @@ method(LittleBirdFather, void, land_imp, xxx)
 
 loader(LittleBirdFather)
 {
-    binding(LittleBirdFather, int, getAge, xxx);
-    binding(LittleBirdFather, void, fly, xxx);
-    binding(LittleBirdFather, void, hello_abs, mo receiver);
-    binding(LittleBirdFather, void, land_imp, xxx);
+    hinding(LittleBirdFather, int, getAge, 3045599689, xxx);
+    hinding(LittleBirdFather, void, fly, 101491, xxx);
+    hinding(LittleBirdFather, void, hello_abs, 1197016965, mo receiver);
+    hinding(LittleBirdFather, void, land_imp, 2677959544, xxx);
     return claz;
 }

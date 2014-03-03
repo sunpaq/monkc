@@ -21,7 +21,7 @@ void monkc_runtime_check()
 void testMonkC()
 {
     //new a instance
-    LittleBird* abird = new(LittleBird);
+    LittleBird* abird = hew(LittleBird, 506760431);
     
     //static call methods
     //LittleBird_fly(abird, abird, nil, nil);
@@ -29,16 +29,16 @@ void testMonkC()
     //LittleBird_swim(abird, abird, nil, nil);
     
     //dynamic call methods
-    ff(abird, fly, nil);
-    ff(abird, swim, nil);
-    ff(abird, eat, nil);
+    fh(abird,fly, 101491, nil);
+    fh(abird,swim, 3543688, nil);
+    fh(abird,eat, 100184, nil);
     
     //call abs method
-    ff(abird, hello_abs, nil);
-    ff(abird, land_abs, nil);
+    fh(abird,hello_abs, 1197016965, nil);
+    fh(abird,land_abs, 2677951518, nil);
     
     //dynamic call super class methods
-    int fatherage = (int)ff(abird, getAge, nil);
+    int fatherage = (int)fh(abird,getAge, 3045599689, nil);
     printf("my father age is : %d\n", fatherage);
     
     recycle(abird);
@@ -50,7 +50,7 @@ void testMonkC()
 void testLemontea()
 {
     
-    MCString* mcstr = ff(new(MCString), initWithCString, "a MCString");
+    MCString* mcstr = ff(hew(MCString, 2872462663), initWithCString, "a MCString");
     ff(mcstr, add, " the second");
     ff(mcstr, add, " the third");
     ff(mcstr, add, " the forth\n");
@@ -62,12 +62,12 @@ void testLemontea()
         ff(mcstr, add, " a piece of string");
         LOG_LEVEL = old;
     }
-    ff(mcstr, print, nil);
+    fh(mcstr,print, 106934957, nil);
     release(mcstr);
     
-    MCClock* mcclock = ff(new(MCClock), setTimeToNow, nil);
-    ff(mcclock, printTime, nil);
-    ff(mcclock, printCurrentGMTTime, nil);
+    MCClock* mcclock = ff(hew(MCClock, 1601663000), setTimeToNow, nil);
+    fh(mcclock,printTime, 2497993498, nil);
+    fh(mcclock,printCurrentGMTTime, 1939388559, nil);
     recycle(mcclock);
 }
 
@@ -119,7 +119,7 @@ int main(int argc, char const *argv[])
 //		test_method_jumpping();
 		test_object_life_cycle();
 
-		MCContext* context = new(MCContext);
+		MCContext* context = hew(MCContext, 1685319481);
 		context->argc = argc;
 		context->argv = cast(char**, argv);
 		for(;;)
