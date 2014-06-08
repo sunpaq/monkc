@@ -47,10 +47,17 @@ a toolkit for OOP programming in C language
 	3. VisualStudio12 	(Windows)
 
 [Android](https://github.com/sunpaq/monkc4Android)
+
 [iOS](https://github.com/sunpaq/monkc4iOS)
+
 [Linux](https://github.com/sunpaq/monkc4Linux)
+
 [Mac](https://github.com/sunpaq/monkc4Mac)
+
 [Win32](https://github.com/sunpaq/monkc4Win32)
+
+	i usurally develop MonkC on Mac OS use Xcode
+	so the Mac version will be the latest one.
 
 ## Syntax
 
