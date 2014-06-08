@@ -41,10 +41,10 @@ a toolkit for OOP programming in C language
 	2. Eclipse 			(Linux/Windows)
 	3. VisualStudio12 	(Windows)
 
-	(https://github.com/sunpaq/monkc4Android)
-	(https://github.com/sunpaq/monkc4iOS)
-	(https://github.com/sunpaq/monkc4Linux)
-	(https://github.com/sunpaq/monkc4Mac)
+	[Android](https://github.com/sunpaq/monkc4Android)
+	[iOS](https://github.com/sunpaq/monkc4iOS)
+	[Linux](https://github.com/sunpaq/monkc4Linux)
+	[Mac](https://github.com/sunpaq/monkc4Mac)
 
 #### recomand code editor:
 	Sublime Text 
