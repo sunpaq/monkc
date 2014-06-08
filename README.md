@@ -8,28 +8,9 @@ a toolkit for OOP programming in C language
 **Monk-C**, is a toolkit for OOP programming use pure C (static library). the aim of Monk-C is to support OOP in pure C with some tiny C macros, functions and even a light preprocessor. Monk-C is inspired by Apple Objective-C and gcc builtin "Constructing Calls". It is tiny and primitive but full of fun. I use it to play with my RaspberryPi and it really vary suitable for the ARM/Linux based embeded systems. It is open source under **BSD** license(3-clause license). I written it under the X86/Linux platform and X86/MacOS ARM/Linux is also fully tested and supportted both 32bit and 64bit.
 
 ###### Monk-C is based on **C99** standard
-
 ###### No stable version released now, developing commit: 0.1.140223
 
-#### Documents
-
-###### 1 [wiki page](https://github.com/sunpaq/monkc/wiki) on github
-###### 2 [PDF doc](https://github.com/sunpaq/monkc/tree/master/doc) (on writing)
-###### 3 Infos at this page
-
-#### supported IDEs (template project):
-
-	1. Xcode   			(MacOS)
-	2. Eclipse 			(Linux/Windows)
-	3. VisualStudio12 	(Windows)
-
-[Android (https://github.com/sunpaq/monkc4Android)](https://github.com/sunpaq/monkc4Android)
-[iOS (https://github.com/sunpaq/monkc4iOS)](https://github.com/sunpaq/monkc4iOS)
-[Linux (https://github.com/sunpaq/monkc4Linux)](https://github.com/sunpaq/monkc4Linux)
-[Mac (https://github.com/sunpaq/monkc4Mac)](https://github.com/sunpaq/monkc4Mac)
-[Win32 (https://github.com/sunpaq/monkc4Win32)](https://github.com/sunpaq/monkc4Win32)
-
-#### supported platforms:
+## Supported platforms:
 
 	[CPUArch/OS/Compiler]
 
@@ -53,75 +34,28 @@ a toolkit for OOP programming in C language
 
 	PowerPC64/FreeBSD/clang                     On Working (iMac G5)
 
-#### recomand code editor:
-	Sublime Text 
-	(you can use any editor. but some one have auto-complete function will help a lot)
+## Documents:
 
-#### need these tools:
-    gmake - this is needed on FreeBSD
-            i am trying to write a generic makefile for both
-            make and GNU make. but for now. please alias your
-            make to gmake.
-	clang - I strongly recommand use this C compiler. 
-	        because i found it can report more detailed error infomations
-	flex - this is needed to build the 'mcpp' preprocessor for monkc
+###### 1 [wiki page](https://github.com/sunpaq/monkc/wiki) on github
+###### 2 [PDF doc](https://github.com/sunpaq/monkc/tree/master/doc) (on writing)
+###### 3 Infos at this page
 
-#### how to compile and install (command line):
+## Play with MonkC use IDEs (template project):
 
-	0. default is compile by 'clang'. make sure you have one installed. 
-	   it also need 'flex'. you can install flex by 'sudo apt-get install flex' on Ubuntu
-	   or install flex use macport on Mac OS X
-	1. cd ./src
-	2. sudo make install
+	1. Xcode   			(MacOS)
+	2. Eclipse 			(Linux/Windows)
+	3. VisualStudio12 	(Windows)
 
-	clang is recommand. cause it can output better error infomations
-	if you want change it to gcc
-	change [ CC = clang -> CC = gcc ] in:
-	1. /src/monkc_runtime/Makefile 	    -> line10 
-	2. /src/monkc_buildtool/mcbuild     -> line12
-	3. /src/lemontea/Makefile			-> line9
-	4. /src/tests/Makefile				-> line7
-	to use gcc as the compiler
-
-	the command above will build the <libmonkc.a> <liblemontea.a>
-	and automatically copy them to 				/usr/local/lib/
-	and copy the <.h> header files to 			/usr/local/include/
-	and copy the <mcpp> <mcbuild> tool to 		/usr/local/bin/
-
-#### how to create and build a monkc project:
-
-	1. mkdir <your project dir>
-	2. cd <your project dir> && mcbuild -create
-	3. write code in the <your project dir/src> folder
-	  (you can use any folder structure to organize your code)
-	4. cd <your project dir> && mcbuild -sync
-	5. cd <your project dir>/build && make
-	   the output binary will be 'exec' in the build folder
-	  (see the examples folder for more details)
+[Android](https://github.com/sunpaq/monkc4Android)
+[iOS](https://github.com/sunpaq/monkc4iOS)
+[Linux](https://github.com/sunpaq/monkc4Linux)
+[Mac](https://github.com/sunpaq/monkc4Mac)
+[Win32](https://github.com/sunpaq/monkc4Win32)
 
 ## Syntax
+
 **Monk-C** use "MC" as the prefix.
-#### main entry
 
-	int main(int argc, char const *argv[])
-	{
-		LOG_LEVEL = MC_VERBOSE;
-		//your code here
-		return 0;
-	}
-
-	global log level:
-	you can set the global variable LOG_LEVEL to:
-	MC_SILENT		//no log outputed
-	MC_ERROR_ONLY  //error log only
-	MC_DEBUG 		//error log and debug log
-	MC_VERBOSE     //error log and debug log and runtime log
-
-	you can use:
-	error_log()
-	debug_log()
-	runtime_log()
-	to output logs. parameter is same as printf(char* fmt, ...)
 
 #### declear interface - write in .h file
 
@@ -225,6 +159,52 @@ a toolkit for OOP programming in C language
 	C style: 	Bird_fly(bird, 0, fly, nil);
 	Macro:		call(bird, Bird, fly, nil);
 
+
+
+####protocol file
+
+	Flyable.p:
+
+	binding(Flyable, void, duckFly, xxx);
+	binding(Flyable, void, chickenFly, xxx);
+
+
+######the BIND part (include in .c file):
+
+	loader(Bird)
+	{
+		debug_logt(class->name, "load called\n");
+		#include "Flyable.p"
+
+		binding(Bird, Bird*, initWithType, int type);
+		binding(Bird, void, bye, xxx);
+		binding(Bird, void, fly, xxx);
+		binding(Bird, int, fatherAge, xxx);
+		return claz;
+	}
+
+#### main entry
+
+	int main(int argc, char const *argv[])
+	{
+		LOG_LEVEL = MC_VERBOSE;
+		//your code here
+		return 0;
+	}
+
+	global log level:
+	you can set the global variable LOG_LEVEL to:
+	MC_SILENT		//no log outputed
+	MC_ERROR_ONLY  //error log only
+	MC_DEBUG 		//error log and debug log
+	MC_VERBOSE     //error log and debug log and runtime log
+
+	you can use:
+	error_log()
+	debug_log()
+	runtime_log()
+	to output logs. parameter is same as printf(char* fmt, ...)
+
 ####Macros and runtime functions often used
 
 ---
@@ -250,31 +230,57 @@ a toolkit for OOP programming in C language
 
 Total only **16** words.[^1]
 
-####protocol file
+## Hack the MonkC runtime on UNIX-like system use command line tools
 
-	Flyable.p:
+#### recomand code editor:
+	Sublime Text 
+	(you can use any editor. but some one have auto-complete function will help a lot)
 
-	binding(Flyable, void, duckFly, xxx);
-	binding(Flyable, void, chickenFly, xxx);
+#### need these tools:
+    gmake - this is needed on FreeBSD
+            i am trying to write a generic makefile for both
+            make and GNU make. but for now. please alias your
+            make to gmake.
+	clang - I strongly recommand use this C compiler. 
+	        because i found it can report more detailed error infomations
+	flex - this is needed to build the 'mcpp' preprocessor for monkc
 
+#### how to compile and install (command line):
 
-######the BIND part (include in .c file):
+	0. default is compile by 'clang'. make sure you have one installed. 
+	   it also need 'flex'. you can install flex by 'sudo apt-get install flex' on Ubuntu
+	   or install flex use macport on Mac OS X
+	1. cd ./src
+	2. sudo make install
 
-	loader(Bird)
-	{
-		debug_logt(class->name, "load called\n");
-		#include "Flyable.p"
+	clang is recommand. cause it can output better error infomations
+	if you want change it to gcc
+	change [ CC = clang -> CC = gcc ] in:
+	1. /src/monkc_runtime/Makefile 	    -> line10 
+	2. /src/monkc_buildtool/mcbuild     -> line12
+	3. /src/lemontea/Makefile			-> line9
+	4. /src/tests/Makefile				-> line7
+	to use gcc as the compiler
 
-		binding(Bird, Bird*, initWithType, int type);
-		binding(Bird, void, bye, xxx);
-		binding(Bird, void, fly, xxx);
-		binding(Bird, int, fatherAge, xxx);
-		return claz;
-	}
+	the command above will build the <libmonkc.a> <liblemontea.a>
+	and automatically copy them to 				/usr/local/lib/
+	and copy the <.h> header files to 			/usr/local/include/
+	and copy the <mcpp> <mcbuild> tool to 		/usr/local/bin/
 
-####For more infomation please goto [wiki page](https://github.com/sunpaq/monkc/wiki) on github
+#### how to create and build a monkc project:
 
-####TODO list:
+	1. mkdir <your project dir>
+	2. cd <your project dir> && mcbuild -create
+	3. write code in the <your project dir/src> folder
+	  (you can use any folder structure to organize your code)
+	4. cd <your project dir> && mcbuild -sync
+	5. cd <your project dir>/build && make
+	   the output binary will be 'exec' in the build folder
+	  (see the examples folder for more details)
+
+##For more infomation please goto [wiki page](https://github.com/sunpaq/monkc/wiki) on github
+
+##TODO list:
 
 	1. add type convert to preprocessor mcpp
 
