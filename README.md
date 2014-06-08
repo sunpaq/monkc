@@ -28,10 +28,27 @@ a toolkit for OOP programming in C language
 	ARM32/FreeBSD/clang                         On Working (RaspberryPi)
 	ARM32/Linux/gcc&clang    					OK (RaspberryPi/Debian)
 	ARM32/iOS/clang								OK
-	ARM32/Android/clang							On Working
+	ARM32/Android/clang							OK (NDK build)
 
 	ARM64/Linux/gcc&clang    					On Working
 	ARM64/iOS/clang								On Working
+
+	PowerPC64/FreeBSD/clang                     On Working (iMac G5)
+
+#### supported IDEs (template project):
+
+	1. Xcode   			(MacOS)
+	2. Eclipse 			(Linux/Windows)
+	3. VisualStudio12 	(Windows)
+
+	(https://github.com/sunpaq/monkc4Android)
+	(https://github.com/sunpaq/monkc4iOS)
+	(https://github.com/sunpaq/monkc4Linux)
+	(https://github.com/sunpaq/monkc4Mac)
+
+#### recomand code editor:
+	Sublime Text 
+	(you can use any editor. but some one have auto-complete function will help a lot)
 
 #### need these tools:
     gmake - this is needed on FreeBSD
@@ -41,18 +58,6 @@ a toolkit for OOP programming in C language
 	clang - I strongly recommand use this C compiler. 
 	        because i found it can report more detailed error infomations
 	flex - this is needed to build the 'mcpp' preprocessor for monkc
-
-#### recomand code editor:
-	Sublime Text 
-	(you can use any editor. but some one have auto-complete function will help a lot)
-
-#### IDE support (template project):
-
-	all templete project in /IDESupport folder
-	here is the IDEs:
-	1. Xcode   			(MacOS)
-	2. Eclipse 			(Linux/Windows)
-	3. VisualStudio12 	(Windows)
 
 #### how to compile and install (command line):
 
