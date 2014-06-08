@@ -11,6 +11,24 @@ a toolkit for OOP programming in C language
 
 ###### No stable version released now, developing commit: 0.1.140223
 
+#### Documents
+
+###### 1 [wiki page](https://github.com/sunpaq/monkc/wiki) on github
+###### 2 [PDF doc](https://github.com/sunpaq/monkc/tree/master/doc) (on writing)
+###### 3 Infos at this page
+
+#### supported IDEs (template project):
+
+	1. Xcode   			(MacOS)
+	2. Eclipse 			(Linux/Windows)
+	3. VisualStudio12 	(Windows)
+
+[Android (https://github.com/sunpaq/monkc4Android)](https://github.com/sunpaq/monkc4Android)
+[iOS (https://github.com/sunpaq/monkc4iOS)](https://github.com/sunpaq/monkc4iOS)
+[Linux (https://github.com/sunpaq/monkc4Linux)](https://github.com/sunpaq/monkc4Linux)
+[Mac (https://github.com/sunpaq/monkc4Mac)](https://github.com/sunpaq/monkc4Mac)
+[Win32 (https://github.com/sunpaq/monkc4Win32)](https://github.com/sunpaq/monkc4Win32)
+
 #### supported platforms:
 
 	[CPUArch/OS/Compiler]
@@ -34,17 +52,6 @@ a toolkit for OOP programming in C language
 	ARM64/iOS/clang								On Working
 
 	PowerPC64/FreeBSD/clang                     On Working (iMac G5)
-
-#### supported IDEs (template project):
-
-	1. Xcode   			(MacOS)
-	2. Eclipse 			(Linux/Windows)
-	3. VisualStudio12 	(Windows)
-
-	[Android](https://github.com/sunpaq/monkc4Android)
-	[iOS](https://github.com/sunpaq/monkc4iOS)
-	[Linux](https://github.com/sunpaq/monkc4Linux)
-	[Mac](https://github.com/sunpaq/monkc4Mac)
 
 #### recomand code editor:
 	Sublime Text 
