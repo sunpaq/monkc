@@ -40,17 +40,17 @@ a toolkit for OOP programming in C language
 ###### 2 [PDF doc](https://github.com/sunpaq/monkc/tree/master/doc) (on writing)
 ###### 3 Infos at this page
 
-## Play with MonkC use IDEs (template project):
+## Play with Monk-C use IDEs (template project):
 
-	1. Xcode   			(MacOS)
-	2. Eclipse 			(Linux/Windows)
-	3. VisualStudio12 	(Windows)
+[1 Android - Eclipse on Linux/Windows](https://github.com/sunpaq/monkc4Android)
 
-[Android](https://github.com/sunpaq/monkc4Android)
-[iOS](https://github.com/sunpaq/monkc4iOS)
-[Linux](https://github.com/sunpaq/monkc4Linux)
-[Mac](https://github.com/sunpaq/monkc4Mac)
-[Win32](https://github.com/sunpaq/monkc4Win32)
+[2 iOS     - Xcode on MacOS](https://github.com/sunpaq/monkc4iOS)
+
+[3 Linux   - Eclipse on Linux](https://github.com/sunpaq/monkc4Linux)
+
+[4 Mac     - Xcode on MacOS](https://github.com/sunpaq/monkc4Mac)
+
+[5 Win32   - Eclipse on Windows](https://github.com/sunpaq/monkc4Win32)
 
 	i usurally develop MonkC on Mac OS use Xcode
 	so the Mac version will be the latest one.
