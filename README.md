@@ -5,13 +5,12 @@ a toolkit for OOP programming in C language
 
 ## Overview
 
-**Monk-C**, is a toolkit for OOP programming use pure C (static library). the aim of Monk-C is to support OOP in pure C with some tiny C macros, functions and even a light preprocessor. Monk-C is inspired by Apple Objective-C and gcc builtin "Constructing Calls". It is tiny and primitive but full of fun. I use it to play with my RaspberryPi and it really vary suitable for the ARM/Linux based embeded systems. It is open source under **BSD** license(3-clause license). I written it under the X86/Linux platform and X86/MacOS ARM/Linux is also fully tested and supportted both 32bit and 64bit.
+**Monk-C**, is a toolkit for OOP programming use pure C (static library). the aim of Monk-C is to support OOP in pure C with some tiny C macros, functions and even a light preprocessor (optional). Monk-C is inspired by Apple Objective-C and gcc builtin "Constructing Calls". It is tiny and primitive but full of fun. I use it to play with my RaspberryPi and it really vary suitable for the ARM/Linux based embeded systems. It is open source under **BSD** license(3-clause license). I written it under the X86/Linux platform and X86/MacOS ARM/Linux is also fully tested and supportted both 32bit and 64bit.
 
 ###### Monk-C is based on **C99** standard
-
 ###### No stable version released now, developing commit: 0.1.140223
 
-#### supported platforms:
+## Supported platforms:
 
 	[CPUArch/OS/Compiler]
 
@@ -28,10 +27,207 @@ a toolkit for OOP programming in C language
 	ARM32/FreeBSD/clang                         On Working (RaspberryPi)
 	ARM32/Linux/gcc&clang    					OK (RaspberryPi/Debian)
 	ARM32/iOS/clang								OK
-	ARM32/Android/clang							On Working
+	ARM32/Android/clang							OK (NDK build)
 
 	ARM64/Linux/gcc&clang    					On Working
 	ARM64/iOS/clang								On Working
+
+	PowerPC64/FreeBSD/clang                     On Working (iMac G5)
+
+## Documents:
+
+###### 1 [wiki page](https://github.com/sunpaq/monkc/wiki) on github
+###### 2 [PDF doc](https://github.com/sunpaq/monkc/tree/master/doc) (on writing)
+###### 3 Infos at this page
+
+## Play with Monk-C use IDEs (template project):
+
+[1 Android - Eclipse on Linux/Windows](https://github.com/sunpaq/monkc4Android)
+
+[2 iOS     - Xcode on MacOS](https://github.com/sunpaq/monkc4iOS)
+
+[3 Linux   - Eclipse on Linux](https://github.com/sunpaq/monkc4Linux)
+
+[4 Mac     - Xcode on MacOS](https://github.com/sunpaq/monkc4Mac)
+
+[5 Win32   - Eclipse on Windows](https://github.com/sunpaq/monkc4Win32)
+
+	i usurally develop MonkC on Mac OS use Xcode
+	so the Mac version will be the latest one.
+
+## Syntax
+
+**Monk-C** use "MC" as the prefix.
+
+
+#### declear interface - write in .h file
+
+	#include "monkc.h"
+	#include "BirdFather.h"
+
+	//avoid multi-defines
+	#ifndef Bird_
+	#define Bird_
+
+	//class define
+	monkc(Bird);
+		char* name;
+		int type;
+	end(Bird);
+
+	//methods define
+	method(Bird, void, bye, xxx);
+	method(Bird, Bird*, initWithType, int type);
+	method(Bird, void, fly, xxx);
+	method(Bird, int, fatherAge, xxx);
+
+	#endif
+	
+####protocol file (Flyable.p)
+
+	binding(Flyable, void, duckFly, xxx);
+	binding(Flyable, void, chickenFly, xxx);
+
+#### implement methods - write in .c file
+		
+	#include "Bird.h"
+
+	//called by runtime, initialize the class data
+	initer(Bird)
+	{
+		//new your super by hand!
+		obj->super = new(BirdFather);
+		obj->type = 3;
+		debug_logt("Bird", "[%p] init called\n", obj);
+		return obj;
+	}
+
+	//public method implements
+	method(Bird, void, bye, xxx)
+	{
+		debug_logt(nameof(obj), "[%p] bye called\n", obj);
+		recycle(obj->super);
+	}
+
+	//private C function
+	static void funcA(Bird* obj, int arg1)
+	{
+		debug_log("i am local function A\n");
+	}
+
+	//protocol you comply with
+	protocol(Flyable, void, duckFly, xxx)
+	{
+		debug_log("%s\n", "Bird:Duck GuaGuaGua fly");
+	}
+
+	protocol(Flyable, void, chickenFly, xxx)		
+	{
+		debug_log("%s\n", "Bird:Chicken JiJiJi fly");
+	}
+
+	method(Bird, Bird*, initWithType, int type)
+	{
+		obj->type = type;
+		return obj;
+	}
+
+	method(Bird, int, fatherAge, xxx)
+	{
+		int fage = cast(BirdFather, obj->super)->age;
+		debug_logt(nameof(obj), "my father age is: %d\n", fage);
+		return fage;
+	}
+
+	method(Bird, void, fly, xxx)
+	{
+		debug_log("Bird[%p->%p]: default fly type %d\n", obj, obj->super, obj->type);
+		funcA(obj, 100);
+	}
+
+	//must have. binding methods at runtime.
+	loader(Bird)
+	{
+		debug_logt(nameofc(class), "load called\n");
+
+		//protocol itself is just a header file
+		#include "Flyable.p"
+
+		//DO NOT WRITE THEM BY HAND!
+		//YOU CAN COPY ALL THE METHODS DECLEARED IN HEADER FILE
+		//AND CHANGE "method->binding"
+
+		binding(Bird, Bird*, initWithType, int type);
+		binding(Bird, void, bye, xxx);
+		binding(Bird, void, fly, xxx);
+		binding(Bird, int, fatherAge, xxx);
+		return claz;
+	}
+
+####Dynamically calling method
+
+	it just like the Objective-C. sending message instead of function call.
+
+	Bird* bird = new(Bird);
+	ff(bird, fly, nil);
+
+####Statically calling method
+	
+	C style: 	Bird_fly(bird, 0, fly, nil);
+	Macro:		call(bird, Bird, fly, nil);
+
+#### main entry
+
+	int main(int argc, char const *argv[])
+	{
+		LOG_LEVEL = MC_VERBOSE;
+		//your code here
+		return 0;
+	}
+
+	global log level:
+	you can set the global variable LOG_LEVEL to:
+	MC_SILENT		//no log outputed
+	MC_ERROR_ONLY  //error log only
+	MC_DEBUG 		//error log and debug log
+	MC_VERBOSE     //error log and debug log and runtime log
+
+	you can use:
+	error_log()
+	debug_log()
+	runtime_log()
+	to output logs. parameter is same as printf(char* fmt, ...)
+
+####Macros and runtime functions often used
+
+---
+
+1. monkc
+2. end
+3. initer
+4. loader
+5. method
+6. protocol
+7. binding
+8. new
+9. call
+10. ff
+11. retain
+12. release
+13. recycle
+14. obj
+15. claz
+16. xxx
+
+---
+
+Total only **16** words.[^1]
+
+## Hack the MonkC runtime on UNIX-like system use command line tools
+
+#### recomand code editor:
+	Sublime Text 
+	(you can use any editor. but some one have auto-complete function will help a lot)
 
 #### need these tools:
     gmake - this is needed on FreeBSD
@@ -41,18 +237,6 @@ a toolkit for OOP programming in C language
 	clang - I strongly recommand use this C compiler. 
 	        because i found it can report more detailed error infomations
 	flex - this is needed to build the 'mcpp' preprocessor for monkc
-
-#### recomand code editor:
-	Sublime Text 
-	(you can use any editor. but some one have auto-complete function will help a lot)
-
-#### IDE support (template project):
-
-	all templete project in /IDESupport folder
-	here is the IDEs:
-	1. Xcode   			(MacOS)
-	2. Eclipse 			(Linux/Windows)
-	3. VisualStudio12 	(Windows)
 
 #### how to compile and install (command line):
 
@@ -87,182 +271,9 @@ a toolkit for OOP programming in C language
 	   the output binary will be 'exec' in the build folder
 	  (see the examples folder for more details)
 
-## Syntax
-**Monk-C** use "MC" as the prefix.
-#### main entry
+##For more infomation please goto [wiki page](https://github.com/sunpaq/monkc/wiki) on github
 
-	int main(int argc, char const *argv[])
-	{
-		LOG_LEVEL = MC_VERBOSE;
-		//your code here
-		return 0;
-	}
-
-	global log level:
-	you can set the global variable LOG_LEVEL to:
-	MC_SILENT		//no log outputed
-	MC_ERROR_ONLY  //error log only
-	MC_DEBUG 		//error log and debug log
-	MC_VERBOSE     //error log and debug log and runtime log
-
-	you can use:
-	error_log()
-	debug_log()
-	runtime_log()
-	to output logs. parameter is same as printf(char* fmt, ...)
-
-#### declear interface - write in .h file
-
-	#include "monkc.h" ---> must include (can be global setted use "-include" option of compiler)
-	#include "BirdFather.h"	 ---> super class
-
-	#ifndef Bird_ ---> avoid multi-defines (can be auto generated by IDE)
-	#define Bird_
-
-	implements(Flyable); ---> optional protocol mark (do nothing just a mark)
-	extends(BirdFather); ---> optional super class mark (do nothing just a mark)
-
-	monkc(Bird); ---> class data begin
-		char* name;
-		int type;
-	end(Bird); ---> class data end
-
-	method(Bird, void, bye, xxx); ---> class public method list begin
-	method(Bird, Bird*, initWithType, int type);
-	method(Bird, void, fly, xxx);
-	method(Bird, int, fatherAge, xxx); ---> class public method list end
-
-	#endif ---> avoid multi-defines
-	
-#### implement methods - write in .c file
-		
-	#include "Bird.h"
-
-	initer(Bird) ---> must have. initialize the class data
-	{
-		obj->super = new(BirdFather); ---> new your super by hand!
-		obj->type = 3;
-		debug_logt("Bird", "[%p] init called\n", obj);
-		return obj;
-	}
-
-	method(Bird, void, bye, xxx) ---> 1.public method implements
-	{
-		debug_logt(nameof(obj), "[%p] bye called\n", obj);
-		recycle(obj->super);
-	}
-
-	static void funcA(Bird* obj, int arg1) ---> 2.private C function
-	{
-		debug_log("i am local function A\n");
-	}
-
-	protocol(Flyable, void, duckFly, xxx) ---> 3.protocol method you comply with
-	{
-		debug_log("%s\n", "Bird:Duck GuaGuaGua fly");
-	}
-
-	protocol(Flyable, void, chickenFly, xxx)		
-	{
-		debug_log("%s\n", "Bird:Chicken JiJiJi fly");
-	}
-
-	method(Bird, Bird*, initWithType, int type)
-	{
-		obj->type = type;
-		return obj;
-	}
-
-	method(Bird, int, fatherAge, xxx)
-	{
-		int fage = cast(BirdFather, obj->super)->age;
-		debug_logt(nameof(obj), "my father age is: %d\n", fage);
-		return fage;
-	}
-
-	method(Bird, void, fly, xxx)
-	{
-		debug_log("Bird[%p->%p]: default fly type %d\n", obj, obj->super, obj->type);
-		funcA(obj, 100);
-	}
-
-	loader(Bird) ---> must have. binding methods at runtime.
-	{
-		debug_logt(nameofc(class), "load called\n");
-		#include "Flyable.p" ---> protocol itself is just a header file
-
-		//DO NOT WRITE THEM BY HAND!
-		//YOU CAN COPY ALL THE METHODS DECLEARED IN HEADER FILE
-		//AND CHANGE "method->binding"
-		binding(Bird, Bird*, initWithType, int type);
-		binding(Bird, void, bye, xxx);
-		binding(Bird, void, fly, xxx);
-		binding(Bird, int, fatherAge, xxx);
-		return claz;
-	}
-
-####Dynamically calling method
-
-	it just like the Objective-C. sending message instead of function call.
-
-	Bird* bird = new(Bird);
-	ff(bird, fly, nil);
-
-####Statically calling method
-	
-	C style: 	Bird_fly(bird, 0, fly, nil);
-	Macro:		call(bird, Bird, fly, nil);
-
-####Macros and runtime functions often used
-
----
-
-1. monkc
-2. end
-3. initer
-4. loader
-5. method
-6. protocol
-7. binding
-8. new
-9. call
-10. ff
-11. retain
-12. release
-13. recycle
-14. obj
-15. claz
-16. xxx
-
----
-
-Total only **16** words.[^1]
-
-####protocol file
-
-	Flyable.p:
-
-	binding(Flyable, void, duckFly, xxx);
-	binding(Flyable, void, chickenFly, xxx);
-
-
-######the BIND part (include in .c file):
-
-	loader(Bird)
-	{
-		debug_logt(class->name, "load called\n");
-		#include "Flyable.p"
-
-		binding(Bird, Bird*, initWithType, int type);
-		binding(Bird, void, bye, xxx);
-		binding(Bird, void, fly, xxx);
-		binding(Bird, int, fatherAge, xxx);
-		return claz;
-	}
-
-####For more infomation please goto [wiki page](https://github.com/sunpaq/monkc/wiki) on github
-
-####TODO list:
+##TODO list:
 
 	1. add type convert to preprocessor mcpp
 
