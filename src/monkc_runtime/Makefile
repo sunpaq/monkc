@@ -7,8 +7,8 @@ ARCH=$(strip $(shell uname -m))
 OS=$(strip $(shell uname -s))
 
 #-w -Wno-unused-variable -Wno-return-type
-CC=clang -g -Wall
-AS=as
+CC=clang -g -Wall -v
+AS=clang -S 
 
 ASMFILE=MCRuntimeAsm_IA32.asm
 ifeq ($(ARCH),x86_64)
@@ -34,6 +34,11 @@ endif
 ifeq ($(ARCH),amd64)
 ifeq ($(OS),FreeBSD)
 	ASMFILE=MCRuntimeAsm_X8664.asm
+endif
+endif
+ifeq ($(ARCH),powerpc)
+ifeq ($(OS),FreeBSD)
+	ASMFILE=MCRuntimeAsm_PowerPC64.S
 endif
 endif
 ifeq ($(ARCH),i386)

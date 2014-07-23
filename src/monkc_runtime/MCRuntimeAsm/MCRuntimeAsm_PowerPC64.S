@@ -26,22 +26,26 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 /*
-infos about PowerPC 64 platform:
+infos about PowerPC 64 platform: (from IBM Knowledge Center)
+	
+link register --> 
+r3 r4 
 
-stack-align: 	public(16byte) non-public(16byte)
-frame-pointer: 	fp is r11 in ARM mode / r7 in thumb mode
-keep-fp:		-mapcs-frame will keep the fp not to be optimized out
+ldarx  RT, RA, RB --> data, RA+RB=EA (effective-address)
+stdcx. RS, RA, RB --> data, RA+RB=EA
+
+cmpi BF, L, RA, SI --> ConditionField, (32bit=0), reg, immidiate
 */
 
 .text
 .globl _push_jump
 .p2align 4 			
 _push_jump:
-	cmp 0,0,r1,0
+	cmp 0,3,0x0
 	beq 0f
-	b r4
+	b 4
 0:
-	b lr
+	blr
 
 
 /*
@@ -123,32 +127,32 @@ return 0 success
 .globl	mc_atomic_get_integer
 .p2align 4, 0x90
 mc_atomic_get_integer:
-	lwarx v1, [a1]
-	mr r0, v1
-	b lr
+	lwarx 5,0,3
+	mr 0, 5
+	blr
 
 .text
 .globl	mc_atomic_get_pointer
 .p2align 4, 0x90
 mc_atomic_get_pointer:
-	lwarx v1, [a1]
-	mr r0, v1
-	b lr
+	ldarx 5,0,3
+	mr 0, 5
+	blr
 
 .text
 .globl	mc_atomic_set_integer
 .p2align 4, 0x90
 mc_atomic_set_integer:
-	stdcx v1, a3, [a1]
-	mr r0, v1
-	b lr
+	stwcx. 5,3,4
+	mr 0, 1
+	blr
 
 
 .text
 .globl	mc_atomic_set_pointer
 .p2align 4, 0x90
 mc_atomic_set_pointer:
-	stdcx v1, a3, [a1]
-	mr r0, v1
-	b lr
+	stdcx. 5,3,4
+	mr 0, 1
+	blr
 
