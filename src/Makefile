@@ -24,7 +24,7 @@ install: clean
 	cd ..
 	cd $(LEMONTEA_PATH) && $(MAKE) && $(MAKE) install
 	cd ..
-	cd $(MCPP_PATH) && $(MAKE) && sudo $(MAKE) install
+	cd $(MCPP_PATH) && $(MAKE) && $(MAKE) install
 	cd ..
 	cd $(MCBUILD_PATH) && $(MAKE) install
 	cd ..

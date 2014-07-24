@@ -7,7 +7,7 @@ void jumpTarget(mo const this, const void* entry, int arg1, int arg2)
 	printf("arg2 %d\n", arg2);
 
 	if(count==100)return;
-	_clean_jump2(make_msg(this, entry), 300, ++count);
+	//_clean_jump2(make_msg(this, entry), 300, ++count);
 }
 
 void TargetVoid()

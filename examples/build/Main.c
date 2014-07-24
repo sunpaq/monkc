@@ -24,9 +24,9 @@ void testMonkC()
     LittleBird* abird = hew(LittleBird, 506760431);
     
     //static call methods
-    //LittleBird_fly(abird, abird, nil, nil);
-    //LittleBird_eat(abird, abird, nil, nil);
-    //LittleBird_swim(abird, abird, nil, nil);
+    LittleBird_fly(abird, 0, nil);
+    LittleBird_eat(abird, 0, nil);
+    LittleBird_swim(abird,0, nil);
     
     //dynamic call methods
     fh(abird,fly, 101491, nil);
@@ -77,7 +77,7 @@ void test(MCContext* context)
 	printf("%s\n", "ctl+c to exit");
 	printf("%s\n", "----------");
 
-	int selection = call(context,
+	char selection = call(context,
 		MCContext,
 		showMenuAndGetSelectionChar, 
 		5,
@@ -114,7 +114,7 @@ void test(MCContext* context)
 
 int main(int argc, char const *argv[])
 {
-		LOG_LEVEL = MC_DEBUG;
+		LOG_LEVEL = MC_VERBOSE;
 		monkc_runtime_check();
 //		test_method_jumpping();
 		test_object_life_cycle();

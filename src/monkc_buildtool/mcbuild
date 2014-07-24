@@ -7,7 +7,7 @@ dumpBuild()
 	echo 'OBJS = $(patsubst %.c, %.o, $(MODULES))' >> build/Makefile                        
 	echo 'LINK_HEAD = -I/usr/local/include/monkc -I/usr/local/include/lemontea' >> build/Makefile    
 	echo 'LINK_BIN = -lpthread -L/usr/local/lib -lmonkc -llemontea' >> build/Makefile
-	echo 'CC = clang -g -w -Wall -Wno-unused-variable -Wno-return-type' >> build/Makefile             
+	echo 'CC = gcc -g -w -Wall -Wno-unused-variable -Wno-return-type' >> build/Makefile             
 	echo 'AS = as' >> build/Makefile
 	echo 'LEX = mcpp' >> build/Makefile                                               
 	echo 'exec:$(OBJS)' >> build/Makefile

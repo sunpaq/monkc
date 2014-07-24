@@ -7,8 +7,8 @@ ARCH=$(strip $(shell uname -m))
 OS=$(strip $(shell uname -s))
 
 #-w -Wno-unused-variable -Wno-return-type
-CC=clang -g -Wall -v
-AS=clang -S 
+CC=gcc -g -Wall
+AS=as 
 
 ASMFILE=MCRuntimeAsm_IA32.asm
 ifeq ($(ARCH),x86_64)

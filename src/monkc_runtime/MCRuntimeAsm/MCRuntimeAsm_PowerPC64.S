@@ -41,9 +41,9 @@ cmpi BF, L, RA, SI --> ConditionField, (32bit=0), reg, immidiate
 .globl _push_jump
 .p2align 4 			
 _push_jump:
-	cmp 0,3,0x0
+	cmpi 0,0,3,0
 	beq 0f
-	b 4
+	ba [4]
 0:
 	blr
 
@@ -128,23 +128,27 @@ return 0 success
 .p2align 4, 0x90
 mc_atomic_get_integer:
 	lwarx 5,0,3
-	mr 0, 5
+	mr 3, 5
 	blr
 
 .text
 .globl	mc_atomic_get_pointer
 .p2align 4, 0x90
 mc_atomic_get_pointer:
-	ldarx 5,0,3
-	mr 0, 5
+	lwarx 5,0,3
+	mr 3, 5
 	blr
 
 .text
 .globl	mc_atomic_set_integer
 .p2align 4, 0x90
 mc_atomic_set_integer:
-	stwcx. 5,3,4
-	mr 0, 1
+	stwcx. 5,0,3
+	bne 0f
+	li 3, 0
+	blr
+0:
+	li 3, 1
 	blr
 
 
@@ -152,7 +156,10 @@ mc_atomic_set_integer:
 .globl	mc_atomic_set_pointer
 .p2align 4, 0x90
 mc_atomic_set_pointer:
-	stdcx. 5,3,4
-	mr 0, 1
+	stwcx. 5,0,3
+	bne 1f
+	li 3, 0
+1:
+	li 3, 1
 	blr
 
