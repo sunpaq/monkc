@@ -44,8 +44,9 @@ method(Bird, int, fatherAge, xxx)
 
 method(Bird, void, fly, xxx)
 {
-	debug_log("Bird[%p->%p]: default fly type %d\n", obj, obj->super, obj->type);
-	funcA(obj, 100);
+  //debug_log("Bird[%p->%p]: default fly type %d\n", obj, obj->super, obj->type);
+  //funcA(obj, 100);
+  printf("Bird flying");
 }
 
 //

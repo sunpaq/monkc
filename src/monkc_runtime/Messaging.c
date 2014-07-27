@@ -113,7 +113,11 @@ mc_message _response_to_h(const mo obj, const char* methodname, unsigned hashval
 					if(mc_compare_key(met_first_hit->key, methodname) == 0){
 						tmpmsg.object = obj_first_hit;
                         tmpmsg.addr = met_first_hit->value;
-						runtime_log("[first hit]return a message[%s/%s]\n", tmpmsg.object->isa->item->key, methodname);
+						runtime_log("[first hit]return a message[%s/%s(%p/%p)]\n", 
+                                                            tmpmsg.object->isa->item->key, 
+                                                            methodname,
+                                                            tmpmsg.object,
+                                                            tmpmsg.addr);
 						return tmpmsg;}
 				}
 				if(mc_compare_key(met_item->key, methodname) == 0){
