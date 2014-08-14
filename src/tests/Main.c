@@ -6,7 +6,7 @@
 
 int main(int argc, char const *argv[])
 {
-	LOG_LEVEL = MC_VERBOSE;
+	LOG_LEVEL = MC_DEBUG;
 	//while(1){
 
 	test_blockpool();

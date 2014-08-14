@@ -15,14 +15,127 @@ they are [LGPL2.1] maybe that will be the problem
 #include <xcb/xcb.h>
 #include <stdio.h>
 #include <stdlib.h>
- 
+
+//global draw context
+xcb_connection_t    *c;
+xcb_screen_t        *s;
+xcb_window_t         w;
+xcb_gcontext_t       g;
+xcb_generic_event_t *e;
+
+//--------------------
+#include "monkc.h"
+#include "MCArray.h"
+
+monkc(MCPoint);
+    double x;
+    double y;
+end(MCPoint);
+
+monkc(MCSize);
+    double width;
+    double height;
+end(MCSize);
+
+monkc(MCRect);
+    MCPoint origin;
+    MCSize size;
+end(MCRect);
+
+inline MCRect mcrect(double x, double y, double width, double height)
+{
+    MCRect frame;
+    frame.origin.x = x;
+    frame.origin.y = y;
+    frame.size.width = width;
+    frame.size.height = height;
+    return frame;
+}
+
+monkc(MCNode);
+    MCRect frame;
+    struct MCNode_struct *parent;
+    MCArray *children;
+end(MCNode);
+
+method(MCNode, MCNode*, initWithFrame, MCRect frame);
+method(MCNode, MCNode*, addChild, MCNode* child);
+method(MCNode, void, draw, xxx);
+
+initer(MCNode)
+{
+    obj->super = nil;
+    obj->children = new(MCArray);
+    return obj;
+}
+
+method(MCNode, void, bye, xxx)
+{
+    //clean up
+    release(obj->children);
+}
+
+method(MCNode, MCNode*, initWithFrame, MCRect frame)
+{
+    obj.frame = frame;
+    return obj;
+}
+
+method(MCNode, MCNode*, addChild, MCNode* child)
+{
+    retain(child);
+    call(obj->children, MCArray, addItem, child);
+    return child;
+}
+
+static draw_use_xcb(xcb_rectangle_t *xcb_rect)
+{
+    xcb_poly_fill_rectangle(c, w, g, 1, xcb_rect);
+}
+
+method(MCNode, void, draw, xxx)
+{
+    //draw self
+    draw_use_xcb(&obj.frame);
+    //draw children
+    int i;
+    for(i=0; i<obj->children.count; i++)
+    {
+        MCNode* child = obj->children[i];
+        if(child)
+	  call(child, MCNode, draw, nil);
+    }
+    return;
+}
+
+loader(MCNode)
+{
+    binding(MCNode, MCNode*, initWithFrame, MCRect frame);
+    binding(MCNode, MCNode*, addChild, MCNode* child);
+    binding(MCNode, void, draw, xxx);
+    return claz;
+}
+
+//--------------------
+void drawAll()
+{
+    MCNode* root = new(MCNode);
+    ff(root, initWithFrame, mcrect(0,0,20,20));
+
+    MCNode* node1 = new(MCNode);
+    ff(node1, initWithFrame, mcrect(0,0,10,10));
+    ff(root, addChild, node1);
+
+    ff(root, draw, nil);
+}
+
 int main(void)
 {
-  xcb_connection_t    *c;
-  xcb_screen_t        *s;
-  xcb_window_t         w;
-  xcb_gcontext_t       g;
-  xcb_generic_event_t *e;
+  //xcb_connection_t    *c;
+  //xcb_screen_t        *s;
+  //xcb_window_t         w;
+  //xcb_gcontext_t       g;
+  //xcb_generic_event_t *e;
   uint32_t             mask;
   uint32_t             values[2];
   int                  done = 0;
@@ -65,6 +178,9 @@ int main(void)
     switch (e->response_type & ~0x80) {
     case XCB_EXPOSE:    /* draw or redraw the window */
       xcb_poly_fill_rectangle(c, w, g,  1, &r);
+
+      drawAll();
+
       xcb_flush(c);
       break;
     case XCB_KEY_PRESS:  /* exit on key press */

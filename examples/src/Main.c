@@ -22,7 +22,9 @@ void testMonkC()
 {
     //new a instance
     LittleBird* abird = new(LittleBird);
-    
+    LittleBird* bbird = new(LittleBird);
+    release(bbird);
+
     //static call methods
     LittleBird_fly(abird, 0, nil);
     LittleBird_eat(abird, 0, nil);
