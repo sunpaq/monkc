@@ -228,7 +228,9 @@ Total only **16** words.[^1]
 ## Hack the MonkC runtime on UNIX-like system use command line tools
 
 #### recomand code editor:
-	Sublime Text 
+	Sublime Text
+	Atom
+	Vim/Emacs (with plugins)
 	(you can use any editor. but some one have auto-complete function will help a lot)
 
 #### need these tools:
