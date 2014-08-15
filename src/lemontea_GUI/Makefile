@@ -1,8 +1,8 @@
 
 OBJS = XCB_example.o
 
-LINK_HEAD = -I/usr/local/include/monkc -I/opt/local/include/
-LINK_BIN = -lpthread -L/usr/local/lib -lmonkc -L/opt/local/lib -lxcb
+LINK_HEAD = -I/usr/local/include/monkc -I/usr/local/include/lemontea -I/opt/local/include/
+LINK_BIN = -lpthread -L/usr/local/lib -lmonkc -llemontea -L/opt/local/lib -lxcb
 
 CC = clang -O -g -w -Wall -Wno-unused-variable -Wno-return-type
 AS = as

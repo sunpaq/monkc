@@ -77,7 +77,7 @@ method(MCNode, void, bye, xxx)
 
 method(MCNode, MCNode*, initWithFrame, MCRect frame)
 {
-    obj.frame = frame;
+    obj->frame = frame;
     return obj;
 }
 
@@ -96,14 +96,18 @@ static draw_use_xcb(xcb_rectangle_t *xcb_rect)
 method(MCNode, void, draw, xxx)
 {
     //draw self
-    draw_use_xcb(&obj.frame);
+    xcb_rectangle_t rect = {obj->frame.origin.x,
+                            obj->frame.origin.y,
+                            obj->frame.size.width,
+                            obj->frame.size.height};
+    draw_use_xcb(&rect);
     //draw children
     int i;
-    for(i=0; i<obj->children.count; i++)
+    for(i=0; i<obj->children->count; i++)
     {
-        MCNode* child = obj->children[i];
+        MCNode* child = call(obj->children, MCArray, getItemByIndex, i);
         if(child)
-	  call(child, MCNode, draw, nil);
+          call(child, MCNode, draw, nil);
     }
     return;
 }
@@ -120,7 +124,7 @@ loader(MCNode)
 void drawAll()
 {
     MCNode* root = new(MCNode);
-    ff(root, initWithFrame, mcrect(0,0,20,20));
+    ff(root, initWithFrame, mcrect(30,30,120,120));
 
     MCNode* node1 = new(MCNode);
     ff(node1, initWithFrame, mcrect(0,0,10,10));
@@ -140,7 +144,7 @@ int main(void)
   uint32_t             values[2];
   int                  done = 0;
   xcb_rectangle_t      r = { 20, 20, 60, 60 };
- 
+
                         /* open connection with the server */
   c = xcb_connect(NULL,NULL);
   if (xcb_connection_has_error(c)) {
@@ -149,7 +153,7 @@ int main(void)
   }
                         /* get the first screen */
   s = xcb_setup_roots_iterator( xcb_get_setup(c) ).data;
- 
+
                        /* create black graphics context */
   g = xcb_generate_id(c);
   w = s->root;
@@ -157,7 +161,7 @@ int main(void)
   values[0] = s->black_pixel;
   values[1] = 0;
   xcb_create_gc(c, g, w, mask, values);
- 
+
                        /* create window */
   w = xcb_generate_id(c);
   mask = XCB_CW_BACK_PIXEL | XCB_CW_EVENT_MASK;
@@ -167,17 +171,17 @@ int main(void)
                     10, 10, 100, 100, 1,
                     XCB_WINDOW_CLASS_INPUT_OUTPUT, s->root_visual,
                     mask, values);
- 
+
                         /* map (show) the window */
   xcb_map_window(c, w);
- 
+
   xcb_flush(c);
- 
+
                         /* event loop */
   while (!done && (e = xcb_wait_for_event(c))) {
     switch (e->response_type & ~0x80) {
     case XCB_EXPOSE:    /* draw or redraw the window */
-      xcb_poly_fill_rectangle(c, w, g,  1, &r);
+      //xcb_poly_fill_rectangle(c, w, g,  1, &r);
 
       drawAll();
 
@@ -191,6 +195,6 @@ int main(void)
   }
                         /* close connection to server */
   xcb_disconnect(c);
- 
+
   return 0;
 }
