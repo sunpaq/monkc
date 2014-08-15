@@ -9,4 +9,5 @@ clean:
 	rm -f lex.yy.c mcpp core
 
 install:
+	mkdir -p $(BINPATH)
 	cp mcpp $(BINPATH)
