@@ -75,7 +75,8 @@ a toolkit for OOP programming in C language
 		int type;
 	end(Bird);
 
-	//methods define
+	//methods define Monk-C methods need at lease ONE argument
+	//if you have no idea to design one, use "xxx" to fill the blank
 	method(Bird, void, bye, xxx);
 	method(Bird, Bird*, initWithType, int type);
 	method(Bird, void, fly, xxx);
