@@ -168,7 +168,7 @@ int main(void)
   values[0] = s->white_pixel;
   values[1] = XCB_EVENT_MASK_EXPOSURE | XCB_EVENT_MASK_KEY_PRESS;
   xcb_create_window(c, s->root_depth, w, s->root,
-                    10, 10, 100, 100, 1,
+                    10, 10, 400, 300, 1,
                     XCB_WINDOW_CLASS_INPUT_OUTPUT, s->root_visual,
                     mask, values);
 
