@@ -279,11 +279,11 @@ Total only **16** words.[^1]
 
 ##TODO list:
 
-	1. add type convert to preprocessor mcpp
+	1. add type check/convert to preprocessor mcpp
 
 	2. add auto binding to preprocessor mcpp
 
-	3. add arg type check to preprocessor mcpp
+	3. add memory leak detector to preprocessor mcpp
 
 	4. lemontea_WEB
 
