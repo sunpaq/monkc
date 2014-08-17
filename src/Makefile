@@ -1,6 +1,7 @@
 BINPATH 	= /usr/local/bin
 RUNTIME_PATH 	= ./monkc_runtime
 LEMONTEA_PATH 	= ./lemontea
+GEMONTEA_PATH 	= ./lemontea_GUI
 MCPP_PATH 	= ./monkc_preprocessor
 MCBUILD_PATH 	= ./monkc_buildtool
 TESTPATH	= ./tests
@@ -38,6 +39,8 @@ clean:
 	cd $(RUNTIME_PATH) && $(MAKE) clean
 	cd ..
 	cd $(LEMONTEA_PATH) && $(MAKE) clean
+	cd ..
+	cd $(GEMONTEA_PATH) && $(MAKE) clean
 	cd ..
 	cd $(TESTPATH) && $(MAKE) clean
 	cd ..
