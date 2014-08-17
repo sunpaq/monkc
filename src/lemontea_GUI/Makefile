@@ -1,5 +1,5 @@
 
-OBJS = XCB_example.o
+OBJS = MCUIMainLoop.o MCUIBase.o
 
 #LINK_HEAD = -I/usr/local/include/monkc -I/usr/local/include/lemontea -I/opt/local/include/
 #LINK_BIN = -lpthread -L/usr/local/lib -lmonkc -llemontea -L/opt/local/lib -lxcb
@@ -13,8 +13,11 @@ AS = as
 exec:$(OBJS)
 	$(CC) -o exec $(OBJS) $(LINK_BIN)
 
-XCB_example.o:XCB_example.c
-	$(CC) -c XCB_example.c $(LINK_HEAD)
+MCUIBase.o:MCUIBase.c
+	$(CC) -c MCUIBase.c $(LINK_HEAD)
+
+MCUIMainLoop.o:MCUIMainLoop.c
+	$(CC) -c MCUIMainLoop.c $(LINK_HEAD)
 
 clean:
 	rm -f exec $(OBJS)
