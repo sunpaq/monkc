@@ -122,7 +122,7 @@ a toolkit for OOP programming in C language
 	
 	method(Bird, Bird*, findBird, xxx)
 	{
-	        return obj;
+		return obj;
 	}
 
 	//private C function
@@ -142,7 +142,7 @@ a toolkit for OOP programming in C language
 		debug_log("%s\n", "Bird:Chicken JiJiJi fly");
 	}
 
-        //public method implements
+	//public method implements
 	method(Bird, Bird*, initWithType, int type)
 	{
 		obj->type = type;
