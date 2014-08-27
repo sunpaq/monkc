@@ -120,7 +120,7 @@ a toolkit for OOP programming in C language
 	//[findClassname] is an anchor mehtod for the child instance find super instance
 	//and directly access its data (see wiki for more info)
 	
-        method(Bird, Bird*, findBird, xxx)
+	method(Bird, Bird*, findBird, xxx)
 	{
 	        return obj;
 	}
