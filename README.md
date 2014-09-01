@@ -78,6 +78,8 @@ a toolkit for OOP programming in C language
 	//methods define
 	//Monk-C methods need at lease ONE argument
 	//if you have no idea to design one, use "xxx" to fill the blank
+	
+	method(Bird, Bird*, findBird, xxx);
 	method(Bird, void, bye, xxx);
 	method(Bird, Bird*, initWithType, int type);
 	method(Bird, void, fly, xxx);
@@ -103,12 +105,24 @@ a toolkit for OOP programming in C language
 		debug_logt("Bird", "[%p] init called\n", obj);
 		return obj;
 	}
-
-	//public method implements
+	
+	//<special used method>
+	//[bye] is called when instance reference count became 0
+	//this is the callback for clean up
+	
 	method(Bird, void, bye, xxx)
 	{
 		debug_logt(nameof(obj), "[%p] bye called\n", obj);
 		recycle(obj->super);
+	}
+	
+	//<special used method>
+	//[findClassname] is an anchor mehtod for the child instance find super instance
+	//and directly access its data (see wiki for more info)
+	
+	method(Bird, Bird*, findBird, xxx)
+	{
+		return obj;
 	}
 
 	//private C function
@@ -128,6 +142,7 @@ a toolkit for OOP programming in C language
 		debug_log("%s\n", "Bird:Chicken JiJiJi fly");
 	}
 
+	//public method implements
 	method(Bird, Bird*, initWithType, int type)
 	{
 		obj->type = type;
