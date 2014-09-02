@@ -24,32 +24,28 @@ they are [LGPL2.1] maybe that will be the problem
 #include "MCXCBContext.h"
 
 //--------------------
-void drawAll()
-{
-    MCNode* root = new(MCNode);
-    ff(root, initWithFrame, mc_rect(30,30,120,120));
-
-    MCNode* node1 = new(MCNode);
-    ff(node1, initWithFrame, mc_rect(0,0,10,10));
-    ff(root, addChild, node1);
-
-    ff(root, draw, nil);
-}
-
 int main(void)
 {
   MCXCBContext* ctx = MCXCBContext_instance();
 
-  int                  done = 0;
-  xcb_generic_event_t *event;
+  MCNode* root = new(MCNode);
+  MCNode* node1 = new(MCNode);
+  ff(root, initWithFrame, mc_rect(30,30,120,120));
+  ff(node1, initWithFrame, mc_rect(0,0,10,10));
+  ff(root, addChild, node1);
+
+  int done = 0;
+  xcb_generic_event_t       *event;
+  xcb_motion_notify_event_t *mevent;
 
   while (!done && (event = xcb_wait_for_event(ctx->connection))) {
     switch (event->response_type & ~0x80) {
     case XCB_EXPOSE:
-
-      drawAll();
-      //MCXCBContext_flush();
-
+      ff(root, draw, nil);
+      break;
+    case XCB_MOTION_NOTIFY:
+      mevent = event;
+      MCPoint point = {};
       break;
     case XCB_KEY_PRESS:
       done = 1;

@@ -30,16 +30,18 @@ typedef enum {
     GC_DASH_OFFSET,
     GC_DASH_LIST,
     GC_ARC_MODE,
+    GC_ENUM_MAX
 } MCXCBContextMask;
 
 monkc(MCXCBContext);
+    MCRect              rootrect;
     xcb_connection_t    *connection;
     xcb_screen_t        *screen;
     xcb_drawable_t      window;
     xcb_void_cookie_t   cookie;
     xcb_gcontext_t      gctx;
     uint32_t            mask;
-    uint32_t            value[1];
+    uint32_t            value[GC_ENUM_MAX];
 end(MCXCBContext);
 
 extern MCXCBContext* MCXCBContext_instance();

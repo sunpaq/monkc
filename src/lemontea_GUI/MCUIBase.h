@@ -3,25 +3,38 @@
 #ifndef _MCUIBase_
 #define _MCUIBase_
 
-monkc(MCPoint);
+typedef struct MCPoint_struct {
     double x;
     double y;
-end(MCPoint);
+} MCPoint;
 
-monkc(MCSize);
+typedef struct MCSize_struct {
     double width;
     double height;
-end(MCSize);
+} MCSize;
 
-monkc(MCRect);
+typedef struct MCRect_struct {
     MCPoint origin;
     MCSize size;
-end(MCRect);
+} MCRect;
+
+typedef struct MCColor_struct {
+    unsigned R;
+    unsigned G;
+    unsigned B;
+} MCColor;
 
 extern inline MCRect mc_rect(double x, double y, double width, double height);
+extern inline MCColor mc_color(unsigned R, unsigned G, unsigned B);
 
-extern const MCPoint mc_point_zero;
-extern const MCSize  mc_size_zero;
-extern const MCRect  mc_rect_zero;
+const MCPoint mc_point_zero;
+const MCSize  mc_size_zero;
+const MCRect  mc_rect_zero;
+
+const MCColor mc_color_white;
+const MCColor mc_color_black;
+const MCColor mc_color_red;
+const MCColor mc_color_green;
+const MCColor mc_color_blue;
 
 #endif

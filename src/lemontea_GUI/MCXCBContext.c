@@ -46,6 +46,8 @@ static printScreenInfo(xcb_screen_t* screen)
 initer(MCXCBContext)
 {
     obj->super = nil;
+    MCRect rect = {{0,0},{800,600}};
+    obj->rootrect = rect;
 
     //connet to X server
     obj->connection = xcb_connect(NULL, NULL);
@@ -61,26 +63,37 @@ initer(MCXCBContext)
 #endif
 
     //create window
+    obj->mask = XCB_CW_BACK_PIXEL
+              | XCB_CW_EVENT_MASK;
+    obj->value[0] = obj->screen->white_pixel;
+    obj->value[1] = XCB_EVENT_MASK_EXPOSURE
+                  | XCB_EVENT_MASK_KEY_PRESS
+                  | XCB_EVENT_MASK_POINTER_MOTION
+                  | XCB_EVENT_MASK_BUTTON_MOTION;
     obj->window = xcb_generate_id(obj->connection);
     xcb_create_window(obj->connection,
-                      XCB_COPY_FROM_PARENT, //depth same as root
+                      XCB_COPY_FROM_PARENT,                  //depth same as root
                       obj->window,
                       obj->screen->root,
-                      0, 0,                 //x, y
-                      800, 600,             //width, height
-                      1,                    //border_width
+                      obj->rootrect.origin.x,                //x, y
+                      obj->rootrect.origin.y,
+                      obj->rootrect.size.width,
+                      obj->rootrect.size.height,             //width, height
+                      1,                                     //border_width
                       XCB_WINDOW_CLASS_INPUT_OUTPUT,
                       obj->screen->root_visual,
-                      0,
-                      NULL);
+                      obj->mask,
+                      obj->value);
 
     //show (map) the window on screen
     xcb_map_window(obj->connection, obj->window);
 
     //create graphic context
     obj->gctx = xcb_generate_id(obj->connection);
-    obj->mask = XCB_GC_FOREGROUND;
+    obj->mask = XCB_GC_FOREGROUND
+              | XCB_GC_GRAPHICS_EXPOSURES;
     obj->value[0] = obj->screen->black_pixel;
+    obj->value[1] = 0;
     xcb_create_gc(obj->connection,
                   obj->gctx,
                   obj->screen->root,

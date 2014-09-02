@@ -60,6 +60,8 @@ method(MCNode, void, draw, xxx)
         if(child)
           call(child, MCNode, draw, nil);
     }
+
+    MCXCBContext_flush();
     return;
 }
 
