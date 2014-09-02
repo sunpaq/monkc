@@ -1,9 +1,11 @@
 
 OBJS = MCUIMainLoop.o MCUIBase.o MCNode.o MCXCBContext.o
 
+#for Mac OS install libxcb use macports
 LINK_HEAD = -I/usr/local/include/monkc -I/usr/local/include/lemontea -I/opt/local/include/
 LINK_BIN = -lpthread -L/usr/local/lib -lmonkc -llemontea -L/opt/local/lib -lxcb
 
+#for UNIX-like OS
 #LINK_HEAD = -I/usr/local/include/monkc -I/usr/local/include/lemontea -I/usr/local/include/
 #LINK_BIN = -lpthread -L/usr/local/lib -lmonkc -llemontea -lxcb
 
