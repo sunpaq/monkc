@@ -46,8 +46,8 @@ static printScreenInfo(xcb_screen_t* screen)
 initer(MCXCBContext)
 {
     obj->super = nil;
-    MCRect rect = {{0,0},{800,600}};
-    obj->rootrect = rect;
+    obj->winframe = mc_rect(0,0,800,600);
+    obj->wincolor = mc_color(41,41,41);
 
     //connet to X server
     obj->connection = xcb_connect(NULL, NULL);
@@ -62,24 +62,34 @@ initer(MCXCBContext)
     printScreenInfo(obj->screen);
 #endif
 
+    //alloc background color
+    MCColorReply* bgreply = MCXCBContext_allocColorFor(obj, obj->wincolor);
+    MCPixel bgpixel = bgreply->pixel;
+    free(bgreply);
+
+    //alloc foreground color
+    MCColorReply* fgreply = MCXCBContext_allocColorFor(obj, mc_color(255,255,255));
+    MCPixel fgpixel = fgreply->pixel;
+    free(fgreply);
+
     //create window
     obj->mask = XCB_CW_BACK_PIXEL
               | XCB_CW_EVENT_MASK;
-    obj->value[0] = obj->screen->white_pixel;
+    obj->value[0] = bgpixel;
     obj->value[1] = XCB_EVENT_MASK_EXPOSURE
                   | XCB_EVENT_MASK_KEY_PRESS
                   | XCB_EVENT_MASK_POINTER_MOTION
                   | XCB_EVENT_MASK_BUTTON_MOTION;
     obj->window = xcb_generate_id(obj->connection);
     xcb_create_window(obj->connection,
-                      XCB_COPY_FROM_PARENT,                  //depth same as root
+                      XCB_COPY_FROM_PARENT,               //depth same as root
                       obj->window,
                       obj->screen->root,
-                      obj->rootrect.origin.x,                //x, y
-                      obj->rootrect.origin.y,
-                      obj->rootrect.size.width,
-                      obj->rootrect.size.height,             //width, height
-                      1,                                     //border_width
+                      obj->winframe.origin.x,             //x, y
+                      obj->winframe.origin.y,
+                      obj->winframe.size.width,
+                      obj->winframe.size.height,          //width, height
+                      1,                                  //border_width
                       XCB_WINDOW_CLASS_INPUT_OUTPUT,
                       obj->screen->root_visual,
                       obj->mask,
@@ -92,7 +102,7 @@ initer(MCXCBContext)
     obj->gctx = xcb_generate_id(obj->connection);
     obj->mask = XCB_GC_FOREGROUND
               | XCB_GC_GRAPHICS_EXPOSURES;
-    obj->value[0] = obj->screen->black_pixel;
+    obj->value[0] = fgpixel;
     obj->value[1] = 0;
     xcb_create_gc(obj->connection,
                   obj->gctx,
@@ -125,13 +135,27 @@ void MCXCBContext_releaseInstance()
 
 void MCXCBContext_flush()
 {
-    MCXCBContext_instance();
     xcb_flush(_instance->connection);
+}
+
+MCColorReply* MCXCBContext_allocColor(MCColor color)
+{
+    return MCXCBContext_allocColorFor(_instance, color);
+}
+
+MCColorReply* MCXCBContext_allocColorFor(MCXCBContext* obj, MCColor color)
+{
+    MCColorReply* pointer;
+    xcb_alloc_color_cookie_t cookie;
+    cookie = xcb_alloc_color(obj->connection,
+                             obj->screen->default_colormap,
+                             color.R*255, color.G*255, color.B*255);
+    pointer = xcb_alloc_color_reply(obj->connection, cookie, NULL);
+    return pointer;
 }
 
 void MCXCBContext_fillRect(MCRect *rect)
 {
-    MCXCBContext_instance();
     if(_instance && rect) {
         xcb_rectangle_t xrect = {rect->origin.x,
                                  rect->origin.y,
@@ -143,6 +167,23 @@ void MCXCBContext_fillRect(MCRect *rect)
                                 _instance->gctx,
                                 1, &xrect);
     }
+}
+
+void MCXCBContext_fillRectColor(MCRect *rect, MCColor color)
+{
+    MCPixel drawpixel = MCXCBContext_allocColorFor(_instance, color)->pixel;
+    call(_instance, MCXCBContext, changeAttribute, XCB_GC_FOREGROUND, drawpixel);
+    MCXCBContext_fillRect(rect);
+}
+
+void MCXCBContext_clearRect(MCRect *rect)
+{
+    MCXCBContext_fillRectColor(rect, _instance->wincolor);
+}
+
+void MCXCBContext_clear()
+{
+    MCXCBContext_fillRectColor(&_instance->winframe, _instance->wincolor);
 }
 
 method(MCXCBContext, void, bye, xxx)
@@ -164,7 +205,7 @@ method(MCXCBContext, void, updateAttribute, xxx)
                                 obj->value);
 }
 
-method(MCXCBContext, void, changeAttribute, uint32_t mask, const uint32_t *valuelist)
+method(MCXCBContext, void, changeAttribute, MCXCBContextMask mask, const uint32_t *valuelist)
 {
     obj->mask = mask;
     obj->value[0] = valuelist;

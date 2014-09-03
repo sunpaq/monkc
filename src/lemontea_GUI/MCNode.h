@@ -9,6 +9,7 @@ monkc(MCNode);
     MCRect frame;
     MCPoint anchor;
     MCPoint position;
+    MCColor color;
     struct MCNode_struct *parent;
     MCArray *children;
 end(MCNode);

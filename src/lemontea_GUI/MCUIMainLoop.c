@@ -28,29 +28,55 @@ int main(void)
 {
   MCXCBContext* ctx = MCXCBContext_instance();
 
-  MCNode* root = new(MCNode);
+  MCNode* root  = new(MCNode);
   MCNode* node1 = new(MCNode);
-  ff(root, initWithFrame, mc_rect(30,30,120,120));
-  ff(node1, initWithFrame, mc_rect(0,0,10,10));
-  ff(root, addChild, node1);
+  MCNode* node2 = new(MCNode);
+  MCNode* node3 = new(MCNode);
+
+  root->color  = mc_color_blue;
+  node1->color = mc_color_green;
+  node2->color = mc_color_red;
+  node3->color = mc_color_mix(mc_color_red, mc_color_green);
+
+  ff(root,  initWithFrame, mc_rect(30,30,160,120));
+  ff(node1, initWithFrame, mc_rect(0,0,80,60));
+  ff(node2, initWithFrame, mc_rect(0,0,40,30));
+  ff(node3, initWithFrame, mc_rect(0,0,20,15));
+
+  node1->anchor = mc_point(0.5, 0.5);
+  node2->anchor = mc_point(0.5, 0.5);
+  node3->anchor = mc_point(0.5, 0.5);
+  node1->position = mc_point(80, 60);
+  node2->position = mc_point(40, 30);
+  node3->position = mc_point(20, 15);
+
+  ff(root,  addChild, node1);
+  ff(node1, addChild, node2);
+  ff(node2, addChild, node3);
 
   int done = 0;
   xcb_generic_event_t       *event;
-  xcb_motion_notify_event_t *mevent;
+  xcb_motion_notify_event_t *motion;
 
   while (!done && (event = xcb_wait_for_event(ctx->connection))) {
     switch (event->response_type & ~0x80) {
     case XCB_EXPOSE:
-      ff(root, draw, nil);
+      MCXCBContext_clear();
       break;
     case XCB_MOTION_NOTIFY:
-      mevent = event;
-      MCPoint point = {};
+      MCXCBContext_clearRect(&root->frame);
+      motion = event;
+      MCPoint point = mc_point(motion->event_x, motion->event_y);
+      mc_point_copy(&root->frame.origin, point);
       break;
     case XCB_KEY_PRESS:
-      done = 1;
+      //done = 1;
+      root->color = mc_color_mix(root->color, mc_color(0,0,25.5));
       break;
     }
+
+    ff(root, draw, nil);
+    MCXCBContext_flush();
     free(event);
   }
 

@@ -1,13 +1,28 @@
 
 #include "MCUIBase.h"
 
+inline MCPoint mc_point(double x, double y)
+{
+    MCPoint point = {x, y};
+    return point;
+}
+
+inline MCPoint* mc_point_copy(MCPoint* A, MCPoint B)
+{
+    A->x = B.x;
+    A->y = B.y;
+    return A;
+}
+
+inline MCSize  mc_size(double width, double height)
+{
+    MCSize point = {width, height};
+    return point;
+}
+
 inline MCRect mc_rect(double x, double y, double width, double height)
 {
-    MCRect frame;
-    frame.origin.x = x;
-    frame.origin.y = y;
-    frame.size.width = width;
-    frame.size.height = height;
+    MCRect frame = {{x, y}, {width, height}};
     return frame;
 }
 
@@ -15,6 +30,12 @@ inline MCColor mc_color(unsigned R, unsigned G, unsigned B)
 {
     MCColor color = {R, G, B};
     return color;
+}
+
+inline MCColor mc_color_mix(MCColor A, MCColor B)
+{
+    MCColor mixed = {A.R+B.R, A.G+B.G, A.B+B.B};
+    return mixed;
 }
 
 const MCPoint mc_point_zero = {0,0};
