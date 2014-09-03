@@ -83,8 +83,18 @@ method(MCNode, void, draw, xxx)
     return;
 }
 
+protocol(MCTouchbleProtocol, void, onTouchEvent, MCPoint point)
+{
+    MCNode* node = cast(MCNode*, obj);
+    if(mc_rect_contains(&node->frame, point)) {
+        node->color = mc_color_mix(node->color, mc_color(128,0,0));
+    }
+}
+
 loader(MCNode)
 {
+    #include "MCTouchbleProtocol.h"
+
     binding(MCNode, void, bye, xxx);
     binding(MCNode, MCNode*, findMCNode, xxx);
     binding(MCNode, MCNode*, initWithFrame, MCRect frame);

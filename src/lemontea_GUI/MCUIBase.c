@@ -14,7 +14,7 @@ inline MCPoint* mc_point_copy(MCPoint* A, MCPoint B)
     return A;
 }
 
-inline MCSize  mc_size(double width, double height)
+inline MCSize mc_size(double width, double height)
 {
     MCSize point = {width, height};
     return point;
@@ -24,6 +24,16 @@ inline MCRect mc_rect(double x, double y, double width, double height)
 {
     MCRect frame = {{x, y}, {width, height}};
     return frame;
+}
+
+inline int mc_rect_contains(MCRect* rect, MCPoint point)
+{
+    double deltax = point.x - rect->origin.x;
+    double deltay = point.y - rect->origin.y;
+    if(deltax >= 0 && deltax <= rect->size.width)
+       if(deltay >= 0 && deltay <= rect->size.height)
+         return 1;
+    return 0;
 }
 
 inline MCColor mc_color(unsigned R, unsigned G, unsigned B)

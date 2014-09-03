@@ -54,9 +54,13 @@ int main(void)
   ff(node1, addChild, node2);
   ff(node2, addChild, node3);
 
+  ff(ctx, registerTouchObserver, root);
+
   int done = 0;
   xcb_generic_event_t       *event;
   xcb_motion_notify_event_t *motion;
+
+  MCPoint mouse;
 
   while (!done && (event = xcb_wait_for_event(ctx->connection))) {
     switch (event->response_type & ~0x80) {
@@ -64,10 +68,15 @@ int main(void)
       MCXCBContext_clear();
       break;
     case XCB_MOTION_NOTIFY:
-      MCXCBContext_clearRect(&root->frame);
+      //MCXCBContext_clearRect(&root->frame);
       motion = event;
-      MCPoint point = mc_point(motion->event_x, motion->event_y);
-      mc_point_copy(&root->frame.origin, point);
+      mouse = mc_point(motion->event_x, motion->event_y);
+      //mc_point_copy(&root->frame.origin, mouse);
+      break;
+    case XCB_BUTTON_PRESS:
+      ff(ctx, notifyTouchObservers, mouse);
+      //if(mc_rect_contains(&root->frame, mouse))
+      //    root->color = mc_color_mix(root->color, mc_color(0,0,128));
       break;
     case XCB_KEY_PRESS:
       //done = 1;
@@ -80,6 +89,7 @@ int main(void)
     free(event);
   }
 
+  ff(ctx, unregisterTouchObserver, root);
   MCXCBContext_releaseInstance();
   return 0;
 }

@@ -4,6 +4,7 @@
 #ifndef MCNode_
 #define MCNode_
 
+implements(MCTouchbleProtocol);
 monkc(MCNode);
     //always abslute position from window left top 0,0
     MCRect frame;

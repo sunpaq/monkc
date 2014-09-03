@@ -2,6 +2,7 @@
 
 #include "monkc.h"
 #include "MCUIBase.h"
+#include "MCArray.h"
 
 #ifndef MCXCBContext_
 #define MCXCBContext_
@@ -47,6 +48,7 @@ monkc(MCXCBContext);
     xcb_gcontext_t      gctx;
     uint32_t            mask;
     uint32_t            value[GC_ENUM_MAX];
+    MCArray*            touch_observers;
 end(MCXCBContext);
 
 //MCXCBContext is singleton class
@@ -71,5 +73,10 @@ method(MCXCBContext, MCXCBContext*, findMCXCBContext, xxx);
 //handle attribute
 method(MCXCBContext, void, changeAttribute, MCXCBContextMask mask, const uint32_t *valuelist);
 method(MCXCBContext, void, updateAttribute, xxx);
+
+//touch event
+method(MCXCBContext, void, registerTouchObserver, mo observer);
+method(MCXCBContext, void, unregisterTouchObserver, mo observer);
+method(MCXCBContext, void, notifyTouchObservers, MCPoint point);
 
 #endif

@@ -24,11 +24,13 @@ typedef struct MCColor_struct {
     unsigned B;
 } MCColor;
 
-extern inline MCPoint mc_point(double x, double y);
+extern inline MCPoint  mc_point(double x, double y);
 extern inline MCPoint* mc_point_copy(MCPoint* A, MCPoint B);
 
 extern inline MCSize  mc_size(double width, double height);
 extern inline MCRect  mc_rect(double x, double y, double width, double height);
+extern inline int     mc_rect_contains(MCRect* rect, MCPoint point);
+
 extern inline MCColor mc_color(unsigned R, unsigned G, unsigned B);
 extern inline MCColor mc_color_mix(MCColor A, MCColor B);
 

@@ -48,6 +48,7 @@ initer(MCXCBContext)
     obj->super = nil;
     obj->winframe = mc_rect(0,0,800,600);
     obj->wincolor = mc_color(41,41,41);
+    obj->touch_observers = new(MCArray);
 
     //connet to X server
     obj->connection = xcb_connect(NULL, NULL);
@@ -78,6 +79,7 @@ initer(MCXCBContext)
     obj->value[0] = bgpixel;
     obj->value[1] = XCB_EVENT_MASK_EXPOSURE
                   | XCB_EVENT_MASK_KEY_PRESS
+                  | XCB_EVENT_MASK_BUTTON_PRESS
                   | XCB_EVENT_MASK_POINTER_MOTION
                   | XCB_EVENT_MASK_BUTTON_MOTION;
     obj->window = xcb_generate_id(obj->connection);
@@ -212,12 +214,34 @@ method(MCXCBContext, void, changeAttribute, MCXCBContextMask mask, const uint32_
     call(obj, MCXCBContext, updateAttribute, nil);
 }
 
+method(MCXCBContext, void, registerTouchObserver, mo observer)
+{
+    call(obj->touch_observers, MCArray, addItem, observer);
+}
+
+method(MCXCBContext, void, unregisterTouchObserver, mo observer)
+{
+    call(obj->touch_observers, MCArray, removeItem, observer);
+}
+
+method(MCXCBContext, void, notifyTouchObservers, MCPoint point)
+{
+    MCArray* array = obj->touch_observers;
+    int i;
+    for(i=0; i<array->count; i++) {
+       mo item = call(array, MCArray, getItemByIndex, i);
+       ff(item, onTouchEvent, point);
+    }
+}
+
 loader(MCXCBContext)
 {
     binding(MCXCBContext, void, bye, xxx);
     binding(MCXCBContext, MCXCBContext*, findMCXCBContext, xxx);
     binding(MCXCBContext, void, updateAttribute, xxx);
     binding(MCXCBContext, void, changeAttribute, uint32_t mask, const uint32_t *valuelist);
-
+    binding(MCXCBContext, void, registerTouchObserver, mo observer);
+    binding(MCXCBContext, void, unregisterTouchObserver, mo observer);
+    binding(MCXCBContext, void, notifyTouchObservers, xxx);
     return claz;
 }
