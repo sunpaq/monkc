@@ -22,6 +22,7 @@ loader(MCArray)
 
 	binding(MCArray, void*, getItemByIndex, int index);
 	binding(MCArray, void, visiteEachBy, mc_message visitorFunction);
+	binding(MCArray, void, visiteEachWithData, lamdafunc visitorFunction, void* data);
 	return claz;
 }
 
@@ -45,7 +46,7 @@ static void expand_array(MCArray* obj)
 		memcpy(*newbuff, *(obj->buff), obj->size * sizeof(void*));
 		free(obj->buff);
 		obj->buff = newbuff;
-		printf("[MCArray] expand to (%d)\n", obj->size);
+		//printf("[MCArray] expand to (%d)\n", obj->size);
 	}
 }
 
@@ -117,14 +118,30 @@ method(MCArray, void*, getItemByIndex, int index)
 	return deref(obj->buff)[index];
 }
 
-method(MCArray, void, visiteEachBy, mc_message visitorFunction)
+//just an example
+void example_visitor1(_lamda, void* item, int index){}
+void example_visitor2(_lamda, void* item, int index, void* data){}
+
+method(MCArray, void, visiteEachBy, lamdafunc visitorFunction)
 {
 	int i;
 	for(i=0; i<(obj->size); i++){
 		void* eachItem = deref(obj->buff)[i];
 		if(eachItem)
-			_push_jump(make_msg(eachItem, visitorFunction.addr), eachItem, i);
-		else
-			printf("[MCArray] item(%d) is nil\n", i);
+			_push_jump(visitorFunction, eachItem, i);
+		//else
+			//printf("[MCArray] item(%d) is nil\n", i);
+	}
+}
+
+method(MCArray, void, visiteEachWithData, lamdafunc visitorFunction, void* data)
+{
+	int i;
+	for(i=0; i<(obj->size); i++){
+		void* eachItem = deref(obj->buff)[i];
+		if(eachItem)
+			_push_jump(visitorFunction, eachItem, i, data);
+		//else
+			//printf("[MCArray] item(%d) is nil\n", i);
 	}
 }

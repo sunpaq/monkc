@@ -6,9 +6,10 @@
 *.dia
 *.dat
 *.LinkFileList
+*.tar.gz
 Info.plist
 XcodeMonkC/MonkCAppXcodeTemplete/build/Release/MonkCAppXcodeTemplete
-
 XcodeMonkC/MonkCAppXcodeTemplete/build/Release/MonkCAppXcodeTemplete.dSYM/Contents/Resources/DWARF/MonkCAppXcodeTemplete
-
-.DS_Store
+src/lemontea/lemontea/
+src/monkc_runtime/monkc/
+example/build/

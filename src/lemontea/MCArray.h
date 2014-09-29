@@ -18,6 +18,9 @@ method(MCArray, MCArray*, removeItem, void* item);
 method(MCArray, MCArray*, removeItemByIndex, int index);
 method(MCArray, MCArray*, clear, xxx);
 method(MCArray, void*, getItemByIndex, int index);
-method(MCArray, void, visiteEachBy, mc_message visitorFunction);
+method(MCArray, void, visiteEachBy, lamdafunc visitorFunction);
+method(MCArray, void, visiteEachWithData, lamdafunc visitorFunction, void* data);
+void example_visitor1(_lamda, void* item, int index);
+void example_visitor2(_lamda, void* item, int index, void* data);
 
 #endif /* MCARRAY_H_ */

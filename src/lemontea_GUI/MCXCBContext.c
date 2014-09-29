@@ -224,14 +224,23 @@ method(MCXCBContext, void, unregisterTouchObserver, mo observer)
     call(obj->touch_observers, MCArray, removeItem, observer);
 }
 
+static void visiter(_lamda, void* item, int index, void* data)
+{
+    mo observer = cast(mo, item);
+    MCPoint* point = cast(MCPoint*, data);
+    ff(observer, onTouchEvent, *point);
+}
+
 method(MCXCBContext, void, notifyTouchObservers, MCPoint point)
 {
     MCArray* array = obj->touch_observers;
-    int i;
-    for(i=0; i<array->count; i++) {
-       mo item = call(array, MCArray, getItemByIndex, i);
-       ff(item, onTouchEvent, point);
-    }
+    ff(array, visiteEachWithData, lamda(visiter), &point);
+
+    // int i;
+    // for(i=0; i<array->count; i++) {
+    //    mo item = call(array, MCArray, getItemByIndex, i);
+    //    ff(item, onTouchEvent, point);
+    // }
 }
 
 loader(MCXCBContext)
