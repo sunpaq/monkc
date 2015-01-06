@@ -68,10 +68,10 @@ int main(void)
       MCXCBContext_clear();
       break;
     case XCB_MOTION_NOTIFY:
-      //MCXCBContext_clearRect(&root->frame);
+      MCXCBContext_clearRect(&root->frame);
       motion = event;
       mouse = mc_point(motion->event_x, motion->event_y);
-      //mc_point_copy(&root->frame.origin, mouse);
+      mc_point_copy(&root->frame.origin, mouse);
       break;
     case XCB_BUTTON_PRESS:
       ff(ctx, notifyTouchObservers, mouse);
