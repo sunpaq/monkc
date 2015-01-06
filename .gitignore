@@ -13,3 +13,4 @@ XcodeMonkC/MonkCAppXcodeTemplete/build/Release/MonkCAppXcodeTemplete.dSYM/Conten
 src/lemontea/lemontea/
 src/monkc_runtime/monkc/
 example/build/
+!binary
