@@ -36,7 +36,9 @@ int main(void)
   root->color  = mc_color_blue;
   node1->color = mc_color_green;
   node2->color = mc_color_red;
-  node3->color = mc_color_mix(mc_color_red, mc_color_green);
+
+  MCColor* colorp = ff(node3, access, S(color));
+  deref(colorp) = mc_color_mix(mc_color_red, mc_color_green);
 
   ff(root,  initWithFrame, mc_rect(30,30,160,120));
   ff(node1, initWithFrame, mc_rect(0,0,80,60));

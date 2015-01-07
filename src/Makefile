@@ -1,7 +1,7 @@
 BINPATH 	= /usr/local/bin
 RUNTIME_PATH 	= ./monkc_runtime
 LEMONTEA_PATH 	= ./lemontea
-GEMONTEA_PATH 	= ./lemontea_GUI
+GEMONTEA_PATH 	= ./lemontea_GUI/src
 MCPP_PATH 	= ./monkc_preprocessor
 MCBUILD_PATH 	= ./monkc_buildtool
 TESTPATH	= ./tests

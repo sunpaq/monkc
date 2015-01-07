@@ -21,12 +21,12 @@ void funcA(Bird* obj, int arg1)
 
 protocol(Flyable, void, duckFly, xxx)
 {
-	debug_log("%s:Duck GuaGuaGua fly\n", nameof(cast(mo, obj)));
+	debug_log("%s:Duck GuaGuaGua fly\n", nameof(rawobj));
 }
 
 protocol(Flyable, void, chickenFly, xxx)
 {
-	debug_log("%s:Chicken JiJiJi fly\n", nameof(cast(mo, obj)));
+	debug_log("%s:Chicken JiJiJi fly\n", nameof(rawobj));
 }
 
 method(Bird, Bird*, initWithType, int type)

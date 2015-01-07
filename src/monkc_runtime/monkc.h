@@ -71,6 +71,7 @@
 #endif
 #define xxx void* xxx
 #define S(value) #value
+#define SEQ(dest, src) (mc_compare_key(dest, src)==0)
 #define A_B(a, b) a##_##b
 
 typedef struct mc_hashitem_struct
@@ -133,7 +134,7 @@ mc_class* isa;\
 mc_block* block;\
 int ref_count;\
 mc_class* saved_isa;\
-mc_class* mode\
+mc_class* mode;
 
 #define end(cls) }cls;\
 mc_class* cls##_load(mc_class* const claz);\
@@ -157,7 +158,9 @@ typedef mc_object* (*initerFP)(mc_object*);
 #define hinding(cls, type, met, hash, ...)	_binding_h(claz, S(met), A_B(cls, met), hash)
 #define hverride(cls, type, met, hash, ...) _override_h(claz, S(met), A_B(cls, met), hash)
 #define method(cls, type, name, ...) 	type cls##_##name(cls* volatile obj, volatile void* entry, __VA_ARGS__)
-#define protocol(pro, type, name, ...)  static type pro##_##name(mo volatile obj, volatile void* entry, __VA_ARGS__)
+#define protocol(pro, type, name, ...)  static type pro##_##name(mo volatile rawobj, volatile void* entry, __VA_ARGS__)
+#define varscope(cls)                   cls* obj = ((cls*)rawobj)
+#define var(vname)                      (obj->vname)
 #define cast(type, obj) 				((type)obj)
 
 //for create object
