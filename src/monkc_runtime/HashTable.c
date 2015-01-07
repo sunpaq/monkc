@@ -27,7 +27,13 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "monkc.h"
 
-static const unsigned mc_hashtable_sizes[5] = {100, 200, 1000, 4000, 10000};
+static const unsigned mc_hashtable_sizes[5] = {
+	MC_HASHTABLE_SIZE_L1, 
+	MC_HASHTABLE_SIZE_L2, 
+	MC_HASHTABLE_SIZE_L3, 
+	MC_HASHTABLE_SIZE_L4, 
+	MC_HASHTABLE_SIZE_L5};
+	
 unsigned get_tablesize(const unsigned level)
 {
 	if(level>5){
