@@ -26,7 +26,7 @@ if [ "$1" = "" ]
 then
 	echo "1.mcbuild -c(--create)         //create a project at current path"
 	echo "2.mcbuild -s(--sync)           //sync src to build folder"
-	echo "3.cd ./build && make           //compile"
+	echo "3.make -C build                //compile source in subfolder <build>"
 fi
 if [ "$1" = "--create" ] || [ "$1" = "-c" ]
 then
@@ -35,7 +35,7 @@ then
 	dumpBuild
 	echo "1.[o] -c(--create)"
 	echo "2.[x] -s(--sync)"
-	echo "3.[x] cd ./build && make"
+	echo "3.[x] make -C build"
 fi
 if [ "$1" = "--sync" ] || [ "$1" = "-s" ]
 then
@@ -45,5 +45,5 @@ then
 	cp -v -f $(find ./src -name '*.h') build
 	echo "1.[o] -c(--create)"
 	echo "2.[o] -s(--sync)"
-	echo "3.[x] cd ./build && make"
+	echo "3.[x] make -C build"
 fi
