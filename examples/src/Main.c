@@ -124,10 +124,22 @@ void test(MCContext* context)
 		//case '1':mocha_syntex_test(context);break;
 		case '1':menu_drive_test(context);break;
 		//case '3':mocha_lib_test();break;
-		case '2':mocha_serversocket_test();break;
-		case '3':mocha_clientsocket_test(context);break;
-        case '4':testMonkC();break;
-        case '5':testLemontea();break;
+	        case '2':{
+		    char serverip[32];
+		    printf("input your ip:");
+		    ff(context, getUserInputString, serverip);
+                    mocha_serversocket_test(serverip);
+		    break;
+		}
+	        case '3':{
+		    char serverip[32];
+		    printf("input the server side ip you want connect:");
+		    ff(context, getUserInputString, serverip);
+		    mocha_clientsocket_test(context, serverip);
+	            break;
+		}
+	        case '4':testMonkC();break;
+                case '5':testLemontea();break;
         
 		//case '6':mocha_exception_test();break;
 		//case '7':test_MCThread();break;

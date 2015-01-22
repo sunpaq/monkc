@@ -2,10 +2,10 @@
 #include "MCSocket.h"
 #include "MCIO.h"
 
-void mocha_clientsocket_test(MCContext* context)
+void mocha_clientsocket_test(MCContext* context, const char* serverip)
 {
 	MCSocket* client = new(MCSocket);
-	ff(client, initWithTypeIpPort, MCSocket_Client_TCP, "127.0.0.1", "4000");
+	ff(client, initWithTypeIpPort, MCSocket_Client_TCP, serverip, "4000");
 
 	char sendbuff[1024];
 	//char recvbuff[1024];
@@ -34,10 +34,10 @@ static int readline(int fd, char* const recvbuff)
 	return -1;
 }
 
-void mocha_serversocket_test()
+void mocha_serversocket_test(const char* serverip)
 {
 	MCSocket* server = new(MCSocket);
-	ff(server, initWithTypeIpPort, MCSocket_Server_TCP, "127.0.0.1", "4000");
+	ff(server, initWithTypeIpPort, MCSocket_Server_TCP, serverip, "4000");
 
 	ff(server, listeningStart, nil);
 	printf("%s\n", "MC server start to listenning");
