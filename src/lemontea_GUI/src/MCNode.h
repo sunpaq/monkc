@@ -17,7 +17,6 @@ monkc(MCNode);
 end(MCNode);
 
 method(MCNode, void, bye, xxx);
-method(MCNode, MCNode*, findMCNode, xxx);
 method(MCNode, MCNode*, initWithFrame, MCRect frame);
 method(MCNode, MCNode*, initWithSize, MCSize size);
 method(MCNode, MCNode*, addChild, MCNode* child);

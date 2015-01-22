@@ -1,19 +1,15 @@
-binding(MCAccessbleProtocol, void*, access, const char* propertyName);
+binding(MCAccessbleProtocol, void*, access, const char* varname);
 
 /*
-protocol(MCAccessbleProtocol, void*, access, const char* propertyName)
+protocol(MCAccessbleProtocol, void*, access, const char* varname)
 {
-    MCNode* node = cast(MCNode*, obj);
-         if (SEQ(S(frame),    propertyName)) return addrof(node->frame);
-    else if (SEQ(S(anchor),   propertyName)) return addrof(node->anchor);
-    else if (SEQ(S(position), propertyName)) return addrof(node->position);
-    else if (SEQ(S(color),    propertyName)) return addrof(node->color);
-    else {
-        mc_message msg = _response_to(node->super, propertyName);
-        if (msg.object)
-            _push_jump(msg, propertyName);
-        else
-            return nil;
-    }
+    varscope(CLASS);
+    if (SEQ(S(AAAA), varname)) return addrof(obj->AAAA);
+    if (SEQ(S(BBBB), varname)) return addrof(obj->BBBB);
+    if (SEQ(S(CCCC), varname)) return addrof(obj->CCCC);
+    if (SEQ(S(DDDD), varname)) return addrof(obj->DDDD);
+    void* varp = nil;
+    varp = ff(obj->super, access, varname);
+    return varp;
 }
 */

@@ -17,15 +17,30 @@ initer(MCNode)
     return obj;
 }
 
+protocol(MCAccessbleProtocol, void*, access, const char* varname)
+{
+    varscope(MCNode);
+    if (SEQ(S(frame),    varname)) return addrof(obj->frame);
+    if (SEQ(S(anchor),   varname)) return addrof(obj->anchor);
+    if (SEQ(S(position), varname)) return addrof(obj->position);
+    if (SEQ(S(color),    varname)) return addrof(obj->color);
+    void* varp = nil;
+    varp = ff(obj->super, access, varname);
+    return varp;
+}
+
+protocol(MCTouchbleProtocol, void, onTouchEvent, MCPoint point)
+{
+    varscope(MCNode);
+    if(mc_rect_contains(addrof(obj->frame), point)) {
+        var(color) = mc_color_mix(obj->color, mc_color(128,0,0));
+    }
+}
+
 method(MCNode, void, bye, xxx)
 {
     //clean up
     release(var(children));
-}
-
-method(MCNode, MCNode*, findMCNode, xxx)
-{
-    return obj;
 }
 
 method(MCNode, MCNode*, initWithFrame, MCRect frame)
@@ -85,37 +100,11 @@ method(MCNode, void, draw, xxx)
     return;
 }
 
-protocol(MCTouchbleProtocol, void, onTouchEvent, MCPoint point)
-{
-    varscope(MCNode);
-    if(mc_rect_contains(addrof(obj->frame), point)) {
-        var(color) = mc_color_mix(obj->color, mc_color(128,0,0));
-    }
-}
-
-protocol(MCAccessbleProtocol, void*, access, const char* propertyName)
-{
-    varscope(MCNode);
-         if (SEQ(S(frame),    propertyName)) return addrof(obj->frame);
-    else if (SEQ(S(anchor),   propertyName)) return addrof(obj->anchor);
-    else if (SEQ(S(position), propertyName)) return addrof(obj->position);
-    else if (SEQ(S(color),    propertyName)) return addrof(obj->color);
-    else {
-        mc_message msg = _response_to(var(super), propertyName, 2);
-        if (msg.object)
-            _push_jump(msg, propertyName);
-        else
-            return nil;
-    }
-}
-
 loader(MCNode)
 {
-    #include "MCTouchbleProtocol.h"
     #include "MCAccessbleProtocol.h"
-
+    #include "MCTouchbleProtocol.h"
     binding(MCNode, void, bye, xxx);
-    binding(MCNode, MCNode*, findMCNode, xxx);
     binding(MCNode, MCNode*, initWithFrame, MCRect frame);
     binding(MCNode, MCNode*, initWithSize, MCSize size);
     binding(MCNode, MCNode*, addChild, MCNode* child);
