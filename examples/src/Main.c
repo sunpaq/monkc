@@ -48,6 +48,7 @@ void testMonkC()
 
 #include "MCString.h"
 #include "MCClock.h"
+#include "MCIO.h"
 
 void testLemontea()
 {
@@ -57,13 +58,13 @@ void testLemontea()
     ff(mcstr, add, " the third");
     ff(mcstr, add, " the forth\n");
     
-    int i;
-    for (i=0; i<100; i++) {
-        int old = LOG_LEVEL;
-        LOG_LEVEL = MC_ERROR_ONLY;
-        ff(mcstr, add, " a piece of string");
-        LOG_LEVEL = old;
-    }
+    // int i;
+    // for (i=0; i<100; i++) {
+    //     int old = LOG_LEVEL;
+    //     LOG_LEVEL = MC_ERROR_ONLY;
+    //     ff(mcstr, add, " a piece of string");
+    //     LOG_LEVEL = old;
+    // }
     ff(mcstr, print, nil);
     release(mcstr);
     
@@ -71,6 +72,28 @@ void testLemontea()
     ff(mcclock, printTime, nil);
     ff(mcclock, printCurrentGMTTime, nil);
     recycle(mcclock);
+
+    MCFile* afile = MCFile_newReadWrite("mcfile.txt", 1);
+    char buff[1024] = "this is a file";
+    int res = call(afile, MCFile, writeToBegin, 8, buff, 64);
+    printf("writeToBegin result: %d errno: %d\n", res, errno);
+    call(afile, MCFile, printAttribute, nil);
+    release(afile);
+
+    MCCharBuffer* charbuff = CopyToCharBuffer(NewMCCharBuffer(64*sizeof(char)), 
+    	"this is a stream make it longer to find out why it is cutted\n");
+    MCString* mcstring = ff(new(MCString), initWithCString, 
+    	"this is a stream make it longer to find out why it is cutted\n");
+    MCStream* stream = ff(new(MCStream), newWithPath, readwrite_fullbuffered, "mcstream.txt");
+    ff(stream, putCString, charbuff);
+    ff(stream, putMCString, mcstring);
+    //check it
+    printf("%s\n", charbuff->data);
+
+    release(stream);
+    ReleaseMCBuffer(charbuff);
+    release(mcstring);
+
 }
 
 void test(MCContext* context)
