@@ -51,8 +51,10 @@ static void get_chars_until_enter(char resultString[])
 	while((tc=getchar())!='\n'){
 		resultString[i]=tc;
 		i++;
+		putchar(tc);
 	}
 	resultString[i]='\0';
+	putchar(tc);
 }
 
 method(MCContext, void, bye, xxx)
