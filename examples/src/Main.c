@@ -87,8 +87,6 @@ void testLemontea()
     MCStream* stream = ff(new(MCStream), newWithPath, readwrite_fullbuffered, "mcstream.txt");
     ff(stream, putCString, charbuff);
     ff(stream, putMCString, mcstring);
-    //check it
-    printf("%s\n", charbuff->data);
 
     release(stream);
     ReleaseMCBuffer(charbuff);
