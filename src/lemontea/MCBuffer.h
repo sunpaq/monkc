@@ -29,6 +29,7 @@ typedef struct {
 }MCDoubleBuffer;
 
 MCCharBuffer* NewMCCharBuffer(size_t size);
+MCCharBuffer* CopyToCharBuffer(MCCharBuffer* buff, char* src);
 MCIntBuffer* NewMCIntBuffer(size_t size);
 MCUnsignedBuffer* NewMCUnsignedBuffer(size_t size);
 MCLongBuffer* NewMCLongBuffer(size_t size);

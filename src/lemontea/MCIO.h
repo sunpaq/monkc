@@ -13,6 +13,7 @@
 #include <time.h>
 #include <dirent.h>
 #include <ftw.h>
+#include <errno.h>
 
 /* MCFile */
 
@@ -25,8 +26,14 @@ monkc(MCFile);
 	void* buffer;
 	struct stat attribute;
 end(MCFile);
-
-method(MCFile, void, initWithPathName, char* pathname, int oflag);
+/*
+O_RDONLY
+O_WRONLY | O_TRUNC //truncate the file(have write permission) length to 0
+O_RDWR | O_TRUNC
+O_APPEND
+O_CREAT | O_EXCL //use together to create lock file! it is atomic operation
+*/
+method(MCFile, MCFile*, initWithPathName, char* pathname, int oflag);
 
 method(MCFile, size_t, readFromBegin, off_t offset, size_t nbytes);
 method(MCFile, size_t, readAtLastPosition, off_t offset, size_t nbytes);
@@ -114,8 +121,7 @@ monkc(MCByteStream) extends(MCStream);
 end(MCByteStream);
 
 method(MCByteStream, void, bye, xxx);
-method(MCByteStream, 
-MCByteStream*, newWithPath, MCStreamType type, char* path);
+method(MCByteStream, MCByteStream*, newWithPath, MCStreamType type, char* path);
 #endif
 
 /* MCStdinStream */

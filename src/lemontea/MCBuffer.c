@@ -7,6 +7,12 @@ MCCharBuffer* NewMCCharBuffer(size_t size)
 	return instance;
 }
 
+MCCharBuffer* CopyToCharBuffer(MCCharBuffer* buff, char* src)
+{
+	strcpy(buff->data, src);
+	return buff;
+}
+
 MCIntBuffer* NewMCIntBuffer(size_t size)
 {
 	MCIntBuffer* instance = (MCIntBuffer*)malloc(sizeof(MCIntBuffer)+size);

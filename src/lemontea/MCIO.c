@@ -4,7 +4,7 @@
 
 loader(MCFile)
 {
-binding(MCFile, void, initWithPathName, char* pathname, int oflag);
+binding(MCFile, MCFile*, initWithPathName, char* pathname, int oflag);
 
 binding(MCFile, int, readFromBegin, off_t offset, size_t nbytes);
 binding(MCFile, int, readAtLastPosition, off_t offset, size_t nbytes);
@@ -30,16 +30,15 @@ initer(MCFile)
 	return obj;
 }
 
-method(MCFile, 
-void, initWithPathName, char* pathname, int oflag)
+method(MCFile, MCFile*, initWithPathName, char* pathname, int oflag)
 {
 	if((obj->fd = open(pathname, oflag, 0774))==-1)
-		return;
+		return obj;
 	obj->pathname = pathname;
 	if(fstat(obj->fd, &obj->attribute)<0)
-		return;
+		return obj;
 	obj->buffer = malloc(obj->attribute.st_blksize*10);
-	return;
+	return obj;
 }
 
 // typedef enum _MCStreamType{
@@ -79,8 +78,7 @@ initer(MCStream)
 	return obj;
 }
 
-method(MCStream, 
-MCStream*, newWithPath, MCStreamType type, char* path)
+method(MCStream, MCStream*, newWithPath, MCStreamType type, char* path)
 {
 	//FILE *fopen(const char *restrict pathname, const char *restrict type);
 	//type:
@@ -135,8 +133,7 @@ initer(MCSelect)
 	return obj;
 }
 
-method(MCSelect, 
-void, initWithSecondAndMicrosec, long second, long microsecond)
+method(MCSelect, void, initWithSecondAndMicrosec, long second, long microsecond)
 {
 	//timeout.tv_sec
 	//timeout.tv_usec
@@ -253,23 +250,23 @@ mode_t MCFile_setNewFilePermissionMask4Process(mode_t cmask)
 
 MCFile* MCFile_newReadOnly(char* pathname)
 {
-	return ff(new(MCFile), newWithPathName, pathname, O_RDONLY|O_CREAT);
+	return ff(new(MCFile), initWithPathName, pathname, O_RDONLY|O_CREAT);
 }
 
 MCFile* MCFile_newWriteOnly(char* pathname, int isClear)
 {
 	if(isClear)
-		return ff(new(MCFile), newWithPathName, pathname, O_WRONLY|O_CREAT|O_TRUNC);
+		return ff(new(MCFile), initWithPathName, pathname, O_WRONLY|O_CREAT|O_TRUNC);
 	else
-		return ff(new(MCFile), newWithPathName, pathname, O_WRONLY|O_CREAT);
+		return ff(new(MCFile), initWithPathName, pathname, O_WRONLY|O_CREAT);
 }
 
 MCFile* MCFile_newReadWrite(char* pathname, int isClear)
 {
 	if(isClear)
-		return ff(new(MCFile), newWithPathName, pathname, O_RDWR|O_CREAT|O_TRUNC);
+		return ff(new(MCFile), initWithPathName, pathname, O_RDWR|O_CREAT|O_TRUNC);
 	else
-		return ff(new(MCFile), newWithPathName, pathname, O_RDWR|O_CREAT);
+		return ff(new(MCFile), initWithPathName, pathname, O_RDWR|O_CREAT);
 }
 
 int MCFile_createSymbolLink(char* pathname, char* linkname)
