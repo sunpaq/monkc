@@ -865,20 +865,98 @@ typedef struct mc_message_structmc_message_struct403,12873
 
 doc/index.html,0
 
-examples/build/Main.c,225
-void monkc_runtime_check()monkc_runtime_check10,167
-void testMonkC()testMonkC21,461
-void testLemontea()testLemontea53,1241
-void test(MCContext* context)test99,2842
-int main(int argc, char const *argv[])main152,4270
+examples/build/Bird.c,402
+initer(Bird)initer3,19
+method(Bird, void, bye, xxx)method11,150
+void funcA(Bird* obj, int arg1)funcA17,262
+protocol(Flyable, void, duckFly, xxx)protocol22,338
+protocol(Flyable, void, chickenFly, xxx)protocol27,443
+method(Bird, Bird*, initWithType, int type)method32,551
+method(Bird, int, fatherAge, xxx)method38,632
+method(Bird, void, fly, xxx)method45,795
+loader(Bird)loader107,2309
 
-examples/build/LittleBirdFather.c,319
-initer(LittleBirdFather)initer12,202
-method(LittleBirdFather, int, getAge, xxx)method18,285
-method(LittleBirdFather, void, fly, xxx)method23,348
-method(LittleBirdFather, void, hello_abs, mo receiver)method28,438
-method(LittleBirdFather, void, land_imp, xxx)method33,543
-loader(LittleBirdFather)loader38,638
+examples/build/Bird.h,191
+#define Bird_Bird_5,58
+implements(Flyable);Flyable7,73
+extends(BirdFather);BirdFather8,94
+monkc(Bird);Bird9,115
+	char* name;name10,128
+	int type;type11,141
+end(Bird);Bird12,152
+
+examples/build/BirdBase.c,122
+initer(BirdBase)initer11,156
+loader(BirdBase)loader16,194
+method(BirdBase, void, land_abs, mo receiver)method23,283
+
+examples/build/BirdBase.h,117
+#define example_BirdBase_hexample_BirdBase_h10,160
+monkc(BirdBase);BirdBase14,208
+end(BirdBase);BirdBase15,225
+
+examples/build/BirdCatA.c,258
+initer(BirdCatA)initer3,23
+method(Bird, void, catmethodA, xxx)method9,83
+method(Bird, void, catmethodB, xxx)method14,181
+method(Bird, void, catmethodC, xxx)method19,279
+method(Bird, void, catmethodD, xxx)method24,377
+loader(BirdCatA)loader29,475
+
+examples/build/BirdCatA.h,93
+#define BirdCatA_BirdCatA_5,56
+monkc(BirdCatA);BirdCatA7,75
+end(BirdCatA);BirdCatA8,92
+
+examples/build/BirdFather.c,278
+initer(BirdFather)initer3,25
+method(BirdFather, void, bye, xxx)method11,176
+method(BirdFather, void, flyhigh, xxx)method17,294
+method(BirdFather, void, fly, xxx)method22,389
+method(BirdFather, void, singAsong, char* asong)method27,470
+loader(BirdFather)loader32,577
+
+examples/build/BirdFather.h,126
+#define BirdFather_BirdFather_5,69
+monkc(BirdFather);BirdFather7,90
+	int age;age8,109
+end(BirdFather);BirdFather9,119
+
+examples/build/BirdGrandFather.c,308
+initer(BirdGrandFather)initer3,30
+method(BirdGrandFather, void, bye, xxx)method11,164
+method(BirdGrandFather, void, flyhigh, xxx)method16,265
+method(BirdGrandFather, void, fly, xxx)method21,365
+method(BirdGrandFather, void, singAsong, char* asong)method26,451
+loader(BirdGrandFather)loader31,563
+
+examples/build/BirdGrandFather.h,155
+#define BirdGrandFather_BirdGrandFather_4,46
+monkc(BirdGrandFather);BirdGrandFather6,72
+	int age;age7,96
+end(BirdGrandFather);BirdGrandFather8,106
+
+examples/build/BirdModeA.c,269
+initer(BirdModeA)initer3,24
+method(Bird, void, modemethodA, xxx)method8,60
+method(Bird, void, modemethodB, int type)method13,142
+method(Bird, void, modemethodC, xxx)method18,229
+method(Bird, void, modemethodD, xxx)method23,311
+loader(BirdModeA)loader28,393
+
+examples/build/BirdModeA.h,99
+#define BirdModeA_BirdModeA_5,57
+monkc(BirdModeA);BirdModeA7,77
+end(BirdModeA);BirdModeA8,95
+
+examples/build/ClientServerExample.c,206
+void mocha_clientsocket_test(MCContext* context)mocha_clientsocket_test5,74
+static int readline(int fd, char* const recvbuff)readline25,526
+void mocha_serversocket_test()mocha_serversocket_test37,772
+
+examples/build/ClientServerExample.h,0
+
+examples/build/Flyable.h,0
 
 examples/build/LittleBird.c,396
 initer(LittleBird)initer14,236
@@ -890,98 +968,31 @@ method(LittleBird, void, eat, xxx)method42,679
 method(LittleBird, void, hello_imp, xxx)method48,762
 loader(LittleBird)loader53,845
 
-examples/build/BirdBase.c,122
-initer(BirdBase)initer11,156
-loader(BirdBase)loader16,194
-method(BirdBase, void, land_abs, mo receiver)method23,295
-
-examples/build/BirdGrandFather.c,308
-initer(BirdGrandFather)initer3,30
-method(BirdGrandFather, void, bye, xxx)method11,164
-method(BirdGrandFather, void, flyhigh, xxx)method16,265
-method(BirdGrandFather, void, fly, xxx)method21,365
-method(BirdGrandFather, void, singAsong, char* asong)method26,451
-loader(BirdGrandFather)loader31,563
-
-examples/build/BirdFather.c,278
-initer(BirdFather)initer3,25
-method(BirdFather, void, bye, xxx)method11,176
-method(BirdFather, void, flyhigh, xxx)method17,294
-method(BirdFather, void, fly, xxx)method22,389
-method(BirdFather, void, singAsong, char* asong)method27,470
-loader(BirdFather)loader32,577
-
-examples/build/Bird.c,402
-initer(Bird)initer3,19
-method(Bird, void, bye, xxx)method11,150
-void funcA(Bird* obj, int arg1)funcA17,262
-protocol(Flyable, void, duckFly, xxx)protocol22,338
-protocol(Flyable, void, chickenFly, xxx)protocol27,436
-method(Bird, Bird*, initWithType, int type)method32,537
-method(Bird, int, fatherAge, xxx)method38,618
-method(Bird, void, fly, xxx)method45,781
-loader(Bird)loader107,2295
-
-examples/build/BirdCatA.c,258
-initer(BirdCatA)initer3,23
-method(Bird, void, catmethodA, xxx)method9,83
-method(Bird, void, catmethodB, xxx)method14,181
-method(Bird, void, catmethodC, xxx)method19,279
-method(Bird, void, catmethodD, xxx)method24,377
-loader(BirdCatA)loader29,475
-
-examples/build/ObjectLifeCycle.c,58
-void test_object_life_cycle()test_object_life_cycle4,31
-
-examples/build/MethodJumpping.c,178
-void jumpTarget(mo const this, const void* entry, int arg1, int arg2)jumpTarget3,29
-void TargetVoid()TargetVoid13,263
-void test_method_jumpping()test_method_jumpping20,373
-
-examples/build/MenuDrivenExample.c,62
-void menu_drive_test(MCContext* context)menu_drive_test3,32
-
-examples/build/ClientServerExample.c,248
-void mocha_clientsocket_test(MCContext* context, const char* serverip)mocha_clientsocket_test5,74
-static int readline(int fd, char* const recvbuff)readline25,568
-void mocha_serversocket_test(const char* clientip)mocha_serversocket_test37,814
-
-examples/build/BirdModeA.c,269
-initer(BirdModeA)initer3,24
-method(Bird, void, modemethodA, xxx)method8,60
-method(Bird, void, modemethodB, int type)method13,142
-method(Bird, void, modemethodC, xxx)method18,229
-method(Bird, void, modemethodD, xxx)method23,311
-loader(BirdModeA)loader28,393
-
-examples/build/ClientServerExample.h,0
-
-examples/build/BirdModeA.h,99
-#define BirdModeA_BirdModeA_5,57
-monkc(BirdModeA);BirdModeA7,77
-end(BirdModeA);BirdModeA8,95
-
-examples/build/LittleBirdFather.h,181
-#define MonkCAppXcodeTemplete_BirdFather_hMonkCAppXcodeTemplete_BirdFather_h10,192
-monkc(LittleBirdFather);LittleBirdFather14,256
-end(LittleBirdFather);LittleBirdFather15,281
-
 examples/build/LittleBird.h,169
 #define MonkCAppXcodeTemplete_Bird_hMonkCAppXcodeTemplete_Bird_h10,180
 monkc(LittleBird);LittleBird14,238
 char* name;name15,257
 end(LittleBird);LittleBird16,269
 
-examples/build/BirdBase.h,117
-#define example_BirdBase_hexample_BirdBase_h10,160
-monkc(BirdBase);BirdBase14,208
-end(BirdBase);BirdBase15,225
+examples/build/LittleBirdFather.c,319
+initer(LittleBirdFather)initer12,202
+method(LittleBirdFather, int, getAge, xxx)method18,285
+method(LittleBirdFather, void, fly, xxx)method23,348
+method(LittleBirdFather, void, hello_abs, mo receiver)method28,438
+method(LittleBirdFather, void, land_imp, xxx)method33,532
+loader(LittleBirdFather)loader38,627
 
-examples/build/BirdFather.h,126
-#define BirdFather_BirdFather_5,69
-monkc(BirdFather);BirdFather7,90
-	int age;age8,109
-end(BirdFather);BirdFather9,119
+examples/build/LittleBirdFather.h,181
+#define MonkCAppXcodeTemplete_BirdFather_hMonkCAppXcodeTemplete_BirdFather_h10,192
+monkc(LittleBirdFather);LittleBirdFather14,256
+end(LittleBirdFather);LittleBirdFather15,281
+
+examples/build/Main.c,225
+void monkc_runtime_check()monkc_runtime_check10,167
+void testMonkC()testMonkC21,461
+void testLemontea()testLemontea52,1146
+void test(MCContext* context)test76,1748
+int main(int argc, char const *argv[])main117,2782
 
 examples/build/Makefile,350
 MODULES = $(wildcard *.c)MODULES1,0
@@ -992,64 +1003,22 @@ CC = gcc -g -w -Wall -Wno-unused-variable -Wno-return-typeCC5,192
 AS = asAS6,251
 LEX = mcppLEX7,259
 
-examples/build/BirdGrandFather.h,155
-#define BirdGrandFather_BirdGrandFather_4,46
-monkc(BirdGrandFather);BirdGrandFather6,72
-	int age;age7,96
-end(BirdGrandFather);BirdGrandFather8,106
-
-examples/build/Bird.h,191
-#define Bird_Bird_5,58
-implements(Flyable);Flyable7,73
-extends(BirdFather);BirdFather8,94
-monkc(Bird);Bird9,115
-	char* name;name10,128
-	int type;type11,141
-end(Bird);Bird12,152
-
-examples/build/BirdCatA.h,93
-#define BirdCatA_BirdCatA_5,56
-monkc(BirdCatA);BirdCatA7,75
-end(BirdCatA);BirdCatA8,92
-
-examples/build/ObjectLifeCycle.h,0
-
-examples/build/MethodJumpping.h,0
+examples/build/MenuDrivenExample.c,62
+void menu_drive_test(MCContext* context)menu_drive_test3,32
 
 examples/build/MenuDrivenExample.h,0
 
-examples/build/Flyable.h,0
-
-examples/src/Main.c,225
-void monkc_runtime_check()monkc_runtime_check10,167
-void testMonkC()testMonkC21,461
-void testLemontea()testLemontea53,1164
-void test(MCContext* context)test99,2664
-int main(int argc, char const *argv[])main152,4070
-
-examples/src/ClientServerExample.c,248
-void mocha_clientsocket_test(MCContext* context, const char* serverip)mocha_clientsocket_test5,74
-static int readline(int fd, char* const recvbuff)readline25,545
-void mocha_serversocket_test(const char* clientip)mocha_serversocket_test37,791
-
-examples/src/ClientServerExample.h,0
-
-examples/src/MenuDrivenExample.c,62
-void menu_drive_test(MCContext* context)menu_drive_test3,32
-
-examples/src/MenuDrivenExample.h,0
-
-examples/src/MethodJumpping.c,178
+examples/build/MethodJumpping.c,178
 void jumpTarget(mo const this, const void* entry, int arg1, int arg2)jumpTarget3,29
 void TargetVoid()TargetVoid13,263
 void test_method_jumpping()test_method_jumpping20,373
 
-examples/src/MethodJumpping.h,0
+examples/build/MethodJumpping.h,0
 
-examples/src/ObjectLifeCycle.c,58
+examples/build/ObjectLifeCycle.c,58
 void test_object_life_cycle()test_object_life_cycle4,31
 
-examples/src/ObjectLifeCycle.h,0
+examples/build/ObjectLifeCycle.h,0
 
 examples/src/category/BirdCatA.c,258
 initer(BirdCatA)initer3,23
@@ -1084,6 +1053,16 @@ monkc(Bird);Bird9,115
 	int type;type11,141
 end(Bird);Bird12,152
 
+examples/src/class/BirdBase.c,122
+initer(BirdBase)initer11,156
+loader(BirdBase)loader16,194
+method(BirdBase, void, land_abs, mo receiver)method23,283
+
+examples/src/class/BirdBase.h,117
+#define example_BirdBase_hexample_BirdBase_h10,160
+monkc(BirdBase);BirdBase14,208
+end(BirdBase);BirdBase15,225
+
 examples/src/class/BirdFather.c,278
 initer(BirdFather)initer3,25
 method(BirdFather, void, bye, xxx)method11,176
@@ -1111,16 +1090,6 @@ examples/src/class/BirdGrandFather.h,155
 monkc(BirdGrandFather);BirdGrandFather6,72
 	int age;age7,96
 end(BirdGrandFather);BirdGrandFather8,106
-
-examples/src/class/BirdBase.c,122
-initer(BirdBase)initer11,156
-loader(BirdBase)loader16,194
-method(BirdBase, void, land_abs, mo receiver)method23,283
-
-examples/src/class/BirdBase.h,117
-#define example_BirdBase_hexample_BirdBase_h10,160
-monkc(BirdBase);BirdBase14,208
-end(BirdBase);BirdBase15,225
 
 examples/src/class/LittleBird.c,396
 initer(LittleBird)initer14,236
@@ -1164,21 +1133,336 @@ examples/src/classmode/BirdModeA.h,99
 monkc(BirdModeA);BirdModeA7,77
 end(BirdModeA);BirdModeA8,95
 
+examples/src/ClientServerExample.c,248
+void mocha_clientsocket_test(MCContext* context, const char* serverip)mocha_clientsocket_test5,74
+static int readline(int fd, char* const recvbuff)readline25,545
+void mocha_serversocket_test(const char* serverip)mocha_serversocket_test37,791
+
+examples/src/ClientServerExample.h,0
+
+examples/src/Main.c,225
+void monkc_runtime_check()monkc_runtime_check10,167
+void testMonkC()testMonkC21,461
+void testLemontea()testLemontea53,1164
+void test(MCContext* context)test97,2613
+int main(int argc, char const *argv[])main150,3987
+
+examples/src/MenuDrivenExample.c,62
+void menu_drive_test(MCContext* context)menu_drive_test3,32
+
+examples/src/MenuDrivenExample.h,0
+
+examples/src/MethodJumpping.c,178
+void jumpTarget(mo const this, const void* entry, int arg1, int arg2)jumpTarget3,29
+void TargetVoid()TargetVoid13,263
+void test_method_jumpping()test_method_jumpping20,373
+
+examples/src/MethodJumpping.h,0
+
+examples/src/ObjectLifeCycle.c,58
+void test_object_life_cycle()test_object_life_cycle4,31
+
+examples/src/ObjectLifeCycle.h,0
+
 examples/src/protocol/Flyable.h,0
 
-src/Makefile,513
-BINPATH 	= /usr/local/binBINPATH1,0
-RUNTIME_PATH 	= ./monkc_runtimeRUNTIME_PATH2,26
-LEMONTEA_PATH 	= ./lemonteaLEMONTEA_PATH3,58
-GEMONTEA_PATH 	= ./lemontea_GUI/srcGEMONTEA_PATH4,86
-MCPP_PATH 	= ./monkc_preprocessorMCPP_PATH5,122
-MCBUILD_PATH 	= ./monkc_buildtoolMCBUILD_PATH6,156
-TESTPATH	= ./testsTESTPATH7,190
-XCODEPATH       = ../XcodeMonkCXCODEPATH8,209
-EXAMPLEPATH     = ../examplesEXAMPLEPATH9,241
-OS=$(strip $(shell uname -s))OS11,272
-MAKE = makeMAKE12,302
-	MAKE = gmakeMAKE14,335
+src/lemontea/lemontea/MCArray.h,199
+#define MCARRAY_H_MCARRAY_H_4,43
+monkc(MCArray);MCArray6,63
+	int count;count7,79
+	int size;size8,91
+	int indexLast;indexLast9,102
+	void* (*buff)[];buff10,118
+end(MCArray);MCArray11,136
+
+src/lemontea/lemontea/MCBuffer.h,479
+#define _MCBuffer_MCBuffer2,18
+	size_t size;size7,96
+	char data[];data8,110
+}MCCharBuffer;MCCharBuffer9,124
+	size_t size;size12,157
+	int data[];data13,171
+}MCIntBuffer;MCIntBuffer14,184
+	size_t size;size17,216
+	unsigned data[];data18,230
+}MCUnsignedBuffer;MCUnsignedBuffer19,248
+	size_t size;size22,285
+	long data[];data23,299
+}MCLongBuffer;MCLongBuffer24,313
+	size_t size;size27,346
+	double data[];data28,360
+}MCDoubleBuffer;MCDoubleBuffer29,376
+
+src/lemontea/lemontea/MCClock.h,751
+#define MCClock_MCClock_5,59
+monkc(MCClock);MCClock7,77
+	struct tm rawtime;rawtime8,93
+end(MCClock);MCClock9,113
+#define no_change no_change41,1558
+enum weekday {weekday42,1582
+	SUN, //SUNDAY,SUN43,1597
+	MON, //MONDAY,MON44,1613
+	TUE, //TUESDAY,TUE45,1629
+	WED, //WEDNESDAY,WED46,1646
+	THU, //THURSDAY,THU47,1665
+	FRI, //FRIDAY,FRI48,1683
+	SAT, //SATURDAY,SAT49,1699
+enum month {month52,1721
+	JAN, //JANUARY,JAN53,1734
+	FEB, //FEBRUARY,FEB54,1751
+	MAR, //MARCH,MAR55,1769
+	APR, //APRIL,APR56,1784
+	MAY,MAY57,1799
+	JUN, //JUNE,JUN58,1805
+	JUL, //JULY,JUL59,1819
+	AUG, //AUGUST,AUG60,1833
+	SEP, //SEPTEMBER,SEP61,1849
+	OCT, //OCTOBER,OCT62,1868
+	NOV, //NOVEMBER,NOV63,1885
+	DEC, //DECEMBER,DEC64,1903
+
+src/lemontea/lemontea/MCContext.h,189
+#define MCContext_MCContext_5,59
+monkc(MCContext);MCContext7,79
+	int argc;argc8,97
+	char** argv;argv9,108
+	char selectionChar;selectionChar10,122
+end(MCContext);MCContext11,143
+
+src/lemontea/lemontea/MCException.h,386
+#define _MCException_MCException6,85
+#define __exception_try_not_called __exception_try_not_called8,107
+#define __MCNoneException __MCNoneException13,244
+#define __ECODE(__ECODE14,272
+#define throws(throws19,383
+#define throw(throw20,405
+#define try try22,514
+#define catch(catch23,627
+#define finally finally24,689
+#define MAX_EXCEPTION_NUM MAX_EXCEPTION_NUM26,750
+
+src/lemontea/lemontea/MCIO.h,2130
+#define MCFile_MCFile_21,320
+monkc(MCFile);MCFile23,337
+	int fd;fd24,352
+	char* pathname;pathname25,361
+	void* buffer;buffer26,378
+	struct stat attribute;attribute27,393
+end(MCFile);MCFile28,417
+typedef enum _MCStreamType{_MCStreamType78,2186
+	readonly_fullbuffered,readonly_fullbuffered79,2214
+	readwrite_fullbuffered,readwrite_fullbuffered80,2238
+	readonly_linebuffered,readonly_linebuffered81,2263
+	readwrite_linebufferedreadwrite_linebuffered82,2287
+}MCStreamType;MCStreamType83,2311
+#define MCStream_MCStream_86,2391
+monkc(MCStream);MCStream88,2410
+	FILE* fileObject;fileObject89,2427
+end(MCStream);MCStream90,2446
+#define MCByteStream_MCByteStream_118,3443
+monkc(MCByteStream) extends(MCStream);MCStream120,3466
+end(MCByteStream);MCByteStream121,3505
+#define MCStdinStream_MCStdinStream_130,3696
+monkc(MCStdinStream) extends(MCStream);MCStream132,3720
+end(MCStdinStream);MCStdinStream133,3760
+#define MCStdoutStream_MCStdoutStream_141,3874
+monkc(MCStdoutStream) extends(MCStream);MCStream143,3899
+end(MCStdoutStream);MCStdoutStream144,3940
+#define MCStdoutStream_MCStdoutStream_152,4056
+monkc(MCStdoutStream) extends(MCStream);MCStream154,4081
+end(MCStdoutStream);MCStdoutStream155,4122
+#define MCStderrStream_MCStderrStream_161,4216
+monkc(MCStderrStream) extends(MCStream);MCStream163,4241
+end(MCStderrStream);MCStderrStream164,4282
+typedef enum _MCSelect_fd_type{_MCSelect_fd_type171,4368
+	MCSelect_Readfd,MCSelect_Readfd172,4400
+	MCSelect_Writefd,MCSelect_Writefd173,4418
+	MCSelect_Exceptionfd,MCSelect_Exceptionfd174,4437
+}MCSelect_fd_type;MCSelect_fd_type175,4460
+#define MCSelect_ MCSelect_178,4498
+monkc(MCSelect);MCSelect180,4518
+	int maxfd;maxfd181,4535
+	fd_set readfd_set;readfd_set182,4547
+	fd_set writefd_set;writefd_set183,4567
+	fd_set exceptionfd_set;exceptionfd_set184,4588
+	fd_set readfd_result_set;readfd_result_set185,4613
+	fd_set writefd_result_set;writefd_result_set186,4640
+	fd_set exceptionfd_result_set;exceptionfd_result_set187,4668
+	struct timeval timeout;timeout188,4700
+end(MCSelect);MCSelect189,4725
+
+src/lemontea/lemontea/MCMath.h,105
+#define MCMath_MCMath_4,41
+monkc(MCMath);MCMath6,58
+	unsigned tid;tid7,73
+end(MCMath);MCMath8,88
+
+src/lemontea/lemontea/MCProcess.h,681
+#define MCProcess_ MCProcess_14,209
+monkc(MCProcess);MCProcess16,230
+	pid_t pid;pid17,248
+	pid_t ppid;ppid18,260
+	uid_t uid;uid19,273
+	uid_t euid;euid20,285
+	gid_t gid;gid21,298
+	gid_t egid;egid22,310
+end(MCProcess);MCProcess23,323
+	wait_no_option=0,wait_no_option35,697
+	wait_continued=WCONTINUED,wait_continued36,716
+	wait_no_hang=WNOHANG,wait_no_hang37,744
+	wait_untraced=WUNTRACEDwait_untraced40,902
+}MCProcessOptions;MCProcessOptions43,1108
+typedef struct MCProcessRUseage_struct {MCProcessRUseage_struct59,1707
+    struct rusage* rusage_p;rusage_p60,1748
+    char* description;description61,1777
+} MCProcessRUseage;MCProcessRUseage62,1800
+
+src/lemontea/lemontea/MCSocket.h,856
+#define MCSocket_Queue_Length MCSocket_Queue_Length137,4247
+typedef enum _MCSocketType{_MCSocketType138,4280
+	MCSocket_Server_TCP,MCSocket_Server_TCP139,4308
+	MCSocket_Server_UDP,MCSocket_Server_UDP140,4330
+	MCSocket_Client_TCP,MCSocket_Client_TCP141,4352
+	MCSocket_Client_UDP,MCSocket_Client_UDP142,4374
+}MCSocketType;MCSocketType143,4396
+#define MCSocketClientInfo_MCSocketClientInfo_146,4440
+monkc(MCSocketClientInfo);MCSocketClientInfo148,4469
+	int returnSfd;returnSfd149,4496
+	struct sockaddr address;address150,4512
+	socklen_t address_len;address_len151,4538
+end(MCSocketClientInfo);MCSocketClientInfo152,4562
+#define MCSocket_MCSocket_159,4708
+monkc(MCSocket);MCSocket161,4727
+	int sfd;sfd162,4744
+	int isServer;isServer163,4754
+	struct addrinfo peeraddrinfo;peeraddrinfo164,4769
+end(MCSocket);MCSocket165,4800
+
+src/lemontea/lemontea/MCString.h,174
+#define MCString_MCString_5,62
+monkc(MCString);MCString7,81
+	size_t length;length8,98
+	size_t size; size9,114
+	char* buff;buff10,129
+end(MCString);MCString11,142
+
+src/lemontea/lemontea/MCThread.h,1508
+#define MCMutexLockNew(MCMutexLockNew76,1931
+#define MCMutexAttrNew(MCMutexAttrNew77,1988
+#define MCMutexLockStaticInitializer MCMutexLockStaticInitializer78,2049
+#define MCMutexLockInit(MCMutexLockInit79,2117
+#define MCMutexLockDestroy(MCMutexLockDestroy80,2190
+#define MCMutexLock(MCMutexLock82,2259
+#define MCMutexTrylock(MCMutexTrylock83,2319
+#define MCMutexUnlock(MCMutexUnlock84,2384
+#define MCSpinLockInit(MCSpinLockInit87,2487
+#define MCSpinLockDestroy(MCSpinLockDestroy90,2695
+#define MCSpinLock(MCSpinLock91,2761
+#define MCSpinTrylock(MCSpinTrylock92,2819
+#define MCSpinUnlock(MCSpinUnlock93,2882
+#define MCCondLockNew(MCCondLockNew95,2945
+#define MCCondAttrNew(MCCondAttrNew96,3000
+#define MCCondLockStaticInitializer MCCondLockStaticInitializer97,3059
+#define MCCondLockInit(MCCondLockInit98,3125
+#define MCCondLockDestroy(MCCondLockDestroy99,3197
+#define MCCondWait(MCCondWait101,3264
+#define MCCondSignal(MCCondSignal102,3335
+#define MCCondBroadcast(MCCondBroadcast103,3397
+#define MCRunnable_MCRunnable_110,3505
+monkc(MCRunnable);MCRunnable112,3526
+	void (*init_routine)(void);init_routine113,3545
+end(MCRunnable);MCRunnable114,3574
+#define MCThread_MCThread_125,3759
+monkc(MCThread);MCThread127,3778
+	pthread_t self;self128,3795
+	pthread_attr_t attribute;attribute129,3812
+	pthread_once_t once_control;once_control130,3839
+	int isRunOnce;isRunOnce131,3869
+	MCRunnable* runnable;runnable132,3885
+end(MCThread);MCThread133,3908
+
+src/lemontea/lemontea/MCUnitTest.h,1720
+void assertYES(int expression) throws(MCAssertYESException);MCAssertYESException7,213
+void assertNO(int expression) throws(MCAssertNOException);MCAssertNOException8,274
+void assertNil(void* ptr) throws(MCAssertNilException);MCAssertNilException9,333
+void assertNotNil(void* ptr) throws(MCAssertNotNilException);MCAssertNotNilException10,389
+void assertSame(mo obj1, mo obj2) throws(MCAssertSameException);MCAssertSameException11,451
+void assertNotSame(mo obj1, mo obj2) throws(MCAssertNotSameException);MCAssertNotSameException12,516
+void assertEquals(int exp1, int exp2) throws(MCAssertEqualsException);MCAssertEqualsException13,587
+#define MCUnitTestResult_MCUnitTestResult_19,730
+monkc(MCUnitTestResult);MCUnitTestResult21,758
+end(MCUnitTestResult);MCUnitTestResult22,783
+#define MCUnitTestCase_ MCUnitTestCase_32,1023
+monkc(MCUnitTestCase);MCUnitTestCase34,1049
+	MCUnitTestResult* unitTestResultRef;unitTestResultRef35,1072
+	struct MCUnitTestCase_struct* next_case;next_case36,1110
+end(MCUnitTestCase);MCUnitTestCase37,1152
+#define MCUnitTestSuite_MCUnitTestSuite_50,1551
+monkc(MCUnitTestSuite);MCUnitTestSuite52,1577
+	MCUnitTestCase *first_case;first_case53,1601
+    MCUnitTestCase **last_case_p;last_case_p54,1630
+	int test_case_count;test_case_count55,1664
+	struct MCUnitTestSuite_struct* next_suite;next_suite56,1686
+end(MCUnitTestSuite);MCUnitTestSuite57,1730
+#define MCUnitTestRunner_MCUnitTestRunner_67,1973
+monkc(MCUnitTestRunner);MCUnitTestRunner69,2000
+	MCUnitTestResult* unitTestResult;unitTestResult70,2025
+	MCUnitTestSuite* first_suite;first_suite71,2060
+	int test_suite_count;test_suite_count72,2091
+end(MCUnitTestRunner);MCUnitTestRunner73,2114
+
+src/lemontea/lemontea/MCVector.h,1417
+#define VEC_STACK_SIZE VEC_STACK_SIZE5,41
+	double x;x10,102
+}vector_struct;vector_struct11,113
+typedef vector_struct* vector;vector12,129
+	double x;x15,177
+	double y;y16,188
+}vector2_struct;vector2_struct17,199
+typedef vector2_struct* vector2;vector218,216
+	double x;x21,266
+	double y;y22,277
+	double z;z23,288
+}vector3_struct;vector3_struct24,299
+typedef vector3_struct* vector3;vector325,316
+	double x;x28,366
+	double y;y29,377
+	double z;z30,388
+	double t;t31,399
+}vector4_struct;vector4_struct32,410
+typedef vector4_struct* vector4;vector433,427
+#define popvx(popvx40,624
+#define popvy(popvy41,650
+#define popvz(popvz42,676
+#define popvt(popvt43,702
+	long double x;x47,791
+}wector_struct;wector_struct48,807
+typedef wector_struct* wector;wector49,823
+	long double x;x52,871
+	long double y;y53,887
+}wector2_struct;wector2_struct54,903
+typedef wector2_struct* wector2;wector255,920
+	long double x;x58,970
+	long double y;y59,986
+	long double z;z60,1002
+}wector3_struct;wector3_struct61,1018
+typedef wector3_struct* wector3;wector362,1035
+	long double x;x65,1085
+	long double y;y66,1101
+	long double z;z67,1117
+	long double t;t68,1133
+}wector4_struct;wector4_struct69,1149
+typedef wector4_struct* wector4;wector470,1166
+#define popwx(popwx77,1413
+#define popwy(popwy78,1439
+#define popwz(popwz79,1465
+#define popwt(popwt80,1491
+
+src/lemontea/Makefile,233
+SRCS=$(wildcard *.c)SRCS1,0
+LIBOBJS=$(patsubst %.c, %.o, $(SRCS))LIBOBJS2,21
+LINK_HEAD = -I/usr/local/include/monkc -I/usr/local/include/lemonteaLINK_HEAD4,60
+CC = gcc -g -w -Wall -Wno-unused-variable -Wno-return-typeCC7,188
 
 src/lemontea/MCArray.c,1203
 initer(MCArray){initer4,42
@@ -1757,303 +2041,86 @@ typedef wector4_struct* wector4;wector470,1166
 #define popwz(popwz79,1465
 #define popwt(popwt80,1491
 
-src/lemontea/Makefile,233
-SRCS=$(wildcard *.c)SRCS1,0
-LIBOBJS=$(patsubst %.c, %.o, $(SRCS))LIBOBJS2,21
-LINK_HEAD = -I/usr/local/include/monkc -I/usr/local/include/lemonteaLINK_HEAD4,60
-CC = gcc -g -w -Wall -Wno-unused-variable -Wno-return-typeCC7,188
+src/lemontea_3D/Makefile,231
+OBJS = MC3DMainLoop.o MCCamera.oOBJS1,0
+LINK_HEAD = -I/usr/local/include/monkc \LINK_HEAD4,74
+LINK_BIN = -lpthread \LINK_BIN8,225
+CC = clangCC16,516
+FLAGS = -O -g -w -Wall -Wno-unused-variable -Wno-return-typeFLAGS17,527
 
-src/lemontea/lemontea/MCArray.h,199
-#define MCARRAY_H_MCARRAY_H_4,43
-monkc(MCArray);MCArray6,63
-	int count;count7,79
-	int size;size8,91
-	int indexLast;indexLast9,102
-	void* (*buff)[];buff10,118
-end(MCArray);MCArray11,136
+src/lemontea_3D/MC3DBase.h,659
+#define _MC3DBase_MC3DBase2,18
+    double x;x7,74
+    double y;y8,88
+    double z;  z9,102
+} MCVertex;MCVertex10,118
+inline MCVertex MCVertexMake(double x, double y, double z) {MCVertexMake12,131
+inline void putMCVertexes(MCVertex verp[], int size) {putMCVertexes16,227
+inline MCVertex MCVertexFromSpherical(double R, double tht, double fai) {MCVertexFromSpherical24,413
+inline void MCGLFrustumView(double left, double right,MCGLFrustumView32,649
+inline void MCGLLookat(double eyeX,    double eyeY,    double eyeZ,MCGLLookat40,882
+inline void MCGLLookatSpherical(double centerX, double centerY, double centerZ,MCGLLookatSpherical48,1186
 
-src/lemontea/lemontea/MCUnitTest.h,1720
-void assertYES(int expression) throws(MCAssertYESException);MCAssertYESException7,213
-void assertNO(int expression) throws(MCAssertNOException);MCAssertNOException8,274
-void assertNil(void* ptr) throws(MCAssertNilException);MCAssertNilException9,333
-void assertNotNil(void* ptr) throws(MCAssertNotNilException);MCAssertNotNilException10,389
-void assertSame(mo obj1, mo obj2) throws(MCAssertSameException);MCAssertSameException11,451
-void assertNotSame(mo obj1, mo obj2) throws(MCAssertNotSameException);MCAssertNotSameException12,516
-void assertEquals(int exp1, int exp2) throws(MCAssertEqualsException);MCAssertEqualsException13,587
-#define MCUnitTestResult_MCUnitTestResult_19,730
-monkc(MCUnitTestResult);MCUnitTestResult21,758
-end(MCUnitTestResult);MCUnitTestResult22,783
-#define MCUnitTestCase_ MCUnitTestCase_32,1023
-monkc(MCUnitTestCase);MCUnitTestCase34,1049
-	MCUnitTestResult* unitTestResultRef;unitTestResultRef35,1072
-	struct MCUnitTestCase_struct* next_case;next_case36,1110
-end(MCUnitTestCase);MCUnitTestCase37,1152
-#define MCUnitTestSuite_MCUnitTestSuite_50,1551
-monkc(MCUnitTestSuite);MCUnitTestSuite52,1577
-	MCUnitTestCase *first_case;first_case53,1601
-    MCUnitTestCase **last_case_p;last_case_p54,1630
-	int test_case_count;test_case_count55,1664
-	struct MCUnitTestSuite_struct* next_suite;next_suite56,1686
-end(MCUnitTestSuite);MCUnitTestSuite57,1730
-#define MCUnitTestRunner_MCUnitTestRunner_67,1973
-monkc(MCUnitTestRunner);MCUnitTestRunner69,2000
-	MCUnitTestResult* unitTestResult;unitTestResult70,2025
-	MCUnitTestSuite* first_suite;first_suite71,2060
-	int test_suite_count;test_suite_count72,2091
-end(MCUnitTestRunner);MCUnitTestRunner73,2114
+src/lemontea_3D/MC3DMainLoop.c,698
+Display                 *dpy;dpy16,312
+Window                  root;root17,342
+GLint                   att[] = { GLX_RGBA, GLX_DEPTH_SIZE, 24, GLX_DOUBLEBUFFER, None };att18,372
+XVisualInfo             *vi;vi19,462
+Colormap                cmap;cmap20,491
+XSetWindowAttributes    swa;swa21,521
+Window                  win;win22,550
+GLXContext              glc;glc23,579
+XWindowAttributes       gwa;gwa24,608
+XEvent                  xev;xev25,637
+XFontStruct*            fnt;fnt26,666
+void ClearScreen() {ClearScreen28,696
+void setupX() {setupX33,814
+void DrawText(int x, int y, const char* text, int size) {DrawText80,2126
+int main(int argc, char *argv[]) {main90,2400
 
-src/lemontea/lemontea/MCThread.h,1508
-#define MCMutexLockNew(MCMutexLockNew76,1931
-#define MCMutexAttrNew(MCMutexAttrNew77,1988
-#define MCMutexLockStaticInitializer MCMutexLockStaticInitializer78,2049
-#define MCMutexLockInit(MCMutexLockInit79,2117
-#define MCMutexLockDestroy(MCMutexLockDestroy80,2190
-#define MCMutexLock(MCMutexLock82,2259
-#define MCMutexTrylock(MCMutexTrylock83,2319
-#define MCMutexUnlock(MCMutexUnlock84,2384
-#define MCSpinLockInit(MCSpinLockInit87,2487
-#define MCSpinLockDestroy(MCSpinLockDestroy90,2695
-#define MCSpinLock(MCSpinLock91,2761
-#define MCSpinTrylock(MCSpinTrylock92,2819
-#define MCSpinUnlock(MCSpinUnlock93,2882
-#define MCCondLockNew(MCCondLockNew95,2945
-#define MCCondAttrNew(MCCondAttrNew96,3000
-#define MCCondLockStaticInitializer MCCondLockStaticInitializer97,3059
-#define MCCondLockInit(MCCondLockInit98,3125
-#define MCCondLockDestroy(MCCondLockDestroy99,3197
-#define MCCondWait(MCCondWait101,3264
-#define MCCondSignal(MCCondSignal102,3335
-#define MCCondBroadcast(MCCondBroadcast103,3397
-#define MCRunnable_MCRunnable_110,3505
-monkc(MCRunnable);MCRunnable112,3526
-	void (*init_routine)(void);init_routine113,3545
-end(MCRunnable);MCRunnable114,3574
-#define MCThread_MCThread_125,3759
-monkc(MCThread);MCThread127,3778
-	pthread_t self;self128,3795
-	pthread_attr_t attribute;attribute129,3812
-	pthread_once_t once_control;once_control130,3839
-	int isRunOnce;isRunOnce131,3869
-	MCRunnable* runnable;runnable132,3885
-end(MCThread);MCThread133,3908
+src/lemontea_3D/MC3DShapeBase.h,143
+#define _MC3DShapeBase_MC3DShapeBase2,23
+extern inline void DrawGround() {DrawGround6,70
+extern inline void DrawACube() {DrawACube18,328
 
-src/lemontea/lemontea/MCString.h,174
-#define MCString_MCString_5,62
-monkc(MCString);MCString7,81
-	size_t length;length8,98
-	size_t size; size9,114
-	char* buff;buff10,129
-end(MCString);MCString11,142
+src/lemontea_3D/MCCamera.c,391
+initer(MCCamera)initer3,23
+method(MCCamera, void, reset, xxx)method10,120
+method(MCCamera, MCVertex, position, xxx)method23,439
+method(MCCamera, MCVertex, up, xxx)method28,548
+method(MCCamera, void, updateRatioFocalDistance, xxx)method33,654
+method(MCCamera, void, updateLookat, xxx)method44,952
+method(MCCamera, void, update, xxx)method50,1119
+loader(MCCamera)loader56,1260
 
-src/lemontea/lemontea/MCSocket.h,856
-#define MCSocket_Queue_Length MCSocket_Queue_Length137,4247
-typedef enum _MCSocketType{_MCSocketType138,4280
-	MCSocket_Server_TCP,MCSocket_Server_TCP139,4308
-	MCSocket_Server_UDP,MCSocket_Server_UDP140,4330
-	MCSocket_Client_TCP,MCSocket_Client_TCP141,4352
-	MCSocket_Client_UDP,MCSocket_Client_UDP142,4374
-}MCSocketType;MCSocketType143,4396
-#define MCSocketClientInfo_MCSocketClientInfo_146,4440
-monkc(MCSocketClientInfo);MCSocketClientInfo148,4469
-	int returnSfd;returnSfd149,4496
-	struct sockaddr address;address150,4512
-	socklen_t address_len;address_len151,4538
-end(MCSocketClientInfo);MCSocketClientInfo152,4562
-#define MCSocket_MCSocket_159,4708
-monkc(MCSocket);MCSocket161,4727
-	int sfd;sfd162,4744
-	int isServer;isServer163,4754
-	struct addrinfo peeraddrinfo;peeraddrinfo164,4769
-end(MCSocket);MCSocket165,4800
+src/lemontea_3D/MCCamera.h,774
+#define _MCCamera_MCCamera4,38
+monkc(MCCamera);MCCamera8,80
+    double ratio;ratio9,97
+    double focal_length;focal_length10,115
+    double max_distance;max_distance11,140
+    MCVertex lookat;lookat12,165
+    double R;R14,213
+    double tht;tht15,227
+    double fai;fai16,243
+end(MCCamera);MCCamera17,259
+#define MCLensStandard50mm MCLensStandard50mm26,527
+#define MCLensWide24mm MCLensWide24mm27,562
+#define MCLensLong100mm MCLensLong100mm28,597
+#define MCLensLong200mm MCLensLong200mm29,632
+#define MCRatioCameraFilm3x2 MCRatioCameraFilm3x231,668
+#define MCRatioOldTV4x3 MCRatioOldTV4x332,710
+#define MCRatioHDTV16x9 MCRatioHDTV16x933,752
+#define MCRatioCinema239x100 MCRatioCinema239x10034,795
+#define MCRatioMake(MCRatioMake35,838
 
-src/lemontea/lemontea/MCProcess.h,681
-#define MCProcess_ MCProcess_14,209
-monkc(MCProcess);MCProcess16,230
-	pid_t pid;pid17,248
-	pid_t ppid;ppid18,260
-	uid_t uid;uid19,273
-	uid_t euid;euid20,285
-	gid_t gid;gid21,298
-	gid_t egid;egid22,310
-end(MCProcess);MCProcess23,323
-	wait_no_option=0,wait_no_option35,697
-	wait_continued=WCONTINUED,wait_continued36,716
-	wait_no_hang=WNOHANG,wait_no_hang37,744
-	wait_untraced=WUNTRACEDwait_untraced40,902
-}MCProcessOptions;MCProcessOptions43,1108
-typedef struct MCProcessRUseage_struct {MCProcessRUseage_struct59,1707
-    struct rusage* rusage_p;rusage_p60,1748
-    char* description;description61,1777
-} MCProcessRUseage;MCProcessRUseage62,1800
-
-src/lemontea/lemontea/MCMath.h,105
-#define MCMath_MCMath_4,41
-monkc(MCMath);MCMath6,58
-	unsigned tid;tid7,73
-end(MCMath);MCMath8,88
-
-src/lemontea/lemontea/MCIO.h,2130
-#define MCFile_MCFile_21,320
-monkc(MCFile);MCFile23,337
-	int fd;fd24,352
-	char* pathname;pathname25,361
-	void* buffer;buffer26,378
-	struct stat attribute;attribute27,393
-end(MCFile);MCFile28,417
-typedef enum _MCStreamType{_MCStreamType78,2186
-	readonly_fullbuffered,readonly_fullbuffered79,2214
-	readwrite_fullbuffered,readwrite_fullbuffered80,2238
-	readonly_linebuffered,readonly_linebuffered81,2263
-	readwrite_linebufferedreadwrite_linebuffered82,2287
-}MCStreamType;MCStreamType83,2311
-#define MCStream_MCStream_86,2391
-monkc(MCStream);MCStream88,2410
-	FILE* fileObject;fileObject89,2427
-end(MCStream);MCStream90,2446
-#define MCByteStream_MCByteStream_118,3443
-monkc(MCByteStream) extends(MCStream);MCStream120,3466
-end(MCByteStream);MCByteStream121,3505
-#define MCStdinStream_MCStdinStream_130,3696
-monkc(MCStdinStream) extends(MCStream);MCStream132,3720
-end(MCStdinStream);MCStdinStream133,3760
-#define MCStdoutStream_MCStdoutStream_141,3874
-monkc(MCStdoutStream) extends(MCStream);MCStream143,3899
-end(MCStdoutStream);MCStdoutStream144,3940
-#define MCStdoutStream_MCStdoutStream_152,4056
-monkc(MCStdoutStream) extends(MCStream);MCStream154,4081
-end(MCStdoutStream);MCStdoutStream155,4122
-#define MCStderrStream_MCStderrStream_161,4216
-monkc(MCStderrStream) extends(MCStream);MCStream163,4241
-end(MCStderrStream);MCStderrStream164,4282
-typedef enum _MCSelect_fd_type{_MCSelect_fd_type171,4368
-	MCSelect_Readfd,MCSelect_Readfd172,4400
-	MCSelect_Writefd,MCSelect_Writefd173,4418
-	MCSelect_Exceptionfd,MCSelect_Exceptionfd174,4437
-}MCSelect_fd_type;MCSelect_fd_type175,4460
-#define MCSelect_ MCSelect_178,4498
-monkc(MCSelect);MCSelect180,4518
-	int maxfd;maxfd181,4535
-	fd_set readfd_set;readfd_set182,4547
-	fd_set writefd_set;writefd_set183,4567
-	fd_set exceptionfd_set;exceptionfd_set184,4588
-	fd_set readfd_result_set;readfd_result_set185,4613
-	fd_set writefd_result_set;writefd_result_set186,4640
-	fd_set exceptionfd_result_set;exceptionfd_result_set187,4668
-	struct timeval timeout;timeout188,4700
-end(MCSelect);MCSelect189,4725
-
-src/lemontea/lemontea/MCException.h,386
-#define _MCException_MCException6,85
-#define __exception_try_not_called __exception_try_not_called8,107
-#define __MCNoneException __MCNoneException13,244
-#define __ECODE(__ECODE14,272
-#define throws(throws19,383
-#define throw(throw20,405
-#define try try22,514
-#define catch(catch23,627
-#define finally finally24,689
-#define MAX_EXCEPTION_NUM MAX_EXCEPTION_NUM26,750
-
-src/lemontea/lemontea/MCContext.h,189
-#define MCContext_MCContext_5,59
-monkc(MCContext);MCContext7,79
-	int argc;argc8,97
-	char** argv;argv9,108
-	char selectionChar;selectionChar10,122
-end(MCContext);MCContext11,143
-
-src/lemontea/lemontea/MCClock.h,751
-#define MCClock_MCClock_5,59
-monkc(MCClock);MCClock7,77
-	struct tm rawtime;rawtime8,93
-end(MCClock);MCClock9,113
-#define no_change no_change41,1558
-enum weekday {weekday42,1582
-	SUN, //SUNDAY,SUN43,1597
-	MON, //MONDAY,MON44,1613
-	TUE, //TUESDAY,TUE45,1629
-	WED, //WEDNESDAY,WED46,1646
-	THU, //THURSDAY,THU47,1665
-	FRI, //FRIDAY,FRI48,1683
-	SAT, //SATURDAY,SAT49,1699
-enum month {month52,1721
-	JAN, //JANUARY,JAN53,1734
-	FEB, //FEBRUARY,FEB54,1751
-	MAR, //MARCH,MAR55,1769
-	APR, //APRIL,APR56,1784
-	MAY,MAY57,1799
-	JUN, //JUNE,JUN58,1805
-	JUL, //JULY,JUL59,1819
-	AUG, //AUGUST,AUG60,1833
-	SEP, //SEPTEMBER,SEP61,1849
-	OCT, //OCTOBER,OCT62,1868
-	NOV, //NOVEMBER,NOV63,1885
-	DEC, //DECEMBER,DEC64,1903
-
-src/lemontea/lemontea/MCBuffer.h,479
-#define _MCBuffer_MCBuffer2,18
-	size_t size;size7,96
-	char data[];data8,110
-}MCCharBuffer;MCCharBuffer9,124
-	size_t size;size12,157
-	int data[];data13,171
-}MCIntBuffer;MCIntBuffer14,184
-	size_t size;size17,216
-	unsigned data[];data18,230
-}MCUnsignedBuffer;MCUnsignedBuffer19,248
-	size_t size;size22,285
-	long data[];data23,299
-}MCLongBuffer;MCLongBuffer24,313
-	size_t size;size27,346
-	double data[];data28,360
-}MCDoubleBuffer;MCDoubleBuffer29,376
-
-src/lemontea/lemontea/MCVector.h,1417
-#define VEC_STACK_SIZE VEC_STACK_SIZE5,41
-	double x;x10,102
-}vector_struct;vector_struct11,113
-typedef vector_struct* vector;vector12,129
-	double x;x15,177
-	double y;y16,188
-}vector2_struct;vector2_struct17,199
-typedef vector2_struct* vector2;vector218,216
-	double x;x21,266
-	double y;y22,277
-	double z;z23,288
-}vector3_struct;vector3_struct24,299
-typedef vector3_struct* vector3;vector325,316
-	double x;x28,366
-	double y;y29,377
-	double z;z30,388
-	double t;t31,399
-}vector4_struct;vector4_struct32,410
-typedef vector4_struct* vector4;vector433,427
-#define popvx(popvx40,624
-#define popvy(popvy41,650
-#define popvz(popvz42,676
-#define popvt(popvt43,702
-	long double x;x47,791
-}wector_struct;wector_struct48,807
-typedef wector_struct* wector;wector49,823
-	long double x;x52,871
-	long double y;y53,887
-}wector2_struct;wector2_struct54,903
-typedef wector2_struct* wector2;wector255,920
-	long double x;x58,970
-	long double y;y59,986
-	long double z;z60,1002
-}wector3_struct;wector3_struct61,1018
-typedef wector3_struct* wector3;wector362,1035
-	long double x;x65,1085
-	long double y;y66,1101
-	long double z;z67,1117
-	long double t;t68,1133
-}wector4_struct;wector4_struct69,1149
-typedef wector4_struct* wector4;wector470,1166
-#define popwx(popwx77,1413
-#define popwy(popwy78,1439
-#define popwz(popwz79,1465
-#define popwt(popwt80,1491
+src/lemontea_GUI/src/Makefile,380
+OBJS = MCUIMainLoop.o MCUIBase.o MCNode.o MCXCBContext.oOBJS2,1
+LINK_HEAD = -I/usr/local/include/monkc -I/usr/local/include/lemontea -I/opt/local/include/LINK_HEAD5,99
+LINK_BIN = -lpthread -L/usr/local/lib -lmonkc -llemontea -L/opt/local/lib -lxcbLINK_BIN6,190
+CC = clangCC12,446
+FLAGS = -O -g -w -Wall -Wno-unused-variable -Wno-return-typeFLAGS13,457
+AS = asAS14,518
 
 src/lemontea_GUI/src/MCAccessbleProtocol.h,0
 
@@ -2199,16 +2266,205 @@ monkc(MCXCBContext);MCXCBContext41,772
     MCArray*            touch_observers;touch_observers51,1099
 end(MCXCBContext);MCXCBContext52,1140
 
-src/lemontea_GUI/src/Makefile,365
-OBJS = MCUIMainLoop.o MCUIBase.o MCNode.o MCXCBContext.oOBJS2,1
-LINK_HEAD = -I/usr/local/include/monkc -I/usr/local/include/lemontea -I/usr/local/include/LINK_HEAD9,291
-LINK_BIN = -lpthread -L/usr/local/lib -lmonkc -llemontea -lxcbLINK_BIN10,382
-CC = clangCC12,446
-FLAGS = -O -g -w -Wall -Wno-unused-variable -Wno-return-typeFLAGS13,457
-AS = asAS14,518
+src/Makefile,513
+BINPATH 	= /usr/local/binBINPATH1,0
+RUNTIME_PATH 	= ./monkc_runtimeRUNTIME_PATH2,26
+LEMONTEA_PATH 	= ./lemonteaLEMONTEA_PATH3,58
+GEMONTEA_PATH 	= ./lemontea_GUI/srcGEMONTEA_PATH4,86
+MCPP_PATH 	= ./monkc_preprocessorMCPP_PATH5,122
+MCBUILD_PATH 	= ./monkc_buildtoolMCBUILD_PATH6,156
+TESTPATH	= ./testsTESTPATH7,190
+XCODEPATH       = ../XcodeMonkCXCODEPATH8,209
+EXAMPLEPATH     = ../examplesEXAMPLEPATH9,241
+OS=$(strip $(shell uname -s))OS11,272
+MAKE = makeMAKE12,302
+	MAKE = gmakeMAKE14,335
 
 src/monkc_buildtool/Makefile,38
 BINPATH = /usr/local/bin/BINPATH1,0
+
+src/monkc_preprocessor/lex.yy.c,9814
+#define  YY_INT_ALIGNED YY_INT_ALIGNED4,21
+#define FLEX_SCANNERFLEX_SCANNER8,99
+#define YY_FLEX_MAJOR_VERSION YY_FLEX_MAJOR_VERSION9,120
+#define YY_FLEX_MINOR_VERSION YY_FLEX_MINOR_VERSION10,152
+#define YY_FLEX_SUBMINOR_VERSION YY_FLEX_SUBMINOR_VERSION11,184
+#define FLEX_BETAFLEX_BETA13,253
+#define FLEXINT_HFLEXINT_H29,551
+#define __STDC_LIMIT_MACROS __STDC_LIMIT_MACROS39,862
+typedef int8_t flex_int8_t;flex_int8_t43,922
+typedef uint8_t flex_uint8_t;flex_uint8_t44,950
+typedef int16_t flex_int16_t;flex_int16_t45,980
+typedef uint16_t flex_uint16_t;flex_uint16_t46,1010
+typedef int32_t flex_int32_t;flex_int32_t47,1042
+typedef uint32_t flex_uint32_t;flex_uint32_t48,1072
+typedef uint64_t flex_uint64_t;flex_uint64_t49,1104
+typedef signed char flex_int8_t;flex_int8_t51,1142
+typedef short int flex_int16_t;flex_int16_t52,1175
+typedef int flex_int32_t;flex_int32_t53,1207
+typedef unsigned char flex_uint8_t; flex_uint8_t54,1233
+typedef unsigned short int flex_uint16_t;flex_uint16_t55,1270
+typedef unsigned int flex_uint32_t;flex_uint32_t56,1312
+#define INT8_MIN INT8_MIN61,1417
+#define INT16_MIN INT16_MIN64,1480
+#define INT32_MIN INT32_MIN67,1547
+#define INT8_MAX INT8_MAX70,1618
+#define INT16_MAX INT16_MAX73,1680
+#define INT32_MAX INT32_MAX76,1744
+#define UINT8_MAX UINT8_MAX79,1813
+#define UINT16_MAX UINT16_MAX82,1877
+#define UINT32_MAX UINT32_MAX85,1943
+#define YY_USE_CONSTYY_USE_CONST93,2093
+#define YY_USE_CONSTYY_USE_CONST100,2214
+#define yyconst yyconst106,2316
+#define yyconstyyconst108,2344
+#define YY_NULL YY_NULL112,2401
+#define YY_SC_TO_UI(YY_SC_TO_UI119,2648
+#define BEGIN BEGIN125,2879
+#define YY_START YY_START131,3078
+#define YYSTATE YYSTATE132,3118
+#define YY_STATE_EOF(YY_STATE_EOF135,3201
+#define YY_NEW_FILE YY_NEW_FILE138,3321
+#define YY_END_OF_BUFFER_CHAR YY_END_OF_BUFFER_CHAR140,3360
+#define YY_BUF_SIZE YY_BUF_SIZE144,3449
+#define YY_STATE_BUF_SIZE YY_STATE_BUF_SIZE149,3577
+#define YY_TYPEDEF_YY_BUFFER_STATEYY_TYPEDEF_YY_BUFFER_STATE152,3685
+typedef struct yy_buffer_state *YY_BUFFER_STATE;YY_BUFFER_STATE153,3720
+#define YY_TYPEDEF_YY_SIZE_TYY_TYPEDEF_YY_SIZE_T157,3806
+typedef size_t yy_size_t;yy_size_t158,3835
+#define EOB_ACT_CONTINUE_SCAN EOB_ACT_CONTINUE_SCAN165,3923
+#define EOB_ACT_END_OF_FILE EOB_ACT_END_OF_FILE166,3955
+#define EOB_ACT_LAST_MATCH EOB_ACT_LAST_MATCH167,3985
+    #define YY_LESS_LINENO(YY_LESS_LINENO169,4015
+#define yyless(yyless172,4130
+#define unput(unput185,4485
+#define YY_STRUCT_YY_BUFFER_STATEYY_STRUCT_YY_BUFFER_STATE188,4565
+struct yy_buffer_stateyy_buffer_state189,4599
+	FILE *yy_input_file;yy_input_file191,4625
+	char *yy_ch_buf;		/* input buffer */yy_ch_buf193,4648
+	char *yy_buf_pos;		/* current position in input buffer */yy_buf_pos194,4686
+	yy_size_t yy_buf_size;yy_buf_size199,4829
+	yy_size_t yy_n_chars;yy_n_chars204,4939
+	int yy_is_our_buffer;yy_is_our_buffer210,5107
+	int yy_is_interactive;yy_is_interactive217,5345
+	int yy_at_bol;yy_at_bol223,5512
+    int yy_bs_lineno; /**< The line count. */yy_bs_lineno225,5529
+    int yy_bs_column; /**< The column count. */yy_bs_column226,5575
+	int yy_fill_buffer;yy_fill_buffer231,5710
+	int yy_buffer_status;yy_buffer_status233,5732
+#define YY_BUFFER_NEW YY_BUFFER_NEW235,5756
+#define YY_BUFFER_NORMAL YY_BUFFER_NORMAL236,5780
+#define YY_BUFFER_EOF_PENDING YY_BUFFER_EOF_PENDING247,6278
+static size_t yy_buffer_stack_top = 0; /**< index of top of stack. */yy_buffer_stack_top253,6386
+static size_t yy_buffer_stack_max = 0; /**< capacity of stack. */yy_buffer_stack_max254,6456
+static YY_BUFFER_STATE * yy_buffer_stack = 0; /**< Stack as an array. */yy_buffer_stack255,6522
+#define YY_CURRENT_BUFFER YY_CURRENT_BUFFER263,6790
+#define YY_CURRENT_BUFFER_LVALUE YY_CURRENT_BUFFER_LVALUE270,7086
+static char yy_hold_char;yy_hold_char273,7228
+static yy_size_t yy_n_chars;		/* number of characters read into yy_ch_buf */yy_n_chars274,7254
+yy_size_t yyleng;yyleng275,7331
+static char *yy_c_buf_p = (char *) 0;yy_c_buf_p278,7395
+static int yy_init = 0;		/* whether we need to initialize */yy_init279,7433
+static int yy_start = 0;	/* start state number */yy_start280,7494
+static int yy_did_buffer_switch_on_eof;yy_did_buffer_switch_on_eof285,7673
+#define YY_FLUSH_BUFFER YY_FLUSH_BUFFER299,8193
+#define yy_new_buffer yy_new_buffer309,8535
+#define yy_set_interactive(yy_set_interactive311,8575
+#define yy_set_bol(yy_set_bol321,8851
+#define YY_AT_BOL(YY_AT_BOL331,9094
+typedef unsigned char YY_CHAR;YY_CHAR335,9177
+FILE *yyin = (FILE *) 0, *yyout = (FILE *) 0;yyin337,9209
+FILE *yyin = (FILE *) 0, *yyout = (FILE *) 0;yyout337,9209
+typedef int yy_state_type;yy_state_type339,9256
+int yylineno = 1;yylineno343,9306
+#define yytext_ptr yytext_ptr346,9346
+#define YY_DO_BEFORE_ACTION YY_DO_BEFORE_ACTION356,9699
+#define YY_NUM_RULES YY_NUM_RULES363,9865
+#define YY_END_OF_BUFFER YY_END_OF_BUFFER364,9889
+struct yy_trans_infoyy_trans_info367,9998
+	flex_int32_t yy_verify;yy_verify369,10022
+	flex_int32_t yy_nxt;yy_nxt370,10047
+static yyconst flex_int16_t yy_accept[167] =yy_accept372,10073
+static yyconst flex_int32_t yy_ec[256] =yy_ec394,11219
+static yyconst flex_int32_t yy_meta[32] =yy_meta426,12941
+static yyconst flex_int16_t yy_base[201] =yy_base434,13208
+static yyconst flex_int16_t yy_def[201] =yy_def460,14572
+static yyconst flex_int16_t yy_nxt[455] =yy_nxt486,15935
+static yyconst flex_int16_t yy_chk[455] =yy_chk540,18954
+static yy_state_type yy_last_accepting_state;yy_last_accepting_state594,21973
+static char *yy_last_accepting_cpos;yy_last_accepting_cpos595,22019
+int yy_flex_debug = 0;yy_flex_debug598,22083
+#define REJECT REJECT603,22209
+#define yymore(yymore604,22253
+#define YY_MORE_ADJ YY_MORE_ADJ605,22299
+#define YY_RESTORE_YY_MORE_OFFSETYY_RESTORE_YY_MORE_OFFSET606,22321
+char *yytext;yytext607,22355
+unsigned hash(const char *s)hash610,22403
+char* uint2str(unsigned i)uint2str618,22539
+char* hash_ff_method_name(char* in, int i)hash_ff_method_name625,22646
+char* hash_binding_method_name(char* in, int i)hash_binding_method_name655,23375
+char* hash_new_class_name(char* in, int i)hash_new_class_name683,24104
+char* hash_new_category_class_name(char* in, int i)hash_new_category_class_name707,24688
+#define MYP MYP731,25281
+#define MYECHO MYECHO732,25346
+#define MYECHO2 MYECHO2734,25463
+#define MYECHO3 MYECHO3736,25585
+#define MYECHO4 MYECHO4738,25702
+#define INITIAL INITIAL743,25851
+#define YY_EXTRA_TYPE YY_EXTRA_TYPE754,26153
+#define YY_READ_BUF_SIZE YY_READ_BUF_SIZE822,27375
+#define ECHO ECHO830,27593
+#define YY_INPUT(YY_INPUT837,27778
+#define yyterminate(yyterminate874,28695
+#define YY_START_STACK_INCR YY_START_STACK_INCR879,28830
+#define YY_FATAL_ERROR(YY_FATAL_ERROR884,28920
+#define YY_DECL_IS_OURS YY_DECL_IS_OURS893,29153
+#define YY_DECL YY_DECL897,29206
+#define YY_USER_ACTIONYY_USER_ACTION904,29382
+#define YY_BREAK YY_BREAK909,29475
+#define YY_RULE_SETUP YY_RULE_SETUP912,29507
+static int yy_get_next_buffer (void)yy_get_next_buffer1208,36154
+    static yy_state_type yy_get_previous_state (void)yy_get_previous_state1342,39746
+    static yy_state_type yy_try_NUL_trans  (yy_state_type yy_current_state )yy_try_NUL_trans1374,40648
+    static void yyunput (int c, register char * yy_bp )yyunput1397,41320
+    static int yyinput (void)yyinput1436,42386
+    void yyrestart  (FILE * input_file )yyrestart1513,44151
+    void yy_switch_to_buffer  (YY_BUFFER_STATE  new_buffer )yy_switch_to_buffer1530,44512
+static void yy_load_buffer_state  (void)yy_load_buffer_state1561,45355
+    YY_BUFFER_STATE yy_create_buffer  (FILE * file, int  size )yy_create_buffer1575,45828
+    void yy_delete_buffer (YY_BUFFER_STATE  b )yy_delete_buffer1603,46519
+    static void yy_init_buffer  (YY_BUFFER_STATE  b, FILE * file )yy_init_buffer1626,47044
+    void yy_flush_buffer (YY_BUFFER_STATE  b )yy_flush_buffer1654,47777
+void yypush_buffer_state (YY_BUFFER_STATE new_buffer )yypush_buffer_state1683,48463
+void yypop_buffer_state (void)yypop_buffer_state1713,49228
+static void yyensure_buffer_stack (void)yyensure_buffer_stack1732,49623
+YY_BUFFER_STATE yy_scan_buffer  (char * base, yy_size_t  size )yy_scan_buffer1781,51245
+YY_BUFFER_STATE yy_scan_string (yyconst char * yystr )yy_scan_string1818,52318
+YY_BUFFER_STATE yy_scan_bytes  (yyconst char * yybytes, yy_size_t  _yybytes_len )yy_scan_bytes1831,52724
+#define YY_EXIT_FAILURE YY_EXIT_FAILURE1861,53448
+static void yy_fatal_error (yyconst char* msg )yy_fatal_error1864,53482
+#undef yylessyyless1872,53661
+#define yyless(yyless1873,53675
+int yyget_lineno  (void)yyget_lineno1892,54134
+FILE *yyget_in  (void)yyget_in1901,54228
+FILE *yyget_out  (void)yyget_out1909,54312
+yy_size_t yyget_leng  (void)yyget_leng1917,54412
+char *yyget_text  (void)yyget_text1926,54505
+void yyset_lineno (int  line_number )yyset_lineno1935,54621
+void yyset_in (FILE *  in_str )yyset_in1947,54846
+void yyset_out (FILE *  out_str )yyset_out1952,54907
+int yyget_debug  (void)yyget_debug1957,54972
+void yyset_debug (int  bdebug )yyset_debug1962,55031
+static int yy_init_globals (void)yy_init_globals1967,55101
+int yylex_destroy  (void)yylex_destroy1996,55783
+static void yy_flex_strncpy (char* s1, yyconst char * s2, int n )yy_flex_strncpy2022,56337
+static int yy_flex_strlen (yyconst char * s )yy_flex_strlen2031,56498
+void *yyalloc (yy_size_t  size )yyalloc2041,56615
+void *yyrealloc  (void * ptr, yy_size_t  size )yyrealloc2046,56686
+void yyfree (void * ptr )yyfree2058,57142
+#define YYTABLES_NAME YYTABLES_NAME2063,57236
+int yywrap(void)yywrap2069,57292
+int main(int argc, char *argv[])main2074,57325
 
 src/monkc_preprocessor/Makefile,57
 BINPATH = /usr/local/bin/BINPATH1,0
@@ -2282,191 +2538,6 @@ info(Bird);Bird14,271
 clear(Bird);Bird15,283
 Bird* bc = new_category(Bird, BirdCatA);bc16,296
 
-src/monkc_preprocessor/lex.yy.c,9899
-#define  YY_INT_ALIGNED YY_INT_ALIGNED4,21
-#define FLEX_SCANNERFLEX_SCANNER8,99
-#define YY_FLEX_MAJOR_VERSION YY_FLEX_MAJOR_VERSION9,120
-#define YY_FLEX_MINOR_VERSION YY_FLEX_MINOR_VERSION10,152
-#define YY_FLEX_SUBMINOR_VERSION YY_FLEX_SUBMINOR_VERSION11,184
-#define FLEX_BETAFLEX_BETA13,253
-#define	__STDC_LIMIT_MACROS__STDC_LIMIT_MACROS20,407
-#define	__dead2__dead225,491
-#define FLEXINT_HFLEXINT_H39,712
-#define __STDC_LIMIT_MACROS __STDC_LIMIT_MACROS50,1055
-typedef int8_t flex_int8_t;flex_int8_t54,1115
-typedef uint8_t flex_uint8_t;flex_uint8_t55,1143
-typedef int16_t flex_int16_t;flex_int16_t56,1173
-typedef uint16_t flex_uint16_t;flex_uint16_t57,1203
-typedef int32_t flex_int32_t;flex_int32_t58,1235
-typedef uint32_t flex_uint32_t;flex_uint32_t59,1265
-typedef signed char flex_int8_t;flex_int8_t61,1303
-typedef short int flex_int16_t;flex_int16_t62,1336
-typedef int flex_int32_t;flex_int32_t63,1368
-typedef unsigned char flex_uint8_t; flex_uint8_t64,1394
-typedef unsigned short int flex_uint16_t;flex_uint16_t65,1431
-typedef unsigned int flex_uint32_t;flex_uint32_t66,1473
-#define INT8_MIN INT8_MIN70,1559
-#define INT16_MIN INT16_MIN73,1622
-#define INT32_MIN INT32_MIN76,1689
-#define INT8_MAX INT8_MAX79,1760
-#define INT16_MAX INT16_MAX82,1822
-#define INT32_MAX INT32_MAX85,1886
-#define UINT8_MAX UINT8_MAX88,1955
-#define UINT16_MAX UINT16_MAX91,2019
-#define UINT32_MAX UINT32_MAX94,2085
-#define YY_USE_CONSTYY_USE_CONST104,2255
-#define YY_USE_CONSTYY_USE_CONST111,2376
-#define yyconst yyconst117,2478
-#define yyconstyyconst119,2506
-#define YY_NULL YY_NULL123,2563
-#define YY_SC_TO_UI(YY_SC_TO_UI130,2810
-#define BEGIN BEGIN136,3041
-#define YY_START YY_START142,3240
-#define YYSTATE YYSTATE143,3280
-#define YY_STATE_EOF(YY_STATE_EOF146,3363
-#define YY_NEW_FILE YY_NEW_FILE149,3483
-#define YY_END_OF_BUFFER_CHAR YY_END_OF_BUFFER_CHAR151,3522
-#define YY_BUF_SIZE YY_BUF_SIZE155,3611
-#define YY_STATE_BUF_SIZE YY_STATE_BUF_SIZE160,3739
-#define YY_TYPEDEF_YY_BUFFER_STATEYY_TYPEDEF_YY_BUFFER_STATE163,3847
-typedef struct yy_buffer_state *YY_BUFFER_STATE;YY_BUFFER_STATE164,3882
-#define YY_TYPEDEF_YY_SIZE_TYY_TYPEDEF_YY_SIZE_T168,3968
-typedef size_t yy_size_t;yy_size_t169,3997
-#define EOB_ACT_CONTINUE_SCAN EOB_ACT_CONTINUE_SCAN176,4085
-#define EOB_ACT_END_OF_FILE EOB_ACT_END_OF_FILE177,4117
-#define EOB_ACT_LAST_MATCH EOB_ACT_LAST_MATCH178,4147
-    #define YY_LESS_LINENO(YY_LESS_LINENO180,4177
-#define yyless(yyless183,4292
-#define unput(unput196,4647
-#define YY_STRUCT_YY_BUFFER_STATEYY_STRUCT_YY_BUFFER_STATE199,4727
-struct yy_buffer_stateyy_buffer_state200,4761
-	FILE *yy_input_file;yy_input_file202,4787
-	char *yy_ch_buf;		/* input buffer */yy_ch_buf204,4810
-	char *yy_buf_pos;		/* current position in input buffer */yy_buf_pos205,4848
-	yy_size_t yy_buf_size;yy_buf_size210,4991
-	yy_size_t yy_n_chars;yy_n_chars215,5101
-	int yy_is_our_buffer;yy_is_our_buffer221,5269
-	int yy_is_interactive;yy_is_interactive228,5507
-	int yy_at_bol;yy_at_bol234,5674
-    int yy_bs_lineno; /**< The line count. */yy_bs_lineno236,5691
-    int yy_bs_column; /**< The column count. */yy_bs_column237,5737
-	int yy_fill_buffer;yy_fill_buffer242,5872
-	int yy_buffer_status;yy_buffer_status244,5894
-#define YY_BUFFER_NEW YY_BUFFER_NEW246,5918
-#define YY_BUFFER_NORMAL YY_BUFFER_NORMAL247,5942
-#define YY_BUFFER_EOF_PENDING YY_BUFFER_EOF_PENDING258,6440
-static size_t yy_buffer_stack_top = 0; /**< index of top of stack. */yy_buffer_stack_top264,6548
-static size_t yy_buffer_stack_max = 0; /**< capacity of stack. */yy_buffer_stack_max265,6618
-static YY_BUFFER_STATE * yy_buffer_stack = 0; /**< Stack as an array. */yy_buffer_stack266,6684
-#define YY_CURRENT_BUFFER YY_CURRENT_BUFFER274,6952
-#define yy_current_buffer yy_current_buffer277,7105
-#define YY_CURRENT_BUFFER_LVALUE YY_CURRENT_BUFFER_LVALUE282,7292
-static char yy_hold_char;yy_hold_char285,7434
-static yy_size_t yy_n_chars;		/* number of characters read into yy_ch_buf */yy_n_chars286,7460
-yy_size_t yyleng;yyleng287,7537
-static char *yy_c_buf_p = (char *) 0;yy_c_buf_p290,7601
-static int yy_init = 0;		/* whether we need to initialize */yy_init291,7639
-static int yy_start = 0;	/* start state number */yy_start292,7700
-static int yy_did_buffer_switch_on_eof;yy_did_buffer_switch_on_eof297,7879
-#define YY_FLUSH_BUFFER YY_FLUSH_BUFFER311,8399
-#define yy_new_buffer yy_new_buffer321,8741
-#define yy_set_interactive(yy_set_interactive323,8781
-#define yy_set_bol(yy_set_bol333,9057
-#define YY_AT_BOL(YY_AT_BOL343,9300
-typedef unsigned char YY_CHAR;YY_CHAR347,9383
-FILE *yyin = (FILE *) 0, *yyout = (FILE *) 0;yyin349,9415
-FILE *yyin = (FILE *) 0, *yyout = (FILE *) 0;yyout349,9415
-typedef int yy_state_type;yy_state_type351,9462
-int yylineno = 1;yylineno355,9512
-#define yytext_ptr yytext_ptr358,9552
-#define YY_DO_BEFORE_ACTION YY_DO_BEFORE_ACTION368,9913
-#define YY_NUM_RULES YY_NUM_RULES375,10076
-#define YY_END_OF_BUFFER YY_END_OF_BUFFER376,10100
-struct yy_trans_infoyy_trans_info379,10209
-	flex_int32_t yy_verify;yy_verify381,10233
-	flex_int32_t yy_nxt;yy_nxt382,10258
-static yyconst flex_int16_t yy_accept[167] =yy_accept384,10284
-static yyconst flex_int32_t yy_ec[256] =yy_ec406,11430
-static yyconst flex_int32_t yy_meta[32] =yy_meta438,13152
-static yyconst flex_int16_t yy_base[201] =yy_base446,13419
-static yyconst flex_int16_t yy_def[201] =yy_def472,14783
-static yyconst flex_int16_t yy_nxt[455] =yy_nxt498,16146
-static yyconst flex_int16_t yy_chk[455] =yy_chk552,19165
-static yy_state_type yy_last_accepting_state;yy_last_accepting_state606,22184
-static char *yy_last_accepting_cpos;yy_last_accepting_cpos607,22230
-int yy_flex_debug = 0;yy_flex_debug610,22294
-#define REJECT REJECT615,22420
-#define yymore(yymore616,22464
-#define YY_MORE_ADJ YY_MORE_ADJ617,22510
-#define YY_RESTORE_YY_MORE_OFFSETYY_RESTORE_YY_MORE_OFFSET618,22532
-char *yytext;yytext619,22566
-unsigned hash(const char *s)hash622,22614
-char* uint2str(unsigned i)uint2str630,22750
-char* hash_ff_method_name(char* in, int i)hash_ff_method_name637,22857
-char* hash_binding_method_name(char* in, int i)hash_binding_method_name667,23586
-char* hash_new_class_name(char* in, int i)hash_new_class_name695,24315
-char* hash_new_category_class_name(char* in, int i)hash_new_category_class_name719,24899
-#define MYP MYP743,25492
-#define MYECHO MYECHO744,25557
-#define MYECHO2 MYECHO2746,25674
-#define MYECHO3 MYECHO3748,25796
-#define MYECHO4 MYECHO4750,25913
-#define INITIAL INITIAL755,26062
-#define YY_EXTRA_TYPE YY_EXTRA_TYPE766,26364
-#define YY_READ_BUF_SIZE YY_READ_BUF_SIZE836,27613
-#define ECHO ECHO844,27831
-#define YY_INPUT(YY_INPUT851,28041
-#define yyterminate(yyterminate888,28955
-#define YY_START_STACK_INCR YY_START_STACK_INCR893,29090
-#define YY_FATAL_ERROR(YY_FATAL_ERROR898,29180
-#define YY_DECL_IS_OURS YY_DECL_IS_OURS907,29413
-#define YY_DECL YY_DECL911,29466
-#define YY_USER_ACTIONYY_USER_ACTION918,29642
-#define YY_BREAK YY_BREAK923,29735
-#define YY_RULE_SETUP YY_RULE_SETUP926,29767
-static int yy_get_next_buffer (void)yy_get_next_buffer1222,36379
-    static yy_state_type yy_get_previous_state (void)yy_get_previous_state1356,39951
-    static yy_state_type yy_try_NUL_trans  (yy_state_type yy_current_state )yy_try_NUL_trans1388,40826
-    static void yyunput (int c, char * yy_bp )yyunput1412,41492
-    static int yyinput (void)yyinput1452,42545
-    void yyrestart  (FILE * input_file )yyrestart1529,44312
-    void yy_switch_to_buffer  (YY_BUFFER_STATE  new_buffer )yy_switch_to_buffer1546,44673
-static void yy_load_buffer_state  (void)yy_load_buffer_state1577,45516
-    YY_BUFFER_STATE yy_create_buffer  (FILE * file, int  size )yy_create_buffer1591,45989
-    void yy_delete_buffer (YY_BUFFER_STATE  b )yy_delete_buffer1619,46680
-    static void yy_init_buffer  (YY_BUFFER_STATE  b, FILE * file )yy_init_buffer1638,47129
-    void yy_flush_buffer (YY_BUFFER_STATE  b )yy_flush_buffer1666,47862
-void yypush_buffer_state (YY_BUFFER_STATE new_buffer )yypush_buffer_state1695,48548
-void yypop_buffer_state (void)yypop_buffer_state1725,49313
-static void yyensure_buffer_stack (void)yyensure_buffer_stack1744,49708
-YY_BUFFER_STATE yy_scan_buffer  (char * base, yy_size_t  size )yy_scan_buffer1793,51330
-YY_BUFFER_STATE yy_scan_string (yyconst char * yystr )yy_scan_string1830,52403
-YY_BUFFER_STATE yy_scan_bytes  (yyconst char * yybytes, yy_size_t  _yybytes_len )yy_scan_bytes1843,52820
-#define YY_EXIT_FAILURE YY_EXIT_FAILURE1874,53555
-static void yy_fatal_error (yyconst char* msg )yy_fatal_error1877,53589
-#undef yylessyyless1885,53768
-#define yyless(yyless1886,53782
-int yyget_lineno  (void)yyget_lineno1905,54241
-FILE *yyget_in  (void)yyget_in1914,54335
-FILE *yyget_out  (void)yyget_out1922,54419
-yy_size_t yyget_leng  (void)yyget_leng1930,54519
-char *yyget_text  (void)yyget_text1939,54612
-void yyset_lineno (int  line_number )yyset_lineno1948,54728
-void yyset_in (FILE *  in_str )yyset_in1960,54953
-void yyset_out (FILE *  out_str )yyset_out1965,55014
-int yyget_debug  (void)yyget_debug1970,55079
-void yyset_debug (int  bdebug )yyset_debug1975,55138
-static int yy_init_globals (void)yy_init_globals1980,55208
-int yylex_destroy  (void)yylex_destroy2009,55890
-static void yy_flex_strncpy (char* s1, yyconst char * s2, int n )yy_flex_strncpy2035,56444
-static int yy_flex_strlen (yyconst char * s )yy_flex_strlen2044,56596
-void *yyalloc (yy_size_t  size )yyalloc2054,56704
-void *yyrealloc  (void * ptr, yy_size_t  size )yyrealloc2059,56775
-void yyfree (void * ptr )yyfree2071,57231
-#define YYTABLES_NAME YYTABLES_NAME2076,57325
-int yywrap(void)yywrap2082,57381
-int main(int argc, char *argv[])main2087,57414
-
 src/monkc_runtime/HashTable.c,1012
 static const unsigned mc_hashtable_sizes[5] = {mc_hashtable_sizes30,1525
 unsigned get_tablesize(const unsigned level)get_tablesize37,1695
@@ -2496,6 +2567,27 @@ void runtime_log(char* volatile fmt, ...)runtime_log67,2235
 void error_logt(char* volatile tag, char* volatile fmt, ...)error_logt83,2576
 void debug_logt(char* volatile tag, char* volatile fmt, ...)debug_logt98,2917
 void runtime_logt(char* volatile tag, char* volatile fmt, ...)runtime_logt114,3297
+
+src/monkc_runtime/Makefile,818
+INCPATH=/usr/local/include/INCPATH1,0
+LIBPATH=/usr/local/lib/LIBPATH2,28
+SRCS=$(wildcard *.c)SRCS4,53
+LIBOBJS=$(patsubst %.c, %.o, $(SRCS))LIBOBJS5,74
+ARCH=$(strip $(shell uname -m))ARCH6,112
+OS=$(strip $(shell uname -s))OS7,144
+CC=gcc -g -WallCC10,217
+AS=asAS11,233
+ASMFILE=MCRuntimeAsm_IA32.asmASMFILE13,240
+	ASMFILE=MCRuntimeAsm_X8664_darwin.asmASMFILE16,312
+	ASMFILE=MCRuntimeAsm_IA32_darwin.asmASMFILE21,403
+	ASMFILE=MCRuntimeAsm_IA32_darwin.asmASMFILE26,493
+	ASMFILE=MCRuntimeAsm_X8664.asmASMFILE31,584
+	ASMFILE=MCRuntimeAsm_X8664.asmASMFILE36,670
+	ASMFILE=MCRuntimeAsm_PowerPC64.SASMFILE41,758
+	ASMFILE=MCRuntimeAsm_IA32.asmASMFILE46,843
+	ASMFILE=MCRuntimeAsm_IA32.asmASMFILE51,925
+	ASMFILE=MCRuntimeAsm_ARM32.asmASMFILE55,990
+	ASMFILE=MCRuntimeAsm_ARM64.asmASMFILE59,1055
 
 src/monkc_runtime/MCRuntimeAsm/MCRuntimeAsm_ARM32.asm,387
 _push_jump:_push_jump39,1747
@@ -2570,27 +2662,6 @@ _mc_atomic_get_pointer:_mc_atomic_get_pointer139,3498
 _mc_atomic_set_integer:_mc_atomic_set_integer153,3704
 _mc_atomic_set_pointer:_mc_atomic_set_pointer178,4156
 
-src/monkc_runtime/Makefile,818
-INCPATH=/usr/local/include/INCPATH1,0
-LIBPATH=/usr/local/lib/LIBPATH2,28
-SRCS=$(wildcard *.c)SRCS4,53
-LIBOBJS=$(patsubst %.c, %.o, $(SRCS))LIBOBJS5,74
-ARCH=$(strip $(shell uname -m))ARCH6,112
-OS=$(strip $(shell uname -s))OS7,144
-CC=gcc -g -WallCC10,217
-AS=asAS11,233
-ASMFILE=MCRuntimeAsm_IA32.asmASMFILE13,240
-	ASMFILE=MCRuntimeAsm_X8664_darwin.asmASMFILE16,312
-	ASMFILE=MCRuntimeAsm_IA32_darwin.asmASMFILE21,403
-	ASMFILE=MCRuntimeAsm_IA32_darwin.asmASMFILE26,493
-	ASMFILE=MCRuntimeAsm_X8664.asmASMFILE31,584
-	ASMFILE=MCRuntimeAsm_X8664.asmASMFILE36,670
-	ASMFILE=MCRuntimeAsm_PowerPC64.SASMFILE41,758
-	ASMFILE=MCRuntimeAsm_IA32.asmASMFILE46,843
-	ASMFILE=MCRuntimeAsm_IA32.asmASMFILE51,925
-	ASMFILE=MCRuntimeAsm_ARM32.asmASMFILE55,990
-	ASMFILE=MCRuntimeAsm_ARM64.asmASMFILE59,1055
-
 src/monkc_runtime/Messaging.c,490
 mc_message make_msg(mo const obj, const void* entry)make_msg30,1525
 mc_message _self_response_to(const mo obj, const char* methodname)_self_response_to39,1703
@@ -2598,24 +2669,153 @@ mc_message _self_response_to_h(const mo obj, const char* methodname, unsigned ha
 mc_message _response_to(const mo obj, const char* methodname, int strict)_response_to72,2699
 mc_message _response_to_h(const mo obj, const char* methodname, unsigned hashval, int strict)_response_to_h77,2845
 
-src/monkc_runtime/ObjectManage.c,1274
-mc_block* alloc_mc_block()alloc_mc_block40,1663
-mc_block* init_mc_block(mc_block* ablock, void* data)init_mc_block45,1740
-mc_block* new_mc_block(void* data)new_mc_block52,1870
-void package_by_block(mc_block* ablock, mc_object* aobject)package_by_block57,1957
-mc_blockpool* new_mc_blockpool()new_mc_blockpool63,2085
-void pushToTail(mc_blockpool* bpool, mc_block* ablock)pushToTail71,2244
-mc_block* getFromHead(mc_blockpool* bpool)getFromHead87,2634
-void empty(mc_blockpool* bpool)empty107,3034
-int count(mc_blockpool* bpool)count117,3211
-int cut(mc_blockpool* bpool, mc_block* ablock, mc_block** result)cut131,3430
-void mc_info(const char* classname, size_t size, loaderFP loader)mc_info183,4776
-void mc_info_h(const char* classname, size_t size, loaderFP loader, unsigned hashval)mc_info_h188,4901
-void mc_clear(const char* classname, size_t size, loaderFP loader)mc_clear195,5167
-void mc_clear_h(const char* classname, size_t size, loaderFP loader, unsigned hashval)mc_clear_h200,5294
-mo mc_alloc(const char* classname, size_t size, loaderFP loader)mc_alloc215,5878
-mo mc_alloc_h(const char* classname, size_t size, loaderFP loader, unsigned hashval)mc_alloc_h220,6010
-void mc_dealloc(mc_object* aobject, int is_recycle)mc_dealloc246,6821
+src/monkc_runtime/monkc/monkc.h,5980
+#define __MCRuntime____MCRuntime__29,1508
+#define MC_HASHTABLE_SIZE_L1 MC_HASHTABLE_SIZE_L147,2062
+#define MC_HASHTABLE_SIZE_L2 MC_HASHTABLE_SIZE_L248,2095
+#define MC_HASHTABLE_SIZE_L3 MC_HASHTABLE_SIZE_L349,2128
+#define MC_HASHTABLE_SIZE_L4 MC_HASHTABLE_SIZE_L450,2162
+#define MC_HASHTABLE_SIZE_L5 MC_HASHTABLE_SIZE_L551,2196
+#define MC_STRICT_MODE MC_STRICT_MODE60,2443
+#define nil nil70,2682
+#define xxx xxx72,2712
+#define S(S73,2734
+#define SEQ(SEQ74,2758
+#define A_B(A_B75,2812
+typedef struct mc_hashitem_structmc_hashitem_struct77,2839
+	struct mc_hashitem_struct* next;next79,2875
+	unsigned hash;hash80,2909
+	unsigned index;index81,2925
+	unsigned level;level82,2942
+	void* value;value83,2959
+	char* key;key85,3003
+}mc_hashitem;mc_hashitem86,3015
+typedef struct mc_hashtable_structmc_hashtable_struct88,3030
+	int lock;lock90,3067
+	unsigned level;level91,3078
+	unsigned count;count92,3095
+	mc_hashitem* items[];items93,3112
+}mc_hashtable;mc_hashtable94,3135
+typedef struct mc_block_structmc_block_struct96,3151
+	struct mc_block_struct* next;next98,3184
+	void* data;data99,3215
+}mc_block;mc_block100,3228
+typedef struct mc_blockpool_structmc_blockpool_struct102,3240
+	int lock;lock104,3277
+	mc_block* tail;tail105,3288
+}mc_blockpool;mc_blockpool106,3305
+typedef struct mc_class_structmc_class_struct109,3378
+	size_t objsize;objsize111,3411
+	mc_hashtable* table;table112,3428
+	mc_blockpool* free_pool;free_pool113,3450
+	mc_blockpool* used_pool;used_pool114,3476
+	mc_hashitem* item;item115,3502
+}mc_class;mc_class116,3522
+typedef struct mc_object_structmc_object_struct119,3587
+	struct mc_object_struct* super;super121,3621
+	mc_class* isa;isa122,3654
+	mc_block* block;block123,3670
+	int ref_count;ref_count124,3688
+	mc_class* saved_isa;saved_isa125,3704
+	mc_class* mode;mode126,3726
+}mc_object;mc_object127,3743
+typedef mc_object* mo;mo128,3755
+#define monkc(monkc130,3779
+#define end(end139,3952
+#define implements(implements144,4096
+#define extends(extends145,4125
+typedef mc_class* (*loaderFP)(mc_class*);loaderFP148,4183
+typedef mc_object* (*initerFP)(mc_object*);initerFP149,4225
+#define loader(loader152,4282
+#define initer(initer153,4349
+#define binding(binding156,4425
+#define override(override157,4503
+#define hinding(hinding158,4582
+#define hverride(hverride159,4671
+#define method(method160,4762
+#define protocol(protocol161,4872
+#define varscope(varscope162,4992
+#define var(var163,5058
+#define cast(cast164,5111
+#define newc(newc167,5172
+#define new(new168,5309
+#define hew(hew169,5434
+#define new_category(new_category170,5535
+#define hew_category(hew_category171,5667
+#define clear(clear172,5811
+#define hlear(hlear173,5878
+#define info(info174,5958
+#define hnfo(hnfo175,6036
+#define callc(callc178,6144
+#define call(call179,6257
+#define response_to(response_to180,6361
+#define hesponse_to(hesponse_to181,6427
+#define ffc(ffc182,6505
+#define ff(ff183,6627
+#define fh(fh184,6741
+#define fs(fs185,6854
+#define shift(shift186,6943
+#define shift_back(shift_back187,7023
+#define REFCOUNT_NO_MM REFCOUNT_NO_MM212,8006
+#define REFCOUNT_ERR REFCOUNT_ERR213,8033
+#define recycle(recycle217,8144
+#define release(release218,8183
+#define retain(retain219,8222
+#define nameof(nameof229,8573
+#define nameofc(nameofc230,8612
+#define deref(deref231,8649
+#define addrof(addrof232,8673
+int LOG_LEVEL;LOG_LEVEL238,8714
+#define MC_SILENT MC_SILENT240,8730
+#define MC_ERROR_ONLY MC_ERROR_ONLY241,8754
+#define MC_DEBUG MC_DEBUG242,8778
+#define MC_VERBOSE MC_VERBOSE243,8802
+#define LOG_COLOR_NONE LOG_COLOR_NONE246,8851
+#define LOG_COLOR_BLACK LOG_COLOR_BLACK247,8884
+#define LOG_COLOR_DARK_GRAY LOG_COLOR_DARK_GRAY248,8921
+#define LOG_COLOR_BLUE LOG_COLOR_BLUE249,8962
+#define LOG_COLOR_LIGHT_BLUE LOG_COLOR_LIGHT_BLUE250,8998
+#define LOG_COLOR_GREEN LOG_COLOR_GREEN251,9040
+#define LOG_COLOR_LIGHT_GREEN LOG_COLOR_LIGHT_GREEN252,9077
+#define LOG_COLOR_CYAN LOG_COLOR_CYAN253,9120
+#define LOG_COLOR_LIGHT_CYAN LOG_COLOR_LIGHT_CYAN254,9156
+#define LOG_COLOR_RED LOG_COLOR_RED255,9198
+#define LOG_COLOR_LIGHT_RED LOG_COLOR_LIGHT_RED256,9233
+#define LOG_COLOR_PURPLE LOG_COLOR_PURPLE257,9274
+#define LOG_COLOR_LIGHT_PURPLE LOG_COLOR_LIGHT_PURPLE258,9312
+#define LOG_COLOR_BROWN LOG_COLOR_BROWN259,9356
+#define LOG_COLOR_YELLOW LOG_COLOR_YELLOW260,9393
+#define LOG_COLOR_LIGHT_GRAY LOG_COLOR_LIGHT_GRAY261,9431
+#define LOG_COLOR_WHITE LOG_COLOR_WHITE262,9473
+#define LOG_FMT LOG_FMT263,9510
+#define LOG_COLOR_NONE LOG_COLOR_NONE265,9546
+#define LOG_COLOR_BLACK LOG_COLOR_BLACK266,9572
+#define LOG_COLOR_DARK_GRAY LOG_COLOR_DARK_GRAY267,9599
+#define LOG_COLOR_BLUE LOG_COLOR_BLUE268,9630
+#define LOG_COLOR_LIGHT_BLUE LOG_COLOR_LIGHT_BLUE269,9656
+#define LOG_COLOR_GREEN LOG_COLOR_GREEN270,9688
+#define LOG_COLOR_LIGHT_GREEN LOG_COLOR_LIGHT_GREEN271,9715
+#define LOG_COLOR_CYAN LOG_COLOR_CYAN272,9748
+#define LOG_COLOR_LIGHT_CYAN LOG_COLOR_LIGHT_CYAN273,9774
+#define LOG_COLOR_RED LOG_COLOR_RED274,9806
+#define LOG_COLOR_LIGHT_RED LOG_COLOR_LIGHT_RED275,9831
+#define LOG_COLOR_PURPLE LOG_COLOR_PURPLE276,9862
+#define LOG_COLOR_LIGHT_PURPLE LOG_COLOR_LIGHT_PURPLE277,9890
+#define LOG_COLOR_BROWN LOG_COLOR_BROWN278,9924
+#define LOG_COLOR_YELLOW LOG_COLOR_YELLOW279,9951
+#define LOG_COLOR_LIGHT_GRAY LOG_COLOR_LIGHT_GRAY280,9979
+#define LOG_COLOR_WHITE LOG_COLOR_WHITE281,10011
+#define LOG_FMT LOG_FMT282,10038
+typedef struct mc_message_structmc_message_struct328,11673
+    mo object;object330,11708
+    const void* addr;addr331,11723
+}mc_message, lamdafunc;mc_message332,11745
+}mc_message, lamdafunc;lamdafunc332,11745
+#define lamda(lamda334,11770
+#define _lamda _lamda335,11810
+#define MC_NO_NODE(MC_NO_NODE381,13603
+#define MC_ONE_NODE(MC_ONE_NODE382,13648
+#define MC_TWO_NODE(MC_TWO_NODE383,13708
 
 src/monkc_runtime/monkc.c,1679
 static mc_hashtable* mc_global_classtable = nil;mc_global_classtable31,1540
@@ -2789,153 +2989,24 @@ typedef struct mc_message_structmc_message_struct328,11673
 #define MC_ONE_NODE(MC_ONE_NODE382,13648
 #define MC_TWO_NODE(MC_TWO_NODE383,13708
 
-src/monkc_runtime/monkc/monkc.h,5980
-#define __MCRuntime____MCRuntime__29,1508
-#define MC_HASHTABLE_SIZE_L1 MC_HASHTABLE_SIZE_L147,2062
-#define MC_HASHTABLE_SIZE_L2 MC_HASHTABLE_SIZE_L248,2095
-#define MC_HASHTABLE_SIZE_L3 MC_HASHTABLE_SIZE_L349,2128
-#define MC_HASHTABLE_SIZE_L4 MC_HASHTABLE_SIZE_L450,2162
-#define MC_HASHTABLE_SIZE_L5 MC_HASHTABLE_SIZE_L551,2196
-#define MC_STRICT_MODE MC_STRICT_MODE60,2443
-#define nil nil70,2682
-#define xxx xxx72,2712
-#define S(S73,2734
-#define SEQ(SEQ74,2758
-#define A_B(A_B75,2812
-typedef struct mc_hashitem_structmc_hashitem_struct77,2839
-	struct mc_hashitem_struct* next;next79,2875
-	unsigned hash;hash80,2909
-	unsigned index;index81,2925
-	unsigned level;level82,2942
-	void* value;value83,2959
-	char* key;key85,3003
-}mc_hashitem;mc_hashitem86,3015
-typedef struct mc_hashtable_structmc_hashtable_struct88,3030
-	int lock;lock90,3067
-	unsigned level;level91,3078
-	unsigned count;count92,3095
-	mc_hashitem* items[];items93,3112
-}mc_hashtable;mc_hashtable94,3135
-typedef struct mc_block_structmc_block_struct96,3151
-	struct mc_block_struct* next;next98,3184
-	void* data;data99,3215
-}mc_block;mc_block100,3228
-typedef struct mc_blockpool_structmc_blockpool_struct102,3240
-	int lock;lock104,3277
-	mc_block* tail;tail105,3288
-}mc_blockpool;mc_blockpool106,3305
-typedef struct mc_class_structmc_class_struct109,3378
-	size_t objsize;objsize111,3411
-	mc_hashtable* table;table112,3428
-	mc_blockpool* free_pool;free_pool113,3450
-	mc_blockpool* used_pool;used_pool114,3476
-	mc_hashitem* item;item115,3502
-}mc_class;mc_class116,3522
-typedef struct mc_object_structmc_object_struct119,3587
-	struct mc_object_struct* super;super121,3621
-	mc_class* isa;isa122,3654
-	mc_block* block;block123,3670
-	int ref_count;ref_count124,3688
-	mc_class* saved_isa;saved_isa125,3704
-	mc_class* mode;mode126,3726
-}mc_object;mc_object127,3743
-typedef mc_object* mo;mo128,3755
-#define monkc(monkc130,3779
-#define end(end139,3952
-#define implements(implements144,4096
-#define extends(extends145,4125
-typedef mc_class* (*loaderFP)(mc_class*);loaderFP148,4183
-typedef mc_object* (*initerFP)(mc_object*);initerFP149,4225
-#define loader(loader152,4282
-#define initer(initer153,4349
-#define binding(binding156,4425
-#define override(override157,4503
-#define hinding(hinding158,4582
-#define hverride(hverride159,4671
-#define method(method160,4762
-#define protocol(protocol161,4872
-#define varscope(varscope162,4992
-#define var(var163,5058
-#define cast(cast164,5111
-#define newc(newc167,5172
-#define new(new168,5309
-#define hew(hew169,5434
-#define new_category(new_category170,5535
-#define hew_category(hew_category171,5667
-#define clear(clear172,5811
-#define hlear(hlear173,5878
-#define info(info174,5958
-#define hnfo(hnfo175,6036
-#define callc(callc178,6144
-#define call(call179,6257
-#define response_to(response_to180,6361
-#define hesponse_to(hesponse_to181,6427
-#define ffc(ffc182,6505
-#define ff(ff183,6627
-#define fh(fh184,6741
-#define fs(fs185,6854
-#define shift(shift186,6943
-#define shift_back(shift_back187,7023
-#define REFCOUNT_NO_MM REFCOUNT_NO_MM212,8006
-#define REFCOUNT_ERR REFCOUNT_ERR213,8033
-#define recycle(recycle217,8144
-#define release(release218,8183
-#define retain(retain219,8222
-#define nameof(nameof229,8573
-#define nameofc(nameofc230,8612
-#define deref(deref231,8649
-#define addrof(addrof232,8673
-int LOG_LEVEL;LOG_LEVEL238,8714
-#define MC_SILENT MC_SILENT240,8730
-#define MC_ERROR_ONLY MC_ERROR_ONLY241,8754
-#define MC_DEBUG MC_DEBUG242,8778
-#define MC_VERBOSE MC_VERBOSE243,8802
-#define LOG_COLOR_NONE LOG_COLOR_NONE246,8851
-#define LOG_COLOR_BLACK LOG_COLOR_BLACK247,8884
-#define LOG_COLOR_DARK_GRAY LOG_COLOR_DARK_GRAY248,8921
-#define LOG_COLOR_BLUE LOG_COLOR_BLUE249,8962
-#define LOG_COLOR_LIGHT_BLUE LOG_COLOR_LIGHT_BLUE250,8998
-#define LOG_COLOR_GREEN LOG_COLOR_GREEN251,9040
-#define LOG_COLOR_LIGHT_GREEN LOG_COLOR_LIGHT_GREEN252,9077
-#define LOG_COLOR_CYAN LOG_COLOR_CYAN253,9120
-#define LOG_COLOR_LIGHT_CYAN LOG_COLOR_LIGHT_CYAN254,9156
-#define LOG_COLOR_RED LOG_COLOR_RED255,9198
-#define LOG_COLOR_LIGHT_RED LOG_COLOR_LIGHT_RED256,9233
-#define LOG_COLOR_PURPLE LOG_COLOR_PURPLE257,9274
-#define LOG_COLOR_LIGHT_PURPLE LOG_COLOR_LIGHT_PURPLE258,9312
-#define LOG_COLOR_BROWN LOG_COLOR_BROWN259,9356
-#define LOG_COLOR_YELLOW LOG_COLOR_YELLOW260,9393
-#define LOG_COLOR_LIGHT_GRAY LOG_COLOR_LIGHT_GRAY261,9431
-#define LOG_COLOR_WHITE LOG_COLOR_WHITE262,9473
-#define LOG_FMT LOG_FMT263,9510
-#define LOG_COLOR_NONE LOG_COLOR_NONE265,9546
-#define LOG_COLOR_BLACK LOG_COLOR_BLACK266,9572
-#define LOG_COLOR_DARK_GRAY LOG_COLOR_DARK_GRAY267,9599
-#define LOG_COLOR_BLUE LOG_COLOR_BLUE268,9630
-#define LOG_COLOR_LIGHT_BLUE LOG_COLOR_LIGHT_BLUE269,9656
-#define LOG_COLOR_GREEN LOG_COLOR_GREEN270,9688
-#define LOG_COLOR_LIGHT_GREEN LOG_COLOR_LIGHT_GREEN271,9715
-#define LOG_COLOR_CYAN LOG_COLOR_CYAN272,9748
-#define LOG_COLOR_LIGHT_CYAN LOG_COLOR_LIGHT_CYAN273,9774
-#define LOG_COLOR_RED LOG_COLOR_RED274,9806
-#define LOG_COLOR_LIGHT_RED LOG_COLOR_LIGHT_RED275,9831
-#define LOG_COLOR_PURPLE LOG_COLOR_PURPLE276,9862
-#define LOG_COLOR_LIGHT_PURPLE LOG_COLOR_LIGHT_PURPLE277,9890
-#define LOG_COLOR_BROWN LOG_COLOR_BROWN278,9924
-#define LOG_COLOR_YELLOW LOG_COLOR_YELLOW279,9951
-#define LOG_COLOR_LIGHT_GRAY LOG_COLOR_LIGHT_GRAY280,9979
-#define LOG_COLOR_WHITE LOG_COLOR_WHITE281,10011
-#define LOG_FMT LOG_FMT282,10038
-typedef struct mc_message_structmc_message_struct328,11673
-    mo object;object330,11708
-    const void* addr;addr331,11723
-}mc_message, lamdafunc;mc_message332,11745
-}mc_message, lamdafunc;lamdafunc332,11745
-#define lamda(lamda334,11770
-#define _lamda _lamda335,11810
-#define MC_NO_NODE(MC_NO_NODE381,13603
-#define MC_ONE_NODE(MC_ONE_NODE382,13648
-#define MC_TWO_NODE(MC_TWO_NODE383,13708
+src/monkc_runtime/ObjectManage.c,1274
+mc_block* alloc_mc_block()alloc_mc_block40,1663
+mc_block* init_mc_block(mc_block* ablock, void* data)init_mc_block45,1740
+mc_block* new_mc_block(void* data)new_mc_block52,1870
+void package_by_block(mc_block* ablock, mc_object* aobject)package_by_block57,1957
+mc_blockpool* new_mc_blockpool()new_mc_blockpool63,2085
+void pushToTail(mc_blockpool* bpool, mc_block* ablock)pushToTail71,2244
+mc_block* getFromHead(mc_blockpool* bpool)getFromHead87,2634
+void empty(mc_blockpool* bpool)empty107,3034
+int count(mc_blockpool* bpool)count117,3211
+int cut(mc_blockpool* bpool, mc_block* ablock, mc_block** result)cut131,3430
+void mc_info(const char* classname, size_t size, loaderFP loader)mc_info183,4776
+void mc_info_h(const char* classname, size_t size, loaderFP loader, unsigned hashval)mc_info_h188,4901
+void mc_clear(const char* classname, size_t size, loaderFP loader)mc_clear195,5167
+void mc_clear_h(const char* classname, size_t size, loaderFP loader, unsigned hashval)mc_clear_h200,5294
+mo mc_alloc(const char* classname, size_t size, loaderFP loader)mc_alloc215,5878
+mo mc_alloc_h(const char* classname, size_t size, loaderFP loader, unsigned hashval)mc_alloc_h220,6010
+void mc_dealloc(mc_object* aobject, int is_recycle)mc_dealloc246,6821
 
 src/tests/Main.c,50
 int main(int argc, char const *argv[])main7,130

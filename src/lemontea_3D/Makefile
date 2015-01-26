@@ -1,4 +1,4 @@
-OBJS = MC3DMainLoop.o
+OBJS = MC3DMainLoop.o MCCamera.o
 
 #for Mac OS install libxcb use macports
 LINK_HEAD = -I/usr/local/include/monkc \
@@ -21,6 +21,9 @@ exec:$(OBJS)
 
 MC3DMainLoop.o:MC3DMainLoop.c
 	$(CC) $(FLAGS) -c MC3DMainLoop.c $(LINK_HEAD)
+
+MCCamera.o:MCCamera.c
+	$(CC) $(FLAGS) -c MCCamera.c $(LINK_HEAD)
 
 clean:
 	rm -f exec $(OBJS)
