@@ -4,6 +4,7 @@
 //all the X11 stuff is installed in /opt/X11 on Mac OS
 #include <X11/X.h>
 #include <X11/Xlib.h>
+#include <X11/keysymdef.h>
 #include <GL/gl.h>
 #include <GL/glx.h>
 #include <GL/glu.h>
@@ -18,6 +19,7 @@ Window                  win;
 GLXContext              glc;
 XWindowAttributes       gwa;
 XEvent                  xev;
+XFontStruct*            fnt;
 
 #define MCLensStandard50mm (0.050)
 #define MCLensWide24mm     (0.024)
@@ -150,11 +152,10 @@ void DrawACube() {
 }
 
 static double degree = 0;
-static double tht = 0;
-static double fai = 0;
+static double tht = 0.5;
+static double fai = 0.5;
 
-int main(int argc, char *argv[]) {
-
+void setupX() {
     dpy = XOpenDisplay(NULL);
  
     if(dpy == NULL) {
@@ -173,6 +174,18 @@ int main(int argc, char *argv[]) {
         /* %p creates hexadecimal output like in glxinfo */
     }
 
+    //set font
+    const char * fontname = "-*-helvetica-*-r-*-*-14-*-*-*-*-*-*-*";
+    fnt = XLoadQueryFont (dpy, fontname);
+    /* If the font could not be loaded, revert to the "fixed" font. */
+    if (! fnt) {
+        //fprintf (stderr, "unable to load font %s: using fixed\n", fontname);
+        fnt = XLoadQueryFont (dpy, "fixed");
+    }
+    if (fnt) {
+      //XSetFont(dpy, glc, fnt->fid);
+    }
+    
     cmap = XCreateColormap(dpy, root, vi->visual, AllocNone);
     swa.colormap = cmap;
     swa.event_mask = ExposureMask | KeyPressMask;
@@ -184,7 +197,22 @@ int main(int argc, char *argv[]) {
     glc = glXCreateContext(dpy, vi, NULL, GL_TRUE);
     glXMakeCurrent(dpy, win, glc);
  
-    glEnable(GL_DEPTH_TEST); 
+    glEnable(GL_DEPTH_TEST);
+}
+
+void DrawText(int x, int y, const char* text, int size) {
+    int direction;
+    int ascent;
+    int descent;
+    XCharStruct overall;
+    XTextExtents (fnt, text, size,
+		  & direction, & ascent, & descent, & overall);
+    XDrawString(dpy, root, glc, x, y, text, size);
+}
+
+int main(int argc, char *argv[]) {
+
+    setupX();
 
     while(1) {
         XNextEvent(dpy, &xev);
@@ -192,19 +220,41 @@ int main(int argc, char *argv[]) {
         if(xev.type == Expose) {
             XGetWindowAttributes(dpy, win, &gwa);
             glViewport(0, 0, gwa.width, gwa.height);
-	    setupCamera(MCRatioMake(gwa.width, gwa.height),
-			MCLensStandard50mm, 100,
-			MCVertexMake(10.0,10.0,10.0), MCVertexMake(0,0,0), MCVertexMake(0,1.0,0));
-            ClearScreen();
-	    //DrawGround();
-	    DrawACube();
-            glXSwapBuffers(dpy, win);
-        }else if(xev.type == KeyPress) {
             setupCameraSpherical(MCRatioMake(gwa.width, gwa.height),
 				 MCLensStandard50mm, 100,
 				 17.32, tht, fai, MCVertexMake(0,0,0));
-	    tht = tht + 0.2;
-	    fai = fai + 2.0;
+	    //setupCamera(MCRatioMake(gwa.width, gwa.height),
+	    //		MCLensStandard50mm, 100,
+	    //		MCVertexMake(10.0,10.0,10.0), MCVertexMake(0,0,0), MCVertexMake(0,1.0,0));
+            ClearScreen();
+	    //DrawGround();
+	    //DrawText(0,0, "this is a 3D demo", 18);
+	    DrawACube();
+            glXSwapBuffers(dpy, win);
+        }else if(xev.type == KeyPress) {
+	  KeySym ks = XLookupKeysym(&xev.xkey, 0);
+            switch(ks) {
+	      case XK_Left:
+		fai = fai + 0.1;
+		break;
+	      case XK_Right:
+		fai = fai - 0.1;
+		break;
+	      case XK_Up:
+		tht = tht + 0.1;
+		break;
+	      case XK_Down:
+		tht = tht - 0.1;
+                break;
+	      default:
+	        break;
+	    }
+	  
+            setupCameraSpherical(MCRatioMake(gwa.width, gwa.height),
+				 MCLensStandard50mm, 100,
+				 17.32, tht, fai, MCVertexMake(0,0,0));
+	    //tht = tht + 0.2;
+	    //fai = fai + 2.0;
 
 	    ClearScreen();
 	    //DrawGround();
