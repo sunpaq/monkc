@@ -1,6 +1,7 @@
 #ifndef _MC3DBase
 #define _MC3DBase
 
+#include <math.h>
 #include <GL/gl.h>
 
 typedef struct {
@@ -11,6 +12,27 @@ typedef struct {
 
 inline MCVertex MCVertexMake(double x, double y, double z) {
     return (MCVertex){x, y, z};
+}
+
+inline MCVertex MCVertexMiddle(MCVertex v1, MCVertex v2) {
+    return (MCVertex){(v1.x+v2.x)/2.0f, (v1.y+v2.y)/2.0f, (v1.z+v2.z)/2.0f};
+}
+
+inline MCVertex MCVertexAdd(MCVertex v1, MCVertex v2) {
+    return (MCVertex){v1.x+v2.x, v1.y+v2.y, v1.z+v2.z};
+}
+
+inline MCVertex MCVertexSub(MCVertex v1, MCVertex v2) {
+    //the same as add -v2
+    return (MCVertex){v1.x-v2.x, v1.y-v2.y, v1.z-v2.z};
+}
+
+inline MCVertex MCVertexDot(MCVertex v1, MCVertex v2) {
+
+}
+
+inline MCVertex MCVertexCross(MCVertex v1, MCVertex v2) {
+
 }
 
 inline void putMCVertexes(MCVertex verp[], int size) {
