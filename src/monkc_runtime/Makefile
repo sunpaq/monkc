@@ -7,7 +7,7 @@ ARCH=$(strip $(shell uname -m))
 OS=$(strip $(shell uname -s))
 
 #-w -Wno-unused-variable -Wno-return-type
-CC=gcc -g -Wall
+FLAGS=-g -Wall
 AS=as
 
 ASMFILE=MCRuntimeAsm_IA32.asm
@@ -71,7 +71,7 @@ MCRuntimeAsm.o:
 
 #general target
 %.o:%.c
-	$(CC) -c $<
+	$(CC) $(FLAGS) -c $<
 
 install:
 	mkdir -p $(INCPATH)

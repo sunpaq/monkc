@@ -7,13 +7,13 @@ dumpBuild()
 	echo 'OBJS = $(patsubst %.c, %.o, $(MODULES))' >> build/Makefile
 	echo 'LINK_HEAD = -I/usr/local/include/monkc -I/usr/local/include/lemontea' >> build/Makefile
 	echo 'LINK_BIN = -lpthread -L/usr/local/lib -lmonkc -llemontea' >> build/Makefile
-	echo 'CC = gcc -g -w -Wall -Wno-unused-variable -Wno-return-type' >> build/Makefile
+	echo 'FLAGS = -g -w -Wall -Wno-unused-variable -Wno-return-type' >> build/Makefile
 	echo 'AS = as' >> build/Makefile
-	echo 'LEX = mcpp' >> build/Makefile
+	echo 'PP = mcpp' >> build/Makefile
 	echo 'exec:$(OBJS)' >> build/Makefile
-	echo '	$(CC) -o exec $(OBJS) $(LINK_BIN)' >> build/Makefile
+	echo '	$(CC) $(FLAGS) -o exec $(OBJS) $(LINK_BIN)' >> build/Makefile
 	echo '%.o:%.c' >> build/Makefile
-	echo '	$(LEX) $< .hash' >> build/Makefile
+	echo '	$(PP) $< .hash' >> build/Makefile
 	echo '	mv -f .hash $<' >> build/Makefile
 	echo '	$(CC) -c $< $(LINK_HEAD)' >> build/Makefile
 	echo 'clean:' >> build/Makefile
