@@ -12,7 +12,7 @@ void menu_drive_test(MCContext* context)
 	//printf("%d\n", bb);
 	printf("%s\n", "your name please:");
 	char name[100];
-	ff(context, getUserInputString, name);
+	fh(context,getUserInputString, 1145369978, name);
 	
 	char* sex = nil;
 	switch(selection){

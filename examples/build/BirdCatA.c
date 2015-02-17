@@ -29,9 +29,9 @@ method(Bird, void, catmethodD, xxx)
 loader(BirdCatA)
 {
 	debug_logt(nameofc(claz), "BirdCatA - loader called\n");
-	binding(Bird, void, catmethodA, xxx);
-	binding(Bird, void, catmethodB, xxx);
-	binding(Bird, void, catmethodC, xxx);
-	binding(Bird, void, catmethodD, xxx);
+	hinding(Bird, void, catmethodA, 4048645866, xxx);
+	hinding(Bird, void, catmethodB, 4048645867, xxx);
+	hinding(Bird, void, catmethodC, 4048645868, xxx);
+	hinding(Bird, void, catmethodD, 4048645869, xxx);
 	return claz;
 }
