@@ -11,10 +11,11 @@
 
 #include "monkc.h"
 
-monkc(BirdBase);
-end(BirdBase);
+monkc(LittleBirdBase);
+	const char* commonName;
+end(LittleBirdBase);
 
 //abs
-method(BirdBase, void, land_abs, mo receiver);
+method(LittleBirdBase, void, land_abs, mo receiver);
 
 #endif

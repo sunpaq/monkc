@@ -7,14 +7,16 @@
 //
 
 #include <stdio.h>
-#include "monkc.h"
 #include "LittleBird.h"
-#include "LittleBirdFather.h"
 
 initer(LittleBird)
 {
     obj->super = newc(mo, LittleBirdFather);
     obj->name = nil;
+
+    obj->_LittleBirdBase = findsuper(obj, LittleBirdBase);
+    if (obj->_LittleBirdBase == nil)
+        printf("obj->_LittleBirdBase is nil\n");
     return obj;
 }
 
@@ -26,7 +28,10 @@ method(LittleBird, LittleBird*, initWithName, char* aname)
 
 method(LittleBird, void, yourName, xxx)
 {
-    printf("my name is: %s\n", obj->name);
+    if (obj->_LittleBirdBase != nil)
+        printf("my name is: %s + %s\n", obj->_LittleBirdBase->commonName, obj->name);
+    else
+        printf("my name is: %s\n", obj->name);
 }
 
 method(LittleBird, void, fly, xxx)

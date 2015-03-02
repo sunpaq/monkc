@@ -10,9 +10,12 @@
 #define MonkCAppXcodeTemplete_Bird_h
 
 #include "monkc.h"
+#include "LittleBirdFather.h"
+#include "LittleBirdBase.h"
 
 monkc(LittleBird);
-char* name;
+	LittleBirdBase* _LittleBirdBase;
+	char* name;
 end(LittleBird);
 
 method(LittleBird, LittleBird*, initWithName, char* aname);

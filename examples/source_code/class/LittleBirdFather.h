@@ -11,6 +11,7 @@
 
 #include "monkc.h"
 
+extends(LittleBirdBase);
 monkc(LittleBirdFather);
 end(LittleBirdFather);
 
