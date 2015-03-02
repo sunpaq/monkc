@@ -119,6 +119,20 @@ mc_class* new_mc_class(const size_t objsize)
 	return init_mc_class(alloc_mc_class(), objsize);
 }
 
+static inline mc_class* findClass(const char* name, unsigned hashval)
+{
+	mc_hashitem* item = nil;
+	//create a class hashtable
+	if(mc_global_classtable == nil)
+		mc_global_classtable = new_table(0);
+	item=get_item_byhash(&mc_global_classtable, hashval, name);
+	if (item == nil)
+		return nil;
+	else
+		runtime_log("findClass item key:%s, value:%p\n", item->key, item->value);
+	return (mc_class*)(item->value);
+}
+
 mc_class* _load(const char* name, size_t objsize, loaderFP loader)
 {
 	return _load_h(name, objsize, loader, hash(name));
@@ -126,28 +140,38 @@ mc_class* _load(const char* name, size_t objsize, loaderFP loader)
 
 mc_class* _load_h(const char* name, size_t objsize, loaderFP loader, unsigned hashval)
 {
-	mc_hashitem* item = nil;
-	//create a class hashtable
-	if(mc_global_classtable == nil)
-		mc_global_classtable = new_table(0);
-
+	mc_class* aclass = findClass(name, hashval);
 	//try lock spin lock
 	trylock_global_classtable();
-	if((item=get_item_byhash(&mc_global_classtable, hashval, name)) == nil){
+	if(aclass == nil){
 		//new a item
-		mc_class* aclass = new_mc_class(objsize);
-		item = new_item(name, nil);//nil first
+		aclass = new_mc_class(objsize);
+		mc_hashitem* item = new_item(name, nil);//nil first
 		package_by_item(&item, &aclass);
 		(*loader)(aclass);
 		//set item
 		set_item(&mc_global_classtable, item, 0, 1, (char*)name);
 		runtime_log("load a class[%s]\n", nameofc(aclass));
 	}else{
-		runtime_log("find a class[%s]\n", nameofc((mc_class*)item->value));
+		runtime_log("find a class[%s]\n", nameofc(aclass));
 	}
 	//unlock
 	unlock_global_classtable();
-	return (mc_class*)(item->value);
+	return aclass;
+}
+
+mo _findsuper(mo const obj, const char* supername)
+{
+	mc_class* metaclass = findClass(supername, hash(supername));
+	mo iter = nil;
+	for (iter = obj; iter!=nil; iter=iter->super) {
+		if (iter->isa!=nil && iter->isa == metaclass){
+			error_log("find super metaclass: %s iter->isa: %p\n", nameofc(metaclass), iter->isa);
+			return iter;
+		}
+	}
+	error_log("can not find super metaclass: %s iter->isa: %p\n", nameofc(metaclass), iter->isa);
+	return nil;
 }
 
 mo _new(mo const this, initerFP initer)

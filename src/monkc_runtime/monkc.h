@@ -208,6 +208,10 @@ mo _new_category(mo const obj, initerFP initer, loaderFP loader_cat, initerFP in
 void _shift(mo const obj, const char* modename, size_t objsize, loaderFP loader);
 void _shift_back(mo const obj);
 
+//find super object
+mo _findsuper(mo const obj, const char* supername);
+#define findsuper(obj, name) _findsuper((mo)obj, S(name))
+
 //memory management
 #define REFCOUNT_NO_MM 	-1
 #define REFCOUNT_ERR 	-100
