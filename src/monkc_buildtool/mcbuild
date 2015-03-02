@@ -7,7 +7,7 @@ dumpBuild()
 	echo 'OBJS = $(patsubst %.c, %.o, $(MODULES))' >> build/Makefile
 	echo 'LINK_HEAD = -I/usr/local/include/monkc -I/usr/local/include/lemontea' >> build/Makefile
 	echo 'LINK_BIN = -lpthread -L/usr/local/lib -lmonkc -llemontea' >> build/Makefile
-	echo 'FLAGS = -g -w -Wall -Wno-unused-variable -Wno-return-type' >> build/Makefile
+	echo 'FLAGS = -g -Wno-incompatible-pointer-types' >> build/Makefile
 	echo 'AS = as' >> build/Makefile
 	echo 'PP = mcpp' >> build/Makefile
 	echo 'exec:$(OBJS)' >> build/Makefile
@@ -15,7 +15,7 @@ dumpBuild()
 	echo '%.o:%.c' >> build/Makefile
 	echo '	$(PP) $< .hash' >> build/Makefile
 	echo '	mv -f .hash $<' >> build/Makefile
-	echo '	$(CC) -c $< $(LINK_HEAD)' >> build/Makefile
+	echo '	$(CC) $(FLAGS) -c $< $(LINK_HEAD)' >> build/Makefile
 	echo 'clean:' >> build/Makefile
 	echo '	rm -f exec $(OBJS) temp.* stream.txt core' >> build/Makefile
 	echo 'dump:' >> build/Makefile
