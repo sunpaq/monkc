@@ -6,8 +6,10 @@ LIBOBJS=$(patsubst %.c, %.o, $(SRCS))
 ARCH=$(strip $(shell uname -m))
 OS=$(strip $(shell uname -s))
 
-#-w -Wno-unused-variable -Wno-return-type
-FLAGS=-g -Wall
+#-Wall
+#-Wno-unused-variable -Wno-return-type -Wno-incompatible-pointer-types
+#-w
+FLAGS=-g -w
 AS=as
 
 ASMFILE=MCRuntimeAsm_IA32.asm

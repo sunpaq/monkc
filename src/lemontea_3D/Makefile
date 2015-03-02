@@ -13,7 +13,9 @@ OBJS = MC3DMainLoop.o MCCamera.o
 LINK_HEAD = -I/usr/local/include/monkc -I/usr/local/include/lemontea -I/usr/local/include/
 LINK_BIN = -lpthread -L/usr/local/lib -lmonkc -llemontea -lX11 -lGL -lGLU -lm
 
-FLAGS = -O -g -w -Wall -Wno-unused-variable -Wno-return-type
+#-Wall 
+#-Wno-unused-variable -Wno-return-type -Wno-incompatible-pointer-types
+FLAGS = -O -g -w
 
 exec:$(OBJS)
 	$(CC) $(FLAGS) -o exec $(OBJS) $(LINK_BIN)

@@ -4,7 +4,8 @@ LIBOBJS=$(patsubst %.c, %.o, $(SRCS))
 LINK_HEAD = -I/usr/local/include/monkc -I/usr/local/include/lemontea
 #LINK_BIN = -lpthread -L/usr/local/lib -lmonkc -llemontea
 
-FLAGS = -g -w -Wall -Wno-unused-variable -Wno-return-type
+#-Wall -Wno-unused-variable -Wno-return-type -Wno-incompatible-pointer-types
+FLAGS = -g -w
 
 all:$(LIBOBJS)
 	mkdir -p lemontea
