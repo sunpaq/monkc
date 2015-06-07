@@ -42,18 +42,19 @@ a toolkit for OOP programming in C language
 
 ## Play with Monk-C use IDEs (template project):
 
-[1 Android - Eclipse on Linux/Windows](https://github.com/sunpaq/monkc4Android)
+the iOS version is latest 2.0:
 
-[2 iOS     - Xcode on MacOS](https://github.com/sunpaq/monkc4iOS)
+[1 iOS     - Xcode on MacOS](https://github.com/sunpaq/monkc4iOS)
+
+other version will be ported later:
+
+[2 Android - Eclipse on Linux/Windows](https://github.com/sunpaq/monkc4Android)
 
 [3 Linux   - Eclipse on Linux](https://github.com/sunpaq/monkc4Linux)
 
 [4 Mac     - Xcode on MacOS](https://github.com/sunpaq/monkc4Mac)
 
 [5 Win32   - Eclipse on Windows](https://github.com/sunpaq/monkc4Win32)
-
-	i usurally develop MonkC on Mac OS use Xcode
-	so the Mac version will be the latest one.
 
 ## Syntax
 
@@ -69,38 +70,36 @@ a toolkit for OOP programming in C language
 	#ifndef Bird_
 	#define Bird_
 
-	//class define
-	monkc(Bird);
+	//class define <child, super>
+	monkc(Bird, BirdFather);
 		char* name;
 		int type;
-	end(Bird);
+	end(Bird, BirdFather);
 
 	//methods define
 	//Monk-C methods need at lease ONE argument
-	//if you have no idea to design one, use "xxx" to fill the blank
+	//use voida if you have no designed argument
 	
-	method(Bird, Bird*, findBird, xxx);
-	method(Bird, void, bye, xxx);
+	method(Bird, Bird*, findBird);
+	method(Bird, void, bye, voida);
 	method(Bird, Bird*, initWithType, int type);
-	method(Bird, void, fly, xxx);
-	method(Bird, int, fatherAge, xxx);
+	method(Bird, void, fly, voida);
+	method(Bird, int, fatherAge, voida);
 
 	#endif
 	
 ####protocol file (Flyable.p)
 
-	binding(Flyable, void, duckFly, xxx);
-	binding(Flyable, void, chickenFly, xxx);
+	binding(Flyable, void, duckFly);
+	binding(Flyable, void, chickenFly);
 
 #### implement methods - write in .c file
 		
 	#include "Bird.h"
 
 	//called by runtime, initialize the class data
-	initer(Bird)
+	oninit(Bird)
 	{
-		//new your super by hand!
-		obj->super = new(BirdFather);
 		obj->type = 3;
 		debug_logt("Bird", "[%p] init called\n", obj);
 		return obj;
@@ -110,10 +109,9 @@ a toolkit for OOP programming in C language
 	//[bye] is called when instance reference count became 0
 	//this is the callback for clean up
 	
-	method(Bird, void, bye, xxx)
+	method(Bird, void, bye)
 	{
 		debug_logt(nameof(obj), "[%p] bye called\n", obj);
-		recycle(obj->super);
 	}
 	
 	//<special used method>
@@ -186,12 +184,11 @@ a toolkit for OOP programming in C language
 	it just like the Objective-C. sending message instead of function call.
 
 	Bird* bird = new(Bird);
-	ff(bird, fly, nil);
+	ff(bird, fly, 0);
 
 ####Statically calling method
 	
-	C style: 	Bird_fly(bird, 0, fly, nil);
-	Macro:		call(bird, Bird, fly, nil);
+	C style: 	Bird_fly(0, bird, 0);
 
 #### main entry
 
