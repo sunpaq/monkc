@@ -5,34 +5,15 @@ a toolkit for OOP programming in C language
 
 ## Overview
 
-**Monk-C**, is a toolkit for OOP programming use pure C (static library). the aim of Monk-C is to support OOP in pure C with some tiny C macros, functions and even a light preprocessor (optional). Monk-C is inspired by Apple Objective-C and gcc builtin "Constructing Calls". It is tiny and primitive but full of fun. I use it to play with my RaspberryPi and it really vary suitable for the ARM/Linux based embeded systems. It is open source under **BSD** license(3-clause license). I written it under the X86/Linux platform and X86/MacOS ARM/Linux is also fully tested and supportted both 32bit and 64bit.
+**Monk-C**, is a toolkit for OOP programming use pure C (static library). the aim of Monk-C is to support OOP in pure C with some tiny C macros, functions and even a light preprocessor (optional). Monk-C is inspired by Apple Objective-C and gcc builtin "Constructing Calls". It is tiny and primitive but full of fun. I use it to play with my RaspberryPi and it really vary suitable for the ARM/Linux based embeded systems. It is open source under **BSD** license(3-clause license).
 
 ###### Monk-C is based on **C99** standard
-###### No stable version released now, developing commit: 0.1.140223
+###### No stable version released now. but the syntax is nearly ready to be fixed.
+###### I am focusing on X86_64 and ARM64 CPUs. (see the list on bottom of this page)
 
-## Supported platforms:
-
-	[CPUArch/OS/Compiler]
-
-	IA-32/FreeBSD/clang                         On Working
-	IA-32/Linux/gcc&clang    					OK
-	IA-32/MacOS/gcc&clang 	 					No Test
-	IA-32/Windows7(MinGW-32bit)/mingw-gcc		OK
-
-	X86-64/FreeBSD/clang                        OK
-	X86-64/Linux/gcc&clang 	 					OK
-	X86-64/MacOS/gcc&clang   					OK
-	X86-64/Windows7(MinGW-32bit)/mingw-gcc		OK
-
-	ARM32/FreeBSD/clang                         On Working (RaspberryPi)
-	ARM32/Linux/gcc&clang    					OK (RaspberryPi/Debian)
-	ARM32/iOS/clang								OK
-	ARM32/Android/clang							OK (NDK build)
-
-	ARM64/Linux/gcc&clang    					On Working
-	ARM64/iOS/clang								On Working
-
-	PowerPC64/FreeBSD/clang                     On Working (iMac G5)
+## Please check the latest version here (in MCSource folder)
+	
+	https://github.com/sunpaq/monkc4iOS
 
 ## Documents:
 
@@ -60,137 +41,206 @@ other version will be ported later:
 
 **Monk-C** use "MC" as the prefix.
 
+#### Header file
 
-#### declear interface - write in .h file
+	#ifndef _MCCamera
+	#define _MCCamera
 
 	#include "monkc.h"
-	#include "BirdFather.h"
+	#include "MC3DBase.h"
+	#include "MC3DNode.h"
 
-	//avoid multi-defines
-	#ifndef Bird_
-	#define Bird_
+	class(MCCamera, MC3DNode,
+	    double ratio;
+	    double focal_length;
+	    double view_angle;
+	    double max_distance;
+	    MCVector3 lookat;
+	    MCMatrix4 projectionMatrix;
+	    MCMatrix4 modelViewMatrix;
+	    //world coordinate
+	    MCVector3 currentPosition;
+	    //local spherical coordinate
+	    //R[0,unlimited) tht[0, 180.0), fai[0, 360.0)
+	    double R;
+	    double tht;
+	    double fai;
+	    
+	    computing(MCMatrix4, mvproj);
+	    computing(MCMatrix3, normal);
+	);
 
-	//class define <child, super>
-	monkc(Bird, BirdFather);
-		char* name;
-		int type;
-	end(Bird, BirdFather);
+	method(MCCamera, MCCamera*, initWithWidthHeight, unsigned width, unsigned height);
+	method(MCCamera, void, move, double deltaFai, double deltaTht);
+	method(MCCamera, void, reset, voida);
+	method(MCCamera, void, update, MCGLContext* ctx);//override
 
-	//methods define
-	//Monk-C methods need at lease ONE argument
-	//use voida if you have no designed argument
-	
-	method(Bird, Bird*, findBird);
-	method(Bird, void, bye, voida);
-	method(Bird, Bird*, initWithType, int type);
-	method(Bird, void, fly, voida);
-	method(Bird, int, fatherAge, voida);
+	#define MCLensStandard50mm (0.050)
+	#define MCLensWide24mm     (0.024)
+	#define MCLensLong100mm    (0.100)
+	#define MCLensLong200mm    (0.200)
 
+	#define MCRatioCameraFilm3x2    (3.0/2.0)
+	#define MCRatioOldTV4x3         (4.0/3.0)
+	#define MCRatioHDTV16x9         (16.0/9.0)
+	#define MCRatioCinema239x100    (2.39/1.0)
+	#define MCRatioMake(w, h)       ((double)w / (double)h)
+
+	#define MCLensStandard50mmViewAngle (45.0)
 	#endif
-	
-####protocol file (Flyable.p)
 
-	binding(Flyable, void, duckFly);
-	binding(Flyable, void, chickenFly);
+#### C file
 
-#### implement methods - write in .c file
-		
-	#include "Bird.h"
+	#include "MCCamera.h"
 
-	//called by runtime, initialize the class data
-	oninit(Bird)
+	compute(MCMatrix4, mvproj);
+	compute(MCMatrix3, normal);
+
+	oninit(MCCamera)
 	{
-		obj->type = 3;
-		debug_logt("Bird", "[%p] init called\n", obj);
-		return obj;
-	}
-	
-	//<special used method>
-	//[bye] is called when instance reference count became 0
-	//this is the callback for clean up
-	
-	method(Bird, void, bye)
-	{
-		debug_logt(nameof(obj), "[%p] bye called\n", obj);
-	}
-	
-	//<special used method>
-	//[findClassname] is an anchor mehtod for the child instance find super instance
-	//and directly access its data (see wiki for more info)
-	
-	method(Bird, Bird*, findBird, xxx)
-	{
-		return obj;
+	    if (init(MCObject)) {
+	        var(ratio) = MCRatioHDTV16x9;//MCRatioCameraFilm3x2;
+	        var(focal_length) = MCLensWide24mm;//MCLensStandard50mm;
+	        var(view_angle) = MCLensStandard50mmViewAngle;
+	        var(max_distance) = 100;//100 metres
+	        var(lookat) = MCVector3Make(0,0,0);
+	        var(projectionMatrix) = MCMatrix4Identity();
+	        var(modelViewMatrix) = MCMatrix4Identity();
+	        //world coordinate
+	        var(currentPosition) = MCVector3Make(0, 0, 0);
+	        //local spherical coordinate
+	        var(R) = 100;
+	        var(tht) = 60;
+	        var(fai) = 45;
+	        
+	        var(mvproj) = mvproj;
+	        var(normal) = normal;
+	        return obj;
+	    }else{
+	        return mull;
+	    }
 	}
 
-	//private C function
-	static void funcA(Bird* obj, int arg1)
+	compute(MCMatrix4, mvproj)
 	{
-		debug_log("i am local function A\n");
+	    varscope(MCCamera);
+	    MCMatrix4 mvp = MCMatrix4Multiply(var(projectionMatrix), var(modelViewMatrix));
+	    return mvp;
 	}
 
-	//protocol you comply with
-	protocol(Flyable, void, duckFly, xxx)
+	compute(MCMatrix3, normal)
 	{
-		debug_log("%s\n", "Bird:Duck GuaGuaGua fly");
+	    varscope(MCCamera);
+	    MCMatrix3 nor = MCMatrix3InvertAndTranspose((MCMatrix3)MCMatrix4GetMatrix3(obj->modelViewMatrix), NULL);
+	    return nor;
 	}
 
-	protocol(Flyable, void, chickenFly, xxx)		
+	method(MCCamera, MCCamera*, initWithWidthHeight, unsigned width, unsigned height)
 	{
-		debug_log("%s\n", "Bird:Chicken JiJiJi fly");
+	    //setting camera
+	    obj->ratio = MCRatioMake(width, height);
+	    obj->R = 5;
+	    return obj;
 	}
 
-	//public method implements
-	method(Bird, Bird*, initWithType, int type)
+	method(MCCamera, void, reset, voida)
 	{
-		obj->type = type;
-		return obj;
+	    init(MCCamera);
 	}
 
-	method(Bird, int, fatherAge, xxx)
+	function(void, updatePosition, MCVector3* result)
 	{
-		int fage = cast(BirdFather, obj->super)->age;
-		debug_logt(nameof(obj), "my father age is: %d\n", fage);
-		return fage;
+	    varscope(MCCamera);
+	    var(currentPosition) = MCWorldCoorFromLocal(MCVertexFromSpherical(var(R), var(tht), var(fai)), var(lookat));
+	    if (result != mull) {
+	        result->x = var(currentPosition).x;
+	        result->y = var(currentPosition).x;
+	        result->z = var(currentPosition).x;
+	    }
 	}
 
-	method(Bird, void, fly, xxx)
+	function(void, updateRatioFocalDistance, voida)
 	{
-		debug_log("Bird[%p->%p]: default fly type %d\n", obj, obj->super, obj->type);
-		funcA(obj, 100);
+	    varscope(MCCamera);
+	    var(projectionMatrix) = MCMatrix4MakePerspective(MCDegreesToRadians(obj->view_angle),
+	                                                     var(ratio),
+	                                                     var(focal_length),
+	                                                     var(max_distance));
 	}
 
-	//must have. binding methods at runtime.
-	loader(Bird)
+	function(void, updateLookat, voida)
 	{
-		debug_logt(nameofc(class), "load called\n");
-
-		//protocol itself is just a header file
-		#include "Flyable.p"
-
-		//DO NOT WRITE THEM BY HAND!
-		//YOU CAN COPY ALL THE METHODS DECLEARED IN HEADER FILE
-		//AND CHANGE "method->binding"
-
-		binding(Bird, Bird*, initWithType, int type);
-		binding(Bird, void, bye, xxx);
-		binding(Bird, void, fly, xxx);
-		binding(Bird, int, fatherAge, xxx);
-		return claz;
+	    varscope(MCCamera);
+	    MCVector3 modelpos = var(lookat);
+	    MCVector3 eyelocal = MCVertexFromSpherical(var(R), var(tht), var(fai));
+	    MCVector3 eye = MCWorldCoorFromLocal(eyelocal, modelpos);
+	    
+	    if (var(tht) < 90.0) {
+	        MCVector3 Npole = MCVector3Make(0, var(R)/MCCosDegrees(var(tht)), 0);
+	        var(modelViewMatrix) = MCMatrix4MakeLookAt(eye.x, eye.y, eye.z,
+	                                                   modelpos.x, modelpos.y, modelpos.z,
+	                                                   Npole.x-eye.x, Npole.y-eye.y, Npole.z-eye.z);
+	    }
+	    if (var(tht) > 90.0) {
+	        MCVector3 Spole = MCVector3Make(0, -var(R)/MCCosDegrees(180.0-var(tht)), 0);
+	        var(modelViewMatrix) = MCMatrix4MakeLookAt(eye.x, eye.y, eye.z,
+	                                                   modelpos.x, modelpos.y, modelpos.z,
+	                                                   eye.x-Spole.x, eye.y-Spole.y, eye.z-Spole.z);
+	    }
+	    if (var(tht) == 90.0) {
+	        var(modelViewMatrix) = MCMatrix4MakeLookAt(eye.x, eye.y, eye.z,
+	                                                   modelpos.x, modelpos.y, modelpos.z, 0, 1, 0);
+	    }
 	}
 
-####Dynamically calling method
+	//override
+	method(MCCamera, void, update, MCGLContext* ctx)
+	{
+	    updateRatioFocalDistance(0, obj, 0);
+	    updatePosition(0, obj, mull);
+	    updateLookat(0, obj, 0);
+	    
+	    MCGLContext_setUniformMatrix4(0, ctx, "modelViewProjectionMatrix", cvar(mvproj).m);
+	    MCGLContext_setUniformMatrix3(0, ctx, "normalMatrix", cvar(normal).m);
+	}
+
+	method(MCCamera, void, move, double deltaFai, double deltaTht)
+	{
+	    obj->fai = obj->fai + deltaFai;   //Left
+	    obj->tht = obj->tht + deltaTht;   //Up
+	    //camera->fai = camera->fai - 0.1; //Right
+	    //camera->tht = camera->tht - 0.1; //Down
+	    
+	    updateLookat(0, obj, 0);
+	}
+
+	onload(MCCamera)
+	{
+	    if (load(MCObject)) {
+	        mixing(void, updatePosition, MCVertex* result);
+	        mixing(void, updateRatioFocalDistance);
+	        mixing(void, updateLookat);
+	        
+	        binding(MCCamera, void, reset, MCBool updateOrNot);
+	        binding(MCCamera, void, update);
+	        return cla;
+	    }else{
+	        return mull;
+	    }
+	}
+
+#### Dynamically calling method
 
 	it just like the Objective-C. sending message instead of function call.
 
 	Bird* bird = new(Bird);
 	ff(bird, fly, 0);
 
-####Statically calling method
+#### Statically calling method
 	
 	C style: 	Bird_fly(0, bird, 0);
 
-#### main entry
+#### Builtin Log
 
 	int main(int argc, char const *argv[])
 	{
@@ -216,22 +266,22 @@ other version will be ported later:
 
 ---
 
-1. monkc
-2. end
-3. initer
-4. loader
-5. method
-6. protocol
-7. binding
-8. new
-9. call
-10. ff
+1. class
+2. method   (binding)
+3. function (mixing)
+4. compute  (computing)
+5. utility
+6. var
+7. new
+8. ff
+9. oninit (init)
+10. onload (load)
 11. retain
 12. release
 13. recycle
 14. obj
-15. claz
-16. xxx
+15. cla
+16. voida & mull
 
 ---
 
@@ -288,6 +338,30 @@ Total only **16** words.[^1]
 	  (see the examples folder for more details)
 
 ##For more infomation please goto [wiki page](https://github.com/sunpaq/monkc/wiki) on github
+
+## Supported platforms:
+
+	[CPUArch/OS/Compiler]
+
+	IA-32/FreeBSD/clang                         On Working
+	IA-32/Linux/gcc&clang    					OK
+	IA-32/MacOS/gcc&clang 	 					No Test
+	IA-32/Windows7(MinGW-32bit)/mingw-gcc		OK
+
+	X86-64/FreeBSD/clang                        OK
+	X86-64/Linux/gcc&clang 	 					OK
+	X86-64/MacOS/gcc&clang   					OK
+	X86-64/Windows7(MinGW-32bit)/mingw-gcc		OK
+
+	ARM32/FreeBSD/clang                         On Working (RaspberryPi)
+	ARM32/Linux/gcc&clang    					OK (RaspberryPi/Debian)
+	ARM32/iOS/clang								OK
+	ARM32/Android/clang							OK (NDK build)
+
+	ARM64/Linux/gcc&clang    					On Working
+	ARM64/iOS/clang								On Working
+
+	PowerPC64/FreeBSD/clang                     On Working (iMac G5)
 
 ##TODO list:
 
