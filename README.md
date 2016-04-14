@@ -11,7 +11,7 @@ a toolkit for OOP programming in C language
 ###### No stable version released now. but the syntax is nearly ready to be fixed.
 ###### I am focusing on X86_64 and ARM64 CPUs. (see the list on bottom of this page)
 
-## Please check the latest version here (in MCSource folder)
+## The Syntax here is old, Please check the latest version here (in MCSource folder)
 	
 	https://github.com/sunpaq/monkc4iOS
 
@@ -214,9 +214,26 @@ other version will be ported later:
 	    updateLookat(0, obj, 0);
 	}
 
+	//conforming SomeProtocol
+	function(void, moveTo, MCFloat tht, MCFloat fai)
+	{
+		varscope(MCCamera);
+		var(tht) = tht;
+		var(fai) = fai;
+		updateLookat(0, obj, 0);
+	}
+
+	//conforming SomeProtocol
+	function(void, targetTowards, MC3DNode node)
+	{
+		//change the lookat stuff
+	}
+
 	onload(MCCamera)
 	{
 	    if (load(MCObject)) {
+	    	#include "SomeProtocol.h"
+
 	        mixing(void, updatePosition, MCVertex* result);
 	        mixing(void, updateRatioFocalDistance);
 	        mixing(void, updateLookat);
@@ -228,6 +245,11 @@ other version will be ported later:
 	        return mull;
 	    }
 	}
+
+#### Protocol (SomeProtocol.h)
+
+	mixing(void, moveTo, MCFloat tht, MCFloat fai);
+	mixing(void, targetTowards, MC3DNode node);
 
 #### Dynamically calling method
 
