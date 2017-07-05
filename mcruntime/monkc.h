@@ -1,7 +1,7 @@
 /*
- Copyright (c) <2013-2016>, <Sun Yuli>
+ Copyright (c) <2013-2017>, <Sun Yuli>
  All rights reserved.
-
+ 
  Redistribution and use in source and binary forms, with or without
  modification, are permitted provided that the following conditions are met:
  * Redistributions of source code must retain the above copyright
@@ -12,7 +12,7 @@
  * Neither the name of the <Monk-C> nor the
  names of its contributors may be used to endorse or promote products
  derived from this software without specific prior written permission.
-
+ 
  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -31,13 +31,19 @@
 //version=20 means 2.0
 static inline unsigned monkc_version() {return __MCRuntimeVer__;}
 
-/* Monk-C use many C99 standard features, make sure your compiler and platform support C99 standard */
-
-#include <stdio.h>
+#include <stdbool.h>
 #include <stdlib.h>
 #include <stdarg.h>
+#include <stdio.h>
+
+//#include <inttypes.h>
 #include <string.h>
 #include <limits.h>
+
+/* Monk-C use many C99 standard features, make sure your compiler and platform support C99 standard */
+#if __STDC_VERSION__ < 199901L
+#error "your platform doesn't support C99"
+#endif
 
 #ifndef LINE_MAX
 #define LINE_MAX 2048
@@ -57,14 +63,18 @@ static inline unsigned monkc_version() {return __MCRuntimeVer__;}
 #define NO_RECYCLE 1
 #define NO_ATOMIC 1
 
-#ifndef mull
-#define mull ((void*)0)
+#ifndef null
+#define null NULL
 #endif
+#ifndef NUL
+#define NUL '\0'
+#endif
+
 #define voida void* voidarg
 #define S(value) #value
 #define SEQ(dest, src) (mc_compare_key(dest, src)==0)
 #define A_B(a, b) a##_##b
-#define nameof(obj) mc_nameof((mo)obj)
+#define nameof(obj) mc_nameof((MCObject*)obj)
 #define nameofc(cls) mc_nameofc(cls)
 #define deref(x) (*(x))
 #define addrof(x) (&(x))
@@ -73,19 +83,32 @@ static inline unsigned monkc_version() {return __MCRuntimeVer__;}
 //inline function need to be have "inline" and "non-inline" version both implement
 //static inline not require "non-inline" version
 #define MCInline static inline
+#define MCGlobalKey static const char*
 
 /**
- * the types can not be used in Monk-C method arguments:
- * (Limitation of C variable arguments method)
+ * Limitations of Monk-C method()/function() parameters
  *
- * char/signed  char/unsigned  char              (use int)
- * short/signed short/unsigned short             (use int)
- * short int/signed short int/unsigned short int (use int)
- * float                                         (use double)
+ * 1. Limitation of C variable arguments function:
  *
- * any int type should larger than int
- * any float type should larger than double
+ * any int type should >= int
+ * any float type should wrap use MCFloat
+ *
+ * char/signed  char/unsigned  char              (use int/unsigned/MCInt/MCUInt)
+ * short/signed short/unsigned short             (use int/unsigned/MCInt/MCUInt)
+ * short int/signed short int/unsigned short int (use int/unsigned/MCInt/MCUInt)
+ * float                                         (must use MCFloat)
+ *
+ * 2. Limitation of iOS ARM64 ABI
+ *
+ * we only use 8 cpu registers to pass parameters
+ * first 2 are fixed into message.address and message.object
+ * user can define max 6 parameters in a method()
+ *
+ * if you need to pass more than 6 parameters 
+ * please design a structure/object wrap them and pass the pointer in
+ * normal C functions NOT subject to these limitations
  * */
+
 typedef signed int       MCChar;
 typedef signed int       MCShort;
 typedef signed int       MCInt;
@@ -98,71 +121,79 @@ typedef unsigned int       MCUInt;
 typedef unsigned long      MCULong;
 typedef unsigned long long MCULongLong;
 
+//using double for all floating point data (float is 4bytes, double is 8bytes)
 typedef union {
-    double    d;
-    long long ll;
-} MCDouble;
-
-typedef union {
-    float f;
-    int   i;
+    double   f;
+    uint64_t i;
 } MCFloat;
 
-typedef MCUInt       MCHash;
-typedef size_t       MCSizeT;
-typedef void*        MCPtr;
+MCInline MCFloat MCFloatF(double value)   { return (MCFloat){.f=value}; }
+MCInline MCFloat MCFloatI(uint64_t value) { return (MCFloat){.i=value}; }
 
-typedef const char*  MCStaticString;
+typedef uint32_t     MCHash;
+#define MCHashMax    UINT32_MAX
+#define MCHashMask   0x7fffffff
+
+typedef size_t       MCSizeT;
+typedef void*        MCVoidPtr;
 typedef void         (*MCFuncPtr)(void);
 
-typedef int MCBool;
-#define MCFalse 0
-#define MCTrue 1
-
-#define MCFuncPtr(value) ((MCFuncPtr)value)
-#define MCDouble(value)  ((MCDouble)value)
-#define MCFloat(value)   ((MCFloat)value)
+//true, false
+#define printb(B)    (B?"true":"false")
+typedef _Bool MCBool;
 
 /*
  Generic Type
  */
 
-struct mc_object_struct;
+struct _MCObject;
 typedef union {
-    MCChar      mcchar;
-    MCShort     mcshort;
-    MCInt       mcint;
-    MCLong      mclong;
-    MCLongLong  mclonglong;
-    MCUChar     mcuchar;
-    MCUShort    mcushort;
-    MCUInt      mcuint;
-    MCULong     mculong;
-    MCULongLong mculonglong;
-    MCFloat     mcfloat;
-    MCDouble    mcdouble;
-    MCHash      mchash;
+    //float and integers use 8bytes (64bits)
+    double      mcfloat;//default
     MCSizeT     mcsizet;
-    MCPtr       mcptr;
+    MCULongLong mculonglong;
+    MCLongLong  mclonglong;
+    MCULong     mculong;
+    MCLong      mclong;
+    //pointers use 8bytes
+    struct _MCObject *mcobject;
+    MCVoidPtr   mcvoidptr;
     MCFuncPtr   mcfuncptr;
+    //integers use 4bytes
+    MCUInt      mcuint;
+    MCInt       mcint;
+    MCHash      mchash;
+    //bool use 1byte
     MCBool      mcbool;
-    MCStaticString mcstaticstr;
-    struct mc_object_struct *mcobject;
 } MCGeneric;
 
-#define MCGenericI(value)  (MCGeneric){.mcint=value}
-#define MCGenericU(value)  (MCGeneric){.mcunsigned=value}
-#define MCGenericL(value)  (MCGeneric){.mclong=value}
-#define MCGenericF(value)  (MCGeneric){.double=value}
-#define MCGenericSz(value) (MCGeneric){.mcsizet=value}
-#define MCGenericH(value)  (MCGeneric){.mchash=value}
-#define MCGenericP(value)  (MCGeneric){.mcptr=value}
-#define MCGenericFp(value) (MCGeneric){.mcfuncptr=value}
-#define MCGenericB(value)  (MCGeneric){.mcbool=value}
-#define MCGenericSS(value) (MCGeneric){.mcstaticstr=value}
-#define MCGenericEmpty     (MCGeneric){0}
+MCInline MCGeneric MCGenericF(double value)            { MCGeneric g; g.mcfloat=value; return g; }
+MCInline MCGeneric MCGenericSz(MCSizeT value)          { MCGeneric g; g.mcsizet=value; return g; }
+MCInline MCGeneric MCGenericUll(MCULongLong value)     { MCGeneric g; g.mculonglong=value; return g; }
+MCInline MCGeneric MCGenericLl(MCLongLong value)       { MCGeneric g; g.mclonglong=value; return g; }
+MCInline MCGeneric MCGenericUl(MCULong value)          { MCGeneric g; g.mculong=value; return g; }
+MCInline MCGeneric MCGenericL(MCLong value)            { MCGeneric g; g.mclong=value; return g; }
 
+MCInline MCGeneric MCGenericO(struct _MCObject* value) { MCGeneric g; g.mcobject=value; return g; }
+MCInline MCGeneric MCGenericVp(MCVoidPtr value)        { MCGeneric g; g.mcvoidptr=value; return g; }
+MCInline MCGeneric MCGenericFp(MCFuncPtr value)        { MCGeneric g; g.mcfuncptr=value; return g; }
 
+MCInline MCGeneric MCGenericUi(MCUInt value)           { MCGeneric g; g.mcuint=value; return g; }
+MCInline MCGeneric MCGenericI(MCInt value)             { MCGeneric g; g.mcint=value; return g; }
+MCInline MCGeneric MCGenericH(MCHash value)            { MCGeneric g; g.mchash=value; return g; }
+
+MCInline MCGeneric MCGenericB(MCBool value)            { MCGeneric g; g.mcbool=value; return g; }
+
+MCInline int MCGenericCompare(MCGeneric A, MCGeneric B) {
+    if (A.mcfloat > B.mcfloat) {
+        return 1;
+    }
+    else if (A.mcfloat < B.mcfloat) {
+        return -1;
+    }
+    //A == B
+    return 0;
+}
 
 /*
  Log.h
@@ -203,7 +234,7 @@ void runtime_logt(const char* tag, const char* fmt, ...);
 /* *
  * Configure hash table size:
  * have 5 levels of size
- * and it can auto expand to next level when some key conflicted
+ * and it can auto expand to next level when some key collisioned
  *
  * Example of memory usage:
  * max memory useage for one class  table is: 4Byte x 10000 = 40KB
@@ -225,26 +256,40 @@ typedef struct mc_hashitem_struct
 {
     struct mc_hashitem_struct* next;
     MCHash hash;
-    MCHashTableIndex index;
-    MCHashTableLevel level;
     MCGeneric value;
-    const char* key;
-    //char key[MAX_KEY_CHARS+1];
+    char key[MAX_KEY_CHARS];
 }mc_hashitem;
 
+#define MAX_ITEM_CACHE 10
 typedef struct
 {
+    mc_hashitem* cache[MAX_ITEM_CACHE];
+    MCInt cache_count;
     MCInt lock;
     MCHashTableLevel level;
-    MCHashTableSize table_item_count;
     mc_hashitem* items[];
 }mc_hashtable;
 
-static MCHashTableSize mc_hashtable_sizes[MCHashTableLevelCount] = {3001, 9001, 17001, 33001, 123001};//100
+/*
+ method table is initially set min one
+ class  table is initially set max one
+ 
+ only the max size table use chain to slove collision
+ other tables will expand(rehash) until they reach the max
+ */
+
+static MCHashTableSize mc_hashtable_sizes[MCHashTableLevelCount] = {
+    //901,
+    1301,
+    3101,
+    13001,
+    31001,
+    130001
+};
+
 MCInline MCHashTableSize get_tablesize(const MCHashTableLevel level)
 {
     if(level > MCHashTableLevelMax){
-        error_log("get_tablesize(level) level>max return use level=max\n");
         return mc_hashtable_sizes[MCHashTableLevelMax];
     }
     return mc_hashtable_sizes[level];
@@ -252,6 +297,8 @@ MCInline MCHashTableSize get_tablesize(const MCHashTableLevel level)
 
 MCInline void mc_hashtable_add_item(mc_hashtable* table, MCHashTableIndex index, mc_hashitem* item) { table->items[index] = item; }
 MCInline mc_hashitem* mc_hashtable_get_item(mc_hashtable* table, MCHashTableIndex index) { return table->items[index]; }
+
+
 
 typedef struct mc_block_struct
 {
@@ -262,7 +309,7 @@ MCInline mc_block* new_mc_block(void* data)
 {
     mc_block* ablock = (mc_block*)malloc(sizeof(mc_block));
     deref(ablock).data = data;
-    deref(ablock).next = mull;
+    deref(ablock).next = null;
     return ablock;
 }
 
@@ -275,7 +322,7 @@ MCInline mc_blockpool* new_mc_blockpool()
 {
     mc_blockpool* bpool = (mc_blockpool*)malloc(sizeof(mc_blockpool));
     bpool->lock = 0;
-    bpool->tail = mull;
+    bpool->tail = null;
     return bpool;
 }
 //meta class, the struct is a node for inherit hierarchy
@@ -288,16 +335,17 @@ typedef struct
     mc_hashtable* table; //the hashtable may expand so let it dynamic
 }mc_class;
 //for type cast, every object have the 3 var members
-typedef struct MCObjectStruct
+typedef struct _MCObject
 {
-    struct MCObjectStruct* nextResponder;
+    //address is for dynamic method calling.
+    MCFuncPtr address;
+    //data
+    struct _MCObject* nextResponder;
     mc_block* block;
     mc_class* isa;
     mc_class* saved_isa;
     MCInt ref_count;
 } MCObject;
-typedef MCObject* mo;
-#define mo(obj) ((mo)obj)
 
 MCInline mc_class* alloc_mc_class(const MCSizeT objsize)
 {
@@ -306,23 +354,23 @@ MCInline mc_class* alloc_mc_class(const MCSizeT objsize)
     aclass->objsize = objsize;
     //init pool
     aclass->free_pool.lock = 0;
-    aclass->free_pool.tail = mull;
+    aclass->free_pool.tail = null;
     aclass->used_pool.lock = 0;
-    aclass->used_pool.tail = mull;
+    aclass->used_pool.tail = null;
     //init table
     aclass->table = (mc_hashtable*)malloc(sizeof(mc_hashtable) + sizeof(mc_hashitem)*get_tablesize(initlevel));
     aclass->table->lock = 0;
     aclass->table->level = initlevel;
-    aclass->table->table_item_count = 0;
+    //aclass->table->table_item_count = 0;
     //set all the slot to nil
     for (int i = 0; i < get_tablesize(initlevel); i++)
-        (aclass->table->items)[i] = mull;
+        (aclass->table->items)[i] = null;
     return aclass;
 }
 
 MCInline void package_by_item(mc_hashitem* aitem_p, mc_class* aclass_p)
 {
-    (aitem_p)->value.mcptr = aclass_p;
+    (aitem_p)->value.mcvoidptr = aclass_p;
     (aclass_p)->item = aitem_p;
 }
 
@@ -351,17 +399,21 @@ typedef MCObject* (*MCSetsuperPointer)(MCObject*);
 //callbacks
 #define onload(cls)					mc_class* cls##_load(mc_class* const cla)
 #define oninit(cls)						 cls* cls##_init(cls* const obj)
+#define onextend(cls, tag)               void cls##_##tag(mc_class* cla)
 #define load(supercls)                        supercls##_load(cla)
 #define init(supercls)                        supercls##_init((supercls*)obj)
-#define preload(cls)                          _load_h(#cls, sizeof(cls), cls##_##load, hash(#cls));
+#define extend(cls, tag)                      cls##_##tag(_load(#cls, sizeof(cls), cls##_##load))
+#define preload(cls)                          _load(#cls, sizeof(cls), cls##_##load)
+#define superbye(cls)                         cls##_bye(&obj->Super, 0)
 
 //method binding
 #define mixing(type, met, ...)                _binding(cla, S(met), (MCFuncPtr)met)
 #define binding(cls, type, met, ...)  		  _binding(cla, S(met), (MCFuncPtr)A_B(cls, met))
-#define hinding(cls, type, met, hash, ...)	  _binding_h(cla, S(met), (MCFuncPtr)A_B(cls, met), hash)
 #define utility(cls, type, name, ...) 	      type cls##_##name(__VA_ARGS__)
-#define method(cls, type, name, ...) 	      type cls##_##name(MCFuncPtr volatile address, cls* volatile obj, __VA_ARGS__)
-#define function(type, name, ...)             static type name(MCFuncPtr volatile address, void* volatile any, __VA_ARGS__)
+#define method(cls, type, name, ...)          type cls##_##name(cls* volatile obj, __VA_ARGS__)
+#define function(type, name, ...)             static type name(void* volatile any, __VA_ARGS__)
+//#define method(cls, type, name, ...) 	      type cls##_##name(MCFuncPtr volatile address, cls* volatile obj, __VA_ARGS__)
+//#define function(type, name, ...)             static type name(MCFuncPtr volatile address, void* volatile any, __VA_ARGS__)
 
 //property
 #define computing(type, name)                 type (*name)(void*)
@@ -379,61 +431,52 @@ typedef MCObject* (*MCSetsuperPointer)(MCObject*);
 
 //for create object
 #define new(cls)						(cls*)_new(mc_alloc(S(cls), sizeof(cls), (MCLoaderPointer)cls##_load), (MCIniterPointer)cls##_init)
-#define hew(cls, hash)					(cls*)_new(mc_alloc_h(S(cls), sizeof(cls), cls##_load, hash), cls##_setsuper, cls##_init)
 #define clear(cls)  					mc_clear(S(cls), sizeof(cls), cls##_load)
-#define hlear(cls, hash)  				mc_clear_h(S(cls), sizeof(cls), cls##_load, hash)
-#define info(cls)                  		mc_info(S(cls), sizeof(cls), (MCLoaderPointer)cls##_load)
-#define hnfo(cls, hash)                 mc_info_h(S(cls), sizeof(cls), cls##_load, hash)
+#define info(cls)                  		mc_info(S(cls))
 
 //for call method
-#define response_to(obj, met) 			_response_to((mo)obj, S(met), 2)
-#define hesponse_to(obj, met, hash) 	_response_to_h((mo)obj, S(met), hash, 2)
-#define _ff(obj, met, ...)              _push_jump(_response_to((mo)obj, met, MC_STRICT_MODE), __VA_ARGS__)//call by string
-#define ff(obj, met, ...)				_push_jump(_response_to((mo)obj, S(met), MC_STRICT_MODE), __VA_ARGS__)//send message
-#define fh(obj, met, hash, ...)			_push_jump(_response_to_h((mo)obj, S(met), hash, MC_STRICT_MODE), __VA_ARGS__)
-#define fs(obj, met, ...)				_push_jump(_self_response_to((mo)obj, S(met)), __VA_ARGS__)
+#define ff(obj, met, ...)				 _push_jump(response_to((MCObject*)obj, S(met)), __VA_ARGS__)//send message
+#define ffindex(obj, idx, ...)		     _push_jump(response_to_i((MCObject*)obj, idx), __VA_ARGS__)//send index
 
 //lock
-void trylock_global_classtable();
-void unlock_global_classtable();
+void trylock_global_classtable(void);
+void unlock_global_classtable(void);
 
 //binding method api
 MCHashTableIndex _binding(mc_class* const aclass, const char* methodname, MCFuncPtr value);
-MCHashTableIndex _binding_h(mc_class* const aclass, const char* methodname, MCFuncPtr value, MCHash hashval);
 
 //class load
 mc_class* _load(const char* name, MCSizeT objsize, MCLoaderPointer loader);
-mc_class* _load_h(const char* name, MCSizeT objsize, MCLoaderPointer loader, MCHash hashval);
 
 //object create
-mo _new(mo const obj, MCIniterPointer initer);
+MCObject* _new(MCObject* const obj, MCIniterPointer initer);
 
 //memory management
 #define REFCOUNT_NO_MM 	-1
 #define REFCOUNT_ERR 	-100
-void _recycle(mo const obj);
-void _release(mo const obj);
-mo _retain(mo const obj);
-#define recycle(obj) _recycle((mo)obj)
-#define release(obj) _release((mo)obj)
-#define retain(obj)  _retain((mo)obj)
+void _recycle(MCObject* const obj);
+void _release(MCObject* const obj);
+MCObject* _retain(MCObject* const obj);
+#define recycle(obj) _recycle((MCObject*)obj)
+#define release(obj) _release((MCObject*)obj)
+#define retain(obj)  _retain((MCObject*)obj)
 
 //tool for class
-extern void _init_class_list();
-extern void _clear_class_list();
+extern void _init_class_list(void);
+extern void _clear_class_list(void);
 
 MCInline const char* mc_nameofc(const mc_class* aclass) {
-    if(aclass==mull)
+    if(aclass==null)
         return "unknown";
-    if(aclass->item==mull)
+    if(aclass->item==null)
         return "unknown";
-    if(aclass->item->key==mull)
+    if(aclass->item->key[0]==NUL)
         return "unknown";
-    return aclass->item->key;
+    return &aclass->item->key[0];
 }
 
 MCInline const char* mc_nameof(const MCObject* aobject) {
-    if(aobject->isa==mull)
+    if(aobject->isa==null)
         return "unknown";
     return mc_nameofc(aobject->isa);
 }
@@ -452,17 +495,11 @@ void mc_unlock(volatile MCInt* lock_p);
  Key.h
  */
 
-MCInline int mc_compare_key(const char* dest, const char* src) {
-    if (dest && src) {
-        if (dest[0]!='\0' && src[0]!='\0') {
-            return strcmp(dest, src);
-        }else if (dest[0]=='\0' && src[0]=='\0') {
-            return 0;
-        }else{
-            return 1;
-        }
+MCInline MCBool mc_compare_key(const char* dest, const char* src) {
+    if (dest != null && src != null) {
+        return (strcmp(dest, src) == 0);
     }else{
-        return 1;
+        return false;
     }
 }
 
@@ -472,58 +509,98 @@ MCInline int mc_compare_key(const char* dest, const char* src) {
 
 //copy form << The C Programming language >>
 //BKDR Hash Function
-MCInline MCHash hash(const char *s) {
-    //runtime_log("hash(%s) --- ", s);
-    MCHash hashval;
-    for(hashval = 0; *s != '\0'; s++)
+MCInline MCHash hash_content(const char *s) {
+    register MCHash hashval;
+    for(hashval = 0; *s != NUL; s++)
         hashval = *s + 31 * hashval;
-    //runtime_log("hashval is: %d\n", hashval);
-    return hashval;
+    //avoid integer overflow
+    return (hashval & MCHashMask);
 }
 
-mc_hashitem* new_item(const char* key, MCGeneric value);
-mc_hashitem* new_item_h(const char* key, MCGeneric value, const MCHash hashval);
+MCInline MCHash hash(const char *s) {
+    //avoid integer overflow
+    //return ((MCHash)s & MCHashMask);
+    //return ((MCHash)s);
+    return hash_content(s);
+}
+
+MCInline MCHashTableIndex firstHashIndex(MCHash nkey, MCHashTableSize slots) {
+    return nkey % slots;
+    //return (nkey - slots * (nkey / slots));
+}
+
+MCInline MCHashTableIndex secondHashIndex(MCHash nkey, MCHashTableSize slots, MCHash first) {
+    return (first + (1+(nkey % (slots-1)))) % slots;
+    //MCHashTableSize slots_1 = slots - 1;
+    //MCHash temp = first + 1 + nkey - slots_1 * (nkey / slots_1);
+    //return (temp - slots * (temp / slots));
+}
+
+mc_hashitem* new_item(const char* key, MCGeneric value, MCHash hashval);
 mc_hashtable* new_table(const MCHashTableLevel initlevel);
 
-MCHashTableIndex set_item(mc_hashtable** const table_p,
-                mc_hashitem* const item,
-                MCBool isOverride, MCBool isFreeValue, const char* classname);
-mc_hashitem* get_item_bykey(mc_hashtable* const table_p, const char* key);
-mc_hashitem* get_item_byhash(mc_hashtable* const table_p, const MCHash hashval, const char* refkey);
-mc_hashitem* get_item_byindex(mc_hashtable* const table_p, const MCHashTableIndex index);
+MCHashTableIndex set_item(mc_hashtable** table_p, mc_hashitem* item, MCBool isAllowOverride, const char* refkey);
+mc_hashitem* get_item_byhash(mc_hashtable* table_p, const MCHash hashval, const char* refkey);
+
+
+
+MCInline mc_hashitem* get_item_bykey(mc_hashtable* const table_p, const char* key)
+{
+    if(table_p==null){
+        error_log("get_item_bykey(table_p) table_p is nil return nil\n");
+        return null;
+    }
+    //try get index
+    return get_item_byhash(table_p, hash(key), key);
+}
+
+MCInline mc_hashitem* get_item_byindex(mc_hashtable* const table_p, const MCHashTableIndex index)
+{
+    if(table_p==null){
+        error_log("get_item_byindex(table_p) table_p is nil return nil\n");
+        return null;
+    }
+    if(index > get_tablesize(table_p->level))
+        return null;
+    if(table_p->items[index] != null)
+        return table_p->items[index];
+    else
+        return null;
+}
 
 /*
  Messaging.h
  */
 typedef struct {
-    MCFuncPtr address;
-    MCObject* volatile object;
+    MCObject* object;
+    char message[MAX_KEY_CHARS];
 } mc_message;
-#define mc_message_arg(Class) void* volatile address, Class* volatile obj
-MCInline mc_message make_msg(void* obj, void* address) { return (mc_message){address, (mo)obj}; };
+
+MCInline mc_message make_msg(MCObject* obj, const char* msg) {
+    mc_message message;
+    message.object = obj;
+    strncpy(message.message, msg, strlen(msg));
+    return message;
+}
 
 //write by asm
-void* _push_jump(mc_message volatile msg, ...);
+void* _push_jump(register MCObject* msg, ...);
 
 //write by c
-mc_message _self_response_to(const mo obj, const char* methodname);
-mc_message _self_response_to_h(const mo obj, const char* methodname, MCHash hashval);
-mc_message _response_to(mo const obj, const char* methodname, MCInt strict);
-mc_message _response_to_h(mo const obj, const char* methodname, MCHash hashval, MCInt strict);
+MCBool response_test(MCObject* obj, const char* methodname);
+MCObject* response_to(MCObject* obj, const char* methodname);
+MCObject* response_to_i(MCObject* obj, MCHashTableIndex index);
 
 /*
  ObjectManage.h
  */
 
-void mc_info(const char* classname, MCSizeT size, MCLoaderPointer loader);
+void mc_info(const char* classname);
 void mc_clear(const char* classname, MCSizeT size, MCLoaderPointer loader);
-mo mc_alloc(const char* classname, MCSizeT size, MCLoaderPointer loader);
-void mc_info_h(const char* classname, MCSizeT size, MCLoaderPointer loader, MCHash hashval);
-void mc_clear_h(const char* classname, MCSizeT size, MCLoaderPointer loader, MCHash hashval);
-mo mc_alloc_h(const char* classname, MCSizeT size, MCLoaderPointer loader, MCHash hashval);
+MCObject* mc_alloc(const char* classname, MCSizeT size, MCLoaderPointer loader);
 void mc_dealloc(MCObject* aobject, MCInt is_recycle);
 
-#define MC_NO_NODE(bpool) (bpool->tail==mull)
+#define MC_NO_NODE(bpool) (bpool->tail==null)
 #define MC_ONE_NODE(bpool) (bpool->tail->next==bpool->tail)
 #define MC_TWO_NODE(bpool) (bpool->tail->next->next==bpool->tail)
 
@@ -537,59 +614,28 @@ MCInt cut(mc_blockpool* bpool, mc_block* ablock, mc_block** result);
  Root Class MCObject
  */
 
-static inline MCObject* MCObject_init(MCObject* const obj) {obj->nextResponder=mull; return obj;}
-static inline void      MCObject_responseChainConnect(mc_message_arg(MCObject), mo upperObj) {obj->nextResponder=upperObj;}
-static inline void      MCObject_responseChainDisconnect(mc_message_arg(MCObject), voida) {obj->nextResponder=mull;}
-static inline void      MCObject_bye(mc_message_arg(MCObject), voida) {}
+MCObject* MCObject_init(MCObject* const obj);
+static inline void      MCObject_responseChainConnect(MCObject* const obj, MCObject* upperObj) {obj->nextResponder=upperObj;}
+static inline void      MCObject_responseChainDisconnect(MCObject* const obj, voida) {obj->nextResponder=null;}
+static inline void      MCObject_printDebugInfo(MCObject* const obj, mc_class* cobj) {
+    mc_class* mcclass = cobj;
+    if (!mcclass)
+        mcclass = obj->isa;
+    MCHashTableSize size = get_tablesize(mcclass->table->level);
+    for (int i=0; i<size; i++) {
+        mc_hashitem* item = mcclass->table->items[i];
+        if (item && item->key[0]) {
+            debug_log("%s - %d/%s\n", mcclass->item->key, item->hash, item->key);
+        }
+    }
+}
+static inline void      MCObject_bye(MCObject* const obj, voida) {}
 static inline mc_class* MCObject_load(mc_class* const cla) {
     _binding(cla, "responseChainConnect", (MCFuncPtr)MCObject_responseChainConnect);
     _binding(cla, "responseChainDisconnect", (MCFuncPtr)MCObject_responseChainDisconnect);
+    _binding(cla, "printDebugInfo", (MCFuncPtr)MCObject_printDebugInfo);
     _binding(cla, "bye", (MCFuncPtr)MCObject_bye);
     return cla;
 }
 
 #endif
-
-/* Code Snippet
------------------------------------------
-class(MyClass, SuperClass,
-
-    int   member1;
-    float member2;
-)
------------------------------------------
-oninit(MyClass)
-{
-    if (init(MCObject)) {
-
-        return obj;
-    } else {
-        return mull;
-    }
-}
------------------------------------------
-onload(MyClass)
-{
-    if (load(MCObject)) {
-
-        return cla;
-    } else {
-        return mull;
-    }
-}
------------------------------------------
-method(MyClass, void, name, voida)
------------------------------------------
-utility(MyClass, void, name, voida)
------------------------------------------
-function(void, name, voida)
------------------------------------------
-compute(type, name)
------------------------------------------
-computing(type, name)
------------------------------------------
-
------------------------------------------
-End Snippet */
-
-

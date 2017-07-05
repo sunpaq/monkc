@@ -1,3 +1,5 @@
+#ifdef __ANDROID__
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
@@ -43,3 +45,7 @@ each JNI function have two hidden arguments
 2. jobject obj
 you can use 'env' & 'obj' access the JVM environment and Java object proxy
 */
+
+#define JavaStringFromCString(cstr) (*env)->NewStringUTF(env, cstr)
+
+#endif

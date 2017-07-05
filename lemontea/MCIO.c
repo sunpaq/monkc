@@ -1,4 +1,5 @@
 #include "MCIO.h"
+#include "MCLexer.h"
 
 #pragma mark - MCFile unbuffered IO
 
@@ -12,7 +13,7 @@ int MCFile_flushAFileCacheToDisk(int fd)
     return fsync(fd);
 }
 
-int MCFile_isFileExist(char* pathname)
+int MCFile_isPathExist(char* pathname)
 {
     //file exist test
     int res;
@@ -92,36 +93,36 @@ oninit(MCFile)
     if (init(MCObject)) {
         obj->fd = 0;
         obj->pathname = "";
-        obj->buffer = mull;
+        obj->buffer = null;
         //obj->attribute;
         return obj;
     }else{
-        return mull;
+        return null;
     }
 }
 
 method(MCFile, MCFile*, initWithPathName, char* pathname, int oflag)
 {
 	if((obj->fd = open(pathname, oflag, 0774))==-1)
-		return mull;
+		return null;
 	obj->pathname = pathname;
 	if(fstat(obj->fd, &obj->attribute)<0)
-		return mull;
+		return null;
 	obj->buffer = malloc(obj->attribute.st_blksize*10);
 	return obj;
 }
 
 method(MCFile, MCFile*, initWithPathNameDefaultFlag, char* pathname)
 {
-    return MCFile_initWithPathName(address, obj, pathname, MCFileReadWriteTrunc);
+    return MCFile_initWithPathName(obj, pathname, MCFileReadWriteTrunc);
 }
 
-method(MCFile, size_t, readAllFromBegin, off_t offset)
+method(MCFile, ssize_t, readAllFromBegin, off_t offset)
 {
-    return MCFile_readFromBegin(0, obj, offset, obj->attribute.st_size);
+    return MCFile_readFromBegin(obj, offset, (size_t)obj->attribute.st_size);
 }
 
-method(MCFile, size_t, readFromBegin, off_t offset, size_t nbytes)
+method(MCFile, ssize_t, readFromBegin, off_t offset, size_t nbytes)
 {
     //use pread/pwrite for atomic operation
     return pread(obj->fd, obj->buffer, nbytes, offset);
@@ -208,7 +209,7 @@ onload(MCFile)
         binding(MCFile, int, checkPermissionUseRealIDOfProcess, int mode);
         return cla;
     }else{
-        return mull;
+        return null;
     }
 }
 
@@ -217,12 +218,10 @@ onload(MCFile)
 oninit(MCStream)
 {
     if (init(MCObject)) {
-        obj->lineArray = mull;
-        obj->lineLengthArray = mull;
-        obj->lineCount = 0;
+        obj->buffer = null;
         return obj;
     }else{
-        return mull;
+        return null;
     }
 }
 
@@ -234,60 +233,43 @@ method(MCStream, MCStream*, initWithPath, MCStreamType type, const char* path)
     //int setvbuf(FILE *restrict fp, char *restrict buf, int mode, size_t size);
     //[NULL _IOFBF/_IOLBF/_IONBF BUFSIZ]
     
-    obj->fileObject = fopen(path, type.fopenMode);
-    if (obj->fileObject == NULL) {
-        error_log("can not open file: %s\n", path);
-        return mull;
-    }
-    //long size = MCStream_tellSize(0, obj, 0);
-    
-    char ichar;
-    char linebuff[LINE_MAX]; unsigned i = 0;
-    char* textbuff[LINE_MAX]; unsigned lcount = 0;
-    
-    while ((ichar=fgetc(obj->fileObject)) != EOF) {
-        if (ichar != '\n') {
-            if (ichar == ' ' || ichar == '\t' || ichar== '\r' || ichar == '\x0b') {
-                linebuff[i++] = ' ';
-            }else if (ichar == '\xff'){
-                //skip this char
-            }else{
-                linebuff[i++] = ichar;
-            }
-
-        }else{
-            linebuff[i] = '\n';
-            linebuff[i+1] = '\0';
-            MCCharBuffer* line = NewMCCharBuffer(sizeof(char) * i+1);
-            CopyToCharBuffer(line, linebuff);
-            line->data[i+1] = '\0';
-            textbuff[lcount++] = (line->data);
-            i = 0;
+    char decodepath[PATH_MAX] = {0};
+    obj->fileObject = fopen(MCString_percentDecode(path, decodepath), type.fopenMode);
+    if (obj->fileObject) {
+        //file size
+        fseek(obj->fileObject, 0, SEEK_END);
+        long size = ftell(obj->fileObject);
+        fseek(obj->fileObject, 0, SEEK_SET);
+        
+        obj->buffer = (char*)malloc(size * sizeof(char));
+        char* iter = obj->buffer;
+        
+        char c;
+        while ((c = fgetc(obj->fileObject)) != EOF) {
+            *iter++ = c;
         }
+        *iter = NUL;
+        fseek(obj->fileObject, 0, SEEK_SET);
     }
-    
-    obj->lineCount = lcount;
-    obj->lineArray = (char**)malloc(sizeof(char*) * lcount);
-    obj->lineLengthArray = (size_t*) malloc(sizeof(unsigned) * lcount);
-
-    memcpy(obj->lineArray, &textbuff[0], sizeof(char*) * lcount);
-    ff(obj, dump, mull);
     
     return obj;
 }
 
 method(MCStream, MCStream*, initWithPathDefaultType, const char* path)
 {
-    return MCStream_initWithPath(0, obj, MakeMCStreamType(MCStreamBuf_FullBuffered, MCStreamOpen_ReadWrite), path);
+    return MCStream_initWithPath(obj, MakeMCStreamType(MCStreamBuf_FullBuffered, MCStreamOpen_ReadWrite), path);
 }
 
 method(MCStream, void, bye, voida)
 {
-    //0=OK/EOF=ERROR
+    if (obj->buffer) {
+        free(obj->buffer);
+    }
+    //0=OK/NUL=ERROR
     if(fclose(obj->fileObject))
-        error_log("close file error");
+        error_log("MCStream close file error\n");
     //other clean up works
-    
+    superbye(MCObject);
 }
 
 method(MCStream, int, getFileDescriptor, voida)
@@ -378,10 +360,7 @@ method(MCStream, long, tellSize, voida)
 
 method(MCStream, void, dump, voida)
 {
-    int i;
-    for (i=0; i<obj->lineCount; i++) {
-        printf("%s", (obj->lineArray)[i]);
-    }
+    printf("%s", obj->buffer);
 }
 
 onload(MCStream)
@@ -414,7 +393,7 @@ onload(MCStream)
         
         return cla;
     }else{
-        return mull;
+        return null;
     }
 }
 
@@ -432,7 +411,7 @@ oninit(MCSelect)
         FD_ZERO(&obj->exceptionfd_result_set);
         return obj;
     }else{
-        return mull;
+        return null;
     }
 }
 
@@ -514,7 +493,7 @@ onload(MCSelect)
         binding(MCSelect, int, isFdReady, MCSelect_fd_type type, int fd);
         return cla;
     }else{
-        return mull;
+        return null;
     }
 }
 

@@ -1,4 +1,5 @@
 #include "MCMath.h"
+#include "MCBits.h"
 
 utility(MCMath, void, bye, voida)
 {
@@ -83,3 +84,47 @@ utility(MCMath, double, accumulateMind, double* result, double value)
     }
     return *result;
 }
+
+utility(MCMath, MCBool, isPrime, int a)
+{
+    for(int i=2;i<=sqrt(a);i++)
+        if(a%i==0)
+            return false;
+    return true;
+}
+
+utility(MCMath, MCBool, isPowerOfTwo, unsigned a)
+{
+    return (MCBitsSetBitNum(a) == 1);
+}
+
+utility(MCMath, unsigned, chebyshevDiatance, MCVector2i A, MCVector2i B)
+{
+    return MAX(abs(B.x - A.x), abs(B.y - A.y));
+}
+
+utility(MCMath, unsigned, factorialOf, unsigned N)
+{
+    unsigned res = 1;
+    for (unsigned i=N; i>0; i--)
+        res *= i;
+    return res;
+}
+
+utility(MCMath, unsigned, KpermutationsOfN, unsigned K, unsigned N)
+{
+    //P(n,k) = n! / (n-k)!
+    unsigned res = 1;
+    for (unsigned i=N; i>N-K; i--) {
+        res *= i;
+    }
+    return res;
+}
+
+utility(MCMath, unsigned, KcombinationsOfN, unsigned K, unsigned N)
+{
+    //C(n,k) = P(n,k) / k! = n! / k! * (n-k)!
+    return MCMath_KpermutationsOfN(K, N) / MCMath_factorialOf(K);
+}
+
+

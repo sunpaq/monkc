@@ -5,7 +5,7 @@ oninit(MCSocketClientInfo)
     if (init(MCObject)) {
         return obj;
     }else{
-        return mull;
+        return null;
     }
 }
 
@@ -26,7 +26,7 @@ onload(MCSocketClientInfo)
         binding(MCSocketClientInfo, void, bye);
         return cla;
     }else{
-        return mull;
+        return null;
     }
 }
 
@@ -35,7 +35,7 @@ oninit(MCSocket)
     if (init(MCObject)) {
         return obj;
     }else{
-        return mull;
+        return null;
     }
 }
 
@@ -72,14 +72,14 @@ static void create_and_bind_socket(MCSocket* this, MCSocketType socket_type, cha
 	}
 	//get addrinfo linklist
 	if(getaddrinfo(ip, port, &hint, &result)){
-		error_log("can not getaddrinfo, return mull\n");
+		error_log("can not getaddrinfo, return null\n");
 		return;
 	}
 	runtime_log("get the addrinfo linklist.\n");
 
 	//try every addrinfo in list to create and bind until success
 	struct addrinfo* iterator;
-	for(iterator = result; iterator!=mull; iterator = iterator->ai_next)
+	for(iterator = result; iterator!=null; iterator = iterator->ai_next)
 	{		
 		this->sfd = socket(iterator->ai_family, iterator->ai_socktype, iterator->ai_protocol);
 		if (this->isServer)
@@ -129,7 +129,7 @@ method(MCSocket, int, listeningStart, voida)
 
 method(MCSocket, MCSocketClientInfo*, acceptARequest, voida)
 {
-	if (obj->isServer!=1)return mull;
+	if (obj->isServer!=1)return null;
 	MCSocketClientInfo* clientinfo = new(MCSocketClientInfo);
 	clientinfo->returnSfd = accept(obj->sfd, &clientinfo->address, &clientinfo->address_len);
 	return clientinfo;
@@ -180,6 +180,6 @@ onload(MCSocket)
         binding(MCSocket, void, bye);
         return cla;
     }else{
-        return mull;
+        return null;
     }
 }

@@ -1,4 +1,5 @@
 #include "MCContext.h"
+#include "MCLexer.h"
 
 oninit(MCContext)
 {
@@ -6,7 +7,7 @@ oninit(MCContext)
         obj->selectionChar=0;
         return obj;
     }else{
-        return mull;
+        return null;
     }
 }
 
@@ -18,35 +19,40 @@ utility(MCContext, MCContext*, newWithArgs, int argc, char** argv)
 	return res;
 }
 
-struct privateData
+utility(MCContext, char, showMenuAndGetSelectionChar, int count, ...)
 {
-	/* data */
-};
-
-static char get_one_char()
-{
+	va_list ap;
+	va_start(ap, count);
+	int i;
+	for (i = 0; i < count; ++i)
+	{
+		char* arg = va_arg(ap, char*);
+		printf("%d.%s\n", i+1, arg);
+	}
+	printf("%s\n", "your selection is?");
+	va_end(ap);
 	char cf = getchar();
-	while(getchar()!='\n');//clear the buff
 	return cf;
 }
 
 static void get_chars_until_enter(char resultString[])
 {
-	char tc;
+	char tc = NUL;
 	int i=0;
-	while((tc=getchar())!='\n'){
+	while(!isNewLine(&tc)){
+        tc = getchar();
 		resultString[i]=tc;
 		i++;
 		putchar(tc);
 	}
-	resultString[i]='\0';
+	resultString[i] = NUL;
 	putchar(tc);
 }
 
 method(MCContext, void, bye, voida)
 {	
 	runtime_log("%s\n", "MCContext goodbye");
-    MCObject_bye(0, sobj, 0);
+    superbye(MCObject);
 }
 
 method(MCContext, void, dumpParas, voida)
@@ -66,19 +72,19 @@ method(MCContext, char*, getPara, int index)
 method(MCContext, int, isIndexedParaEqualTo, int index, char* para)
 {
 	char* para1 = obj->argv[index];
-	if (para1==mull)return 0;
+	if (para1==null)return 0;
 	if (strcmp(para1, para)==0)return 1;
 	else return 0;
 }
 
 method(MCContext, int, isHavePara, char* para)
 {
-	if(obj==mull)return 0;
+	if(obj==null)return 0;
 	int i, res;
 	for (i = 0; i < obj->argc; ++i)
 	{
 		char* tmp = obj->argv[i];
-        if(tmp!=mull && para!=mull)res = strcmp(tmp, para);
+        if(tmp!=null && para!=null)res = strcmp(tmp, para);
 		else return 0;
 
 		if(res==0)return 1;
@@ -86,26 +92,10 @@ method(MCContext, int, isHavePara, char* para)
 	return 1;
 }
 
-method(MCContext, char, showMenuAndGetSelectionChar, int count, ...)
-{
-	va_list ap;
-	va_start(ap, count);
-	int i;
-	for (i = 0; i < count; ++i)
-	{
-		char* arg = va_arg(ap, char*);
-		printf("%d.%s\n", i+1, arg);
-	}
-	printf("%s\n", "your selection is?");
-	va_end(ap);
-	obj->selectionChar = get_one_char();
-	return obj->selectionChar;
-}
-
 method(MCContext, int, showConfirmAndGetBOOL, const char* confirm)
 {
 	printf("%s (y/n)?\n", confirm);
-	char cf = get_one_char();
+	char cf = getchar();
 	if (cf=='y'){
 		return 1;
 	}
@@ -152,6 +142,7 @@ method(MCContext, int, clearEnvironmentVar, const char* key)
 onload(MCContext)
 {
     if (load(MCObject)) {
+        binding(MCContext, MCContext*, newWithArgs, int argc, char** argv);
         binding(MCContext, void, bye);
         binding(MCContext, void, dumpParas);
         binding(MCContext, char*, getPara, int index);
@@ -165,6 +156,6 @@ onload(MCContext)
         binding(MCContext, int, clearEnvironmentVar, const char* key);
         return cla;
     }else{
-        return mull;
+        return null;
     }
 }
