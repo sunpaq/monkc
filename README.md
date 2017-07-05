@@ -30,7 +30,7 @@ a toolkit for OOP programming in C language
 
 [https://github.com/sunpaq/BohdiAR-pod](https://github.com/sunpaq/BohdiAR-pod)
 
-## The Demo App using both BohdiAR and BohdiEngine:
+## The Demo Google Cardboard VR App using BohdiEngine:
 
 [https://github.com/sunpaq/BohdiEngineDemoSwift](https://github.com/sunpaq/BohdiEngineDemoSwift)
 
