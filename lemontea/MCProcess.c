@@ -11,7 +11,7 @@ oninit(MCProcess)
         obj->egid=getegid();
         return obj;
     }else{
-        return mull;
+        return null;
     }
 }
 
@@ -138,6 +138,6 @@ onload(MCProcess)
         binding(MCProcess, pid_t, waitPIDChildExitGetResourceUseage, pid_t pid, int* statusAddr, int options, MCProcessRUseage* useage);
         return cla;
     }else{
-        return mull;
+        return null;
     }
 }

@@ -21,7 +21,7 @@ typedef struct MCALItemStruct {
 
 MCInline MCALItem MCALItemMake(MCGeneric val)
 {
-    return (MCALItem){mull, mull, val};
+    return (MCALItem){null, null, val};
 }
 
 MCInline void MCALItemLink(MCALItem* A, MCALItem* B)
@@ -32,42 +32,53 @@ MCInline void MCALItemLink(MCALItem* A, MCALItem* B)
 
 MCInline MCBool MCALItemIsHead(MCALItem* item)
 {
-    return (item->prev == mull);
+    return (item->prev == null);
 }
 
 MCInline MCBool MCALItemIsTail(MCALItem* item)
 {
-    return (item->next == mull);
+    return (item->next == null);
 }
 
 #define MCArrayLinkedListMax 1024
 typedef struct {
     MCBool isCircle;
     size_t count;
-    size_t index;
     MCALItem* head;
     MCALItem array[MCArrayLinkedListMax];
 } MCArrayLinkedList;
 
 MCInline void MCALSetHead(MCArrayLinkedList* list, MCALItem* item)
 {
-    item->prev = mull;
+    item->prev = null;
     list->head = item;
 }
 
 MCInline void MCALSetTail(MCArrayLinkedList* list, MCALItem* item)
 {
-    item->next = mull;
+    item->next = null;
 }
 
 MCInline MCBool MCALIsEmpty(MCArrayLinkedList* list)
 {
-    return (list->head == mull);
+    return (list->head == null);
 }
 
 MCArrayLinkedList* MCArrayLinkedListInit(MCArrayLinkedList* list, MCGeneric values[], const size_t count);
 MCArrayLinkedList* MCArrayLinkedListInitCircle(MCArrayLinkedList* list, MCGeneric values[], const size_t count);
 
 MCALItem* MCALDeleteItem(MCArrayLinkedList* list, MCALItem* item);
+
+
+typedef struct {
+    MCGeneric data[MCArrayLinkedListMax];
+    int nexti[MCArrayLinkedListMax];
+    int previ[MCArrayLinkedListMax];
+    int count;
+} MCArrayList;
+
+MCArrayList* MCArrayListInit(MCArrayList* list);
+MCArrayList* MCArrayListAdd(MCArrayList* list, MCGeneric data);
+
 
 #endif /* MCArrayLinkedList_h */

@@ -15,23 +15,23 @@ void assertNO(int expression) throws(MCAssertNOException)
 
 void assertMull(void* ptr) throws(MCAssertMullException)
 {
-	if (ptr!=mull)
-		throw(MCAssertmullException);
+	if (ptr!=null)
+		throw(MCAssertnullException);
 }
 
 void assertNotMull(void* ptr) throws(MCAssertNotMullException)
 {
-	if (ptr==mull)
-		throw(MCAssertNotmullException);
+	if (ptr==null)
+		throw(MCAssertNotnullException);
 }
 
-void assertSame(mo obj1, mo obj2) throws(MCAssertSameException)
+void assertSame(MCObject* obj1, MCObject* obj2) throws(MCAssertSameException)
 {
 	if (obj1!=obj2)
 		throw(MCAssertSameException);
 }
 
-void assertNotSame(mo obj1, mo obj2) throws(MCAssertNotSameException)
+void assertNotSame(MCObject* obj1, MCObject* obj2) throws(MCAssertNotSameException)
 {
 	if (obj1==obj2)
 		throw(MCAssertNotSameException);
@@ -62,34 +62,34 @@ onload(MCUnitTestCase)
         binding(MCUnitTestCase, void, runATestMethod, char* errmsg);
         return cla;
     }else{
-        return mull;
+        return null;
     }
 }
 
 oninit(MCUnitTestCase)
 {
     if (init(MCObject)) {
-        obj->next_case = mull;
+        obj->next_case = null;
         return obj;
     }else{
-        return mull;
+        return null;
     }
 }
 
 method(MCUnitTestCase, MCUnitTestCase*, initWithTestResult, MCUnitTestResult* resultRef)
 {
-	if(resultRef!=mull){
+	if(resultRef!=null){
 		retain(resultRef);
 		obj->unitTestResultRef = resultRef;
 	}else{
-		obj->unitTestResultRef = mull;
+		obj->unitTestResultRef = null;
 	}
 	return obj;
 }
 
 method(MCUnitTestCase, void, bye, voida)
 {
-	if(obj->unitTestResultRef!=mull)
+	if(obj->unitTestResultRef!=null)
 		release(&(obj->unitTestResultRef));
 }
 
@@ -107,11 +107,11 @@ method(MCUnitTestCase, void, tearDown, voida)
 
 static void runMethodByPointer(MCUnitTestCase* obj, mc_hashitem* amethod)
 {
-	ff(obj, setUp, mull);
+	ff(obj, setUp, null);
 	runtime_log("%s\n", "runMethodByPointer start");
 
 	try{
-		_push_jump(_response_to(cast(mo, obj), amethod->key, 0), mull);
+		_push_jump(response_to(cast(MCObject*, obj), amethod->key), null);
 		//if exception generated, this line will never be reached
 	}
 	catch(MCAssertYESException){
@@ -120,11 +120,11 @@ static void runMethodByPointer(MCUnitTestCase* obj, mc_hashitem* amethod)
 	catch(MCAssertNOException){
 		error_log("MCAssertNOException\n");
 	}
-	catch(MCAssertmullException){
-		error_log("MCAssertmullException\n");
+	catch(MCAssertnullException){
+		error_log("MCAssertnullException\n");
 	}
-	catch(MCAssertNotmullException){
-		error_log("MCAssertNotmullException\n");
+	catch(MCAssertNotnullException){
+		error_log("MCAssertNotnullException\n");
 	}
 	catch(MCAssertSameException){
 		error_log("MCAssertSameException\n");
@@ -139,7 +139,7 @@ static void runMethodByPointer(MCUnitTestCase* obj, mc_hashitem* amethod)
 		error_log("testcase: %s at method: [%s]\n", cast(MCObject*, obj)->isa->item->key, amethod->key);
 	}
 
-	ff(obj, tearDown, mull);
+	ff(obj, tearDown, null);
 }
 
 method(MCUnitTestCase, void, runTests, voida)
@@ -150,7 +150,7 @@ method(MCUnitTestCase, void, runTests, voida)
 	unsigned setUp_key = hash("setUp");
 	unsigned tearDown_key = hash("tearDown");
 
-	if(obj==mull || cast(MCObject*, obj)->isa==mull)
+	if(obj==null || cast(MCObject*, obj)->isa==null)
 		return;
 
 	runtime_log("%s\n", "MCUnitTestCase runTests before for loop");
@@ -159,13 +159,13 @@ method(MCUnitTestCase, void, runTests, voida)
 	{
 		//runtime_log("MCUnitTestCase runTests in for loop index:[%d]\n", i);
 		amethod = cast(MCObject*, obj)->isa->table->items[i];
-		if(amethod->value.mcptr!=mull
+		if(amethod->value.mcvoidptr!=null
 		&& i!=bye_key
 		&& i!=setUp_key
 		&& i!=tearDown_key){
 			runtime_log("%s\n", "MCUnitTestCase runTests hit a matched method");
-			if(obj==mull){
-				error_log("MCUnitTestCase runTests this pointer is mull\n");
+			if(obj==null){
+				error_log("MCUnitTestCase runTests this pointer is null\n");
 			}
 			runMethodByPointer(obj, amethod);
 		}
@@ -189,27 +189,27 @@ onload(MCUnitTestSuite)
         binding(MCUnitTestSuite, void, runTestCases);
         return cla;
     }else{
-        return mull;
+        return null;
     }
 }
 
 oninit(MCUnitTestSuite)
 {
     if (init(MCObject)) {
-        obj->first_case = mull;
+        obj->first_case = null;
         obj->last_case_p = &(obj->first_case);
         obj->test_case_count = 0;
-        obj->next_suite = mull;
+        obj->next_suite = null;
         return obj;
     }else{
-        return mull;
+        return null;
     }
 }
 
 method(MCUnitTestSuite, void, bye, voida)
 {
 	MCUnitTestCase *iter, *save;
-	for(iter=obj->first_case; (save=iter)!=mull; release(save))
+	for(iter=obj->first_case; (save=iter)!=null; release(save))
 		iter = iter->next_case;
 }
 
@@ -224,9 +224,9 @@ method(MCUnitTestSuite, void, addTestCase, MCUnitTestCase* volatile tcase)
 method(MCUnitTestSuite, void, runTestCases, voida)
 {
 	runtime_log("%s\n", "MCUnitTestSuite runTestCases");
-	MCUnitTestCase *iter = mull;
-	for(iter=obj->first_case; iter!=mull; iter = iter->next_case)
-        MCUnitTestCase_runTests(0, iter, 0);
+	MCUnitTestCase *iter = null;
+	for(iter=obj->first_case; iter!=null; iter = iter->next_case)
+        MCUnitTestCase_runTests(iter, 0);
 }
 
 /* Test Result */
@@ -240,7 +240,7 @@ oninit(MCUnitTestResult)
         //nothing to init
         return obj;
     }else{
-        return mull;
+        return null;
     }
 }
 
@@ -267,7 +267,7 @@ onload(MCUnitTestResult)
         binding(MCUnitTestResult, void, addFailInfo, char* failinfo);
         return cla;
     }else{
-        return mull;
+        return null;
     }
 }
 
@@ -284,18 +284,18 @@ onload(MCUnitTestResult)
 oninit(MCUnitTestRunner)
 {
     if (init(MCObject)) {
-        obj->first_suite = mull;
+        obj->first_suite = null;
         obj->test_suite_count = 0;
         return obj;
     }else{
-        return mull;
+        return null;
     }
 }
 
 method(MCUnitTestRunner, void, bye, voida)
 {
 	MCUnitTestSuite *iter, *save;
-	for(iter=obj->first_suite; (save=iter)!=mull; release(save))
+	for(iter=obj->first_suite; (save=iter)!=null; release(save))
 		iter = iter->next_suite;
 }
 
@@ -303,7 +303,7 @@ method(MCUnitTestRunner, void, addTestSuite, MCUnitTestSuite* testSuite)
 {
 	retain(testSuite);
 	MCUnitTestSuite **iter;
-	for(iter=&(obj->first_suite); (*iter)!=mull; iter=&((*iter)->next_suite)){}
+	for(iter=&(obj->first_suite); (*iter)!=null; iter=&((*iter)->next_suite)){}
 	(*iter)=testSuite;
 	obj->test_suite_count++;
 }
@@ -312,8 +312,8 @@ method(MCUnitTestRunner, void, runTestSuites, voida)
 {
 	runtime_log("%s\n", "MCUnitTestRunner runTestSuites");
 	MCUnitTestSuite *iter;
-	for(iter=obj->first_suite; iter!=mull; iter = iter->next_suite)
-        MCUnitTestSuite_runTestCases(0, iter, 0);
+	for(iter=obj->first_suite; iter!=null; iter = iter->next_suite)
+        MCUnitTestSuite_runTestCases(iter, 0);
 }
 
 onload(MCUnitTestRunner)
@@ -324,6 +324,6 @@ onload(MCUnitTestRunner)
         binding(MCUnitTestRunner, void, runTestSuites);
         return cla;
     }else{
-        return mull;
+        return null;
     }
 }

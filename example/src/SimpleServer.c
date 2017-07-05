@@ -6,7 +6,7 @@ oninit(SimpleServer)
 		obj->socket = new(MCSocket);
 		return obj;
 	} else {
-		return mull;
+		return null;
 	}
 }
 
@@ -51,6 +51,6 @@ onload(SimpleServer)
 		binding(SimpleServer, void, restart, voida);
 		return cla;
 	} else {
-		return mull;
+		return null;
 	}
 }

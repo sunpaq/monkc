@@ -29,6 +29,10 @@ method(MCClock, void, getRawtime, struct tm* const result);
 method(MCClock, char*, getTimeByString, voida);
 method(MCClock, void, getCPUClocksPerSecond, clock_t* const result);
 method(MCClock, void, getCPUClocksSinceStart, clock_t* const result);
+
+method(MCClock, time_t, getCPUSecondsSinceStart, voida);
+method(MCClock, time_t, getCPUSecondsSince, time_t since);
+
 method(MCClock, char*, getCurrentTimeString, voida);//retrun the same format as asctime: Sun Sep 16 01:03:52 1973\n\0
 method(MCClock, char*, getCurrentGMTTimeString, voida);
 

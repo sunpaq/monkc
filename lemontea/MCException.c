@@ -1,11 +1,11 @@
 #include "MCException.h"
 
 //init define
-jmp_buf exception_env = {};
+jmp_buf exception_env = {0};
 volatile int exception_type = __exception_try_not_called;
 
 static int _exception_list[MAX_EXCEPTION_NUM];
-static mo _exception_store[MAX_EXCEPTION_NUM];
+static MCObject* _exception_store[MAX_EXCEPTION_NUM];
 
 void clean_exception_context()
 {
@@ -16,7 +16,7 @@ void clean_exception_context()
 	int i;
 	for (i = 0; i < MAX_EXCEPTION_NUM; i++){
 		_exception_list[i] = 0;
-		_exception_store[i] = mull;
+		_exception_store[i] = null;
 	}
 	//init the system builtin exceptions here
 }
@@ -25,16 +25,16 @@ void clean_exception_context()
 static inline unsigned _ehash(char *s)
 {
 	unsigned hashval;
-	for(hashval = 0; *s != '\0'; s++)
+	for(hashval = 0; *s != NUL; s++)
 		hashval = *s + 31 * hashval;
-	return (hashval % MAX_EXCEPTION_NUM);
+	return (hashval & MAX_EXCEPTION_NUM);
 }
 
 static unsigned _define_exception(char* s)
 {
 	unsigned val = _ehash(s);
 	if(_exception_list[val] == 1){
-		error_log("your exception name:%s is conflicted please change another name\n", s);
+		error_log("your exception name:%s is collisioned please change another name\n", s);
 		exit(-1);
 	}
 	_exception_list[val] = 1;
@@ -52,25 +52,25 @@ unsigned __get_exception_code(char* s)
 	}
 }
 
-mo get_exception_data(char* key)
+MCObject* get_exception_data(char* key)
 {
 	unsigned val = _ehash(key);
 	if (_exception_list[val] == 0)
 	{
 		error_log("there is no exception: %s. return nil\n", key);
-		return mull;
+		return null;
 	}
-	mo res = _exception_store[val];
+	MCObject* res = _exception_store[val];
 	return res;
 }
 
-void set_exception_data(char* key, mo e)
+void set_exception_data(char* key, MCObject* e)
 {
 	unsigned val = _ehash(key);
 	//e->ref_count = -1;//memery manage here
 
-	mo exp_obj = _exception_store[val];
-	if(exp_obj != mull){
+	MCObject* exp_obj = _exception_store[val];
+	if(exp_obj != null){
 		release(&exp_obj);
 
 	}//auto release the old one

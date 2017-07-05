@@ -25,7 +25,7 @@ method(MCThread, int, equal, MCThread* thread);
 utility(MCThread, int, cancelThread, pthread_t tid);
 utility(MCThread, int, joinThread, pthread_t tid);
 utility(MCThread, void, exitWithStatus, void* status);
-utility(MCThread, pthread_t, currentThread);
+utility(MCThread, pthread_t, currentThread, void);
 
 /*
 The pthread API:

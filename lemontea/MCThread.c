@@ -10,8 +10,8 @@ oninit(MCThread)
 	//example: pthread_attr_getstacksize(m_thread->attribute);
 	pthread_attr_init(&obj->attribute);
     
-    obj->functionPointer = mull;
-    obj->functionArgument = mull;
+    obj->functionPointer = null;
+    obj->functionArgument = null;
 	return obj;
 }
 
@@ -22,10 +22,10 @@ method(MCThread, void, bye, voida)
 
 method(MCThread, MCThread*, initWithFPointerArgument, void* fp, void* farg)
 {
-    if (fp==mull)
+    if (fp==null)
     {
         error_log("%s\n","fp can not be nil, do nothing");
-        return mull;
+        return null;
     }
     obj->functionPointer = fp;
     obj->functionArgument = farg;
@@ -34,7 +34,7 @@ method(MCThread, MCThread*, initWithFPointerArgument, void* fp, void* farg)
 
 method(MCThread, MCThread*, initWithFPointer, void* fp)
 {
-    return MCThread_initWithFPointerArgument(0, obj, fp, mull);
+    return MCThread_initWithFPointerArgument(obj, fp, null);
 }
 
 method(MCThread, int, detach, voida)
@@ -102,7 +102,7 @@ onload(MCThread)
         binding(MCThread, int, equal, MCThread* thread);
         return cla;
     }else{
-        return mull;
+        return null;
     }
 }
 

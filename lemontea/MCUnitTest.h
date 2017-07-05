@@ -8,8 +8,8 @@ void assertYES(int expression) throws(MCAssertYESException);
 void assertNO(int expression) throws(MCAssertNOException);
 void assertNil(void* ptr) throws(MCAssertNilException);
 void assertNotNil(void* ptr) throws(MCAssertNotNilException);
-void assertSame(mo obj1, mo obj2) throws(MCAssertSameException);
-void assertNotSame(mo obj1, mo obj2) throws(MCAssertNotSameException);
+void assertSame(MCObject* obj1, MCObject* obj2) throws(MCAssertSameException);
+void assertNotSame(MCObject* obj1, MCObject* obj2) throws(MCAssertNotSameException);
 void assertEquals(int exp1, int exp2) throws(MCAssertEqualsException);
 void fail(char* message);
 

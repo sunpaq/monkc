@@ -11,13 +11,13 @@ class(MCContext, MCObject,
 );
 
 utility(MCContext, MCContext*, newWithArgs, int argc, char** argv);
+utility(MCContext, char, showMenuAndGetSelectionChar, int count, ...);
 
 method(MCContext, void, bye, voida);
 method(MCContext, void, dumpParas, voida);
 method(MCContext, char*, getPara, int index);
 method(MCContext, int, isIndexedParaEqualTo, int index, char* para);
 method(MCContext, int, isHavePara, char* para);
-method(MCContext, char, showMenuAndGetSelectionChar, int count, ...);
 method(MCContext, int, showConfirmAndGetBOOL, const char* confirm);
 method(MCContext, void, getUserInputString, char resultString[]);
 method(MCContext, char*, getEnvironmentVar, const char* key);

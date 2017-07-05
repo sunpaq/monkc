@@ -16,7 +16,6 @@ MCArrayLinkedList* MCArrayLinkedListInit(MCArrayLinkedList* list, MCGeneric valu
         exit(-1);
     }
     list->count = count;
-    list->index = 0;
     
     int i;
     for (i=0; i<count; i++) {
@@ -40,7 +39,7 @@ MCArrayLinkedList* MCArrayLinkedListInit(MCArrayLinkedList* list, MCGeneric valu
 
 MCArrayLinkedList* MCArrayLinkedListInitCircle(MCArrayLinkedList* list, MCGeneric values[], const size_t count)
 {
-    list->isCircle = MCTrue;
+    list->isCircle = true;
     MCArrayLinkedListInit(list, values, count);
     
     return list;
@@ -57,15 +56,15 @@ MCALItem* MCALDeleteItem(MCArrayLinkedList* list, MCALItem* item)
         item->prev->next = item->next;
         item->next->prev = item->prev;
     }else{
-        if (MCALItemIsHead(item) == MCTrue) {
+        if (MCALItemIsHead(item) == true) {
             MCALSetHead(list, item->next);
         }
-        else if (MCALItemIsTail(item) == MCTrue) {
+        else if (MCALItemIsTail(item) == true) {
             MCALSetTail(list, item->prev);
         }
-        else if (MCALItemIsHead(item) == MCTrue
-                 && MCALItemIsTail(item) == MCTrue) {
-            list->head = mull;
+        else if (MCALItemIsHead(item) == true
+                 && MCALItemIsTail(item) == true) {
+            list->head = null;
         }
         else {
             item->prev->next = item->next;
@@ -73,7 +72,35 @@ MCALItem* MCALDeleteItem(MCArrayLinkedList* list, MCALItem* item)
         }
     }
 
-    item->value.mcptr = mull;
+    item->value.mcvoidptr = null;
     list->count--;
     return list->head;
+}
+
+MCArrayList* MCArrayListInit(MCArrayList* list)
+{
+    for (int i=0; i<MCArrayLinkedListMax; i++) {
+        list->data[i]  = MCGenericFp(null);
+        list->nexti[i] = -1;
+        list->previ[i] = -1;
+    }
+    return list;
+}
+
+MCArrayList* MCArrayListAdd(MCArrayList* list, MCGeneric data)
+{
+    for (int i=0; i<MCArrayLinkedListMax; i++) {
+        if (list->data[i].mcvoidptr == null) {
+            list->data[i] = data;
+            if (i==0){
+                list->previ[i] = -1;
+            }else if(i==MCArrayLinkedListMax-1) {
+                list->nexti[i] = -1;
+            }
+            //double linked list
+            list->nexti[i-1] = i;
+            list->previ[i] = i-1;
+        }
+    }
+    return list;
 }

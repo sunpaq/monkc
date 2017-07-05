@@ -7,7 +7,7 @@ oninit(MCClock)
         var(currentGMTBuff) = (char*)malloc(sizeof(char) * LINE_MAX);
         return obj;
     }else{
-        return mull;
+        return null;
     }
 }
 
@@ -99,6 +99,16 @@ method(MCClock, void, getCPUClocksSinceStart, clock_t* const result)
 	*result = clock();
 }
 
+method(MCClock, time_t, getCPUSecondsSinceStart, voida)
+{
+    return (clock() / CLOCKS_PER_SEC);
+}
+
+method(MCClock, time_t, getCPUSecondsSince, time_t since)
+{
+    return (clock() / CLOCKS_PER_SEC) - since;
+}
+
 method(MCClock, char*, getCurrentTimeString, voida)
 {
 	time_t timer = time(NULL);
@@ -175,6 +185,8 @@ onload(MCClock)
         binding(MCClock, char*, getTimeByString);
         binding(MCClock, void, getCPUClocksPerSecond, clock_t* const result);
         binding(MCClock, void, getCPUClocksSinceStart, clock_t* const result);
+        binding(MCClock, time_t, getCPUSecondsSinceStart, voida);
+        binding(MCClock, time_t, getCPUSecondsSince, time_t since);
         binding(MCClock, char*, getCurrentTimeString);//retrun the same format as asctime: Sun Sep 16 01:03:52 1973\n\0
         binding(MCClock, char*, getCurrentGMTTimeString);
         binding(MCClock, void, printTime);
@@ -182,6 +194,6 @@ onload(MCClock)
         binding(MCClock, void, printCurrentGMTTime);
         return cla;
     }else{
-        return mull;
+        return null;
     }
 }

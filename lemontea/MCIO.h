@@ -50,8 +50,8 @@ typedef enum {
 method(MCFile, MCFile*, initWithPathName, char* pathname, int oflag);
 method(MCFile, MCFile*, initWithPathNameDefaultFlag, char* pathname);
 
-method(MCFile, size_t, readAllFromBegin, off_t offset);
-method(MCFile, size_t, readFromBegin, off_t offset, size_t nbytes);
+method(MCFile, ssize_t, readAllFromBegin, off_t offset);
+method(MCFile, ssize_t, readFromBegin, off_t offset, size_t nbytes);
 method(MCFile, size_t, readAtLastPosition, off_t offset, size_t nbytes);
 method(MCFile, size_t, readFromEnd, off_t offset, size_t nbytes);
 method(MCFile, size_t, writeToBegin, off_t offset, void* buf, size_t nbytes);
@@ -69,11 +69,11 @@ W_OK
 X_OK
 F_OK ---> if file exist
 */
-int MCFile_isFileExit(char* pathname);
+int MCFile_isPathExist(char* pathname);
 int MCFile_chmod(char* pathname, mode_t mode);
 int MFFile_truncateFileTo(char* pathname, off_t length);
 mode_t MCFile_setNewFilePermissionMask4Process(mode_t cmask);
-void MCFile_flushAllCacheToDisk();
+void MCFile_flushAllCacheToDisk(void);
 int MCFile_flushAFileCacheToDisk(int fd);
 int MCFile_createSymbolLink(char* pathname, char* linkname);
 int MCFile_createDirectory(char* pathname);
@@ -87,6 +87,20 @@ MCFile* MCFile_newReadOnly(char* pathname);
 MCFile* MCFile_newWriteOnly(char* pathname, int isClear);
 MCFile* MCFile_newReadWrite(char* pathname, int isClear);
 
+//line will passed
+#define MCStreamEachLine(stream, ...)\
+char line[LINE_MAX];\
+char* c = (char*)stream;\
+while (*c!=NUL) {\
+    if(*c == MCNewLineN || *c == MCNewLineR) {\
+        c++; continue;\
+    }\
+    for (int i=0; !isNewLine(c); c++) {\
+        line[i++] = *c;\
+        line[i] = NUL;\
+    }\
+    __VA_ARGS__\
+}
 #endif
 
 /* MCStream */
@@ -125,10 +139,8 @@ static inline MCStreamType MakeMCStreamType(const unsigned btype, const char* fo
 #define MCStream_
 
 class(MCStream, MCObject,
-	FILE*        fileObject;
-    size_t*      lineLengthArray;
-    size_t       lineCount;
-    char**       lineArray;
+	FILE* fileObject;
+    char* buffer;
 );
 
 method(MCStream, MCStream*, initWithPath, MCStreamType type, const char* path);

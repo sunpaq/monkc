@@ -8,7 +8,7 @@
 #define __exception_try_not_called -1
 extern jmp_buf exception_env;
 extern volatile int exception_type;
-void clean_exception_context();
+void clean_exception_context(void);
 
 #define __MCNoneException 0
 #define __ECODE(name) __get_exception_code(#name)
@@ -23,10 +23,11 @@ unsigned __get_exception_code(char* key);
 #define catch(etype)  else if(exception_type==__ECODE(etype))
 #define finally       if(exception_type!=__MCNoneException)
 
-#define MAX_EXCEPTION_NUM 500
+//512+256+...1
+#define MAX_EXCEPTION_NUM 0x000001ff
 
-mo      get_exception_data(char* key);
-void    set_exception_data(char* key, mo e);
+MCObject* get_exception_data(char* key);
+void      set_exception_data(char* key, MCObject* e);
 
 #endif
 
