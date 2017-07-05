@@ -1,0 +1,15 @@
+<snippet>
+  <!-- Example: Hello, ${1:this} is a ${2:snippet}. -->
+  <content><![CDATA[
+class(${TM_FILENAME/\..*//g}, ${1:MCObject},
+
+    ${2:int   member1};
+    ${3:float member2};
+)
+]]></content>
+  <!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+  <tabTrigger>class</tabTrigger>
+  <description>declare a monkc class</description>
+  <!-- Optional: Set a scope to limit where the snippet will trigger -->
+  <scope>source.c, meta.function.c, entity.name.function.c</scope>
+</snippet>

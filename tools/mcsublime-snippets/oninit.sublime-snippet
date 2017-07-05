@@ -1,0 +1,19 @@
+<snippet>
+  <!-- Example: Hello, ${1:this} is a ${2:snippet}. -->
+  <content><![CDATA[
+oninit(${TM_FILENAME/\..*//g})
+{
+    if (init(${1:MCObject})) {
+        ${2:}
+        return obj;
+    } else {
+        return mull;
+    }
+}
+]]></content>
+  <!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+  <tabTrigger>oninit</tabTrigger>
+  <description>monkc class init</description>
+  <!-- Optional: Set a scope to limit where the snippet will trigger -->
+  <scope>source.c, comment.block.c</scope>
+</snippet>
