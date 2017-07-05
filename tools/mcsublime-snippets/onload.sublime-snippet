@@ -1,0 +1,19 @@
+<snippet>
+  <!-- Example: Hello, ${1:this} is a ${2:snippet}. -->
+  <content><![CDATA[
+onload(${TM_FILENAME/\..*//g})
+{
+    if (load(${1:MCObject})) {
+        ${2:}
+        return cla;
+    } else {
+        return mull;
+    }
+}
+]]></content>
+  <!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+  <tabTrigger>onload</tabTrigger>
+  <description>monkc class load</description>
+  <!-- Optional: Set a scope to limit where the snippet will trigger -->
+  <scope>source.c, meta.function.c, meta.parens.c</scope>
+</snippet>
