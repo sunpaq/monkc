@@ -34,11 +34,7 @@ a toolkit for OOP programming in C language
 
 [https://github.com/sunpaq/BohdiEngineDemoSwift](https://github.com/sunpaq/BohdiEngineDemoSwift)
 
-## Monk-C on Mac OS:
-
-[https://github.com/sunpaq/monkc4Mac](https://github.com/sunpaq/monkc4Mac)
-
-## Monk-C on UNIX via command line tools (this repo):
+## Monk-C on UNIX(Mac & Linux) via command line tools (this repo):
 
 #### requires
 
