@@ -23,18 +23,22 @@ a toolkit for OOP programming in C language
 ## The BohdiEngine (3D) written use Monk-C:
 
 [iOS version via Cocoapods](https://github.com/sunpaq/BohdiEngine-pod)
+
 [Android version](https://github.com/sunpaq/monkc4Android)
-[https://github.com/sunpaq/BohdiEngineDemoSwift](https://github.com/sunpaq/BohdiEngineDemoSwift)
 
 ## The BohdiAR written use Monk-C:
 
 [https://github.com/sunpaq/BohdiAR-pod](https://github.com/sunpaq/BohdiAR-pod)
 
+## The Demo App using both BohdiAR and BohdiEngine:
+
+[https://github.com/sunpaq/BohdiEngineDemoSwift](https://github.com/sunpaq/BohdiEngineDemoSwift)
+
 ## Monk-C on Mac OS:
 
 [https://github.com/sunpaq/monkc4Mac](https://github.com/sunpaq/monkc4Mac)
 
-## Monk-C on UNIX via command line tools:
+## Monk-C on UNIX via command line tools (this repo):
 
 #### requires
 
@@ -55,6 +59,10 @@ a toolkit for OOP programming in C language
 
 	1.[SublimeText Menu -> Preferences -> Browse Packages...] open the plugin folder
 	2.copy the 'mcsublime-snippets' folder into 'User' 
+
+## The MCBuild tool:
+
+	[https://github.com/sunpaq/mcbuild](https://github.com/sunpaq/mcbuild)
 
 ## Syntax
 
@@ -179,7 +187,7 @@ a toolkit for OOP programming in C language
 	
 	C style: 	Bird_fly(bird, 0);
 
-####Macros and runtime functions often used
+#### Macros and runtime functions often used
 
 ---
 
