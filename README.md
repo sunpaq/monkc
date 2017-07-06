@@ -58,7 +58,8 @@ a toolkit for OOP programming in C language
 
 ## The MCBuild tool:
 
-	[https://github.com/sunpaq/mcbuild](https://github.com/sunpaq/mcbuild)
+MCBuild is a script library written use Ruby. Helping C/Monk-C developr generate Makefile.
+[https://github.com/sunpaq/mcbuild](https://github.com/sunpaq/mcbuild)
 
 ## Syntax
 
