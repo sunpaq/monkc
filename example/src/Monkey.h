@@ -5,8 +5,7 @@
 
 class(Monkey, MCObject,
 	const char* name;
-	MCInt age;
-);
+	MCInt age);
 
 method(Monkey, void, info, voida);
 method(Monkey, void, showname, voida);

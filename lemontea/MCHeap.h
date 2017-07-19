@@ -23,8 +23,7 @@ class(MCHeap, MCObject,
       MCGeneric* values;
       size_t count;
       size_t maxcount;
-      size_t maxheight;
-);
+      size_t maxheight);
 
 method(MCHeap, void, bye, voida);
 method(MCHeap, MCHeap*, initWithCopy, MCHeap* ref);
