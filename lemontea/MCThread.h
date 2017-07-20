@@ -12,8 +12,7 @@ class(MCThread, MCObject,
 	pthread_once_t once_control;
 	int isRunOnce;
     void* functionPointer;
-    void* functionArgument;
-);
+    void* functionArgument);
 
 method(MCThread, void, bye, voida);
 method(MCThread, MCThread*, initWithFPointerArgument, void* fp, void* farg);

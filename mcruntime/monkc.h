@@ -36,13 +36,13 @@ static inline unsigned monkc_version() {return __MCRuntimeVer__;}
 #include <stdarg.h>
 #include <stdio.h>
 
-//#include <inttypes.h>
+#include <inttypes.h>
 #include <string.h>
 #include <limits.h>
 
 /* Monk-C use many C99 standard features, make sure your compiler and platform support C99 standard */
 #if __STDC_VERSION__ < 199901L
-#error "your platform doesn't support C99"
+//#error "your platform doesn't support C99"
 #endif
 
 #ifndef LINE_MAX
@@ -127,8 +127,8 @@ typedef union {
     uint64_t i;
 } MCFloat;
 
-MCInline MCFloat MCFloatF(double value)   { return (MCFloat){.f=value}; }
-MCInline MCFloat MCFloatI(uint64_t value) { return (MCFloat){.i=value}; }
+MCInline MCFloat MCFloatF(double value)   { MCFloat data; data.f=value; return data; }
+MCInline MCFloat MCFloatI(uint64_t value) { MCFloat data; data.i=value; return data; }
 
 typedef uint32_t     MCHash;
 #define MCHashMax    UINT32_MAX
@@ -140,7 +140,11 @@ typedef void         (*MCFuncPtr)(void);
 
 //true, false
 #define printb(B)    (B?"true":"false")
+#ifdef _WIN32
+typedef bool MCBool;
+#else
 typedef _Bool MCBool;
+#endif
 
 /*
  Generic Type
@@ -503,6 +507,15 @@ MCInline MCBool mc_compare_key(const char* dest, const char* src) {
     }
 }
 
+MCInline char* mc_copy_key(char* dest, const char* src) {
+#ifdef _WIN32
+    strncpy_s(dest, MAX_KEY_CHARS, src, strlen(src));
+#else
+    strncpy(dest, src, strlen(src));
+#endif
+    return dest;
+}
+
 /*
  HashTable.h
  */
@@ -579,7 +592,7 @@ typedef struct {
 MCInline mc_message make_msg(MCObject* obj, const char* msg) {
     mc_message message;
     message.object = obj;
-    strncpy(message.message, msg, strlen(msg));
+    mc_copy_key(message.message, msg);
     return message;
 }
 
@@ -622,7 +635,7 @@ static inline void      MCObject_printDebugInfo(MCObject* const obj, mc_class* c
     if (!mcclass)
         mcclass = obj->isa;
     MCHashTableSize size = get_tablesize(mcclass->table->level);
-    for (int i=0; i<size; i++) {
+    for (MCHashTableSize i=0; i<size; i++) {
         mc_hashitem* item = mcclass->table->items[i];
         if (item && item->key[0]) {
             debug_log("%s - %d/%s\n", mcclass->item->key, item->hash, item->key);

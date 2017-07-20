@@ -1,13 +1,10 @@
 #!/usr/bin/ruby
 require 'mcbuild'
 
-libs = [
-	$com_oreisoft_mcruntime
-]
-
-$com_oreisoft_lemontea = MCBuild.new(File.dirname(__FILE__))
+$com_oreisoft_lemontea = MCBuild.new(__dir__)
 	.set_name("lemontea")
-	.set_dependency(libs)
+	.set_dependency([
+		$com_oreisoft_mcruntime])
 
 
 

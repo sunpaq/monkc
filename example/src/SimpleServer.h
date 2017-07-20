@@ -6,8 +6,7 @@
 
 class(SimpleServer, MCObject,
 	const char* configFilePath;
-	MCSocket* socket;
-);
+	MCSocket* socket);
 
 method(SimpleServer, void, bye, voida);
 method(SimpleServer, SimpleServer*, initWithConfigFile, const char* filepath);

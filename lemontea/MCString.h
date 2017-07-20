@@ -9,8 +9,7 @@ class(MCString, MCObject,
 	size_t length;
 	size_t size;
     size_t cursor;
-	char* buff;
-)
+	char* buff);
 
 //length not include NUL
 //real size, include NUL include empty space in buffer

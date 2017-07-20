@@ -25,8 +25,7 @@ class(MCFile, MCObject,
 	int fd;
 	char* pathname;
 	void* buffer;
-	struct stat attribute;
-);
+	struct stat attribute);
 
 /*
 O_RDONLY

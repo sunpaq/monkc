@@ -7,8 +7,7 @@
 class(MCContext, MCObject,
 	int argc;
 	char** argv;
-	char selectionChar;
-);
+	char selectionChar);
 
 utility(MCContext, MCContext*, newWithArgs, int argc, char** argv);
 utility(MCContext, char, showMenuAndGetSelectionChar, int count, ...);

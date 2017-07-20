@@ -15,7 +15,7 @@
 class(MCSet, MCObject,
       MCGeneric* values;
       size_t maxcount;
-      size_t count;);
+      size_t count);
 
 method(MCSet, void, bye, voida);
 method(MCSet, MCSet*, initWithMaxCount, size_t maxcount);

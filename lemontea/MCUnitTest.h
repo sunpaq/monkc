@@ -32,8 +32,7 @@ method(MCUnitTestResult, void, addFailInfo, char* failinfo);
 
 class(MCUnitTestCase, MCObject,
 	MCUnitTestResult* unitTestResultRef;
-	struct MCUnitTestCaseStruct* next_case;
-);
+	struct MCUnitTestCaseStruct* next_case);
 
 method(MCUnitTestCase, MCUnitTestCase*, initWithTestResult, MCUnitTestResult* resultRef);
 method(MCUnitTestCase, void, bye, voida);
@@ -52,8 +51,7 @@ class(MCUnitTestSuite, MCObject,
 	MCUnitTestCase *first_case;
     MCUnitTestCase **last_case_p;
 	int test_case_count;
-	struct MCUnitTestSuiteStruct* next_suite;
-);
+	struct MCUnitTestSuiteStruct* next_suite);
 
 method(MCUnitTestSuite, void, bye, voida);
 method(MCUnitTestSuite, void, addTestCase, MCUnitTestCase* volatile tcase);
@@ -68,8 +66,7 @@ method(MCUnitTestSuite, void, runTestCases, voida);
 class(MCUnitTestRunner, MCObject,
 	MCUnitTestResult* unitTestResult;
 	MCUnitTestSuite* first_suite;
-	int test_suite_count;
-);
+	int test_suite_count);
 
 method(MCUnitTestRunner, void, bye, voida);
 method(MCUnitTestRunner, void, addTestSuite, MCUnitTestSuite* testSuite);
