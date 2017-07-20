@@ -18,7 +18,9 @@ a toolkit for OOP programming in C language
 
 ## Use Monk-C on iOS via Cocoapods
 
-[https://github.com/sunpaq/monkc-pod](https://github.com/sunpaq/monkc-pod)
+[via Cocoapods](https://github.com/sunpaq/monkc-pod)
+
+[Demo App](https://github.com/sunpaq/monkc4iOS)
 
 ## The BohdiEngine (3D) written use Monk-C:
 
