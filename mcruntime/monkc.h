@@ -635,7 +635,7 @@ static inline void      MCObject_printDebugInfo(MCObject* const obj, mc_class* c
     if (!mcclass)
         mcclass = obj->isa;
     MCHashTableSize size = get_tablesize(mcclass->table->level);
-    for (int i=0; i<size; i++) {
+    for (MCHashTableSize i=0; i<size; i++) {
         mc_hashitem* item = mcclass->table->items[i];
         if (item && item->key[0]) {
             debug_log("%s - %d/%s\n", mcclass->item->key, item->hash, item->key);
