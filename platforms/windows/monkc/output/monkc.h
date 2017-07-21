@@ -148,7 +148,7 @@ typedef _Bool MCBool;
 Generic Type
 */
 
-struct _MCObject;
+struct MCObject_struct;
 typedef union {
 	//float and integers use 8bytes (64bits)
 	double      mcfloat;//default
@@ -158,7 +158,7 @@ typedef union {
 	MCULong     mculong;
 	MCLong      mclong;
 	//pointers use 8bytes
-	struct _MCObject *mcobject;
+	struct MCObject_struct *mcobject;
 	MCVoidPtr   mcvoidptr;
 	MCFuncPtr   mcfuncptr;
 	//integers use 4bytes
@@ -176,7 +176,7 @@ MCInline MCGeneric MCGenericLl(MCLongLong value) { MCGeneric g; g.mclonglong = v
 MCInline MCGeneric MCGenericUl(MCULong value) { MCGeneric g; g.mculong = value; return g; }
 MCInline MCGeneric MCGenericL(MCLong value) { MCGeneric g; g.mclong = value; return g; }
 
-MCInline MCGeneric MCGenericO(struct _MCObject* value) { MCGeneric g; g.mcobject = value; return g; }
+MCInline MCGeneric MCGenericO(struct MCObject_struct* value) { MCGeneric g; g.mcobject = value; return g; }
 MCInline MCGeneric MCGenericVp(MCVoidPtr value) { MCGeneric g; g.mcvoidptr = value; return g; }
 MCInline MCGeneric MCGenericFp(MCFuncPtr value) { MCGeneric g; g.mcfuncptr = value; return g; }
 
@@ -489,6 +489,7 @@ MCHashTableIndex set_item(mc_hashtable** table_p, mc_hashitem* item, MCBool isAl
 mc_hashitem* get_item_byhash(mc_hashtable* table_p, const MCHash hashval, const char* refkey);
 mc_hashitem* get_item_bykey(mc_hashtable* const table_p, const char* key);
 mc_hashitem* get_item_byindex(mc_hashtable* const table_p, const MCHashTableIndex index);
+MCHashTableSize get_tablesize(const MCHashTableLevel level);
 
 /*
 Messaging.h

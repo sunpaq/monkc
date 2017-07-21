@@ -231,9 +231,6 @@ method(MCUnitTestSuite, void, runTestCases, voida)
 
 /* Test Result */
 
-// #ifndef _MCUnitTestResult
-// #define _MCUnitTestResult _MCObject;\
-
 oninit(MCUnitTestResult)
 {
     if (init(MCObject)) {
@@ -272,14 +269,6 @@ onload(MCUnitTestResult)
 }
 
 /* Test Runner */
-
-// #ifndef _MCUnitTestRunner
-// #define _MCUnitTestRunner _MCObject;\
-// 	MCUnitTestResult* unitTestResult;\
-// 	MCUnitTestSuite* first_suite;\
-// 	int test_suite_count;\
-
-// class(MCUnitTestRunner);
 
 oninit(MCUnitTestRunner)
 {
