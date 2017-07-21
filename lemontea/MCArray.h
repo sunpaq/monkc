@@ -7,7 +7,8 @@ class(MCArray, MCObject,
 	size_t count;
 	size_t maxcount;
 	size_t indexLast;
-    MCGeneric* buff);
+    MCGeneric* buff;
+)
 
 method(MCArray, void, bye, voida);
 method(MCArray, MCArray*, initWithMaxCount, size_t max);

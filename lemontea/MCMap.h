@@ -12,7 +12,8 @@
 #include "monkc.h"
 
 class(MCMap, MCObject,
-      mc_hashtable* table);
+      mc_hashtable* table;
+)
 
 method(MCMap, void, setValueForKey, MCGeneric value, const char* key);
 method(MCMap, void, getValueForKey, MCGeneric* result, const char* key);

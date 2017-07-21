@@ -13,7 +13,8 @@
 
 class(MCSort, MCObject,
       MCGeneric* array;
-      size_t length);
+      size_t length;
+)
 
 method(MCSort, void, bye, voida);
 method(MCSort, MCSort*, initWithArray, MCGeneric* array, size_t length);

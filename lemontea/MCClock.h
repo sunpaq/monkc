@@ -7,7 +7,8 @@
 class(MCClock, MCObject,
       struct tm rawtime;
       char* currentTimeBuff;
-      char* currentGMTBuff);
+      char* currentGMTBuff;
+)
 
 method(MCClock, void, bye, voida);
 method(MCClock, MCClock*, setTimeToNow, voida);

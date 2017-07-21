@@ -489,6 +489,7 @@ MCHashTableIndex set_item(mc_hashtable** table_p, mc_hashitem* item, MCBool isAl
 mc_hashitem* get_item_byhash(mc_hashtable* table_p, const MCHash hashval, const char* refkey);
 mc_hashitem* get_item_bykey(mc_hashtable* const table_p, const char* key);
 mc_hashitem* get_item_byindex(mc_hashtable* const table_p, const MCHashTableIndex index);
+MCHashTableSize get_tablesize(const MCHashTableLevel level);
 
 /*
 Messaging.h

@@ -25,7 +25,8 @@ class(MCFile, MCObject,
 	int fd;
 	char* pathname;
 	void* buffer;
-	struct stat attribute);
+	struct stat attribute;
+)
 
 /*
 O_RDONLY
@@ -243,7 +244,8 @@ class(MCSelect, MCObject,
 	fd_set readfd_result_set;
 	fd_set writefd_result_set;
 	fd_set exceptionfd_result_set;
-	struct timeval timeout);
+	struct timeval timeout;
+)
 
 method(MCSelect, void, initWithSecondAndMicrosec, long second, long microsecond);
 method(MCSelect, int, waitForFdsetChange, voida);
