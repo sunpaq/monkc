@@ -1,7 +1,48 @@
+#ifndef MCSocket_ 
+#define MCSocket_
+
 #include "MCContext.h"
 #include <sys/socket.h>
 #include <netdb.h>
 #include <unistd.h>
+
+#define MCSocket_Queue_Length 50
+
+typedef enum _MCSocketType{
+	MCSocket_Server_TCP,
+	MCSocket_Server_UDP,
+	MCSocket_Client_TCP,
+	MCSocket_Client_UDP,
+}MCSocketType;
+
+class(MCSocketClientInfo, MCObject,
+	int returnSfd;
+	struct sockaddr address;
+	socklen_t address_len;
+)
+
+method(MCSocketClientInfo, void, dumpInfo, voida);
+method(MCSocketClientInfo, void, bye, voida);
+
+class(MCSocket, MCObject,
+	int sfd;
+	int isServer;
+	struct addrinfo peeraddrinfo;
+)
+
+method(MCSocket, MCSocket*, initWithTypeIpPort, MCSocketType socket_type, char* ip, char* port);
+method(MCSocket, int, listeningStart, voida);
+method(MCSocket, MCSocketClientInfo*, acceptARequest, voida);
+method(MCSocket, void, recv, voida);
+method(MCSocket, void, recvfrom, voida);
+method(MCSocket, void, recvmsg, voida);
+method(MCSocket, void, send, voida);
+method(MCSocket, void, sendto, voida);
+method(MCSocket, void, sendmsg, voida);
+method(MCSocket, void, bye, voida);
+
+#endif
+
 /* 
 [ Server Program Skeleton (UDP) ]
 
@@ -134,44 +175,3 @@ close()       close()
 << UNIX Network Programming >>
 
 */
-#define MCSocket_Queue_Length 50
-typedef enum _MCSocketType{
-	MCSocket_Server_TCP,
-	MCSocket_Server_UDP,
-	MCSocket_Client_TCP,
-	MCSocket_Client_UDP,
-}MCSocketType;
-
-#ifndef MCSocketClientInfo_
-#define MCSocketClientInfo_
-
-class(MCSocketClientInfo, MCObject,
-	int returnSfd;
-	struct sockaddr address;
-	socklen_t address_len;
-)
-
-method(MCSocketClientInfo, void, dumpInfo, voida);
-method(MCSocketClientInfo, void, bye, voida);
-#endif
-
-#ifndef MCSocket_ 
-#define MCSocket_
-
-class(MCSocket, MCObject,
-	int sfd;
-	int isServer;
-	struct addrinfo peeraddrinfo;
-)
-
-method(MCSocket, MCSocket*, initWithTypeIpPort, MCSocketType socket_type, char* ip, char* port);
-method(MCSocket, int, listeningStart, voida);
-method(MCSocket, MCSocketClientInfo*, acceptARequest, voida);
-method(MCSocket, void, recv, voida);
-method(MCSocket, void, recvfrom, voida);
-method(MCSocket, void, recvmsg, voida);
-method(MCSocket, void, send, voida);
-method(MCSocket, void, sendto, voida);
-method(MCSocket, void, sendmsg, voida);
-method(MCSocket, void, bye, voida);
-#endif

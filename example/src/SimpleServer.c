@@ -4,6 +4,8 @@ oninit(SimpleServer)
 {
 	if (init(MCObject)) {
 		obj->socket = new(MCSocket);
+		obj->ip = "127.0.0.1";
+		obj->port = "80";
 		return obj;
 	} else {
 		return null;
@@ -19,21 +21,20 @@ method(SimpleServer, SimpleServer*, initWithConfigFile, const char* filepath)
 {
 	obj->configFilePath = filepath;
 	//get ip and port from config file
-	char* ip = "127.0.0.1";
-	char* port = "9999";
 
-	ff(obj->socket, initWithTypeIpPort, MCSocket_Server_TCP, ip, port);
+	ff(obj->socket, initWithTypeIpPort, MCSocket_Server_TCP, obj->ip, obj->port);
 	return obj;
 }
 
 method(SimpleServer, void, start, voida)
 {
 	ff(obj->socket, listeningStart, 0);
+	printf("Server[%s:%s] started\n", obj->ip, obj->port);
 }
 
 method(SimpleServer, void, stop, voida)
 {
-
+	
 }
 
 method(SimpleServer, void, restart, voida)

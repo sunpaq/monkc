@@ -2,9 +2,18 @@
 
 oninit(Monkey)
 {
-	if (init(MCObject)) {
-		var(name) = "little monkey";
-		var(age) = 30;
+	if (init(Animal)) {
+		{
+			scope(Cell);
+			scope->age = 31;
+		}
+
+		{
+			scope(Animal);
+			scope->name = "little monkey";
+		}
+
+		var(level) = 10;
 		return obj;
 	} else {
 		return null;
@@ -18,12 +27,13 @@ method(Monkey, void, info, voida)
 
 method(Monkey, void, showname, voida)
 {
-	printf("Monkey name: %s\n", obj->name);
+	printf("Monkey name: %s\n", sobj->name);
 }
 
 method(Monkey, void, showage, voida)
 {
-	printf("Monkey age: %d\n", obj->age);
+	scope(Cell);
+	printf("Monkey age: %d\n", scope->age);
 }
 
 function(void, fly, voida)
@@ -43,7 +53,7 @@ function(void, landing, const char* info)
 
 onload(Monkey)
 {
-	if (load(MCObject)) {
+	if (load(Animal)) {
 		binding(Monkey, void, info, voida);
 		binding(Monkey, void, showname, voida);
 		binding(Monkey, void, showage, voida);

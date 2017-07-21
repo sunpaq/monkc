@@ -2,13 +2,13 @@
 
 method(Monkey, void, extensionMethod, voida)
 {
-	printf("%s extensionMethod\n", var(name));
+	printf("%s extensionMethod\n", svar(name));
 }
 
 function(void, extensionFunction, voida)
 {
 	as(Monkey);
-	printf("%s extensionFunction\n", var(name));
+	printf("%s extensionFunction\n", svar(name));
 }
 
 onextend(Monkey, Ext)

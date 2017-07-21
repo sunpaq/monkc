@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "monkc.h": "c",
+        "mclinkedlist.h": "c",
+        "vm_map.h": "c"
+    }
+}
