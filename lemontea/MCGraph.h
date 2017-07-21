@@ -43,7 +43,8 @@ class(MCGraph, MCObject,
       size_t vertexCount;
       size_t edgeCount;
       MCGraphVertex* vertexSet;
-      MCGraphEdge*   edgeSet);
+      MCGraphEdge*   edgeSet;
+)
 
 method(MCGraph, void, bye, voida);
 method(MCGraph, MCBool, isAdjacent, MCGraphVertex x, MCGraphVertex y);

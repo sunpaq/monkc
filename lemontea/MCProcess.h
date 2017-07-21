@@ -19,7 +19,8 @@ class(MCProcess, MCObject,
 	uid_t uid;
 	uid_t euid;
 	gid_t gid;
-	gid_t egid);
+	gid_t egid;
+)
 
 method(MCProcess, void, printIDs, voida);
 //returns(0 in child/child-pid in parent/-1 on error)

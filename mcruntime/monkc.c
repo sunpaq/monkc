@@ -268,7 +268,7 @@ static MCHashTableSize mc_hashtable_sizes[MCHashTableLevelCount] = {
 	130001
 };
 
-MCInline MCHashTableSize get_tablesize(const MCHashTableLevel level)
+MCHashTableSize get_tablesize(const MCHashTableLevel level)
 {
 	if (level > MCHashTableLevelMax) {
 		return mc_hashtable_sizes[MCHashTableLevelMax];

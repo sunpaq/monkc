@@ -36,7 +36,8 @@ typedef struct _BSTNode {
 
 class(MCBST, MCObject,
       BSTNode* root;
-      size_t count);
+      size_t count;
+)
 
 method(MCBST, void, bye, voida);
 method(MCBST, void, insertValue, MCGeneric newval);
@@ -59,7 +60,8 @@ typedef struct _TrieNode {
 
 class(MCTrie, MCObject,
       TrieNode* root;
-      size_t count);
+      size_t count;
+)
 
 method(MCTrie, void, bye, voida);
 method(MCTrie, void, insertValueByKey, MCGeneric newval, const char* word);

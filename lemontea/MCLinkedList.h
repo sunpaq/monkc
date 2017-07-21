@@ -17,8 +17,9 @@
 class(MCItem, MCObject,
       MCGeneric value;
       MCObject* object;
-      struct MCItemStruct* prevItem;
-      struct MCItemStruct* nextItem);
+      struct MCItem_struct* prevItem;
+      struct MCItem_struct* nextItem;
+)
 
 method(MCItem, void, bye, voida);
 method(MCItem, MCItem*, initWithContentObject, MCObject* content);
@@ -36,7 +37,8 @@ class(MCLinkedList, MCObject,
       MCBool countChanged;
       unsigned countCache;
       computing(unsigned, count);
-      computing(MCItem*, cycle));
+      computing(MCItem*, cycle);
+)
 
 method(MCLinkedList, void, bye, voida);
 method(MCLinkedList, void, addItem, MCItem* item);

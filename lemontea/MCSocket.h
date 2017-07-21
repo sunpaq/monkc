@@ -148,7 +148,8 @@ typedef enum _MCSocketType{
 class(MCSocketClientInfo, MCObject,
 	int returnSfd;
 	struct sockaddr address;
-	socklen_t address_len);
+	socklen_t address_len;
+)
 
 method(MCSocketClientInfo, void, dumpInfo, voida);
 method(MCSocketClientInfo, void, bye, voida);
@@ -160,7 +161,8 @@ method(MCSocketClientInfo, void, bye, voida);
 class(MCSocket, MCObject,
 	int sfd;
 	int isServer;
-	struct addrinfo peeraddrinfo);
+	struct addrinfo peeraddrinfo;
+)
 
 method(MCSocket, MCSocket*, initWithTypeIpPort, MCSocketType socket_type, char* ip, char* port);
 method(MCSocket, int, listeningStart, voida);
