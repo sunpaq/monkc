@@ -2,17 +2,20 @@
 
 oninit(MCThread)
 {
-	//init the vars
-	pthread_once_t ponce = PTHREAD_ONCE_INIT;
-	obj->once_control = ponce;
-	obj->isRunOnce = 0;//default is NO
-	//if you need, you can set the attribute use the raw pthread APIs
-	//example: pthread_attr_getstacksize(m_thread->attribute);
-	pthread_attr_init(&obj->attribute);
-    
-    obj->functionPointer = null;
-    obj->functionArgument = null;
-	return obj;
+	if(init(MCObject)) {
+        //init the vars
+        pthread_once_t ponce = PTHREAD_ONCE_INIT;
+        obj->once_control = ponce;
+        obj->isRunOnce = false;//default is NO
+        //if you need, you can set the attribute use the raw pthread APIs
+        //example: pthread_attr_getstacksize(m_thread->attribute);
+        pthread_attr_init(&obj->attribute);
+        
+        obj->functionPointer = null;
+        obj->functionArgument = null;
+        return obj;
+    }
+    return null;
 }
 
 method(MCThread, void, bye, voida)
@@ -45,7 +48,7 @@ method(MCThread, int, detach, voida)
 method(MCThread, int, start, voida)
 {
     int res;
-    if (obj->isRunOnce==1)
+    if (obj->isRunOnce)
     {
         res = pthread_once(&(obj->once_control), obj->functionPointer);
         

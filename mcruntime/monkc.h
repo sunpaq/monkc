@@ -148,7 +148,7 @@ typedef _Bool MCBool;
 Generic Type
 */
 
-struct _MCObject;
+struct MCObject_struct;
 typedef union {
 	//float and integers use 8bytes (64bits)
 	double      mcfloat;//default
@@ -158,7 +158,7 @@ typedef union {
 	MCULong     mculong;
 	MCLong      mclong;
 	//pointers use 8bytes
-	struct _MCObject *mcobject;
+	struct MCObject_struct *mcobject;
 	MCVoidPtr   mcvoidptr;
 	MCFuncPtr   mcfuncptr;
 	//integers use 4bytes
@@ -176,7 +176,7 @@ MCInline MCGeneric MCGenericLl(MCLongLong value) { MCGeneric g; g.mclonglong = v
 MCInline MCGeneric MCGenericUl(MCULong value) { MCGeneric g; g.mculong = value; return g; }
 MCInline MCGeneric MCGenericL(MCLong value) { MCGeneric g; g.mclong = value; return g; }
 
-MCInline MCGeneric MCGenericO(struct _MCObject* value) { MCGeneric g; g.mcobject = value; return g; }
+MCInline MCGeneric MCGenericO(struct MCObject_struct* value) { MCGeneric g; g.mcobject = value; return g; }
 MCInline MCGeneric MCGenericVp(MCVoidPtr value) { MCGeneric g; g.mcvoidptr = value; return g; }
 MCInline MCGeneric MCGenericFp(MCFuncPtr value) { MCGeneric g; g.mcfuncptr = value; return g; }
 
@@ -309,7 +309,7 @@ typedef struct {
 //for type cast, every object have the 3 var members
 typedef struct MCObject_struct {
 	//address is for dynamic method calling.
-	MCFuncPtr address;
+	MCFuncPtr _push_jump_address;
 	//data
 	struct MCObject_struct* nextResponder;
 	mc_block* block;
@@ -358,8 +358,8 @@ typedef MCObject* (*MCSetsuperPointer)(MCObject*);
 #define mixing(type, met, ...)                _binding(cla, #met, (MCFuncPtr)met)
 #define binding(cls, type, met, ...)  		  _binding(cla, #met, (MCFuncPtr)cls##_##met)
 #define utility(cls, type, name, ...) 	      type cls##_##name(__VA_ARGS__)
-#define method(cls, type, name, ...)      type cls##_##name(cls* volatile obj, __VA_ARGS__)
-#define function(type, name, ...)           static type name(void* volatile any, __VA_ARGS__)
+#define method(cls, type, name, ...)          type cls##_##name(register cls* obj, __VA_ARGS__)
+#define function(type, name, ...)             static type name(register void* any, __VA_ARGS__)
 
 //property
 #define computing(type, name)                 type (*name)(void*)
@@ -367,17 +367,18 @@ typedef MCObject* (*MCSetsuperPointer)(MCObject*);
 #define computed(obj, vname)                  obj->vname(obj)
 #define cpt(vname)                            obj->vname(obj)
 
-//variable
-#define superof(obj)                          (&obj->Super)
+//variable super(var) inherited(var)
+#define superof(any)                          (&any->Super)
 #define sobj                                  (&obj->Super)
 #define var(vname)                            (obj->vname)
 #define svar(vname)                           (obj->Super.vname)
 #define cast(type, obj) 				      ((type)obj)
+#define scope(cls)                            cls* scope = (cls*)obj
 #define as(cls)                               cls* obj = (cls*)any
 
 //for create object
 #define new(cls)						(cls*)_new(mc_alloc(#cls, sizeof(cls), (MCLoaderPointer)cls##_load), (MCIniterPointer)cls##_init)
-#define clear(cls)  					    mc_clear(#cls, sizeof(cls), cls##_load)
+#define clear(cls)  					mc_clear(#cls, sizeof(cls), cls##_load)
 #define info(cls)                  		mc_info(#cls)
 
 //for call method

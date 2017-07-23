@@ -10,7 +10,7 @@ class(MCThread, MCObject,
 	pthread_t tid;
 	pthread_attr_t attribute;
 	pthread_once_t once_control;
-	int isRunOnce;
+	MCBool isRunOnce;
     void* functionPointer;
     void* functionArgument;
 )

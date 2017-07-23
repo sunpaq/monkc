@@ -3,10 +3,14 @@
 
 #include "monkc.h"
 #include "MCSocket.h"
+#include "MCThread.h"
 
 class(SimpleServer, MCObject,
 	const char* configFilePath;
 	MCSocket* socket;
+	MCThread* worker;
+	char* ip;
+	char* port;
 )
 
 method(SimpleServer, void, bye, voida);

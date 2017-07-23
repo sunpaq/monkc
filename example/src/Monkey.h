@@ -1,11 +1,10 @@
 #ifndef Monkey_
 #define Monkey_
 
-#include "monkc.h"
+#include "Animal.h"
 
-class(Monkey, MCObject,
-	const char* name;
-	MCInt age;
+class(Monkey, Animal,
+	int level;
 )
 
 method(Monkey, void, info, voida);
