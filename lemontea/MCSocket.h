@@ -15,29 +15,31 @@ typedef enum _MCSocketType{
 	MCSocket_Client_UDP,
 }MCSocketType;
 
-class(MCSocketClientInfo, MCObject,
+typedef struct {
 	int returnSfd;
 	struct sockaddr address;
 	socklen_t address_len;
-)
+} MCSocketClientInfo;
 
-method(MCSocketClientInfo, void, dumpInfo, voida);
-method(MCSocketClientInfo, void, bye, voida);
+MCInline void MCSocketClientInfoDump(MCSocketClientInfo* obj) {
+	printf("accept a client: %s\n", &obj->address.sa_data[0]);
+}
 
 class(MCSocket, MCObject,
 	int sfd;
-	int isServer;
+	MCBool isServer;
 	struct addrinfo peeraddrinfo;
+	MCSocketClientInfo* currentClient;
 )
 
 method(MCSocket, MCSocket*, initWithTypeIpPort, MCSocketType socket_type, char* ip, char* port);
 method(MCSocket, int, listeningStart, voida);
-method(MCSocket, MCSocketClientInfo*, acceptARequest, voida);
+method(MCSocket, MCBool, acceptARequest, MCSocketClientInfo* info);
+method(MCSocket, void, sendto, MCSocketClientInfo* info, const char* msg);
+method(MCSocket, void, send, const char* msg);
 method(MCSocket, void, recv, voida);
 method(MCSocket, void, recvfrom, voida);
 method(MCSocket, void, recvmsg, voida);
-method(MCSocket, void, send, voida);
-method(MCSocket, void, sendto, voida);
 method(MCSocket, void, sendmsg, voida);
 method(MCSocket, void, bye, voida);
 

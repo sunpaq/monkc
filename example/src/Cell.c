@@ -10,12 +10,12 @@ oninit(Cell) {
 
 method(Cell, void, breath, voida)
 {
-    printf("~~~~");
+    printf("~~~~\n");
 }
 
 method(Cell, void, breed, voida)
 {
-    printf(">>>>");
+    printf(">>>>\n");
 }
 
 onload(Cell) {

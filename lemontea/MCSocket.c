@@ -1,42 +1,13 @@
 #include "MCSocket.h"
 
-oninit(MCSocketClientInfo)
-{
-    if (init(MCObject)) {
-        return obj;
-    }else{
-        return null;
-    }
-}
-
-method(MCSocketClientInfo, void, dumpInfo, voida)
-{
-	printf("accept a client: %s\n", obj->address.sa_data);
-}
-
-method(MCSocketClientInfo, void, bye, voida)
-{
-	//nothing to do
-}
-
-onload(MCSocketClientInfo)
-{
-    if (load(MCObject)) {
-        binding(MCSocketClientInfo, void, dumpInfo);
-        binding(MCSocketClientInfo, void, bye);
-        return cla;
-    }else{
-        return null;
-    }
-}
-
 oninit(MCSocket)
 {
     if (init(MCObject)) {
+		var(isServer) = true;
+		var(currentClient) = null;
         return obj;
-    }else{
-        return null;
     }
+    return null;
 }
 
 static void create_and_bind_socket(MCSocket* this, MCSocketType socket_type, char* ip, char* port)
@@ -123,16 +94,37 @@ method(MCSocket, void, bye, voida)
 //EOPNOTSUPP
 method(MCSocket, int, listeningStart, voida)
 {
-	if(obj->isServer!=1)return -1;
+	if(obj->isServer == false){
+		printf("MCSocket isServer=false can not start listening\n");
+		return -1;
+	}
 	return listen(obj->sfd, MCSocket_Queue_Length);
 }
 
-method(MCSocket, MCSocketClientInfo*, acceptARequest, voida)
+method(MCSocket, MCBool, acceptARequest, MCSocketClientInfo* clientinfo)
 {
-	if (obj->isServer!=1)return null;
-	MCSocketClientInfo* clientinfo = new(MCSocketClientInfo);
-	clientinfo->returnSfd = accept(obj->sfd, &clientinfo->address, &clientinfo->address_len);
-	return clientinfo;
+	if (obj->isServer) {
+		clientinfo->returnSfd = accept(obj->sfd, &clientinfo->address, &clientinfo->address_len);
+		if (clientinfo->returnSfd > 0) {
+			obj->currentClient = clientinfo;
+			return true;
+		}
+	}
+	return false;
+}
+
+method(MCSocket, void, sendto, MCSocketClientInfo* info, const char* msg)
+{
+    //sendto(int, const void *, size_t, int, const struct sockaddr *, socklen_t)
+	write(info->returnSfd, msg, strlen(msg));
+}
+
+method(MCSocket, void, send, const char* msg)
+{
+    //send(int, const void *, size_t, int)
+	if(obj->currentClient) {
+		write(obj->currentClient->returnSfd, msg, strlen(msg));
+	}
 }
 
 method(MCSocket, void, recv, voida)
@@ -150,16 +142,6 @@ method(MCSocket, void, recvmsg, voida)
     //recvmsg(int, struct msghdr *, int)
 }
 
-method(MCSocket, void, send, voida)
-{
-    //send(int, const void *, size_t, int)
-}
-
-method(MCSocket, void, sendto, voida)
-{
-    //sendto(int, const void *, size_t, int, const struct sockaddr *, socklen_t)
-}
-
 method(MCSocket, void, sendmsg, voida)
 {
     //sendmsg(int, const struct msghdr *, int)
@@ -169,17 +151,16 @@ onload(MCSocket)
 {
     if (load(MCObject)) {
         binding(MCSocket, MCSocket*, initWithTypeIpPort, MCSocketType socket_type, char* ip, char* port);
-        binding(MCSocket, int, listeningStart);
-        binding(MCSocket, MCSocketClientInfo*, acceptARequest);
+        binding(MCSocket, int, listeningStart, voida);
+        binding(MCSocket, MCBool, acceptARequest, MCSocketClientInfo* info);
+		binding(MCSocket, void, sendto, MCSocketClientInfo* info, const char* msg);
+		binding(MCSocket, void, send, const char* msg);
         binding(MCSocket, void, recv);
         binding(MCSocket, void, recvfrom);
         binding(MCSocket, void, recvmsg);
-        binding(MCSocket, void, send);
-        binding(MCSocket, void, sendto);
         binding(MCSocket, void, sendmsg);
         binding(MCSocket, void, bye);
         return cla;
-    }else{
-        return null;
     }
+    return null;
 }

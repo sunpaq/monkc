@@ -309,7 +309,7 @@ typedef struct {
 //for type cast, every object have the 3 var members
 typedef struct MCObject_struct {
 	//address is for dynamic method calling.
-	MCFuncPtr address;
+	MCFuncPtr _push_jump_address;
 	//data
 	struct MCObject_struct* nextResponder;
 	mc_block* block;

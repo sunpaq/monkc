@@ -35,6 +35,16 @@ utility(MCContext, char, showMenuAndGetSelectionChar, int count, ...)
 	return cf;
 }
 
+utility(MCContext, MCBool, showConfirmAndGetBOOL, const char* confirm)
+{
+	printf("%s (y/n)?\n", confirm);
+	char cf = getchar();
+	if (cf=='y'){
+		return true;
+	}
+	return false;
+}
+
 static void get_chars_until_enter(char resultString[])
 {
 	char tc = NUL;
@@ -92,16 +102,6 @@ method(MCContext, int, isHavePara, char* para)
 	return 1;
 }
 
-method(MCContext, int, showConfirmAndGetBOOL, const char* confirm)
-{
-	printf("%s (y/n)?\n", confirm);
-	char cf = getchar();
-	if (cf=='y'){
-		return 1;
-	}
-	return 0;
-}
-
 method(MCContext, void, getUserInputString, char resultString[])
 {
 	get_chars_until_enter(resultString);
@@ -148,8 +148,6 @@ onload(MCContext)
         binding(MCContext, char*, getPara, int index);
         binding(MCContext, int, isIndexedParaEqualTo, int index, char* para);
         binding(MCContext, int, isHavePara, char* para);
-        binding(MCContext, char, showMenuAndGetSelectionChar, int count, ...);
-        binding(MCContext, int, showConfirmAndGetBOOL, const char* confirm);
         binding(MCContext, void, getUserInputString, char resultString[]);
         binding(MCContext, char*, getEnvironmentVar, const char* key);
         binding(MCContext, int, setEnvironmentVar, const char* key, const char* value, int isOverwrite);

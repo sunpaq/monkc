@@ -967,7 +967,7 @@ MCObject* response_to(MCObject* obj, const char* methodname)
 	MCHash hashval = hash(methodname);
 	mc_hashitem* res = null;
 	if ((res = get_item_byhash(obj->isa->table, hashval, methodname)) != null) {
-		obj->address = res->value.mcfuncptr;
+		obj->_push_jump_address = res->value.mcfuncptr;
 		//runtime_log("return a message[%s/%s]\n", nameof(obj), methodname);
 		return obj;
 	}
@@ -1002,7 +1002,7 @@ MCObject* response_to_i(MCObject* obj, MCHashTableIndex index)
 {
 	mc_hashitem* item = obj->isa->table->items[index];
 	if (item) {
-		obj->address = item->value.mcfuncptr;
+		obj->_push_jump_address = item->value.mcfuncptr;
 		return obj;
 	}
 	return null;
@@ -1014,7 +1014,7 @@ Root Class MCObject
 
 MCObject* MCObject_init(MCObject* const obj)
 {
-	obj->address = null;
+	obj->_push_jump_address = null;
 	obj->nextResponder = null;
 	return obj;
 }

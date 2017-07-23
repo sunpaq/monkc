@@ -1,20 +1,61 @@
 #include "SimpleServer.h"
 
+static const char* template = "\
+worker thread running...\n\
+server[%s:%s] started\n\
+please open another terminal and connet this Server by:\n\
+------------------------\n\
+telnet %s %s\n\
+------------------------\n\
+";
+
+static const char* welcome = "\
+---------------------------------\n\
+Welcome to join Monk-C community!\n\
+---------------------------------\n\
+";
+
+function(void, workerThread, voida)
+{
+	as(SimpleServer);
+	printf(template, obj->ip, obj->port, obj->ip, obj->port);
+	MCSocket_listeningStart(obj->socket, 0);
+
+	MCSocketClientInfo client;
+	while (1) {
+		MCBool success = MCSocket_acceptARequest(obj->socket, &client);
+		if (success) {
+			MCSocketClientInfoDump(&client);
+			ff(obj->socket, send, welcome);
+
+			printf("close socket\n");
+			close(client.returnSfd);
+			break;
+		}
+	}
+}
+
 oninit(SimpleServer)
 {
 	if (init(MCObject)) {
-		obj->socket = new(MCSocket);
-		obj->ip = "127.0.0.1";
-		obj->port = "80";
+		var(configFilePath) = "";
+		var(socket) = new(MCSocket);
+		//var(worker) = new(MCThread);
+		//MCThread_initWithFPointerArgument(obj->worker, workerThread, obj);
+
+		var(ip) = "127.0.0.1";
+		var(port) = "1234";
+		ff(obj->socket, initWithTypeIpPort, MCSocket_Server_TCP, obj->ip, obj->port);
+
 		return obj;
-	} else {
-		return null;
 	}
+	return null;
 }
 
 method(SimpleServer, void, bye, voida)
 {
 	release(obj->socket);
+	release(obj->worker);
 }
 
 method(SimpleServer, SimpleServer*, initWithConfigFile, const char* filepath)
@@ -28,8 +69,8 @@ method(SimpleServer, SimpleServer*, initWithConfigFile, const char* filepath)
 
 method(SimpleServer, void, start, voida)
 {
-	ff(obj->socket, listeningStart, 0);
-	printf("Server[%s:%s] started\n", obj->ip, obj->port);
+	printf("starting worker thread...\n");
+	workerThread(obj, 0);
 }
 
 method(SimpleServer, void, stop, voida)
