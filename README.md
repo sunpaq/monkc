@@ -38,6 +38,11 @@ a toolkit for OOP programming in C language
 
 ## Monk-C on Windows (64bit):
 
+in 'platforms/windows' folder of this repo, there have a Visual Studio Solution 'monkc.sln'
+you can build 'monkc.lib' using it. the binary and header will copy into 'output' folder
+
+here is a demo using the 'monkc.lib' in other Visual Studio Solution
+the binary and header placed into its 'libs' folder
 [https://github.com/sunpaq/monkc4win64](https://github.com/sunpaq/monkc4win64)
 
 ## Monk-C on UNIX(Mac & Linux) via command line tools (this repo):
