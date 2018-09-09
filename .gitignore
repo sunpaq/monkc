@@ -15,3 +15,6 @@ src/monkc_runtime/monkc/
 examples/build/
 !binary
 exec
+example/_build
+lemontea/_build
+mcruntime/_build
