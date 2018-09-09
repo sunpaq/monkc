@@ -13,8 +13,7 @@ a toolkit for OOP programming in C language
 
 ## Next version
 
-	Monk-C 3.0 version will based on ANSI C standard. providing a modern syntax.
-	https://github.com/sunpaq/monkc-next
+- Monk-C 3.0 version will based on ANSI C standard. providing a modern syntax. https://github.com/sunpaq/monkc-next
 
 ## Documents:
 
