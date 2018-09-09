@@ -11,6 +11,11 @@ a toolkit for OOP programming in C language
 ###### No stable version released now. but the syntax is nearly ready to be fixed.
 ###### I am focusing on X86_64 and ARM64 CPUs.
 
+## Next version
+
+	Monk-C 3.0 version will based on ANSI C standard. providing a modern syntax.
+	https://github.com/sunpaq/monkc-next
+
 ## Documents:
 
 ###### 1 [wiki page](https://github.com/sunpaq/monkc/wiki) on github
@@ -23,6 +28,8 @@ a toolkit for OOP programming in C language
 [Demo App](https://github.com/sunpaq/monkc4iOS)
 
 ## The BohdiEngine (3D) written use Monk-C:
+
+[Mac version](https://github.com/sunpaq/BEMac)
 
 [iOS version via Cocoapods](https://github.com/sunpaq/BohdiEngine-pod)
 
