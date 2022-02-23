@@ -67,7 +67,9 @@ the binary and header placed into its 'libs' folder
 #### build & run
 
 	./build.rb all
-	./build.rb run 
+	./build.rb run
+	
+	please use "build-linux.rb" on linux
 
 #### install snippets for sublime text
 
