@@ -11,6 +11,9 @@
 #ifndef MIN
 #define MIN(A, B) ((A<B)?A:B)
 #endif
+#ifndef M_PI
+#define M_PI 3.14159265359
+#endif
 
 MCInline double MClognX(double n, double X) {
     //change of base formula
