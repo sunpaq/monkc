@@ -56,6 +56,7 @@ a toolkit for OOP programming in C language
 	
 #### install build tool
 
+	sudo gem install colored
 	sudo gem install mcbuild
 	
 #### build & run
