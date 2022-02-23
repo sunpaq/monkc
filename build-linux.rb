@@ -17,10 +17,10 @@ end
 
 build.command 'all' do
 	libs.each { |lib|
-		lib.set_std("c99")
+		lib.set_std("gnu99")
 		lib.info.compile.archive_lib
 	}
-	$example.set_std("c99")
+	$example.set_std("gnu99")
 	$example.info.compile.archive_exe.done
 end
 
